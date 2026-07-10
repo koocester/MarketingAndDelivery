@@ -18,6 +18,9 @@ Read [18-future-claude-code-instructions.md](18-future-claude-code-instructions.
 - **No local runtime** — no cron, no Docker, no n8n install. Scheduling lives in n8n Cloud.
 - **Secrets are the top risk** — several live in the wrong place inside n8n (documented, not copied).
 
+## The mandate
+What was originally commissioned, what was forbidden, and the deliberate deviations: [discovery/original-brief.md](discovery/original-brief.md).
+
 ## Ground truth vs history
 - This repo = **infrastructure ground truth** (verified live 2026-07-10).
 - The CEO's second-brain vault = **decision history** (context, not config).
