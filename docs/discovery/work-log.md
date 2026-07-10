@@ -34,6 +34,7 @@ Beyond the Metabase/Command/Vercel surfaces in [../10-dashboard-setup.md](../10-
 | Business-data files (`SMM Carousel Tracker.csv`, generated `dashboard.html`) | **Not copied** — awaiting decision | Real content/owner data; include as sample/redacted or leave out |
 | n8n workflow JSON exports | **Deferred** | Several embed inline secrets; export only after manual redaction |
 | Rotate inline n8n secrets S1–S6 | **Declined by Hakim (2026-07-10)** | Risk consciously accepted; repo is private. Locations remain documented in [../15-security-and-secrets.md](../15-security-and-secrets.md) |
+| Guard the 7 unguarded Lark button automations (incl. 🔴 `Reject Video`) | **Declined by Hakim (2026-07-10) — "Don't fix. Document."** | Audit was read-only; **no change made to the live base**. Risk consciously accepted and recorded. Full detail: [../../connectors/lark/07-button-automation-audit.md](../../connectors/lark/07-button-automation-audit.md) |
 | n8n error alerting (stub) | **Open** | No production change made |
 | `marts.targets` wire vs remove; dbt Xero layer | **Open question** | See [../04-requirements-and-decisions.md](../04-requirements-and-decisions.md) |
 

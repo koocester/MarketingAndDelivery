@@ -63,5 +63,9 @@ All read *"…and all specified conditions are matched…"*. The stage guard is 
 - **Guarded buttons** silently no-op on a wrong stage — no error, no log. That's *safe* behaviour: the guard is protecting you.
 - **Unguarded buttons always fire.** There is no protection. `Reject Video` in particular will kill and notify on a *published* video.
 
-## Recommended fix (not applied — read-only audit)
-Add a stage condition to the 7 unguarded automations, starting with **`Video - Organic video rejected`**: constrain it to the stages where rejection is legitimate (e.g. `Approval` / `Strategist QC` / `Final Approval`), so it cannot fire on `Completed` / `Ready To Upload`.
+## Status: DOCUMENTED, NOT FIXED (explicit decision)
+**Owner decision, 2026-07-10 — "Don't fix. Document."** No change was made to any automation. The risk is **consciously accepted and recorded**, not overlooked. Do not "helpfully" fix these without the owner's say-so.
+
+**If/when a fix is authorised**, the recommended first step: add a stage condition to **`Video - Organic video rejected`**, constraining it to the stages where rejection is legitimate (e.g. `Approval` / `Strategist QC` / `Final Approval`) so it cannot fire on `Completed` / `Ready To Upload`. Then guard the remaining six.
+
+**Operational mitigation while unguarded:** treat `Reject Video` as a live wire — it needs no confirmation, changes stage irreversibly (Lark trash retains deletes ~30 days, but a *stage change* is not a delete), and notifies the Producer. Brief the team accordingly.

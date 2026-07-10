@@ -27,6 +27,8 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 - N/A (first baseline).
 
 ### Security
+- 🔴 Lark button-automation audit: 7 of 28 button automations are unguarded; `Reject Video` sets Rejected/DO NOT POST and DMs the Producer from any stage. **Documented, not fixed** — explicit owner decision (2026-07-10).
+- Corrected automation totals: 90 automations / 74 active (previously stated ~78).
 - Added secret-redaction guidance and the S1–S6 inline-secret findings (values redacted).
 - Added n8n credential-handling guidance (never export raw credentials; scan workflow JSON before commit).
 - Documented unauthenticated webhooks and the missing error-alerting stub as open risks.

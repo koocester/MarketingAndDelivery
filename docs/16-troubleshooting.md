@@ -14,6 +14,7 @@
 | Lark button "does nothing" | wrong-stage silent no-op | the button's stage-gated automation |
 
 ## Known issues (open)
+0. 🔴 **`Reject Video` button is UNGUARDED** — the `Video - Organic video rejected` automation has an empty conditions block. Clicking it on **any** video at **any** stage (incl. Completed/published) sets `Rejected/DO NOT POST` **and DMs the Producer**. 6 other button automations are also unguarded. **Documented, deliberately not fixed** (owner decision 2026-07-10). See [../connectors/lark/07-button-automation-audit.md](../connectors/lark/07-button-automation-audit.md).
 1. **Silent n8n failures** — `Error Handling` is a stub; nothing alerts. Until fixed, check Executions manually.
 2. **Inline secrets (S1–S6)** — see [15](15-security-and-secrets.md).
 3. **Unauthenticated webhooks** — 3 public endpoints.
@@ -21,7 +22,7 @@
 5. **dbt `xero_staging`/`xero_reports` unused** — cards hit raw `xero.*`.
 6. **Metricool overwrite risk** — `metricool_snapshots` must append dated rows.
 7. **Aspire = card float only** — don't compute runway from `finance`.
-8. **AnyCross unverified** — no MCP; confirm automations in-console.
+8. **Lark automations have no API** — 90 automations / 74 active; auditable only in the UI Automation Center.
 
 ## Diagnostics (read-only)
 - n8n: `n8n_get_workflow`, `n8n_executions` (inspect last runs).
