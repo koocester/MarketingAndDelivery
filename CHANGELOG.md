@@ -4,6 +4,16 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 
 ## [Unreleased]
 
+### Added — replication artifacts (turns the map into a rebuildable backup)
+- `n8n/workflows/*.json` — sanitized exports of the live workflows (structure byte-identical; secret VALUES replaced by `<REDACTED_*>` placeholders; credential names/ids preserved).
+- `metabase/cards/` — the actual SQL for all 35 dashboard cards (33 `.sql` + 2 MBQL `.json`) + rebuild guide.
+- `connectors/lark/08-schema-full-reference.md` — complete field dump: 19 tables, 243 fields across Videos(113)/Carousels(64)/Projects(46)/Pages(20).
+- `supabase/schema-ddl.md` — DDL + primary keys for the 6 n8n-fed tables across `content_perf`/`finance`/`marts`/`public`.
+
+### Fixed (documentation accuracy)
+- Corrected Lark field counts: Videos 113 (not 107), Carousels 64 (not 63). Cause: the field API returns `has_more:true` even at `page_size=200` — an earlier pull truncated silently.
+- Flagged `SLA State (activate at go-live)` as a deliberate blank placeholder — the SLA engine is specified but must be verified as switched on.
+
 ### Added
 - Full Lark Base documentation subtree (`connectors/lark/`) centred on the end-to-end workflow and how the base connects to the dashboards.
 - Build provenance (`docs/discovery/build-provenance.md`) — source systems, staging/CSV/idempotency method, verified migration result, full source→base→dashboard lineage.
@@ -27,7 +37,9 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 - N/A (first baseline).
 
 ### Security
+- 🔴 CEO Dashboard: three "7d" card-spend cards have **no date filter** — they report all-time spend as weekly. Documented, not fixed.
 - 🔴 Lark button-automation audit: 7 of 28 button automations are unguarded; `Reject Video` sets Rejected/DO NOT POST and DMs the Producer from any stage. **Documented, not fixed** — explicit owner decision (2026-07-10).
+- n8n exports carry **no secret values** — only `<REDACTED_*>` placeholders mapped to their managed credentials in `n8n/credentials/README.md`. Google Drive/Docs `fileId`s are retained (identifiers, not credentials).
 - Corrected automation totals: 90 automations / 74 active (previously stated ~78).
 - Added secret-redaction guidance and the S1–S6 inline-secret findings (values redacted).
 - Added n8n credential-handling guidance (never export raw credentials; scan workflow JSON before commit).

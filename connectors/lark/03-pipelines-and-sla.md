@@ -18,6 +18,9 @@ Exception states: On Hold · To Reupload · Reject/DO NOT POST · Taken Down.
 > **Pending Copywriting** exists so the 3h copywriting clock starts only when a copywriter *picks up* the carousel (via **Start Copywriting**), not when it's queued.
 
 ## The SLA / Lead-Time engine
+
+> ⚠️ **Is it actually live?** The Videos table carries a field **`SLA State (activate at go-live)`** (`fldL3s3qz8`) that is a **deliberate blank placeholder** — left empty so migration timestamps don't raise false overdues. Treat the SLA engine below as **built and specified, but verify it is switched on** before relying on `Overdue` in reporting.
+
 Each stage has an allowed duration and a live countdown, all as **formula fields**:
 
 - **`Lead Time`** — hours allowed in the current stage. Examples: video Strategist QC 16h, Amendments 6h, Final Approval 48h (client) / 12h (internal); carousel Copywriting 3h, Amendments 2h, Final Approval 12h client / 4h internal.

@@ -1,0 +1,286 @@
+{
+  "id": "m7n7555E2t6Wlvkk",
+  "name": "Command AI Cache (daily 8am)",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "tok",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendBody": true,
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "app_id",
+              "value": "cli_aa914316d6b8deed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "3HvLTgbxXknIviCu",
+          "name": "Lark App Secret (Koocester)"
+        }
+      }
+    },
+    {
+      "id": "met",
+      "name": "Metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT json_build_object('collected_mtd',(SELECT round(sum(amount)) FROM xero.payment WHERE payment_type='ACCRECPAYMENT' AND status='AUTHORISED' AND date_trunc('month',date)=date_trunc('month',current_date)),'invoiced_mtd',(SELECT round(sum(total)) FROM xero.invoice WHERE type='ACCREC' AND date_trunc('month',date)=date_trunc('month',current_date)),'ar_outstanding',(SELECT round(sum(amount_due)) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND amount_due>0),'ar_overdue',(SELECT round(sum(amount_due)) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND amount_due>0 AND due_date<current_date),'open_pipeline',(SELECT round(sum(property_amount_in_home_currency)::numeric) FROM hubspot.deal WHERE (_fivetran_deleted IS NULL OR _fivetran_deleted=false) AND (is_deleted IS NULL OR is_deleted=false) AND property_hs_is_closed IS NOT TRUE),'aspire_balance',(SELECT round(sum(available_balance)::numeric) FROM finance.aspire_accounts WHERE currency_code='SGD'),'leads_mtd',(SELECT count(*) FROM hubspot.contact WHERE date_trunc('month',property_createdate)=date_trunc('month',current_date)),'deals_7d',(SELECT count(*) FROM hubspot.deal WHERE property_createdate >= current_date - interval '7 days'),'total_followers',(SELECT sum(followers) FROM content_perf.metricool_snapshots WHERE snapshot_date=(SELECT max(snapshot_date) FROM content_perf.metricool_snapshots)),'reach_7d',(SELECT sum(views) FROM content_perf.reels WHERE published_date >= current_date - interval '7 days'),'eng_30d',(SELECT round(avg(engagement_rate)::numeric,1) FROM content_perf.reels WHERE engagement_rate IS NOT NULL AND engagement_rate<100 AND published_date >= current_date - interval '30 days'),'won_by_market',(SELECT json_agg(json_build_object('market',market,'won',won_sgd)) FROM (SELECT CASE property_deal_currency_code WHEN 'SGD' THEN 'Singapore' WHEN 'MYR' THEN 'Malaysia' WHEN 'IDR' THEN 'Indonesia' ELSE 'Other' END AS market, round(sum(property_amount_in_home_currency)) won_sgd FROM hubspot.deal WHERE (_fivetran_deleted IS NULL OR _fivetran_deleted=false) AND (is_deleted IS NULL OR is_deleted=false) AND property_hs_is_closed_won='true' GROUP BY 1) qm)) AS payload",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "id": "cmp",
+      "name": "Build Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const token=$('Get Lark Token').first().json.tenant_access_token;\nconst raw=$('Metrics').first().json.payload; const m=(typeof raw==='string')?JSON.parse(raw):raw;\nconst base='BG8PbaZFna1NQksNWkglTN85gSf', tbl='tbl8wIByJQwhIUei';\nconst H={Authorization:'Bearer '+token};\nconst U=(t,ps)=>'https://open.larksuite.com/open-apis/bitable/v1/apps/'+base+'/tables/'+t+'/records/search?page_size='+ps;\nconst RQ=async(u,b)=>{for(let i=0;i<3;i++){try{return await this.helpers.httpRequest({method:'POST',url:u,headers:H,body:b,json:true});}catch(e){if(i===2)return null;await new Promise(r=>setTimeout(r,250*(i+1)));}}};\nconst cV=(f,v)=>RQ(U(tbl,1),{field_names:['Video Stage'],filter:{conjunction:'and',conditions:[{field_name:f,operator:'is',value:[v]}]}}).then(r=>r?((r.data&&r.data.total!=null)?r.data.total:0):null);\nconst qc=await cV('Video Stage','Strategist QC');\nconst ovr=await cV('Overdue','OVERDUE');\nconst ovN=(ovr==null?0:ovr);\nconst arPct=(m.ar_overdue&&m.ar_outstanding)?Math.round(m.ar_overdue/m.ar_outstanding*100):null;\nconst wonTotal=(m.won_by_market||[]).reduce((s,w)=>s+(w.won||0),0);\nconst g=$('Geo').first().json.geo; const G=(typeof g==='string')?JSON.parse(g):g;\nconst pcx=function(f,fp){return (fp&&fp>0)?Math.round((f-fp)/fp*1000)/10:0;};\nconst sp2=function(p){return p==='Koocester'?'Main':String(p).replace('Koocester ','');};\nconst cby={}; (G.ctot||[]).forEach(function(c){cby[c.country]=c;});\nconst CO2=['Singapore','Malaysia','Indonesia'];\nlet socialLines=[];\nif(G.main_total){socialLines.push('Flagship total '+G.main_total.f+' ('+pcx(G.main_total.f,G.main_total.fp)+'% DoD): '+(G.main||[]).map(function(x){return x.platform+' '+x.f+' ('+pcx(x.f,x.fp)+'%)';}).join(', '));}\nCO2.forEach(function(cn){var ct=cby[cn]; if(!ct)return; socialLines.push(cn+' total '+ct.f+' ('+pcx(ct.f,ct.fp)+'%)'); var pages=(G.geo_page||[]).filter(function(x){return x.country===cn;}).sort(function(a,b){return (b.f||0)-(a.f||0);}); pages.forEach(function(pg){var pls=(G.geo_plat||[]).filter(function(x){return x.country===cn&&x.page===pg.page;}); socialLines.push('  '+cn+' '+sp2(pg.page)+': '+pg.f+' ('+pcx(pg.f,pg.fp)+'%) ['+pls.map(function(x){return x.platform+' '+x.f+' '+pcx(x.f,x.fp)+'%';}).join(', ')+']');});});\nconst socialSummary=socialLines.join('\\n');\nconst prompt=\"You are chief of staff to Hakim, founder-CEO of Koocester (lean luxury-media platform pivoting to lead-gen + recurring revenue). Return ONLY a JSON object, no markdown, no code fences, with exactly these keys: tasks, focus, finance, sales, growth, social. tasks = an array of 4 to 5 strings. Each task MUST begin with exactly one bracketed CEO-job tag chosen from [Cash], [People], [Machine], [Direction] (the single job it most advances), then a concrete verb-first action for TODAY under 18 words with a real number and the owner or stage. Rank hardest-hitting first, highest leverage on top. Across the set use at least 3 different tags unless one domain is genuinely on fire, and never more than 2 [Cash] tasks. The four CEO jobs: Cash = collections, AR, runway, pricing; People = right people in right seats, unblock the bottleneck, hire, delegate; Machine = instrument, automate, build so it runs without Hakim; Direction = strategy, what to double down on or kill, the lead-gen pivot. focus = one sentence, the single highest-leverage thing today, itself prefixed with its [Cash]/[People]/[Machine]/[Direction] tag. finance = the read on cash, AR and collections. sales = the read on leads, deals, pipeline and the missing lead-to-customer conversion. growth = the read on audience, content bottleneck and engagement. Do not invent roles (Hakim is founder AND CEO; no CFO/AR manager). Real numbers today: collected MTD S$\"+m.collected_mtd+\", invoiced MTD S$\"+m.invoiced_mtd+\", AR outstanding S$\"+m.ar_outstanding+\", AR overdue S$\"+m.ar_overdue+\" (\"+arPct+\"% of AR), open pipeline S$\"+m.open_pipeline+\", Aspire card float S$\"+m.aspire_balance+\", leads MTD \"+m.leads_mtd+\", deals 7d \"+m.deals_7d+\", won all-time S$\"+wonTotal+\", network followers \"+m.total_followers+\", reach 7d \"+m.reach_7d+\", engagement 30d \"+m.eng_30d+\"% vs 8% world-class, content overdue \"+ovN+\", Strategist QC queue \"+qc+\" (only 2 strategists Wendi+Audrey do all QC). Lead-to-customer conversion is not instrumented yet. Also include a key social = an object with: sentiment (one blunt sentence on overall social-page health), weak (array of 2 to 3 short strings naming the weakest pages or platforms and why), focus (array of 2 to 3 short strings on where to double down for growth), improve (array of 2 to 3 concrete actions). Base social ONLY on this per-page per-platform data (numbers are current followers; percentages are day-over-day change):\\n\"+socialSummary;\nreturn [{json:{prompt}}];"
+      }
+    },
+    {
+      "id": "aian",
+      "name": "AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:1100, messages:[{role:'user', content:$json.prompt}]}) }}",
+        "options": {}
+      },
+      "credentials": {
+        "anthropicApi": {
+          "id": "sg4na3c3HYfSK4zM",
+          "name": "Anthropic API – Koocester"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "prep",
+      "name": "Prep Store",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "jsCode": "let ai=null;\ntry{ const resp=$json; let txt=(resp&&resp.content&&resp.content[0]&&resp.content[0].text)||''; txt=String(txt).trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim(); if(txt) ai=JSON.parse(txt); }catch(e){ ai=null; }\nconst ddl=\"CREATE TABLE IF NOT EXISTS public.command_ai_cache (id bigserial PRIMARY KEY, generated_at timestamptz NOT NULL DEFAULT now(), for_date date NOT NULL DEFAULT current_date, payload jsonb NOT NULL)\";\nif(ai && ai.focus){ return [{json:{ sql: ddl+\"; INSERT INTO public.command_ai_cache (payload) VALUES ($1::jsonb)\", params:[JSON.stringify(ai)], stored:true }}]; }\nreturn [{json:{ sql: ddl, params:[], stored:false }}];"
+      }
+    },
+    {
+      "id": "store",
+      "name": "Store",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.sql }}",
+        "options": {
+          "queryReplacement": "={{ $json.params }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "id": "trig",
+      "name": "Daily 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "geo",
+      "name": "Geo",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        560,
+        120
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH d AS (SELECT DISTINCT snapshot_date FROM content_perf.metricool_snapshots ORDER BY snapshot_date DESC LIMIT 2), lat AS (SELECT max(snapshot_date) md FROM d), pri AS (SELECT min(snapshot_date) pd FROM d), snap AS (SELECT page, platform, country, snapshot_date, followers FROM content_perf.metricool_snapshots WHERE snapshot_date IN ((SELECT md FROM lat),(SELECT pd FROM pri))), gplat AS (SELECT country, page, platform, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page<>'Koocester' GROUP BY country,page,platform), gpage AS (SELECT country, page, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page<>'Koocester' GROUP BY country,page), ctot AS (SELECT country, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page<>'Koocester' GROUP BY country), mainp AS (SELECT platform, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page='Koocester' GROUP BY platform) SELECT json_build_object('ctot',(SELECT json_agg(json_build_object('country',country,'f',f,'fp',fp) ORDER BY f DESC) FROM ctot),'geo_page',(SELECT json_agg(json_build_object('country',country,'page',page,'f',f,'fp',fp)) FROM gpage),'geo_plat',(SELECT json_agg(json_build_object('country',country,'page',page,'platform',platform,'f',f,'fp',fp)) FROM gplat),'main_total',(SELECT json_build_object('f',sum(f),'fp',sum(fp)) FROM mainp),'main',(SELECT json_agg(json_build_object('platform',platform,'f',f,'fp',fp)) FROM mainp)) AS geo",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Get Lark Token": {
+      "main": [
+        [
+          {
+            "node": "Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Prompt": {
+      "main": [
+        [
+          {
+            "node": "AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Prep Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prep Store": {
+      "main": [
+        [
+          {
+            "node": "Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily 8am": {
+      "main": [
+        [
+          {
+            "node": "Get Lark Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Metrics": {
+      "main": [
+        [
+          {
+            "node": "Geo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Geo": {
+      "main": [
+        [
+          {
+            "node": "Build Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": {
+    "node:Daily 8am": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": null,
+  "tags": []
+}

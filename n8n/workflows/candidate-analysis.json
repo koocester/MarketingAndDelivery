@@ -1,0 +1,410 @@
+{
+  "id": "MkbIUyAqel4ciIGg",
+  "name": "Candidate Analysis",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Candidate Analysis",
+        "formFields": {
+          "values": [
+            { "fieldLabel": "Candidate Name" },
+            { "fieldLabel": "Role" },
+            { "fieldLabel": "Department", "fieldType": "dropdown", "fieldOptions": { "values": [ { "option": "Marketing" }, { "option": "Sales" }, { "option": "Human Resource" }, { "option": "Technology" }, { "option": "Finance" }, { "option": "Operations Management" } ] } },
+            { "fieldLabel": "Transcript (SRT, TXT files only)", "fieldType": "file" },
+            { "fieldLabel": "Salary" },
+            { "fieldLabel": "Currency", "fieldType": "dropdown", "fieldOptions": { "values": [ { "option": "SGD" }, { "option": "MYR" }, { "option": "IDR" } ] } },
+            { "fieldLabel": "Submitter Email" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [0, -32],
+      "id": "8cf5ec02-4b66-4e78-b7f9-96794c47cb89",
+      "name": "On form submission",
+      "webhookId": "e2612f62-9317-47b6-86c4-e7863c5e95c4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "e802c6cb-1d96-45aa-87f9-81be020e2ede", "name": "=candidate_clean", "value": "={{ $json[\"Candidate Name\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') }}", "type": "string" },
+            { "id": "74c68e5e-753d-42aa-b1e4-7711d78be5af", "name": "=role_clean", "value": "={{ $json[\"Role\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') }}", "type": "string" },
+            { "id": "2665d125-fe0b-4fe0-b8e9-8f07c991a181", "name": "=department_clean", "value": "={{ $json[\"Department\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') }}", "type": "string" },
+            { "id": "bfb6e561-8a25-4823-b1a8-968711028515", "name": "=salary_clean", "value": "={{ String($json[\"Salary\"]).trim().replace(/[,$\\s]/g, '').replace(/\\.\\d+$/, '') }}", "type": "string" },
+            { "id": "20757550-5e95-4163-a54c-3f782d1bd1f1", "name": "=currency_clean", "value": "={{ $json[\"Currency\"].trim().toUpperCase().replace(/[^A-Z]/g, '') }}", "type": "string" },
+            { "id": "b5a17611-31a0-4d2d-8110-3cb87ab3868d", "name": "=salary_label", "value": "={{ String($json[\"Salary\"]).trim().replace(/[,$\\s]/g, '').replace(/\\.\\d+$/, '') \n   + $json[\"Currency\"].trim().toUpperCase().replace(/[^A-Z]/g, '') }}", "type": "string" },
+            { "id": "5b8d76c5-b7fd-4461-b92a-3090d9234cd3", "name": "=candidate_display", "value": "={{ $json[\"Candidate Name\"].trim().replace(/[^a-zA-Z0-9 \\-']/g, '') }}", "type": "string" },
+            { "id": "2cb1670e-a034-428f-81be-612170d78564", "name": "=role_display", "value": "={{ $json[\"Role\"].trim().replace(/[^a-zA-Z0-9 \\-&()]/g, '') }}", "type": "string" },
+            { "id": "4c28d287-3292-4266-9de2-6dbdfa433b27", "name": "=department_display", "value": "={{ $json[\"Department\"].trim().replace(/[^a-zA-Z0-9 \\-&]/g, '') }}", "type": "string" },
+            { "id": "ea10d258-f50b-4983-a33c-818ff91845fe", "name": "=folder_path", "value": "={{ '/hr/brain/data/' \n   + $json[\"Department\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') \n   + '/' \n   + $json[\"Role\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') \n   + '/' \n   + $json[\"Candidate Name\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') \n   + '/' }}", "type": "string" },
+            { "id": "12dad058-fa57-4f5a-923d-db1baf653cae", "name": "=role_display", "value": "={{ $json[\"Role\"].trim().replace(/[^a-zA-Z0-9 \\-&()]/g, '') }}", "type": "string" },
+            { "id": "14fb6c62-1f55-4f32-907a-a8e836384294", "name": "=transcript_filename", "value": "={{ $now.format('yyyy-MM-dd_HHmm') \n   + '_' \n   + $json[\"Candidate Name\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') \n   + '_' \n   + String($json[\"Salary\"]).trim().replace(/[,$\\s]/g, '').replace(/\\.\\d+$/, '') \n   + $json[\"Currency\"].trim().toUpperCase().replace(/[^A-Z]/g, '') \n   + '_transcript.srt' }}", "type": "string" },
+            { "id": "8bacae2d-5866-4b83-814a-8760f6aa42f2", "name": "=evaluation_filename", "value": "={{ $now.format('yyyy-MM-dd_HHmm') \n   + '_' \n   + $json[\"Candidate Name\"].trim().replace(/\\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') \n   + '_full_evaluation.pdf' }}", "type": "string" }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [224, -32],
+      "id": "181fe374-bbb2-4a5c-8435-6edd21f9909d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// === KOOCESTER HIRING BRAIN — PATH SPLITTER ===\n// Just splits the folder path into segments. \n// Native Google Drive nodes handle search/create.\n\nconst ROOT_FOLDER_ID = '14DbhhKSOogQsuE2-3tx3U-3Qmv-LDzmk';\nconst SHARED_DRIVE_ID = '0ACOEEMt4iqhgUk9PVA';\n\nconst fullPath = $input.item.json.folder_path;\n// e.g. \"/hr/brain/data/Marketing/Head_Of_Growth/Chanran_Singh/\"\n\n// Strip the prefix that's already physically created\nconst relativePath = fullPath\n  .replace('/hr/brain/data/', '')\n  .replace(/\\/$/, '');\n// e.g. \"Marketing/Head_Of_Growth/Chanran_Singh\"\n\nconst segments = relativePath.split('/').filter(s => s.length > 0);\n\nreturn {\n  json: {\n    ...$input.item.json,\n    drive_root_id: ROOT_FOLDER_ID,\n    drive_shared_drive_id: SHARED_DRIVE_ID,\n    department_segment: segments[0] || '',\n    role_segment: segments[1] || '',\n    candidate_segment: segments[2] || '',\n    all_segments: segments\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [448, -32],
+      "id": "b65517d8-0088-4ccd-af41-008f88ec6895",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.department_segment }}",
+        "returnAll": true,
+        "filter": {
+          "driveId": { "__rl": true, "value": "={{ $json.drive_shared_drive_id }}", "mode": "id" },
+          "folderId": { "__rl": true, "value": "={{ $json.drive_root_id }}", "mode": "id" },
+          "whatToSearch": "folders"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [672, -32],
+      "id": "5f2b23c1-9f32-4faf-9ad4-e44324aaefdc",
+      "name": "Search files and folders",
+      "credentials": { "googleDriveOAuth2Api": { "id": "XngROUFvrCCkcUmV", "name": "Koocester Drive" } }
+    },
+    {
+      "parameters": {
+        "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 3 }, "conditions": [ { "id": "bf46f10c-32d6-4a77-ac5f-6d2f39116504", "leftValue": "={{ $json.id }}", "rightValue": "", "operator": { "type": "string", "operation": "exists", "singleValue": true } } ], "combinator": "and" },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [896, -32],
+      "id": "c248c05b-0a21-4756-96ce-8e9f841b75b6",
+      "name": "Department Exists?"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "transcript",
+        "name": "={{  $('Edit Fields').item.json.candidate_clean + '_transcript'  }}",
+        "driveId": { "__rl": true, "value": "My Drive", "mode": "list", "cachedResultName": "My Drive", "cachedResultUrl": "https://drive.google.com/drive/my-drive" },
+        "folderId": { "__rl": true, "value": "=https://drive.google.com/drive/folders/{{  $('Create Candidate Folder').first().json.id  }}", "mode": "url" },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2416, -32],
+      "id": "8b5fa92a-753e-4da7-9617-4f4089dff71f",
+      "name": "Upload Transcript",
+      "credentials": { "googleDriveOAuth2Api": { "id": "XngROUFvrCCkcUmV", "name": "Koocester Drive" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" }, { "name": "x-api-key", "value": "<REDACTED_ANTHROPIC_API_KEY>" }, { "name": "anthropic-version", "value": "2023-06-01" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"model\": \"claude-opus-4-5\", \"max_tokens\": 8000, \"system\": \"__FIRMWARE_PLUS_BOT_1_SCORER__\", \"messages\": [{ \"role\": \"user\", \"content\": {{ JSON.stringify(\"# ROLE\\n\" + ($('Edit Fields').item.json.role || \"Unknown\") + \"\\n\\n# TRANSCRIPT\\n\\n\" + $('Merge Transcript').item.json.transcriptText) }} }] }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [2640, -32],
+      "id": "1e2ea3e7-c0f0-42ae-bfbe-780c1b93661f",
+      "name": "Hiring Scorer",
+      "_note": "system prompt (Bot 1 — Scorer) preserved verbatim in n8n; elided here only to keep the export readable. Restore the exact prompt from the live workflow if editing."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" }, { "name": "x-api-key", "value": "<REDACTED_ANTHROPIC_API_KEY>" }, { "name": "anthropic-version", "value": "2023-06-01" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"model\": \"claude-opus-4-5\", \"max_tokens\": 4000, \"system\": \"__FIRMWARE_PLUS_BOT_2_AUDITOR__\", \"messages\": [{ \"role\": \"user\", \"content\": {{ JSON.stringify(\"# TRANSCRIPT\\n\\n\" + $('Merge Transcript').item.json.transcriptText + \"\\n\\n# SCORECARD TO AUDIT\\n\\n\" + $('Hiring Scorer').item.json.content[0].text + \"\\n\\n# 75+ COUNTER-CHECK OUTPUT\\n\\n\" + $('Counter-Check 75+').item.json.content[0].text) }} }] }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [3088, -32],
+      "id": "dd8a14a4-7a34-41aa-9ad7-4a11d0537882",
+      "name": "Hiring Auditor",
+      "_note": "system prompt (Bot 2 — Auditor) preserved verbatim in n8n; elided here only to keep the export readable. Restore the exact prompt from the live workflow if editing."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" }, { "name": "x-api-key", "value": "<REDACTED_ANTHROPIC_API_KEY>" }, { "name": "anthropic-version", "value": "2023-06-01" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"model\": \"claude-opus-4-5\", \"max_tokens\": 4000, \"system\": \"__FIRMWARE_PLUS_BOT_3_ADVERSARY__\", \"messages\": [{ \"role\": \"user\", \"content\": {{ JSON.stringify(\"# TRANSCRIPT\\n\\n\" + $('Merge Transcript').item.json.transcriptText + \"\\n\\n# SCORER OUTPUT\\n\\n\" + $('Hiring Scorer').item.json.content[0].text + \"\\n\\n# 75+ COUNTER-CHECK OUTPUT\\n\\n\" + $('Counter-Check 75+').item.json.content[0].text + \"\\n\\n# AUDITOR OUTPUT\\n\\n\" + $('Hiring Auditor').item.json.content[0].text) }} }] }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [3312, -32],
+      "id": "e8ec28f9-52b5-4915-b662-e02b6bd0fa1b",
+      "name": "Hiring Adversary",
+      "_note": "system prompt (Bot 3 — Adversary) preserved verbatim in n8n; elided here only to keep the export readable. Restore the exact prompt from the live workflow if editing."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== Aggregate Report v3.4 =====\n// Field names matched exactly to Google Doc template placeholders\n// Respects Counter-Check SKIPPED/LOW confidence\n// NOTE: full body preserved verbatim in the live workflow. See ../credentials/README.md and 09-n8n-setup docs.\n// (Elided in this export only to keep the file readable; restore exact source from live n8n if editing.)\nreturn [{ json: { note: 'See live workflow for exact Aggregate Report source.' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3536, -32],
+      "id": "43dfc003-4c4e-4e98-a690-badb94a07cd6",
+      "name": "Aggregate Report",
+      "_note": "Large parsing/aggregation Code node preserved verbatim in live n8n; body elided in export for readability. No secrets in this node."
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": { "__rl": true, "value": "1bhpuBtlFfelyPMjxFomlXPtAzKW3W22rtVsoDp42WMM", "mode": "id" },
+        "name": "={{ $json.candidateName }}_Report_{{ $json.date }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [3760, -32],
+      "id": "a851218c-d65c-489a-9033-c11d550cbd8e",
+      "name": "Copy Report Template",
+      "credentials": { "googleDriveOAuth2Api": { "id": "XngROUFvrCCkcUmV", "name": "Koocester Drive" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "=Bearer {{ $('Get Lark Token').item.json.tenant_access_token }}" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"receive_id\": \"oc_2d41fbeac22ab8c803ed8d7f8faaeaec\",\n  \"msg_type\": \"interactive\",\n  \"content\": {{ JSON.stringify(JSON.stringify((() => { /* Lark interactive card builder — preserved verbatim in live n8n; body elided in export for readability. No secrets. */ return {}; })())) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [4432, -32],
+      "id": "d1b8f056-a309-43cf-85a3-989e13a3e137",
+      "name": "Notify Lark HR",
+      "_note": "Large inline card-builder IIFE preserved verbatim in live n8n; body elided in export for readability. No secrets in this node (auth is referenced from Get Lark Token)."
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst editFieldsBinary = $('Edit Fields').first().binary;\nitem.binary = editFieldsBinary;\nreturn item;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1104, -32],
+      "id": "be63c87d-eb5f-4607-b55e-d105fe0d987d",
+      "name": "Attach Binary"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{  $('Edit Fields').item.json.candidate_clean + '_' + $now.toFormat('yyyy-MM-dd')  }}",
+        "driveId": { "__rl": true, "mode": "list", "value": "My Drive" },
+        "folderId": { "__rl": true, "mode": "list", "value": "root", "cachedResultName": "/ (Root folder)" },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1456, -64],
+      "id": "8b334fb1-0300-4e5a-aaa6-f6a22c6ca328",
+      "name": "Create Candidate Folder",
+      "credentials": { "googleDriveOAuth2Api": { "id": "XngROUFvrCCkcUmV", "name": "Koocester Drive" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Re-attach Binary: pass through the form submission item AS-IS (with its binary)\n// but enrich its json with the candidate folder data.\n\nconst folderItem = $input.first();\nconst formItem = $('On form submission').first();\n\n// Guard: form submission must have binary\nif (!formItem || !formItem.binary || Object.keys(formItem.binary).length === 0) {\n  throw new Error('On form submission item has no binary attached. Check the form node ran and produced a file.');\n}\n\n// Normalize MIME for text-based extensions Drive labels octet-stream\nconst sourceKey = Object.keys(formItem.binary)[0];\nconst sourceBin = formItem.binary[sourceKey];\nconst fileName = (sourceBin.fileName || '').toLowerCase();\nconst textExts = ['.srt', '.vtt', '.txt', '.md', '.log', '.csv', '.json', '.xml', '.html'];\nlet normalizedMime = sourceBin.mimeType || 'application/octet-stream';\nif (textExts.some(ext => fileName.endsWith(ext))) normalizedMime = 'text/plain';\n\nsourceBin.mimeType = normalizedMime;\n\n// Rename binary key to 'transcript' if it isn't already\nif (sourceKey !== 'transcript') {\n  formItem.binary['transcript'] = sourceBin;\n  delete formItem.binary[sourceKey];\n}\n\n// Merge folder json data on top of the form item's json (guarded)\nconst folderJson = (folderItem && folderItem.json) ? folderItem.json : (folderItem || {});\nconst formJson = formItem.json || {};\n\nreturn [{\n  json: { ...formJson, ...folderJson },\n  binary: formItem.binary\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1712, 32],
+      "id": "78105cd5-30c1-40e1-846a-7ad6e03b4a13",
+      "name": "Re-attach Binary"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "binaryPropertyName": "transcript",
+        "destinationKey": "transcriptText",
+        "options": { "keepSource": "both" }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [2064, 0],
+      "id": "0dddab4a-86e1-4eda-86fb-6dd9ee580edd",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            { "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 }, "conditions": [ { "leftValue": "={{  $binary.transcript.fileName.toLowerCase().endsWith('.pdf') ? 'pdf' : 'text' }}", "rightValue": "pdf", "operator": { "type": "string", "operation": "equals" }, "id": "rule-pdf-fixed-001" } ], "combinator": "and" }, "renameOutput": true, "outputKey": "pdf" },
+            { "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose", "version": 3 }, "conditions": [ { "leftValue": "={{  $binary.transcript.fileName.toLowerCase().endsWith('.pdf') ? 'pdf' : 'text' }}", "rightValue": "text", "operator": { "type": "string", "operation": "equals" }, "id": "rule-text-fixed-001" } ], "combinator": "and" }, "renameOutput": true, "outputKey": "text" }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": { "fallbackOutput": "extra", "renameFallbackOutput": "fallback" }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [1872, 48],
+      "id": "53dc744b-2ea6-40dd-adca-f8d2e23d87bf",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "transcript",
+        "options": { "joinPages": true, "keepSource": "both" }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [2064, 208],
+      "id": "315a98e4-988f-4221-bf1a-694c79453c6d",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"app_id\": \"cli_a9c90133f0f8deee\", \"app_secret\": \"<REDACTED_LARK_APP_SECRET>\" }",
+        "options": {}
+      },
+      "id": "get-lark-token-node-1",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [4208, -32]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            { "action": "replaceAll", "text": "{{candidateName}}", "replaceText": "={{ $('Aggregate Report').item.json.candidateName }}" },
+            { "action": "replaceAll", "text": "{{role}}", "replaceText": "={{ $('Aggregate Report').item.json.role }}" },
+            { "action": "replaceAll", "text": "{{department}}", "replaceText": "={{ $('Aggregate Report').item.json.department }}" },
+            { "action": "replaceAll", "text": "{{date}}", "replaceText": "={{ $('Aggregate Report').item.json.date }}" },
+            { "action": "replaceAll", "text": "{{scoreOver10}}", "replaceText": "={{ $('Aggregate Report').item.json.scoreOver10 }}" },
+            { "action": "replaceAll", "text": "{{scoreOver100}}", "replaceText": "={{ $('Aggregate Report').item.json.scoreOver100 }}" },
+            { "action": "replaceAll", "text": "{{verdict}}", "replaceText": "={{ $('Aggregate Report').item.json.verdict }}" },
+            { "action": "replaceAll", "text": "{{recommendation}}", "replaceText": "={{ $('Aggregate Report').item.json.recommendation }}" },
+            { "action": "replaceAll", "text": "{{executiveSummary}}", "replaceText": "={{ $('Aggregate Report').item.json.executiveSummary }}" },
+            { "action": "replaceAll", "text": "{{strengths}}", "replaceText": "={{ $('Aggregate Report').item.json.strengths }}" },
+            { "action": "replaceAll", "text": "{{concerns}}", "replaceText": "={{ $('Aggregate Report').item.json.concerns }}" },
+            { "action": "replaceAll", "text": "{{auditorFlagCount}}", "replaceText": "={{ $('Aggregate Report').item.json.auditorFlagCount }}" },
+            { "action": "replaceAll", "text": "{{auditorSummary}}", "replaceText": "={{ $('Aggregate Report').item.json.auditorSummary }}" },
+            { "action": "replaceAll", "text": "{{adversaryPatternCount}}", "replaceText": "={{ $('Aggregate Report').item.json.adversaryPatternCount }}" },
+            { "action": "replaceAll", "text": "{{adversarySummary}}", "replaceText": "={{ $('Aggregate Report').item.json.adversarySummary }}" },
+            { "action": "replaceAll", "text": "{{scorerNarrative}}", "replaceText": "={{ $('Aggregate Report').item.json.scorerNarrative }}" },
+            { "action": "replaceAll", "text": "{{transcriptLink}}", "replaceText": "={{ $('Aggregate Report').item.json.transcriptLink }}" },
+            { "action": "replaceAll", "text": "{{folderLink}}", "replaceText": "={{ $('Aggregate Report').item.json.folderLink }}" }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [3984, -32],
+      "id": "fill-template-node-1",
+      "name": "Fill Report Template",
+      "credentials": { "googleDocsOAuth2Api": { "id": "PJnGJdTwVllifCCU", "name": "Koocester Docs" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputItem = $input.first();\n\nlet raw = inputItem.json.transcriptText \n       || inputItem.json.text \n       || inputItem.json.content \n       || inputItem.json.data\n       || '';\n\nconst cleaned = raw\n  .replace(/\\d{2}:\\d{2}:\\d{2}[,.]\\d{3}\\s*-->\\s*\\d{2}:\\d{2}:\\d{2}[,.]\\d{3}\\s*\\n?/g, '')\n  .replace(/^\\d+\\s*$/gm, '')\n  .replace(/\\n{3,}/g, '\\n\\n')\n  .trim();\n\nreturn [{\n  json: {\n    ...inputItem.json,\n    transcriptText: cleaned,\n    transcriptLength: cleaned.length\n  },\n  binary: inputItem.binary\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2240, 96],
+      "id": "48d07e3e-4777-4025-8a34-1486798ba3bc",
+      "name": "Merge Transcript"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Edit Fields').item.json.department_clean }}",
+        "driveId": { "__rl": true, "mode": "list", "value": "My Drive" },
+        "folderId": { "__rl": true, "value": "12tJd0QEzUa6fmwoV1IPVCfdLWJMocCfv", "mode": "list", "cachedResultName": "HR", "cachedResultUrl": "https://drive.google.com/drive/folders/12tJd0QEzUa6fmwoV1IPVCfdLWJMocCfv" },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1232, 208],
+      "id": "056e8dbb-0c26-4692-bcc6-c2857105d70b",
+      "name": "Create folder",
+      "credentials": { "googleDriveOAuth2Api": { "id": "XngROUFvrCCkcUmV", "name": "Koocester Drive" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" }, { "name": "x-api-key", "value": "<REDACTED_ANTHROPIC_API_KEY>" }, { "name": "anthropic-version", "value": "2023-06-01" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"model\": \"claude-opus-4-5\", \"max_tokens\": 4000, \"system\": \"__FIRMWARE_PLUS_BOT_4_COUNTER_CHECK_75__\", \"messages\": [{ \"role\": \"user\", \"content\": {{ JSON.stringify(\"# ROLE / TIER (infer if missing)\\n\" + ($('Edit Fields').item.json.role || \"Unknown\") + \"\\n\\n# TRANSCRIPT\\n\\n\" + $('Merge Transcript').item.json.transcriptText + \"\\n\\n# SCORER SCORECARD\\n\\n\" + $('Hiring Scorer').item.json.content[0].text) }} }] }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [2864, -32],
+      "id": "cca0cwobhkyu-moi7srgv",
+      "name": "Counter-Check 75+",
+      "_note": "system prompt (Bot 4 — 75+ Counter-Check) preserved verbatim in n8n; elided here only to keep the export readable. Restore the exact prompt from the live workflow if editing."
+    }
+  ],
+  "connections": {
+    "On form submission": { "main": [ [ { "node": "Edit Fields", "type": "main", "index": 0 } ] ] },
+    "Edit Fields": { "main": [ [ { "node": "Code in JavaScript", "type": "main", "index": 0 } ] ] },
+    "Code in JavaScript": { "main": [ [ { "node": "Search files and folders", "type": "main", "index": 0 } ] ] },
+    "Search files and folders": { "main": [ [ { "node": "Department Exists?", "type": "main", "index": 0 } ] ] },
+    "Department Exists?": { "main": [ [ { "node": "Attach Binary", "type": "main", "index": 0 } ], [ { "node": "Create folder", "type": "main", "index": 0 } ] ] },
+    "Upload Transcript": { "main": [ [ { "node": "Hiring Scorer", "type": "main", "index": 0 } ] ] },
+    "Hiring Scorer": { "main": [ [ { "node": "Counter-Check 75+", "type": "main", "index": 0 } ] ] },
+    "Hiring Auditor": { "main": [ [ { "node": "Hiring Adversary", "type": "main", "index": 0 } ] ] },
+    "Hiring Adversary": { "main": [ [ { "node": "Aggregate Report", "type": "main", "index": 0 } ] ] },
+    "Aggregate Report": { "main": [ [ { "node": "Copy Report Template", "type": "main", "index": 0 } ] ] },
+    "Attach Binary": { "main": [ [ { "node": "Create Candidate Folder", "type": "main", "index": 0 } ] ] },
+    "Create Candidate Folder": { "main": [ [ { "node": "Re-attach Binary", "type": "main", "index": 0 } ] ] },
+    "Re-attach Binary": { "main": [ [ { "node": "Switch", "type": "main", "index": 0 } ] ] },
+    "Extract from File": { "main": [ [ { "node": "Merge Transcript", "type": "main", "index": 0 } ] ] },
+    "Switch": { "main": [ [ { "node": "Extract from File1", "type": "main", "index": 0 } ], [ { "node": "Extract from File", "type": "main", "index": 0 } ], [ { "node": "Extract from File", "type": "main", "index": 0 } ] ] },
+    "Extract from File1": { "main": [ [ { "node": "Merge Transcript", "type": "main", "index": 0 } ] ] },
+    "Get Lark Token": { "main": [ [ { "node": "Notify Lark HR", "type": "main", "index": 0 } ] ] },
+    "Copy Report Template": { "main": [ [ { "node": "Fill Report Template", "type": "main", "index": 0 } ] ] },
+    "Fill Report Template": { "main": [ [ { "node": "Get Lark Token", "type": "main", "index": 0 } ] ] },
+    "Merge Transcript": { "main": [ [ { "node": "Upload Transcript", "type": "main", "index": 0 } ] ] },
+    "Counter-Check 75+": { "main": [ [ { "node": "Hiring Auditor", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": { "executionOrder": "v1", "binaryMode": "separate", "timeSavedMode": "fixed", "callerPolicy": "workflowsFromSameOwner", "availableInMCP": false },
+  "meta": { "templateCredsSetupCompleted": true },
+  "pinData": {},
+  "tags": []
+}

@@ -15,6 +15,7 @@
 
 ## Known issues (open)
 0. 🔴 **`Reject Video` button is UNGUARDED** — the `Video - Organic video rejected` automation has an empty conditions block. Clicking it on **any** video at **any** stage (incl. Completed/published) sets `Rejected/DO NOT POST` **and DMs the Producer**. 6 other button automations are also unguarded. **Documented, deliberately not fixed** (owner decision 2026-07-10). See [../connectors/lark/07-button-automation-audit.md](../connectors/lark/07-button-automation-audit.md).
+0b. 🔴 **CEO Dashboard "7d" card-spend numbers are actually ALL-TIME.** Three cards labelled 7-day have **no date filter** and sum every negative Aspire transaction ever: `Card Spend (last 7d)`, `Spend by Card Holder (7d)`, `Spend by Category (7d)`. Only `Largest Transactions (7d)` genuinely windows by date. **The dashboard is reporting a false weekly figure.** Preserved verbatim in [../metabase/cards/](../metabase/cards/) — fix by adding a `datetime >= now() - interval '7 days'` predicate. **Documented, not fixed** (owner decision).
 1. **Silent n8n failures** — `Error Handling` is a stub; nothing alerts. Until fixed, check Executions manually.
 2. **Inline secrets (S1–S6)** — see [15](15-security-and-secrets.md).
 3. **Unauthenticated webhooks** — 3 public endpoints.

@@ -1,0 +1,190 @@
+{
+  "id": "r6PNZZURAXZA9sNI",
+  "name": "Aspire → Supabase Sync",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "trig",
+      "name": "Daily 7am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 23 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "acc",
+      "name": "Get Accounts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.aspireapp.com/public/v1/accounts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "options": {}
+      },
+      "credentials": {
+        "oAuth2Api": {
+          "id": "26k5mZGkexthAm67",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "id": "txn",
+      "name": "Get Transactions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.aspireapp.com/public/v1/transactions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "start_date",
+              "value": "={{ new Date(Date.now()-7*24*60*60*1000).toISOString().slice(0,19)+'Z' }}"
+            },
+            {
+              "name": "end_date",
+              "value": "={{ new Date().toISOString().slice(0,19)+'Z' }}"
+            },
+            {
+              "name": "per_page",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "oAuth2Api": {
+          "id": "26k5mZGkexthAm67",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "id": "bld",
+      "name": "Build Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const txns = ($json.data) || [];\nconst accts = (($('Get Accounts').first()||{json:{}}).json.data) || [];\nconst q=(s)=> (s===null||s===undefined)?'NULL':(\"'\"+String(s).replace(/'/g,\"''\")+\"'\");\nconst num=(v)=>{const x=Number(v); return Number.isFinite(x)?x:0;};\nfunction acctName(a){ const dd=(a.debit_details&&a.debit_details[0])||{}; return dd.account_name||''; }\nconst trows=[]; const seen=new Set();\nfor(const t of txns){ if(!t.id||seen.has(t.id)) continue; seen.add(t.id); const ai=t.additional_info||{};\n  trows.push('('+[q(t.id),q(t.account_id),(t.datetime?('TIMESTAMPTZ '+q(t.datetime)):'NULL'),q(t.type),q(t.channel),q(t.status),q(t.currency_code),(num(t.amount)/100),num(t.amount),q(t.reference),q(t.counterparty_name),q(ai.spend_category),q(ai.card_holder),q(ai.card_name),q(ai.card_number),q(ai.card_id),num(t.balance),'now()'].join(',')+')'); }\nconst arows=[];\nfor(const a of accts){ if(!a.id) continue; arows.push('('+[q(a.id),q(a.account_status),q(a.account_type),q(a.currency_code),num(a.available_balance),(num(a.available_balance)/100),q(acctName(a)),'now()'].join(',')+')'); }\nlet sql='CREATE SCHEMA IF NOT EXISTS finance; ';\nsql+='CREATE TABLE IF NOT EXISTS finance.aspire_transactions (id text PRIMARY KEY, account_id text, datetime timestamptz, type text, channel text, status text, currency_code text, amount numeric, amount_cents bigint, reference text, counterparty_name text, spend_category text, card_holder text, card_name text, card_number text, card_id text, balance_cents bigint, loaded_at timestamptz default now()); ';\nsql+='CREATE TABLE IF NOT EXISTS finance.aspire_accounts (id text PRIMARY KEY, account_status text, account_type text, currency_code text, available_balance_cents bigint, available_balance numeric, account_name text, snapshot_at timestamptz default now()); ';\nif(trows.length) sql+='INSERT INTO finance.aspire_transactions (id,account_id,datetime,type,channel,status,currency_code,amount,amount_cents,reference,counterparty_name,spend_category,card_holder,card_name,card_number,card_id,balance_cents,loaded_at) VALUES '+trows.join(',')+' ON CONFLICT (id) DO UPDATE SET status=EXCLUDED.status, amount=EXCLUDED.amount, amount_cents=EXCLUDED.amount_cents, spend_category=EXCLUDED.spend_category, card_holder=EXCLUDED.card_holder, balance_cents=EXCLUDED.balance_cents, loaded_at=now(); ';\nif(arows.length) sql+='INSERT INTO finance.aspire_accounts (id,account_status,account_type,currency_code,available_balance_cents,available_balance,account_name,snapshot_at) VALUES '+arows.join(',')+' ON CONFLICT (id) DO UPDATE SET available_balance_cents=EXCLUDED.available_balance_cents, available_balance=EXCLUDED.available_balance, account_status=EXCLUDED.account_status, snapshot_at=now(); ';\nreturn [{json:{query:sql, txns:trows.length, accts:arows.length}}];"
+      }
+    },
+    {
+      "id": "run",
+      "name": "Run SQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.query }}",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily 7am": {
+      "main": [
+        [
+          {
+            "node": "Get Accounts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Accounts": {
+      "main": [
+        [
+          {
+            "node": "Get Transactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Transactions": {
+      "main": [
+        [
+          {
+            "node": "Build Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Rows": {
+      "main": [
+        [
+          {
+            "node": "Run SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": {
+    "node:Daily 7am": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": null,
+  "tags": []
+}

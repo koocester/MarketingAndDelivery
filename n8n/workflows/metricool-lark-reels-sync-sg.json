@@ -1,0 +1,482 @@
+{
+  "id": "54vD7rU5KNMCjVq1",
+  "name": "Metricool Lark Reels Sync",
+  "_region": "SG (Singapore) — tag qILoDF7XnZQOTBc3",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "f148bc02-bce0-44c7-9534-9fddecec9401",
+      "name": "Daily 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [-6256, 16]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"app_id\":\"cli_aaab8a2fc3391ed2\",\"app_secret\":\"<REDACTED_LARK_APP_SECRET>\"}",
+        "options": {}
+      },
+      "id": "ffd5ad04-c962-405b-835b-1e80bfce52d8",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-6032, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/instagram",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4806605" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "e8faf9be-8a71-4233-aff9-a39bc01127e8",
+      "name": "IG Koocester",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-5824, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/facebook",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4806605" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "4a318a75-13b6-4824-952f-c688779976cd",
+      "name": "FB Koocester",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-5600, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/posts/tiktok",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4806605" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "9cef21bb-84de-4bd7-aedf-f37ea13a0eda",
+      "name": "TT Koocester",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-5376, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/instagram",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807248" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "810f3992-87d0-40ce-84db-d6a70b01035d",
+      "name": "IG Autos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-5152, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/facebook",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807248" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "b8616f2a-0d9b-4889-9c28-ac14b506fd8f",
+      "name": "FB Autos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-4944, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/posts/tiktok",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807248" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "260118c2-24d3-4f9d-92d9-09d109caf85d",
+      "name": "TT Autos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-4720, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/instagram",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807399" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "69f72a19-4bc5-4a61-a972-ce07657e9ad7",
+      "name": "IG Homes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-4496, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/facebook",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807399" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "305a1676-3847-432a-9fc7-85ac04f148e0",
+      "name": "FB Homes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-4272, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/posts/tiktok",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807399" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "27fb5af9-d7b0-423f-9322-fd42956ea1a4",
+      "name": "TT Homes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-4064, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/instagram",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "5672788" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "0aaa9bee-8f0b-4e6f-a33e-6e918dcd5098",
+      "name": "IG Foodie",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-3840, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/facebook",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "5672788" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "bcfc060f-45ac-4586-a7ff-eb4e18f6cb73",
+      "name": "FB Foodie",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-3616, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/posts/tiktok",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "5672788" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "d1221509-8c75-466b-a24a-9d2456324af7",
+      "name": "TT Foodie",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-3392, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/instagram",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807376" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "e8d8c4c0-69c5-4711-8784-096dcd4902f7",
+      "name": "IG Business",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-3184, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/facebook",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807376" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "b0052b3e-1f37-4ea5-a4d0-de84fbe3c39b",
+      "name": "FB Business",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2960, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/posts/tiktok",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "4807376" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "f2720524-ed05-4e60-adc6-e1389a5b2ca5",
+      "name": "TT Business",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2736, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/instagram",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "5564643" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "97d8351f-c6cd-4234-983e-db606a36a4be",
+      "name": "IG Wealth",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1856, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/reels/facebook",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "5564643" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "3c206f5c-70a0-4d9a-9e39-3389d5c2806a",
+      "name": "FB Wealth",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1632, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/posts/tiktok",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "userId", "value": "3748116" }, { "name": "blogId", "value": "5564643" }, { "name": "from", "value": "2026-01-01T00:00:00" }, { "name": "to", "value": "2026-12-31T23:59:59" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "X-Mc-Auth", "value": "<REDACTED_METRICOOL_API_KEY>" } ] },
+        "options": {}
+      },
+      "id": "a2c4d498-bf7a-4d88-bf28-8c270f7ea5d1",
+      "name": "TT Wealth",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-1424, 16]
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalize(post, platform, account) {\n  const contentRaw = post.content || post.message || post.videoDescription || post.description || post.title || post.story || '';\n  const firstLine = contentRaw.split('\\n')[0].trim().substring(0, 200);\n  let url = post.url || post.reelUrl || post.shareUrl || post.link || post.permalink_url || '';\n  if (!url && platform === 'Facebook' && post.reelId) url = 'https://www.facebook.com/reel/' + post.reelId;\n  let publishedDateStr = '';\n  if (post.publishedAt?.dateTime) publishedDateStr = post.publishedAt.dateTime;\n  else if (post.created?.dateTime) publishedDateStr = post.created.dateTime;\n  else if (typeof post.createTime === 'string') publishedDateStr = post.createTime;\n  return {\n    url, account, platform, type: post.type || 'REEL',\n    videoTitle: firstLine, caption: firstLine, publishedDateStr,\n    views:        post.blueReelsPlayCount ?? post.views ?? post.viewCount ?? post.plays ?? 0,\n    reach:        post.postImpressionsUnique ?? post.reach ?? 0,\n    impressions:  post.postImpressionsUnique ?? post.impressionsTotal ?? post.impressions ?? 0,\n    likes:        post.postVideoReactions ?? post.likes ?? post.likeCount ?? post.reactions ?? 0,\n    comments:     post.comments ?? post.commentCount ?? 0,\n    shares:       post.shares ?? post.postVideoSocialActions ?? post.reposts ?? post.shareCount ?? 0,\n    saved:        post.saved ?? post.saves ?? 0,\n    interactions: post.interactions ?? post.postVideoSocialActions ?? 0,\n    engagement:   post.engagement ?? 0\n  };\n}\n\nconst combos = [{\"node\": \"IG Koocester\", \"account\": \"Koocester\", \"platform\": \"Instagram\", \"filterVideo\": false}, {\"node\": \"FB Koocester\", \"account\": \"Koocester\", \"platform\": \"Facebook\", \"filterVideo\": false}, {\"node\": \"TT Koocester\", \"account\": \"Koocester\", \"platform\": \"TikTok\", \"filterVideo\": true}, {\"node\": \"IG Autos\", \"account\": \"Autos\", \"platform\": \"Instagram\", \"filterVideo\": false}, {\"node\": \"FB Autos\", \"account\": \"Autos\", \"platform\": \"Facebook\", \"filterVideo\": false}, {\"node\": \"TT Autos\", \"account\": \"Autos\", \"platform\": \"TikTok\", \"filterVideo\": true}, {\"node\": \"IG Homes\", \"account\": \"Homes\", \"platform\": \"Instagram\", \"filterVideo\": false}, {\"node\": \"FB Homes\", \"account\": \"Homes\", \"platform\": \"Facebook\", \"filterVideo\": false}, {\"node\": \"TT Homes\", \"account\": \"Homes\", \"platform\": \"TikTok\", \"filterVideo\": true}, {\"node\": \"IG Foodie\", \"account\": \"Foodie\", \"platform\": \"Instagram\", \"filterVideo\": false}, {\"node\": \"FB Foodie\", \"account\": \"Foodie\", \"platform\": \"Facebook\", \"filterVideo\": false}, {\"node\": \"TT Foodie\", \"account\": \"Foodie\", \"platform\": \"TikTok\", \"filterVideo\": true}, {\"node\": \"IG Business\", \"account\": \"Business\", \"platform\": \"Instagram\", \"filterVideo\": false}, {\"node\": \"FB Business\", \"account\": \"Business\", \"platform\": \"Facebook\", \"filterVideo\": false}, {\"node\": \"TT Business\", \"account\": \"Business\", \"platform\": \"TikTok\", \"filterVideo\": true}, {\"node\": \"IG Wealth\", \"account\": \"Wealth\", \"platform\": \"Instagram\", \"filterVideo\": false}, {\"node\": \"FB Wealth\", \"account\": \"Wealth\", \"platform\": \"Facebook\", \"filterVideo\": false}, {\"node\": \"TT Wealth\", \"account\": \"Wealth\", \"platform\": \"TikTok\", \"filterVideo\": true}];\nconst larkToken = $('Get Lark Token').first().json.tenant_access_token;\nconst allPosts = [];\n\nfor (const combo of combos) {\n  const raw = $(combo.node).first().json;\n  const data = Array.isArray(raw) ? (raw[0]?.data || []) : (raw.data || []);\n  const posts = data\n    .filter(p => !combo.filterVideo || p.type === 'VIDEO')\n    .map(p => normalize(p, combo.platform, combo.account));\n  allPosts.push(...posts);\n  console.log(combo.account + ' ' + combo.platform + ': ' + posts.length);\n}\n\nconsole.log('Total: ' + allPosts.length);\nreturn [{ json: { data: allPosts, total: allPosts.length, larkToken: larkToken } }];"
+      },
+      "id": "bf1acbca-1f72-4416-95e4-88ec94bd3069",
+      "name": "Combine All Reels",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1856, 16]
+    },
+    {
+      "parameters": {
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/Yp6cwMAtZiOYEjkQzRAlmqWJgQd/tables/tblTkWga52OsXod7/records",
+        "sendQuery": true,
+        "queryParameters": { "parameters": [ { "name": "page_size", "value": "500" } ] },
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "=Bearer {{ $('Combine All Reels').first().json.larkToken }}" } ] },
+        "options": {}
+      },
+      "id": "df47ccf8-2403-44b8-b69e-d05cd371eed8",
+      "name": "Get Lark Records",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2304, 16]
+    },
+    {
+      "parameters": {
+        "jsCode": "const allPosts = $('Combine All Reels').first().json.data || [];\nconst larkItems = $input.item.json.data?.items || [];\nconst toCreate = [], toUpdate = [];\n\nfor (const post of allPosts) {\n  const postUrl = (post.url || '').trim().replace(/\\/$/,'');\n  const publishedDate = post.publishedDateStr ? post.publishedDateStr.split('T')[0] : null;\n  const matched = larkItems.find(r => {\n    const stored = r.fields?.['Post URL'];\n    if (!stored) return false;\n    return stored.trim().replace(/\\/$/,'') === postUrl;\n  });\n  const fields = {\n    'Post URL': post.url, 'Account': post.account, 'Platform': post.platform,\n    'Video Title': post.videoTitle, 'Caption': post.caption,\n    'Views': post.views, 'Reach': post.reach, 'Impressions': post.impressions,\n    'Likes': post.likes, 'Comments': post.comments, 'Shares': post.shares,\n    'Saves': post.saved, 'Interactions': post.interactions,\n    'Engagement Rate': parseFloat(post.engagement.toFixed(4))\n  };\n  if (publishedDate) fields['Published Date'] = publishedDate;\n  if (matched) toUpdate.push({ record_id: matched.record_id, fields });\n  else toCreate.push({ fields });\n}\n\nfunction chunk(arr, size) {\n  const chunks = [];\n  for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size));\n  return chunks;\n}\n\nconst results = [];\nfor (const batch of chunk(toCreate, 500)) {\n  results.push({ json: { operation: 'create', count: batch.length, records: batch } });\n}\nfor (const batch of chunk(toUpdate, 500)) {\n  results.push({ json: { operation: 'update', count: batch.length, records: batch } });\n}\nif (results.length === 0) results.push({ json: { operation: 'skip', count: 0, records: [] } });\nconsole.log('Create batches: ' + chunk(toCreate,500).length + ' | Update batches: ' + chunk(toUpdate,500).length);\nreturn results;"
+      },
+      "id": "f1574c00-2c1d-499f-affc-9b98fdb94594",
+      "name": "Match and Prepare",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2080, 16]
+    },
+    {
+      "parameters": {
+        "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 }, "conditions": [ { "id": "f353f6bf-5de7-46d3-8b1e-a2ffc2d89b8c", "leftValue": "={{ $json.operation }}", "rightValue": "update", "operator": { "type": "string", "operation": "equals" } } ], "combinator": "and" },
+        "options": {}
+      },
+      "id": "0b418bdb-332f-4fa4-97ae-d5bae4ea2448",
+      "name": "Is Update",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-1200, 16]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/Yp6cwMAtZiOYEjkQzRAlmqWJgQd/tables/tblTkWga52OsXod7/records/batch_update",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "=Bearer {{ $('Combine All Reels').first().json.larkToken }}" } ] },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({records: $json.records}) }}",
+        "options": {}
+      },
+      "id": "370daf88-3668-4488-94de-36ad2b8ba512",
+      "name": "Batch Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-976, -128]
+    },
+    {
+      "parameters": {
+        "conditions": { "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 1 }, "conditions": [ { "id": "0e049830-2d11-4be6-aab1-2799112de22e", "leftValue": "={{ $json.operation }}", "rightValue": "create", "operator": { "type": "string", "operation": "equals" } } ], "combinator": "and" },
+        "options": {}
+      },
+      "id": "145a9b8f-ace8-4653-bdba-42898c580b79",
+      "name": "Is Create",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-976, 176]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/Yp6cwMAtZiOYEjkQzRAlmqWJgQd/tables/tblTkWga52OsXod7/records/batch_create",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Authorization", "value": "=Bearer {{ $('Combine All Reels').first().json.larkToken }}" } ] },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({records: $json.records}) }}",
+        "options": {}
+      },
+      "id": "7b966cb4-8662-404c-a51f-662347cf3fa2",
+      "name": "Batch Create",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-752, 96]
+    },
+    {
+      "parameters": {},
+      "id": "0571ed75-a40b-451e-b473-d1d54d17e981",
+      "name": "Skip",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [-752, 272]
+    },
+    {
+      "id": "a4cc5276-60e9-45c9-ba79-7779cc9bbe2d",
+      "name": "Ensure Reels Table",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [-1856, 272],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS content_perf.reels (post_url text PRIMARY KEY, page text, country text, platform text, published_date date, video_title text, views bigint, reach bigint, impressions bigint, likes bigint, comments bigint, shares bigint, saves bigint, interactions bigint, engagement_rate double precision, loaded_at timestamptz default now());",
+        "options": {}
+      },
+      "credentials": { "postgres": { "id": "iLlaPQLaICzc44cH", "name": "Postgres account" } }
+    },
+    {
+      "id": "fa1d58ce-4c95-4b22-becf-4dd1c10c4a3e",
+      "name": "Build Reels Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1632, 272],
+      "parameters": {
+        "jsCode": "const posts = $('Combine All Reels').first().json.data || [];\nconst COUNTRY = 'Singapore';\nconst PAGE = { 'Koocester':'Koocester', 'Homes':'Koocester Homes', 'Business':'Koocester Business', 'Autos':'Koocester Autos', 'Wealth':'Koocester Wealth', 'Foodie':'Koocester Foodie' };\nconst q = (s) => (s===null||s===undefined) ? 'NULL' : (\"'\" + String(s).replace(/'/g, \"''\") + \"'\");\nconst n = (v) => { const x = Number(v); return Number.isFinite(x) ? x : 0; };\nconst seen = new Set();\nconst rows = [];\nfor (const p of posts) {\n  const url = (p.url || '').trim();\n  if (!url) continue;\n  if (seen.has(url)) continue; seen.add(url);\n  const page = PAGE[p.account] || p.account;\n  const pub = p.publishedDateStr ? p.publishedDateStr.split('T')[0] : null;\n  const vals = [q(url), q(page), q(COUNTRY), q(p.platform), (pub ? ('DATE ' + q(pub)) : 'NULL'), q(String(p.videoTitle || '').substring(0,300)), n(p.views), n(p.reach), n(p.impressions), n(p.likes), n(p.comments), n(p.shares), n(p.saved), n(p.interactions), n(p.engagement), 'now()'];\n  rows.push('(' + vals.join(', ') + ')');\n}\nif (rows.length === 0) { return [{ json: { query: 'SELECT 1', rowCount: 0 } }]; }\nconst sql = 'INSERT INTO content_perf.reels (post_url, page, country, platform, published_date, video_title, views, reach, impressions, likes, comments, shares, saves, interactions, engagement_rate, loaded_at) VALUES ' + rows.join(', ') + ' ON CONFLICT (post_url) DO UPDATE SET page=EXCLUDED.page, country=EXCLUDED.country, platform=EXCLUDED.platform, published_date=EXCLUDED.published_date, video_title=EXCLUDED.video_title, views=EXCLUDED.views, reach=EXCLUDED.reach, impressions=EXCLUDED.impressions, likes=EXCLUDED.likes, comments=EXCLUDED.comments, shares=EXCLUDED.shares, saves=EXCLUDED.saves, interactions=EXCLUDED.interactions, engagement_rate=EXCLUDED.engagement_rate, loaded_at=now();';\nreturn [{ json: { query: sql, rowCount: rows.length } }];"
+      }
+    },
+    {
+      "id": "fdf1a849-337d-45bc-9d06-4dda5fd24fe5",
+      "name": "Insert Reels",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [-1408, 272],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.query }}",
+        "options": {}
+      },
+      "credentials": { "postgres": { "id": "iLlaPQLaICzc44cH", "name": "Postgres account" } }
+    }
+  ],
+  "connections": {
+    "Daily 8am": { "main": [ [ { "node": "Get Lark Token", "type": "main", "index": 0 } ] ] },
+    "Get Lark Token": { "main": [ [ { "node": "IG Koocester", "type": "main", "index": 0 } ] ] },
+    "IG Koocester": { "main": [ [ { "node": "FB Koocester", "type": "main", "index": 0 } ] ] },
+    "FB Koocester": { "main": [ [ { "node": "TT Koocester", "type": "main", "index": 0 } ] ] },
+    "TT Koocester": { "main": [ [ { "node": "IG Autos", "type": "main", "index": 0 } ] ] },
+    "IG Autos": { "main": [ [ { "node": "FB Autos", "type": "main", "index": 0 } ] ] },
+    "FB Autos": { "main": [ [ { "node": "TT Autos", "type": "main", "index": 0 } ] ] },
+    "TT Autos": { "main": [ [ { "node": "IG Homes", "type": "main", "index": 0 } ] ] },
+    "IG Homes": { "main": [ [ { "node": "FB Homes", "type": "main", "index": 0 } ] ] },
+    "FB Homes": { "main": [ [ { "node": "TT Homes", "type": "main", "index": 0 } ] ] },
+    "TT Homes": { "main": [ [ { "node": "IG Foodie", "type": "main", "index": 0 } ] ] },
+    "IG Foodie": { "main": [ [ { "node": "FB Foodie", "type": "main", "index": 0 } ] ] },
+    "FB Foodie": { "main": [ [ { "node": "TT Foodie", "type": "main", "index": 0 } ] ] },
+    "TT Foodie": { "main": [ [ { "node": "IG Business", "type": "main", "index": 0 } ] ] },
+    "IG Business": { "main": [ [ { "node": "FB Business", "type": "main", "index": 0 } ] ] },
+    "FB Business": { "main": [ [ { "node": "TT Business", "type": "main", "index": 0 } ] ] },
+    "TT Business": { "main": [ [ { "node": "IG Wealth", "type": "main", "index": 0 } ] ] },
+    "Combine All Reels": { "main": [ [ { "node": "Get Lark Records", "type": "main", "index": 0 }, { "node": "Ensure Reels Table", "type": "main", "index": 0 } ] ] },
+    "Get Lark Records": { "main": [ [ { "node": "Match and Prepare", "type": "main", "index": 0 } ] ] },
+    "Match and Prepare": { "main": [ [ { "node": "Is Update", "type": "main", "index": 0 } ] ] },
+    "Is Update": { "main": [ [ { "node": "Batch Update", "type": "main", "index": 0 } ], [ { "node": "Is Create", "type": "main", "index": 0 } ] ] },
+    "Is Create": { "main": [ [ { "node": "Batch Create", "type": "main", "index": 0 } ], [ { "node": "Skip", "type": "main", "index": 0 } ] ] },
+    "IG Wealth": { "main": [ [ { "node": "FB Wealth", "type": "main", "index": 0 } ] ] },
+    "FB Wealth": { "main": [ [ { "node": "TT Wealth", "type": "main", "index": 0 } ] ] },
+    "TT Wealth": { "main": [ [ { "node": "Combine All Reels", "type": "main", "index": 0 } ] ] },
+    "Ensure Reels Table": { "main": [ [ { "node": "Build Reels Rows", "type": "main", "index": 0 } ] ] },
+    "Build Reels Rows": { "main": [ [ { "node": "Insert Reels", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": { "executionOrder": "v1", "binaryMode": "separate", "availableInMCP": false },
+  "staticData": { "node:Daily 8am": { "recurrenceRules": [ null ], "recurrenceRuleSignatures": [ null ] } },
+  "pinData": {},
+  "tags": [ { "id": "qILoDF7XnZQOTBc3", "name": "SG" } ]
+}

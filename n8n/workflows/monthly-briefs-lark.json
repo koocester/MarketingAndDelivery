@@ -1,0 +1,651 @@
+{
+  "id": "c3bYweWzK8Q4xlFe",
+  "name": "Monthly Briefs → Lark",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "trig",
+      "name": "Monthly 1st 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 1 * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tok",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"app_id\":\"cli_aa914316d6b8deed\",\"app_secret\":\"<REDACTED_LARK_APP_SECRET>\"}",
+        "options": {}
+      }
+    },
+    {
+      "id": "data",
+      "name": "M&D Monthly Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const token=$('Get Lark Token').first().json.tenant_access_token; const base='BG8PbaZFna1NQksNWkglTN85gSf'; const H={Authorization:'Bearer '+token}; const search=async(tbl,fields)=>{ let items=[], pt=null, g=0; do { const u='https://open.larksuite.com/open-apis/bitable/v1/apps/'+base+'/tables/'+tbl+'/records/search'+(pt?('?page_token='+encodeURIComponent(pt)):''); let r; try{ r=await this.helpers.httpRequest({method:'POST',url:u,headers:H,body:{page_size:500,field_names:fields},json:true}); }catch(e){ break; } const d2=(r&&r.data)||{}; items=items.concat(d2.items||[]); pt=d2.page_token; g++; } while(pt&&g<20); return items; }; const d=new Date(Date.now()+8*3600*1000); const y=d.getUTCFullYear(), mo=d.getUTCMonth(); const startThis=Date.UTC(y,mo,1)-8*3600*1000, startNow=Date.UTC(y,mo-1,1)-8*3600*1000, startPrev=Date.UTC(y,mo-2,1)-8*3600*1000; const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const monNow=MON[(mo+11)%12]+' '+(mo===0?y-1:y), monPrev=MON[(mo+10)%12]+' '+(mo<=1?y-1:y); const inNow=t=>typeof t==='number'&&t>=startNow&&t<startThis, inPrev=t=>typeof t==='number'&&t>=startPrev&&t<startNow; const nm=u=>{ let x=Array.isArray(u)?u[0]:u; return (x&&(x.name||x.text))||'(unassigned)'; }; const vids=await search('tbl8wIByJQwhIUei',['Video Stage','Video Editor','Actual Upload Date','First Draft Submitted At','Shoot Date','Producer','Social Media Manager','Strategist']); let compNow=0, compPrev=0, shootsNow=0, shootsPrev=0; const fdNow={}, fdPrev={}, compByEd={}, stageNow={}, postsBySmm={}, shootsByProd={}, compByStrat={}; for(const it of vids){ const f=it.fields||{}; const st=f['Video Stage']; if(st) stageNow[st]=(stageNow[st]||0)+1; const aud=f['Actual Upload Date']; if(inNow(aud)){ compNow++; compByEd[nm(f['Video Editor'])]=(compByEd[nm(f['Video Editor'])]||0)+1; postsBySmm[nm(f['Social Media Manager'])]=(postsBySmm[nm(f['Social Media Manager'])]||0)+1; compByStrat[nm(f['Strategist'])]=(compByStrat[nm(f['Strategist'])]||0)+1; } else if(inPrev(aud)){ compPrev++; } const sd=f['Shoot Date']; if(inNow(sd)){ shootsNow++; shootsByProd[nm(f['Producer'])]=(shootsByProd[nm(f['Producer'])]||0)+1; } else if(inPrev(sd)){ shootsPrev++; } const fd=f['First Draft Submitted At']; if(inNow(fd)){ fdNow[nm(f['Video Editor'])]=(fdNow[nm(f['Video Editor'])]||0)+1; } else if(inPrev(fd)){ fdPrev[nm(f['Video Editor'])]=(fdPrev[nm(f['Video Editor'])]||0)+1; } } const cars=await search('tblnMZctdGYfXjYL',['Carousel Stage','Copywriter','Actual Upload Date']); let carCompNow=0, carCompPrev=0, carCopyNow=0; const carByCopy={}; for(const it of cars){ const f=it.fields||{}; const cs=f['Carousel Stage']; if(cs==='Copywriting') carCopyNow++; const aud=f['Actual Upload Date']; if(inNow(aud)){ carCompNow++; carByCopy[nm(f['Copywriter'])]=(carByCopy[nm(f['Copywriter'])]||0)+1; } else if(inPrev(aud)){ carCompPrev++; } } const sortObj=o=>Object.entries(o).sort((a,b)=>b[1]-a[1]); const sum=o=>Object.values(o).reduce((a,b)=>a+b,0); return [{ json: { token, monNow, monPrev, compNow, compPrev, shootsNow, shootsPrev, compByEd:sortObj(compByEd), fdNow:sortObj(fdNow), fdPrev:sortObj(fdPrev), fdNowTotal:sum(fdNow), fdPrevTotal:sum(fdPrev), stageNow, postsBySmm:sortObj(postsBySmm), shootsByProd:sortObj(shootsByProd), compByStrat:sortObj(compByStrat), carCompNow, carCompPrev, carCopyNow, carByCopy:sortObj(carByCopy) } }];"
+      }
+    },
+    {
+      "id": "cmgr",
+      "name": "Compose Manager Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        -120
+      ],
+      "parameters": {
+        "jsCode": "const j=$('M&D Monthly Data').first().json; const token=j.token; const fmt=n=>(n===null||n===undefined)?'—':Number(n).toLocaleString('en-US'); const AT=id=>'<at user_id=\"'+id+'\"></at>'; const MIKE=AT('ou_2cf32d2d9d8621cb8d46a9710ca351df'); const IMAN=AT('ou_110617a92012d59c85ad5b46399556af'); const pctd=(a,b)=>{ if(!b) return ''; const p=Math.round((a-b)/b*1000)/10; return ' ('+(p>=0?'+':'')+p+'%)'; }; const D='\\n━━━━━━━━━━\\n'; const topComp=(j.compByEd||[]).slice(0,3).map(e=>e[0]+' '+e[1]).join(' · ')||'—'; const t='📋 MANAGER MONTHLY — '+j.monNow+'  (vs '+j.monPrev+')'+D+'📈 OUTPUT\\n• Videos completed: '+fmt(j.compNow)+' vs '+fmt(j.compPrev)+pctd(j.compNow,j.compPrev)+'\\n• First drafts submitted: '+fmt(j.fdNowTotal)+' vs '+fmt(j.fdPrevTotal)+pctd(j.fdNowTotal,j.fdPrevTotal)+'\\n• Top contributors: '+topComp+D+'🎭 BY TEAM (this month vs last)\\n• Producers — shoots: '+fmt(j.shootsNow)+' vs '+fmt(j.shootsPrev)+pctd(j.shootsNow,j.shootsPrev)+'\\n• Editors — first drafts: '+fmt(j.fdNowTotal)+' vs '+fmt(j.fdPrevTotal)+pctd(j.fdNowTotal,j.fdPrevTotal)+'\\n• SMM — posts: '+fmt(j.compNow)+' vs '+fmt(j.compPrev)+pctd(j.compNow,j.compPrev)+'\\n• Strategists / copywriters / sales: per-team stamps coming.'+D+'🌱 PEOPLE & CULTURE — your real job as a manager\\n• Recognise: name your top performer publicly this week. Momentum compounds when it is seen.\\n• Accountability: name the one person slipping and the growth conversation you owe them. This week, not next month.\\n• Onboarding: every new hire % onboarded in Koocester Academy should be climbing to 100%.\\n➡️ '+IMAN+' + '+MIKE+' bring these three to your next 1:1.'+D+'🎯 ONE FIX FOR NEXT MONTH\\nPick the single process or culture change that lifts output most. Commit to it, own it, report it next month.'+'\\n\\n— Auto from the M&D base. The numbers are given; the three people-moves are yours to make.'; return [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "smgr",
+      "name": "Send Manager Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -120
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "ced",
+      "name": "Compose Editor Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        120
+      ],
+      "parameters": {
+        "jsCode": "const j=$('M&D Monthly Data').first().json; const token=j.token; const fmt=n=>Number(n||0).toLocaleString('en-US'); const board=(j.fdNow||[]).map((e,i)=>(i+1)+'. '+e[0]+' — '+e[1]).join('\\n')||'No first drafts recorded yet.'; const comp=(j.compByEd||[]).map(e=>e[0]+' '+e[1]).join(' · ')||'—'; const t='📋 HEAD EDITOR — '+j.monNow+' monthly'+'\\n\\n🥇 FIRST DRAFTS (leading — what the team controls)\\n'+board+'\\nTeam total: '+fmt(j.fdNowTotal)+' (vs '+fmt(j.fdPrevTotal)+' last month)'+'\\n\\n✅ COMPLETIONS (lagging): '+comp+'\\n\\nNote: 4h edits (Wealth/Foodie/Autos) vs 8h (Business/Homes) — read the ranking fairly. Recognise the top, support the bottom.'+'\\n\\n— Auto from the M&D base.'; return [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "sedm",
+      "name": "Send Editor Managers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        180
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "met",
+      "name": "Metrics MoM",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        440,
+        -260
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH me AS (SELECT date_trunc('month', current_date - interval '1 month') AS m0, date_trunc('month', current_date - interval '2 month') AS m1, date_trunc('month', current_date) AS mcur), fnow AS (SELECT max(snapshot_date) d FROM content_perf.metricool_snapshots WHERE snapshot_date < (SELECT mcur FROM me)), fprev AS (SELECT max(snapshot_date) d FROM content_perf.metricool_snapshots WHERE snapshot_date < (SELECT m0 FROM me)) SELECT json_build_object('month_now', to_char((SELECT m0 FROM me),'Mon YYYY'), 'month_prev', to_char((SELECT m1 FROM me),'Mon YYYY'), 'followers_now',(SELECT sum(followers) FROM content_perf.metricool_snapshots WHERE page<>'Koocester' AND snapshot_date=(SELECT d FROM fnow)), 'followers_prev',(SELECT sum(followers) FROM content_perf.metricool_snapshots WHERE page<>'Koocester' AND snapshot_date=(SELECT d FROM fprev)), 'collected_now',(SELECT round(sum(amount)) FROM xero.payment WHERE payment_type='ACCRECPAYMENT' AND status='AUTHORISED' AND date_trunc('month',date)=(SELECT m0 FROM me)), 'collected_prev',(SELECT round(sum(amount)) FROM xero.payment WHERE payment_type='ACCRECPAYMENT' AND status='AUTHORISED' AND date_trunc('month',date)=(SELECT m1 FROM me)), 'leads_now',(SELECT count(*) FROM hubspot.contact WHERE date_trunc('month',property_createdate)=(SELECT m0 FROM me)), 'leads_prev',(SELECT count(*) FROM hubspot.contact WHERE date_trunc('month',property_createdate)=(SELECT m1 FROM me)), 'reach_now',(SELECT sum(views) FROM content_perf.reels WHERE date_trunc('month',published_date)=(SELECT m0 FROM me)), 'reach_prev',(SELECT sum(views) FROM content_perf.reels WHERE date_trunc('month',published_date)=(SELECT m1 FROM me)), 'posts_now',(SELECT count(*) FROM content_perf.reels WHERE date_trunc('month',published_date)=(SELECT m0 FROM me)), 'posts_prev',(SELECT count(*) FROM content_perf.reels WHERE date_trunc('month',published_date)=(SELECT m1 FROM me)), 'eng_now',(SELECT round(avg(engagement_rate)::numeric,1) FROM content_perf.reels WHERE engagement_rate IS NOT NULL AND engagement_rate<100 AND date_trunc('month',published_date)=(SELECT m0 FROM me)), 'eng_prev',(SELECT round(avg(engagement_rate)::numeric,1) FROM content_perf.reels WHERE engagement_rate IS NOT NULL AND engagement_rate<100 AND date_trunc('month',published_date)=(SELECT m1 FROM me))) AS payload",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "id": "cceo",
+      "name": "Compose CEO Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        -260
+      ],
+      "parameters": {
+        "jsCode": "const raw=$json.payload; const m=(typeof raw==='string')?JSON.parse(raw):raw; const token=$('Get Lark Token').first().json.tenant_access_token; const fmt=n=>(n===null||n===undefined)?'—':Number(n).toLocaleString('en-US'); const money=n=>(n===null||n===undefined)?'—':'S$'+Number(n).toLocaleString('en-US'); const pct=(a,b)=>{ if(a==null||b==null||Number(b)===0) return ''; const p=Math.round((a-b)/b*1000)/10; return ' ('+(p>=0?'+':'')+p+'%)'; }; const ar=(a,b)=>{ if(a==null||b==null) return ''; return a>=b?'▲':'▼'; }; const L=(lbl,a,b,f)=>{ f=f||fmt; return '• '+lbl+': '+f(a)+' vs '+f(b)+' '+ar(a,b)+pct(a,b); }; const header='📊 Koocester Monthly Brief — '+(m.month_now||'')+'  (vs '+(m.month_prev||'')+')'; const baseText='📱 AUDIENCE & REACH\\n'+L('Total followers',m.followers_now,m.followers_prev)+'\\n'+L('Reach (views)',m.reach_now,m.reach_prev)+'\\n'+L('Posts',m.posts_now,m.posts_prev)+'\\n'+L('Avg engagement',m.eng_now,m.eng_prev,x=>(x==null)?'—':x+'%')+'\\n\\n💰 REVENUE & LEADS\\n'+L('Collected',m.collected_now,m.collected_prev,money)+'\\n'+L('New leads',m.leads_now,m.leads_prev); const prompt=\"You are the founder-CEO chief of staff at Koocester, a lean luxury-media and growth company. Hakim is founder AND CEO; name only real people, invent no roles. MONTHLY brief comparing \"+(m.month_now||'this month')+\" to \"+(m.month_prev||'last month')+\". PLAIN TEXT ONLY, no markdown, no asterisks. Two parts:\\n\\n🔎 THE MONTH IN ONE LINE: the single most important shift month-on-month.\\n\\n🎯 NEXT MONTH, 3 MOVES (ranked, verb-first, each with a number and owner):\\n1.\\n2.\\n3.\\n\\nData m-o-m: followers \"+fmt(m.followers_now)+\" vs \"+fmt(m.followers_prev)+\"; reach \"+fmt(m.reach_now)+\" vs \"+fmt(m.reach_prev)+\"; posts \"+fmt(m.posts_now)+\" vs \"+fmt(m.posts_prev)+\"; engagement \"+m.eng_now+\"% vs \"+m.eng_prev+\"%; collected \"+money(m.collected_now)+\" vs \"+money(m.collected_prev)+\"; leads \"+fmt(m.leads_now)+\" vs \"+fmt(m.leads_prev)+\". Each move 24 words max. No markdown.\"; return [{ json: { header, baseText, prompt, token } }];"
+      }
+    },
+    {
+      "id": "ai",
+      "name": "AI Insight Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        -260
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:400, messages:[{role:'user', content:$json.prompt}]}) }}",
+        "options": {}
+      },
+      "credentials": {
+        "anthropicApi": {
+          "id": "sg4na3c3HYfSK4zM",
+          "name": "Anthropic API – Koocester"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "fceo",
+      "name": "Final CEO Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -260
+      ],
+      "parameters": {
+        "jsCode": "let insight=''; try { const ai=$json; if(ai&&ai.content) insight=ai.content.map(c=>c.text||'').join('').trim().replace(/\\*/g,''); } catch(e){} const c=$('Compose CEO Monthly').first().json; const full=c.header+'\\n\\n'+(insight?insight+'\\n\\n':'')+c.baseText+'\\n\\n— Auto-generated monthly from live data.'; return [{ json: { content: JSON.stringify({text:full}), token:c.token } }];"
+      }
+    },
+    {
+      "id": "sceo",
+      "name": "Send CEO Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -320
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=open_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'ou_c95568012de1ea7e1fdfc710bbb799d1', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "smgmt",
+      "name": "Send CEO to Management",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_7bfdc6d030886842e9d44434d0598bc8', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "csmm",
+      "name": "Compose SMM Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        260
+      ],
+      "parameters": {
+        "jsCode": "const j=$('M&D Monthly Data').first().json; const token=j.token; const fmt=n=>Number(n||0).toLocaleString('en-US'); const board=(j.postsBySmm||[]).map((e,i)=>(i+1)+'. '+e[0]+' — '+e[1]).join('\\n')||'No posts recorded.'; const t='📋 SMM MONTHLY — '+j.monNow+'\\n\\n📤 POSTS PUBLISHED (the real SMM output)\\n'+board+'\\nTeam total: '+fmt(j.compNow)+' vs '+fmt(j.compPrev)+' last month\\n\\nCarousels posted: '+fmt(j.carCompNow)+' vs '+fmt(j.carCompPrev)+' last month\\n\\n— Auto from the M&D base.'; return [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "ssmm",
+      "name": "Send SMM Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        260
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "cprod",
+      "name": "Compose Producer Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        360
+      ],
+      "parameters": {
+        "jsCode": "const j=$('M&D Monthly Data').first().json; const token=j.token; const fmt=n=>Number(n||0).toLocaleString('en-US'); const board=(j.shootsByProd||[]).map((e,i)=>(i+1)+'. '+e[0]+' — '+e[1]).join('\\n')||'No shoots logged (Shoot Date under-used).'; const t='📋 PRODUCER MONTHLY — '+j.monNow+'\\n\\n🎥 SHOOTS THIS MONTH (Shoot Date logged)\\n'+board+'\\nTeam total: '+fmt(j.shootsNow)+' vs '+fmt(j.shootsPrev)+' last month\\n\\nNote: only counts where Shoot Date is filled — log every shoot to make this real.\\n\\n— Auto from the M&D base.'; return [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "sprod",
+      "name": "Send Producer Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        360
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "ccs",
+      "name": "Compose CS Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        460
+      ],
+      "parameters": {
+        "jsCode": "const j=$('M&D Monthly Data').first().json; const token=j.token; const fmt=n=>Number(n||0).toLocaleString('en-US'); const board=(j.compByStrat||[]).map((e,i)=>(i+1)+'. '+e[0]+' — '+e[1]).join('\\n')||'No throughput recorded.'; const qc=(j.stageNow&&j.stageNow['Strategist QC'])||0; const t='📋 CONTENT STRATEGIST MONTHLY — '+j.monNow+'\\n\\n✅ VIDEOS SHIPPED (completed under each strategist)\\n'+board+'\\nTeam total: '+fmt(j.compNow)+' vs '+fmt(j.compPrev)+' last month\\n\\n⚠️ QC queue right now: '+fmt(qc)+' (the bottleneck — clear it first)\\n\\n— Auto from the M&D base.'; return [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "scs",
+      "name": "Send CS Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "ccopy",
+      "name": "Compose Copywriter Monthly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        560
+      ],
+      "parameters": {
+        "jsCode": "const j=$('M&D Monthly Data').first().json; const token=j.token; const fmt=n=>Number(n||0).toLocaleString('en-US'); const board=(j.carByCopy||[]).map((e,i)=>(i+1)+'. '+e[0]+' — '+e[1]).join('\\n')||'No carousels posted this month.'; const t='📋 COPYWRITER MONTHLY — '+j.monNow+'\\n\\n📝 CAROUSELS SHIPPED (posted this month)\\n'+board+'\\nTeam total: '+fmt(j.carCompNow)+' vs '+fmt(j.carCompPrev)+' last month\\n\\nIn copywriting now: '+fmt(j.carCopyNow)+'\\n\\n— Auto from the M&D base.'; return [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "scopy",
+      "name": "Send Copywriter Monthly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        560
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    }
+  ],
+  "connections": {
+    "Monthly 1st 8am": {
+      "main": [
+        [
+          {
+            "node": "Get Lark Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lark Token": {
+      "main": [
+        [
+          {
+            "node": "M&D Monthly Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Metrics MoM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "M&D Monthly Data": {
+      "main": [
+        [
+          {
+            "node": "Compose Manager Monthly",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compose Editor Monthly",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compose SMM Monthly",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compose Producer Monthly",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compose CS Monthly",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compose Copywriter Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose Manager Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send Manager Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose Editor Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send Editor Managers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Metrics MoM": {
+      "main": [
+        [
+          {
+            "node": "Compose CEO Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose CEO Monthly": {
+      "main": [
+        [
+          {
+            "node": "AI Insight Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Insight Monthly": {
+      "main": [
+        [
+          {
+            "node": "Final CEO Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final CEO Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send CEO Monthly",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send CEO to Management",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose SMM Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send SMM Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose Producer Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send Producer Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose CS Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send CS Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose Copywriter Monthly": {
+      "main": [
+        [
+          {
+            "node": "Send Copywriter Monthly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Singapore",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": {
+    "node:Monthly 1st 8am": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": null,
+  "tags": []
+}

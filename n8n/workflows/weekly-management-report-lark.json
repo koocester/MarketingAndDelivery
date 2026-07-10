@@ -1,0 +1,304 @@
+{
+  "id": "yv5Pz0hpX3kHKvVE",
+  "name": "Weekly Management Report → Lark",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "trig",
+      "name": "Weekly Mon 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tok",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"app_id\":\"cli_aa914316d6b8deed\",\"app_secret\":\"<REDACTED_LARK_APP_SECRET>\"}",
+        "options": {}
+      }
+    },
+    {
+      "id": "sales",
+      "name": "Sales",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT json_build_object('collected_mtd',(SELECT COALESCE(round(sum(amount)),0) FROM xero.payment WHERE payment_type='ACCRECPAYMENT' AND status='AUTHORISED' AND date_trunc('month',date)=date_trunc('month',current_date)),'collected_7d',(SELECT COALESCE(round(sum(amount)),0) FROM xero.payment WHERE payment_type='ACCRECPAYMENT' AND status='AUTHORISED' AND date>=current_date-7),'outstanding',(SELECT COALESCE(round(sum(amount_due)),0) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED'),'outstanding_count',(SELECT count(*) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND amount_due>0),'overdue',(SELECT COALESCE(round(sum(amount_due)),0) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND due_date<current_date AND amount_due>0),'overdue_count',(SELECT count(*) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND due_date<current_date AND amount_due>0),'followers',(SELECT sum(followers) FROM content_perf.metricool_snapshots WHERE page<>'Koocester' AND snapshot_date=(SELECT max(snapshot_date) FROM content_perf.metricool_snapshots))) AS payload",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "ops",
+      "name": "Ops Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const token=$('Get Lark Token').first().json.tenant_access_token; const H={Authorization:'Bearer '+token}; const search=async(base,tbl,fields)=>{ let items=[],pt=null,g=0; do{ const u='https://open.larksuite.com/open-apis/bitable/v1/apps/'+base+'/tables/'+tbl+'/records/search'+(pt?('?page_token='+encodeURIComponent(pt)):''); let r; try{ r=await this.helpers.httpRequest({method:'POST',url:u,headers:H,body:{page_size:500,field_names:fields},json:true}); }catch(e){ break; } const d=(r&&r.data)||{}; items=items.concat(d.items||[]); pt=d.page_token; g++; }while(pt&&g<20); return items; }; const txt=v=>{ if(!v) return ''; if(typeof v==='string') return v; if(v.value&&v.value[0]) return v.value[0].text||''; if(Array.isArray(v)&&v[0]) return v[0].text||''; return ''; }; const sel=v=>{ if(v==null) return ''; if(typeof v==='string') return v; if(v.value!=null) return Array.isArray(v.value)?(v.value[0]||''):v.value; if(Array.isArray(v)) return v[0]||''; return ''; }; const MD='BG8PbaZFna1NQksNWkglTN85gSf'; const vids=await search(MD,'tbl8wIByJQwhIUei',['Video Stage']); const stage={}; for(const it of vids){ const s=sel((it.fields||{})['Video Stage']); if(s) stage[s]=(stage[s]||0)+1; } const projs=await search(MD,'tblAJKbb2UZRh8rn',['Engagement','Status (Manual)']); let clientP=0,doneP=0; for(const it of projs){ const f=it.fields||{}; if(sel(f['Engagement'])==='Client') clientP++; if(sel(f['Status (Manual)'])==='Completed') doneP++; } const cls=await search(MD,'tblWpq8b0uo1vBtX',['Status']); const pipe={}; for(const it of cls){ const s=sel((it.fields||{})['Status']); if(s) pipe[s]=(pipe[s]||0)+1; } const evs=await search(MD,'tblA7Ick2xpH4T5H',['Event Title','Start Date','Status','Targeted Attendees','Actual Attendees','Actual Revenue']); const now=Date.now(); const ACT=['Planning','Marketing Live','Registration Open','Venue Secured','Sponsors Secured','Registration Closed','Event Running']; let upcoming=0,nextEv=null,lastDone=null,evTotal=evs.length,evNoData=0; for(const it of evs){ const f=it.fields||{}; const nm=txt(f['Event Title']); const dt=f['Start Date']; const st2=sel(f['Status']); const att=f['Actual Attendees']||0; if(!att) evNoData++; if(ACT.indexOf(st2)>=0&&typeof dt==='number'&&dt>=now){ upcoming++; if(!nextEv||dt<nextEv.dt) nextEv={name:nm,dt,target:f['Targeted Attendees']||0}; } if(st2==='Completed'&&typeof dt==='number'){ if(!lastDone||dt>lastDone.dt) lastDone={name:nm,dt,actual:att,target:f['Targeted Attendees']||0,rev:f['Actual Revenue']||0}; } } return [{ json:{ token, stage, vtotal:vids.length, clientP, doneP, projTotal:projs.length, pipe, pipeTotal:cls.length, upcoming, nextEv, lastDone, evTotal, evNoData } }];"
+      }
+    },
+    {
+      "id": "compose",
+      "name": "Compose Weekly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "jsCode": "let s={}; try{ const raw=$('Sales').first().json.payload; s=(typeof raw==='string')?JSON.parse(raw):(raw||{}); }catch(e){ s={}; } const o=$('Ops Data').first().json; const token=$('Get Lark Token').first().json.tenant_access_token; const money=n=>(n==null)?'—':'S$'+Number(n).toLocaleString('en-US'); const fmt=n=>(n==null)?'—':Number(n).toLocaleString('en-US'); const st=o.stage||{}; const posted=st['Completed']||0,qc=st['Strategist QC']||0,notst=st['Not Started']||0,ready=st['Ready To Upload']||0,editing=st['Editing']||0; const pp=o.pipe||{}; const pnew=pp['New']||0,pact=pp['Active - Delivery in Action']||0,pcomp=pp['Completed']||0; const nowMs=Date.now()+8*3600*1000; const d=new Date(nowMs); const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const wk=d.getUTCDate()+' '+MON[d.getUTCMonth()]+' '+d.getUTCFullYear(); let evLine; if(o.lastDone){ const ld=o.lastDone; evLine='Last: '+ld.name+(ld.actual?(' '+ld.actual+'/'+ld.target+' attendees'):'')+(ld.rev?(', '+money(ld.rev)+' revenue'):''); } else { evLine='No completed events carry outcome data yet.'; } let upLine=o.upcoming?(o.upcoming+' upcoming'+(o.nextEv?(': '+o.nextEv.name):'')):'None scheduled in the tracker.'; const evGap=(o.evNoData&&o.evTotal)?(o.evNoData+' of '+o.evTotal+' events missing outcome data (attendance/revenue)'):''; const D='\\n━━━━━━━━━━\\n'; const baseText='💰 SALES\\n• Collected MTD: '+money(s.collected_mtd)+'  (last 7d: '+money(s.collected_7d)+')\\n• Owed to us: '+money(s.outstanding)+' across '+fmt(s.outstanding_count)+' invoices\\n• Overdue: '+money(s.overdue)+' across '+fmt(s.overdue_count)+' invoices  ← chase this'+D+'📈 SALES PIPELINE (client accounts)\\n• New: '+fmt(pnew)+'  → Active/in delivery: '+fmt(pact)+'  → Completed: '+fmt(pcomp)+'\\n• Total accounts: '+fmt(o.pipeTotal)+'  ('+fmt(pnew)+' New = growth sitting idle)'+D+'🎬 MARKETING (pipeline now)\\n• Posted all-time: '+fmt(posted)+'  • Ready to upload: '+fmt(ready)+'\\n• In Strategist QC: '+fmt(qc)+'  ← bottleneck  • Editing: '+fmt(editing)+'\\n• Not started: '+fmt(notst)+'  • Videos in system: '+fmt(o.vtotal)+D+'🤝 CLIENT FULFILLMENT\\n• Client projects: '+fmt(o.clientP)+' of '+fmt(o.projTotal)+'  • Marked complete: '+fmt(o.doneP)+D+'🎟️ EVENTS\\n• '+upLine+'\\n• '+evLine+(evGap?('\\n• ⚠️ '+evGap):''); const prompt='You are the founder-CEO chief of staff at Koocester, a lean luxury-media and growth company. Hakim is founder AND CEO; name only real people. WEEKLY management brief. PLAIN TEXT ONLY, no markdown, no asterisks. Two parts: THE WEEK IN ONE LINE (the single most important thing this week), then 3 MOVES for this week (ranked, verb-first, each with a number and an owner where possible), 22 words max each. Data: collected MTD '+money(s.collected_mtd)+'; overdue '+money(s.overdue)+' across '+fmt(s.overdue_count)+' invoices; pipeline '+fmt(pnew)+' New and '+fmt(pact)+' active accounts; QC queue '+fmt(qc)+'; not-started '+fmt(notst)+'; client projects '+fmt(o.clientP)+'; events '+fmt(o.evTotal)+' run with '+fmt(o.evNoData)+' missing outcome data.'; const header='🗓️ WEEKLY MANAGEMENT REPORT — week of '+wk; return [{ json:{ header, baseText, prompt, token } }];"
+      }
+    },
+    {
+      "id": "ai",
+      "name": "AI Insight Weekly",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:400, messages:[{role:'user', content:$json.prompt}]}) }}",
+        "options": {}
+      },
+      "credentials": {
+        "anthropicApi": {
+          "id": "sg4na3c3HYfSK4zM",
+          "name": "Anthropic API – Koocester"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "final",
+      "name": "Final Weekly",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "jsCode": "let insight=''; try{ const ai=$json; if(ai&&ai.content) insight=ai.content.map(c=>c.text||'').join('').trim().replace(/\\*/g,''); }catch(e){} const c=$('Compose Weekly').first().json; const full=c.header+'\\n\\n'+(insight?insight+'\\n\\n':'')+c.baseText+'\\n\\nFull dashboard: open the weekly HTML report in the vault (03. Areas/Operations/weekly-report).\\n— Auto-generated weekly from live data.'; return [{ json:{ content: JSON.stringify({text:full}), token:c.token } }];"
+      }
+    },
+    {
+      "id": "sceo",
+      "name": "Send Weekly CEO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -80
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=open_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'ou_c95568012de1ea7e1fdfc710bbb799d1', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "smgmt",
+      "name": "Send Weekly Mgmt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        80
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_7bfdc6d030886842e9d44434d0598bc8', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    }
+  ],
+  "connections": {
+    "Weekly Mon 8am": {
+      "main": [
+        [
+          {
+            "node": "Get Lark Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lark Token": {
+      "main": [
+        [
+          {
+            "node": "Sales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales": {
+      "main": [
+        [
+          {
+            "node": "Ops Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ops Data": {
+      "main": [
+        [
+          {
+            "node": "Compose Weekly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose Weekly": {
+      "main": [
+        [
+          {
+            "node": "AI Insight Weekly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Insight Weekly": {
+      "main": [
+        [
+          {
+            "node": "Final Weekly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Weekly": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly CEO",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Weekly Mgmt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Singapore",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": {
+    "node:Weekly Mon 8am": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": null,
+  "tags": []
+}

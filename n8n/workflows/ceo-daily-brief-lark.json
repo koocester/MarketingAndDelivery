@@ -1,0 +1,415 @@
+{
+  "id": "c3OAv5oJRanDv8UH",
+  "name": "CEO Daily Brief → Lark",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "trig",
+      "name": "Daily 8am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"app_id\":\"cli_aa914316d6b8deed\",\"app_secret\":\"<REDACTED_LARK_APP_SECRET>\"}",
+        "options": {}
+      },
+      "id": "tok",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH d AS (SELECT DISTINCT snapshot_date FROM content_perf.metricool_snapshots ORDER BY snapshot_date DESC LIMIT 2), lat AS (SELECT max(snapshot_date) md FROM d), pri AS (SELECT min(snapshot_date) pd FROM d), snap AS (SELECT page, platform, country, snapshot_date, followers FROM content_perf.metricool_snapshots WHERE snapshot_date IN ((SELECT md FROM lat),(SELECT pd FROM pri))), gplat AS (SELECT country, page, platform, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page<>'Koocester' GROUP BY country,page,platform), gpage AS (SELECT country, page, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page<>'Koocester' GROUP BY country,page), ctot AS (SELECT country, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page<>'Koocester' GROUP BY country), mainp AS (SELECT platform, sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap WHERE page='Koocester' GROUP BY platform), allp AS (SELECT sum(followers) FILTER (WHERE snapshot_date=(SELECT md FROM lat)) f, sum(followers) FILTER (WHERE snapshot_date=(SELECT pd FROM pri)) fp FROM snap) SELECT json_build_object('period_end',(SELECT md FROM lat),'period_start',(SELECT pd FROM pri),'collected_mtd',(SELECT round(sum(amount)) FROM xero.payment WHERE payment_type='ACCRECPAYMENT' AND status='AUTHORISED' AND date_trunc('month',date)=date_trunc('month',current_date)),'invoiced_mtd',(SELECT round(sum(total)) FROM xero.invoice WHERE type='ACCREC' AND date_trunc('month',date)=date_trunc('month',current_date)),'ar_outstanding',(SELECT round(sum(amount_due)) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND amount_due>0),'ar_overdue',(SELECT round(sum(amount_due)) FROM xero.invoice WHERE type='ACCREC' AND status='AUTHORISED' AND amount_due>0 AND due_date<current_date),'open_pipeline',(SELECT round(sum(property_amount_in_home_currency)::numeric) FROM hubspot.deal WHERE (_fivetran_deleted IS NULL OR _fivetran_deleted=false) AND (is_deleted IS NULL OR is_deleted=false) AND property_hs_is_closed IS NOT TRUE),'aspire_balance',(SELECT round(sum(available_balance)::numeric) FROM finance.aspire_accounts WHERE currency_code='SGD'),'card_spend_7d',(SELECT round(sum(abs(amount))::numeric) FROM finance.aspire_transactions WHERE amount<0 AND datetime >= current_date - interval '7 days'),'leads_mtd',(SELECT count(*) FROM hubspot.contact WHERE date_trunc('month',property_createdate)=date_trunc('month',current_date)),'deals_7d',(SELECT count(*) FROM hubspot.deal WHERE property_createdate >= current_date - interval '7 days'),'total_followers',(SELECT f FROM allp),'follower_growth_pct',(SELECT round(((f-fp)/NULLIF(fp,0)*100)::numeric,1) FROM allp),'reach_7d',(SELECT sum(views) FROM content_perf.reels WHERE published_date >= current_date - interval '7 days'),'eng_30d',(SELECT round(avg(engagement_rate)::numeric,1) FROM content_perf.reels WHERE engagement_rate IS NOT NULL AND engagement_rate<100 AND published_date >= current_date - interval '30 days'),'eng_p90',(SELECT round(percentile_cont(0.9) WITHIN GROUP (ORDER BY engagement_rate)::numeric,1) FROM content_perf.reels WHERE engagement_rate IS NOT NULL AND engagement_rate<100 AND published_date >= current_date - interval '90 days'),'eng_p95',(SELECT round(percentile_cont(0.95) WITHIN GROUP (ORDER BY engagement_rate)::numeric,1) FROM content_perf.reels WHERE engagement_rate IS NOT NULL AND engagement_rate<100 AND published_date >= current_date - interval '90 days'),'top_reel',(SELECT video_title FROM content_perf.reels WHERE published_date >= current_date - interval '7 days' ORDER BY views DESC LIMIT 1),'top_reel_url',(SELECT post_url FROM content_perf.reels WHERE published_date >= current_date - interval '7 days' ORDER BY views DESC LIMIT 1),'top_reel_views',(SELECT views FROM content_perf.reels WHERE published_date >= current_date - interval '7 days' ORDER BY views DESC LIMIT 1),'won_by_market',(SELECT json_agg(json_build_object('market',market,'won',won_sgd) ORDER BY srt) FROM (SELECT CASE property_deal_currency_code WHEN 'SGD' THEN 'Singapore' WHEN 'MYR' THEN 'Malaysia' WHEN 'IDR' THEN 'Indonesia' ELSE 'Other' END AS market, round(sum(property_amount_in_home_currency)) won_sgd, min(CASE property_deal_currency_code WHEN 'SGD' THEN 1 WHEN 'MYR' THEN 2 WHEN 'IDR' THEN 3 ELSE 4 END) srt FROM hubspot.deal WHERE (_fivetran_deleted IS NULL OR _fivetran_deleted=false) AND (is_deleted IS NULL OR is_deleted=false) AND property_hs_is_closed_won='true' GROUP BY 1) qm),'top_spend',(SELECT json_agg(json_build_object('cat',spend_category,'amt',spend)) FROM (SELECT spend_category, round(sum(-amount)) spend FROM finance.aspire_transactions WHERE amount<0 AND spend_category IS NOT NULL AND spend_category<>'' GROUP BY 1 ORDER BY 2 DESC LIMIT 3) ts),'top_spenders',(SELECT json_agg(json_build_object('who',who,'amt',amt)) FROM (SELECT card_holder who, round(sum(-amount)) amt FROM finance.aspire_transactions WHERE amount<0 AND card_holder IS NOT NULL AND card_holder<>'' GROUP BY 1 ORDER BY 2 DESC LIMIT 3) sp),'ctot',(SELECT json_agg(json_build_object('country',country,'f',f,'pct',round(((f-fp)/NULLIF(fp,0)*100)::numeric,1)) ORDER BY f DESC) FROM ctot),'geo_page',(SELECT json_agg(json_build_object('country',country,'page',page,'f',f,'pct',round(((f-fp)/NULLIF(fp,0)*100)::numeric,1))) FROM gpage),'geo_plat',(SELECT json_agg(json_build_object('country',country,'page',page,'platform',platform,'f',f,'pct',round(((f-fp)/NULLIF(fp,0)*100)::numeric,1))) FROM gplat),'main_total',(SELECT json_build_object('f',sum(f),'pct',round(((sum(f)-sum(fp))/NULLIF(sum(fp),0)*100)::numeric,1)) FROM mainp),'main',(SELECT json_agg(json_build_object('platform',platform,'f',f,'pct',round(((f-fp)/NULLIF(fp,0)*100)::numeric,1))) FROM mainp)) AS payload",
+        "options": {}
+      },
+      "id": "met",
+      "name": "Metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        448,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw=$json.payload; const m=(typeof raw==='string')?JSON.parse(raw):raw;\nconst ov=($('Aggregate Overdue').first()||{json:{}}).json||{};\nconst token=$('Get Lark Token').first().json.tenant_access_token;\nconst fmt=n=>(n===null||n===undefined)?'—':Number(n).toLocaleString('en-US');\nconst money=n=>(n===null||n===undefined)?'—':'S$'+Number(n).toLocaleString('en-US');\nconst moneyK=n=>(n===null||n===undefined)?'—':(n>=1000?'S$'+Math.round(n/1000)+'k':money(n));\nconst sign=p=>(p===null||p===undefined)?'':((p>=0?'+':'')+p+'%');\nconst flag=cc=>cc?cc.toUpperCase().replace(/./g,c=>String.fromCodePoint(127397+c.charCodeAt(0))):'';\nconst FBc={Singapore:'SG',Malaysia:'MY',Indonesia:'ID'};\nconst MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\nconst fmtDate=s=>{const d=new Date(String(s).substring(0,10)+'T00:00:00Z');return d.getUTCDate()+' '+MON[d.getUTCMonth()];};\nconst days=Math.round((new Date(String(m.period_end).substring(0,10))-new Date(String(m.period_start).substring(0,10)))/86400000);\nconst periodLabel=days<=1?'day-over-day':('~'+Math.round(days/7)+' wks');\nconst overduePct=(m.ar_overdue&&m.ar_outstanding)?Math.round(m.ar_overdue/m.ar_outstanding*100):null;\nconst CO=['Singapore','Malaysia','Indonesia'];\nconst platO={Instagram:0,TikTok:1,Facebook:2}; const platS={Instagram:'IG',TikTok:'TT',Facebook:'FB'};\nconst sp=p=>p==='Koocester'?'Main':String(p).replace('Koocester ','');\nconst gp=m.geo_page||[], gpl=m.geo_plat||[]; const cby={}; (m.ctot||[]).forEach(c=>cby[c.country]=c);\nlet aud=''; const mt=m.main_total||{};\nconst mp=(m.main||[]).slice().sort((a,b)=>(platO[a.platform]??9)-(platO[b.platform]??9));\naud+='\\n🌏 Koocester (Regional flagship): '+fmt(mt.f)+' ('+sign(mt.pct)+')\\n   '+mp.map(x=>platS[x.platform]+' '+fmt(x.f)+' ('+sign(x.pct)+')').join(' · ')+'\\n';\nCO.forEach(cn=>{const ct=cby[cn]; if(!ct) return; aud+='\\n'+flag(FBc[cn])+' '+cn+': '+fmt(ct.f)+' ('+sign(ct.pct)+')\\n'; const pgs=gp.filter(x=>x.country===cn).sort((a,b)=>(b.f||0)-(a.f||0)); pgs.forEach(pg=>{const pl=gpl.filter(x=>x.country===cn&&x.page===pg.page).sort((a,b)=>(platO[a.platform]??9)-(platO[b.platform]??9)); const ps=pl.map(x=>platS[x.platform]+' '+fmt(x.f)+' ('+sign(x.pct)+')').join(' · '); aud+='   • '+sp(pg.page)+' '+fmt(pg.f)+' ('+sign(pg.pct)+') — '+ps+'\\n';});});\nconst wonLine=(m.won_by_market&&m.won_by_market.length)?'• Won by market (all-time): '+m.won_by_market.map(w=>flag(FBc[w.market])+' '+moneyK(w.won)).join(' · ')+'\\n':'';\nconst spendLine=(m.top_spend&&m.top_spend.length)?'• Top spend (7d): '+m.top_spend.map(s=>String(s.cat).substring(0,20)+' '+money(s.amt)).join(' · ')+'\\n':'';\nconst spenderLine=(m.top_spenders&&m.top_spenders.length)?'• Top card spender (7d): '+m.top_spenders.map(s=>String(s.who).split(' ').slice(0,2).join(' ')+' '+money(s.amt)).join(' · ')+'  (card-tagged only)\\n':'';\nconst top=m.top_reel?String(m.top_reel).substring(0,60):'—';\nconst opsLine=ov.bottleneckLine||'';\nconst header='📊 Koocester Daily Brief — '+fmtDate(m.period_end)+' '+String(m.period_end).substring(0,4);\nconst baseText='💰 FINANCE\\n'+'• Collected (MTD): '+money(m.collected_mtd)+'\\n'+'• Invoiced (MTD): '+money(m.invoiced_mtd)+'\\n'+'• AR outstanding: '+money(m.ar_outstanding)+'  (overdue '+money(m.ar_overdue)+' ⚠️ '+overduePct+'%)\\n'+'• Open pipeline: '+money(m.open_pipeline)+'\\n'+wonLine+'• Aspire balance: '+money(m.aspire_balance)+'  (card float)\\n'+'• Card spend (7d): '+money(m.card_spend_7d)+'\\n'+spendLine+spenderLine+'• Runway: not yet real — needs primary-bank balance + payroll feed (Aspire = card only)\\n\\n'+'🎯 SALES\\n'+'• New leads (MTD): '+fmt(m.leads_mtd)+'\\n'+'• New deals (7d): '+fmt(m.deals_7d)+'\\n\\n'+'📱 AUDIENCE  ('+periodLabel+')\\n'+'• Total network: '+fmt(m.total_followers)+' ('+sign(m.follower_growth_pct)+')\\n'+aud+'\\n'+'🎬 CONTENT\\n'+'• Reach (7d): '+fmt(m.reach_7d)+' views\\n'+'• Avg engagement (30d): '+m.eng_30d+'%\\n'+'   Target ladder → 6% (your current top-10%) · 8%+ world-class leader · 10%+ hero (your best reels hit 10–18%)\\n'+'• 🏆 Top reel (7d): '+top+' · '+fmt(m.top_reel_views)+' views\\n'+'   '+(m.top_reel_url||'')+(opsLine?'\\n\\n⚙️ OPS\\n• '+opsLine:'');\nconst prompt=\"You are the founder-CEO's chief of staff at Koocester, a LEAN luxury-media company. Hakim is the founder AND CEO — there is NO CFO, NO AR manager, NO separate sales lead to 'schedule with'. Do NOT invent roles or tell him to brief himself. Name only real people/stages given below. — north star: become the world's #1 most trusted and influential media, then convert trust into lead-gen + recurring revenue. Output PLAIN TEXT ONLY — no markdown/asterisks. Two parts:\\n\\n⚡ TODAY (ranked — do #1 first):\\n1. <single highest-leverage action — name the number/page/person + a deadline>\\n2. <next>\\n3. <next>\\n4. <next>\\n5. <next>\\n\\n📈 Working: <one line, the strongest real momentum to double down on>\\n\\nRules: each numbered item <=24 words, an ACTION verb-first with a concrete number + deadline. Finance and cash discipline outrank vanity metrics. NEVER use asterisks or any markdown. Deduplicate.\\n\\nThe 5 must be DISTINCT and span DIFFERENT domains — do NOT make more than one about collections. Pick the 5 highest-leverage from these REAL levers:\\n- CASH: chase \"+money(m.ar_overdue)+\" overdue AR (\"+overduePct+\"% of AR), top 5 debtors; only \"+money(m.collected_mtd)+\" collected MTD.\\n- CONTENT BOTTLENECK: \"+((ov&&ov.overdueTotal)||0)+\" videos overdue; biggest jam \"+((ov&&ov.topStr)||'Strategist QC')+\". QC is owned by just 2 strategists (Wendi + Audrey) — a capacity wall; unblock or add a 3rd QC hand.\\n- CONVERSION: lead->customer is UNINSTRUMENTED (\"+fmt(m.leads_mtd)+\" leads MTD, \"+fmt(m.deals_7d)+\" deals 7d) — spec HubSpot client_account + lifecycle to expose the funnel.\\n- SCALE: the Business page compounds across all 3 markets — reverse-engineer its format and brief every vertical.\\n- ENGAGEMENT: 30d \"+m.eng_30d+\"% vs world-class 8%+ — test the top-reel format across pages.\\nEach numbered item <=24 words, verb-first, with a real number + owner/stage. No invented roles. No markdown.\";\nreturn [{ json: { header, baseText, prompt, token } }];"
+      },
+      "id": "comp",
+      "name": "Compose",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'claude-haiku-4-5-20251001', max_tokens:300, messages:[{role:'user', content:$json.prompt}]}) }}",
+        "options": {}
+      },
+      "id": "ai",
+      "name": "AI Insight",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "sg4na3c3HYfSK4zM",
+          "name": "Anthropic API – Koocester"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "jsCode": "let insight='';\ntry { const ai=$json; if (ai && ai.content) insight=ai.content.map(c=>c.text||'').join('').trim().replace(/\\*/g,''); } catch(e){ insight=''; }\nconst c=$('Compose').first().json;\nconst full=c.header+'\\n\\n'+(insight?insight+'\\n\\n':'')+c.baseText+'\\n\\n— Auto-generated from live data. Reply for tweaks.';\nconst content=JSON.stringify({ text: full });\nreturn [{ json: { content, token: c.token } }];"
+      },
+      "id": "fin",
+      "name": "Final Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=open_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'ou_c95568012de1ea7e1fdfc710bbb799d1', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "id": "send",
+      "name": "Send to Lark",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1328,
+        0
+      ],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/BG8PbaZFna1NQksNWkglTN85gSf/tables/tbl8wIByJQwhIUei/records/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user_id_type",
+              "value": "open_id"
+            },
+            {
+              "name": "page_size",
+              "value": "200"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.tenant_access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"field_names\":[\"Video Stage\",\"Producer\",\"Video Editor\",\"Strategist\",\"Overdue\",\"Overdue (alert)\",\"Raw Upload Overdue (alert)\",\"Amendments Overdue (alert)\"],\"filter\":{\"conjunction\":\"or\",\"conditions\":[{\"field_name\":\"Overdue\",\"operator\":\"is\",\"value\":[\"OVERDUE\"]},{\"field_name\":\"Overdue (alert)\",\"operator\":\"is\",\"value\":[\"OVERDUE\"]},{\"field_name\":\"Raw Upload Overdue (alert)\",\"operator\":\"is\",\"value\":[\"OVERDUE\"]},{\"field_name\":\"Amendments Overdue (alert)\",\"operator\":\"is\",\"value\":[\"OVERDUE\"]}]}}",
+        "options": {}
+      },
+      "id": "33ffe679-3eb7-4065-927e-e537f0c96190",
+      "name": "M&D Overdue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        304,
+        192
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = ($json.data && $json.data.items) || [];\nconst txt = (v)=>{ if(v&&typeof v==='object'){const val=v.value; if(Array.isArray(val)&&val.length){const x=val[0]; return (x&&x.text)?x.text:x;} return null;} return v; };\nlet total=0; const byStage={};\nfor(const r of items){ const fl=r.fields||{};\n  const gen=txt(fl['Overdue'])==='OVERDUE';\n  const edit=txt(fl['Overdue (alert)'])==='OVERDUE';\n  const raw=txt(fl['Raw Upload Overdue (alert)'])==='OVERDUE';\n  const amend=txt(fl['Amendments Overdue (alert)'])==='OVERDUE';\n  if(!(gen||edit||raw||amend)) continue;\n  total++;\n  let bucket;\n  if(edit) bucket='Editing';\n  else if(raw) bucket='Raw footage';\n  else if(amend) bucket='Amendments';\n  else { bucket = txt(fl['Video Stage']) || 'Other'; }\n  byStage[bucket]=(byStage[bucket]||0)+1;\n}\nconst top=Object.entries(byStage).sort((a,b)=>b[1]-a[1]);\nconst topStr=top.slice(0,3).map(([n,c])=>n+' '+c).join(', ');\nconst bottleneckLine = total>0 ? (total+' videos overdue company-wide — top jams: '+topStr) : 'No overdue videos — clean.';\nreturn [{ json: { overdueTotal: total, topStr, byStage, bottleneckLine } }];"
+      },
+      "id": "bd3c21ae-6a8e-45fa-a4dc-ea17f6fc825a",
+      "name": "Aggregate Overdue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        192
+      ]
+    },
+    {
+      "id": "1dc4bc34-c6e9-4965-a7c3-f30abb42c6f0",
+      "name": "Send to Management",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1328,
+        180
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_7bfdc6d030886842e9d44434d0598bc8', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    },
+    {
+      "id": "315bc1cd-7079-4d79-ad2a-0dc333863696",
+      "name": "Compose Manager",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        380
+      ],
+      "parameters": {
+        "jsCode": "const token=$('Get Lark Token').first().json.tenant_access_token;\nconst base='BG8PbaZFna1NQksNWkglTN85gSf';\nconst tbl='tbl8wIByJQwhIUei';\nconst CTBL='tblnMZctdGYfXjYL';\nconst url='https://open.larksuite.com/open-apis/bitable/v1/apps/'+base+'/tables/'+tbl+'/records/search';\nconst curl='https://open.larksuite.com/open-apis/bitable/v1/apps/'+base+'/tables/'+CTBL+'/records/search';\nconst H={Authorization:'Bearer '+token};\nconst cnt=async(f,v)=>{ try{ const r=await this.helpers.httpRequest({method:'POST',url:url+'?page_size=1',headers:H,body:{field_names:['Video Stage'],filter:{conjunction:'and',conditions:[{field_name:f,operator:'is',value:[v]}]}},json:true}); return (r&&r.data&&r.data.total)||0; }catch(e){ return null; } };\nconst cnc=async(f,v)=>{ try{ const r=await this.helpers.httpRequest({method:'POST',url:curl+'?page_size=1',headers:H,body:{field_names:['Carousel Stage'],filter:{conjunction:'and',conditions:[{field_name:f,operator:'is',value:[v]}]}},json:true}); return (r&&r.data&&r.data.total)||0; }catch(e){ return null; } };\nconst src=await cnt('Video Stage','Sourcing');\nconst rts=await cnt('Video Stage','Ready to Shoot');\nconst plan=await cnt('Video Stage','Planning');\nconst qc=await cnt('Video Stage','Strategist QC');\nconst rte=await cnt('Video Stage','Ready to Edit');\nconst edit=await cnt('Video Stage','Editing');\nconst ready=await cnt('Video Stage','Ready To Upload');\nconst ns=await cnt('Video Stage','Not Started');\nconst appr=await cnt('Video Stage','Approval');\nconst finappr=await cnt('Video Stage','Final Approval (Marketing/Client)');\nconst ov=await cnt('Overdue','OVERDUE');\nconst gates=((appr||0)+(finappr||0));\nconst cNs=await cnc('Carousel Stage','Not Started');\nconst cCw=await cnc('Carousel Stage','Copywriting');\nconst cFa=await cnc('Carousel Stage','Final Approval (Head Copywriter/Client)');\nconst cReady=await cnc('Carousel Stage','Ready to Upload');\nconst cOv=await cnc('Overdue','OVERDUE');\nlet unsched=null;\ntry{ const r=await this.helpers.httpRequest({method:'POST',url:url+'?page_size=1',headers:H,body:{field_names:['Video Stage'],filter:{conjunction:'and',conditions:[{field_name:'Video Stage',operator:'is',value:['Ready To Upload']},{field_name:'Intended Upload Date',operator:'isEmpty',value:[]}]}},json:true}); unsched=(r&&r.data&&r.data.total)||0; }catch(e){ unsched=null; }\nlet pageMap={};\ntry{\n  const pr=await this.helpers.httpRequest({method:'POST',url:'https://open.larksuite.com/open-apis/bitable/v1/apps/'+base+'/tables/tblUscIBwxElzzXi/records/search?page_size=500',headers:H,body:{field_names:['Page']},json:true});\n  const pit=(pr&&pr.data&&pr.data.items)||[];\n  for(const it of pit){ const f=it.fields&&it.fields.Page; let nm=null; if(typeof f==='string') nm=f; else if(Array.isArray(f)) nm=(f[0]&&(f[0].text||f[0].name))||null; else if(f&&typeof f==='object') nm=f.text||null; pageMap[it.record_id]=(nm||it.record_id).trim(); }\n}catch(e){ pageMap=null; }\nlet atPage=[],atPerson=[];\ntry{\n  const r=await this.helpers.httpRequest({method:'POST',url:url+'?page_size=500',headers:H,body:{field_names:['Page','Video Stage','Strategist','Video Editor','Producer','Social Media Manager','Head of Growth Approver'],filter:{conjunction:'and',conditions:[{field_name:'Overdue',operator:'is',value:['OVERDUE']}]}},json:true});\n  const items=(r&&r.data&&r.data.items)||[];\n  const pT={},qT={};\n  for(const it of items){ const f=it.fields||{};\n    const p=f.Page; let rid=(p&&Array.isArray(p.link_record_ids))?p.link_record_ids[0]:((Array.isArray(p)&&p[0]&&p[0].record_ids&&p[0].record_ids[0])||null); const pn=(rid&&pageMap&&pageMap[rid])||'(no page)'; pT[pn]=(pT[pn]||0)+1;\n    const st=f['Video Stage']; let pick;\n    if(st==='Strategist QC'||st==='Planning') pick=f.Strategist;\n    else if(st==='Amendments Needed'||st==='Amendments (Marketing)'||st==='Editing') pick=f['Video Editor'];\n    else if(st==='Approval'||st==='Final Approval (Marketing/Client)') pick=f['Head of Growth Approver'];\n    else if(st==='Sourcing'||st==='Ready to Shoot'||st==='Ready to Edit') pick=f.Producer;\n    else if(st==='Ready To Upload') pick=f['Social Media Manager'];\n    let nm=(Array.isArray(pick)&&pick[0]&&pick[0].name)||null; if(!nm) nm='(unassigned)'; qT[nm]=(qT[nm]||0)+1; }\n  atPage=Object.entries(pT).sort((a,b)=>b[1]-a[1]).slice(0,3);\n  atPerson=Object.entries(qT).sort((a,b)=>b[1]-a[1]).slice(0,4);\n}catch(e){ atPage=null; atPerson=null; }\nconst fmt=n=>(n===null||n===undefined)?'—':Number(n).toLocaleString('en-US');\nconst now=new Date(Date.now()+8*3600*1000);\nconst MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\nconst date=now.getUTCDate()+' '+MON[now.getUTCMonth()];\nconst D='\\n━━━━━━━━━━\\n';\nconst AT=id=>'<at user_id=\"'+id+'\"></at>';\nconst MIKE=AT('ou_2cf32d2d9d8621cb8d46a9710ca351df');\nconst IMAN=AT('ou_110617a92012d59c85ad5b46399556af');\nconst THAD=AT('ou_f9c0415b83474af74a1e6a141a9b7f4d');\nconst RATNA=AT('ou_20bb893420d181bf0ce86ff4f9445f71');\nconst mkList=(arr,suf)=>{ if(arr===null) return '• Could not read.'; if(arr.length===0) return '• None right now. ✅'; return arr.map(function(e){return '• '+e[0]+' — '+e[1]+suf;}).join('\\n'); };\nconst personLine=mkList(atPerson,' overdue');\nconst pageLine=mkList(atPage,' overdue');\nconst t='📋 M&D MANAGER UPDATE · '+date\n+D+'🚨 THE BOTTLENECK\\nStrategist QC — '+fmt(qc)+' videos held by 2 strategists (Wendi + Audrey).\\n➡️ '+IMAN+' add a 3rd reviewer or clear it today — it gates the whole line.'\n+D+'🧭 MARKETING COORDINATOR (whole-dept output)\\n• Waiting at approval gates: '+fmt(gates)+'\\n• Dept overdue: '+fmt(ov)+'  ·  Unscheduled to post: '+fmt(unsched)+'\\n➡️ '+MIKE+' coordinate across functions + clear approvals — you own the department output today.'\n+D+'⏰ OVERDUE — WHO IS HOLDING MOST\\n'+personLine+'\\n➡️ Respective managers: chase your people above.'\n+D+'👤 PRODUCERS\\n• In queue now: '+fmt(src)+'\\n• Shoots booked ahead: '+fmt(rts)+'\\n➡️ '+THAD+' keep sourcing + booking ahead — this feeds everything downstream.'\n+D+'👤 STRATEGISTS — Wendi + Audrey\\n• QC queue now: '+fmt(qc)+' ⚠️\\n• In planning ahead: '+fmt(plan)+'\\n➡️ '+IMAN+' clear QC first — it is the jam.'\n+D+'👤 EDITORS\\n• Editing now: '+fmt(edit)+'\\n• Waiting to edit: '+fmt(rte)+'\\n➡️ '+IMAN+' keep clearing as drafts land.'\n+D+'👤 SMM\\n• Ready to post: '+fmt(ready)+' (backlog OK)\\n• Unscheduled — no upload date: '+fmt(unsched)+' ⚠️\\n➡️ '+MIKE+' set an upload date on the unscheduled ones — that is the real problem, not the backlog.'\n+D+'🎠 CAROUSELS (copywriting pipeline)\\n• Not started: '+fmt(cNs)+'\\n• Copywriting now: '+fmt(cCw)+'\\n• Final approval: '+fmt(cFa)+'\\n• Ready to post: '+fmt(cReady)+'\\n• Overdue: '+fmt(cOv)+' ⚠️\\n➡️ '+RATNA+' clear copy + approvals so carousels ship.'\n+D+'🚩 PAGES AT RISK (most overdue)\\n'+pageLine\n+D+'📊 OVERALL\\n• Not started: '+fmt(ns)+'  ·  Overdue: '+fmt(ov)\n+'\\n\\n— Auto from the M&D base. Reply for detail.';\nreturn [{ json: { content: JSON.stringify({text:t}), token } }];"
+      }
+    },
+    {
+      "id": "74a9e14c-5d7a-4742-81d2-99c371938926",
+      "name": "Send Manager Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        896,
+        380
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ receive_id: 'oc_cd23f2473003e47dc2a5db164a12d770', msg_type: 'text', content: $json.content }) }}",
+        "options": {}
+      },
+      "disabled": false,
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Daily 8am": {
+      "main": [
+        [
+          {
+            "node": "Get Lark Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Metrics": {
+      "main": [
+        [
+          {
+            "node": "Compose",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose": {
+      "main": [
+        [
+          {
+            "node": "AI Insight",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Insight": {
+      "main": [
+        [
+          {
+            "node": "Final Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Message": {
+      "main": [
+        [
+          {
+            "node": "Send to Lark",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send to Management",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lark Token": {
+      "main": [
+        [
+          {
+            "node": "M&D Overdue",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compose Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "M&D Overdue": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Overdue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Overdue": {
+      "main": [
+        [
+          {
+            "node": "Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose Manager": {
+      "main": [
+        [
+          {
+            "node": "Send Manager Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "binaryMode": "separate"
+  },
+  "staticData": {
+    "node:Daily 8am": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": {},
+  "tags": []
+}

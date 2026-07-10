@@ -1,0 +1,39 @@
+{
+  "card_id": 166,
+  "name": "Deals Created / Week",
+  "dashboard": "CEO Dashboard (67)",
+  "source": "hubspot.deal",
+  "visualization": "line",
+  "query_type": "mbql",
+  "notes": "source-table 234 = hubspot.deal; breakout field 2663 = property_createdate (week); aggregation = count",
+  "dataset_query": {
+    "lib/type": "mbql/query",
+    "database": 34,
+    "stages": [
+      {
+        "source-table": 234,
+        "lib/type": "mbql.stage/mbql",
+        "aggregation": [
+          [
+            "count",
+            {
+              "lib/uuid": "c6a99cca-127e-473b-bda2-0f682bdacecc"
+            }
+          ]
+        ],
+        "breakout": [
+          [
+            "field",
+            {
+              "lib/uuid": "07186d71-2efb-4a13-89e5-97aae9778721",
+              "effective-type": "type/DateTimeWithLocalTZ",
+              "base-type": "type/DateTimeWithLocalTZ",
+              "temporal-unit": "week"
+            },
+            2663
+          ]
+        ]
+      }
+    ]
+  }
+}

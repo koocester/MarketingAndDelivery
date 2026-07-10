@@ -1,6 +1,10 @@
-# Lark — Schema Reference
+# Lark — Schema Reference (curated)
 
-Videos = **107 fields**, Carousels = **63 fields** (pulled live this session). This captures the **load-bearing fields by function** and the exact stage/button sets; regenerate the full list with `bitable_v1_appTableField_list` (see [README](README.md)).
+Videos = **113 fields**, Carousels = **64 fields**, Projects = **46**, Pages = **20**. This page captures only the **load-bearing fields by function** plus the exact stage/button sets.
+
+> 📄 **For the complete field-by-field dump of all four core tables (243 fields, with formulas, option sets and link targets), see [08-schema-full-reference.md](08-schema-full-reference.md).**
+>
+> ⚠️ **Pagination gotcha:** `bitable_v1_appTableField_list` returns `has_more:true` **even at `page_size=200`** — you must follow `page_token` or you will silently miss fields (an earlier pull reported 107 instead of 113).
 
 ## Videos — `tbl8wIByJQwhIUei`
 | Function | Field | id | Type |

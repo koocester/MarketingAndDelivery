@@ -1,0 +1,3 @@
+-- Card: Followers by Market | id: 367 | dashboard: Content Performance (100) | source: content_perf.metricool_snapshots | visualization: bar
+
+WITH complete AS (SELECT snapshot_date FROM content_perf.metricool_snapshots GROUP BY 1 HAVING count(*)>=48) SELECT CASE WHEN page='Koocester' THEN 'Regional' ELSE country END AS market, sum(followers) AS followers, min(CASE WHEN page='Koocester' THEN 4 WHEN country='Singapore' THEN 1 WHEN country='Malaysia' THEN 2 WHEN country='Indonesia' THEN 3 ELSE 5 END) AS sort FROM content_perf.metricool_snapshots WHERE snapshot_date=(SELECT max(snapshot_date) FROM complete) GROUP BY 1 ORDER BY sort

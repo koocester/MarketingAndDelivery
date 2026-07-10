@@ -1,0 +1,3 @@
+-- Card: Open Pipeline by Market | id: 365 | dashboard: CEO Dashboard (67) | source: hubspot.deal | visualization: bar
+
+SELECT CASE property_deal_currency_code WHEN 'SGD' THEN 'Singapore' WHEN 'MYR' THEN 'Malaysia' WHEN 'IDR' THEN 'Indonesia' ELSE 'Other' END AS market, round(sum(property_amount_in_home_currency)) AS open_sgd, min(CASE property_deal_currency_code WHEN 'SGD' THEN 1 WHEN 'MYR' THEN 2 WHEN 'IDR' THEN 3 ELSE 4 END) AS sort FROM hubspot.deal WHERE (_fivetran_deleted IS NULL OR _fivetran_deleted=false) AND (is_deleted IS NULL OR is_deleted=false) AND property_hs_is_closed IS NOT TRUE AND property_amount_in_home_currency IS NOT NULL GROUP BY 1 ORDER BY sort

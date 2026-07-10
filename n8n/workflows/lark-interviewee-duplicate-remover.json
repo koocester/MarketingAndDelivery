@@ -1,0 +1,166 @@
+{
+  "id": "fdDm5oUOSR6IJY0M",
+  "name": "Lark Interviewee Duplicate Remover",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 5
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        -432
+      ],
+      "id": "79049dd0-7c25-4f39-9309-b366bd17e302",
+      "name": "Trigger Time Every 5 Days p Week"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"app_id\": \"cli_a9d78cfa8bb8ded0\",\n  \"app_secret\": \"<REDACTED_LARK_APP_SECRET>\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        384,
+        -224
+      ],
+      "id": "35f9b8ea-0a5f-433b-bba0-b67149592083",
+      "name": "Call Lark Base"
+    },
+    {
+      "parameters": {
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/ClxtbgreEaGMRMsBeYul8TOrglg/tables/tblya0QHnMoSLB5m/records?page_size=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.tenant_access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        384,
+        0
+      ],
+      "id": "2e9c5fa7-81d8-420a-8c22-a1f71b1e40fc",
+      "name": "Read Lark Base"
+    },
+    {
+      "parameters": {
+        "jsCode": "const records = $input.first().json.data.items;\n\nconst duplicates = records.filter(record => {\n  const stagingField = record.fields[\"Staging Field\"];\n  if (stagingField && Array.isArray(stagingField)) {\n    return stagingField.some(item => item.text && item.text.includes(\"repetitive\"));\n  }\n  return false;\n});\n\nreturn duplicates.map(record => ({ json: record }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        192
+      ],
+      "id": "8b2ff4ee-2f87-4820-a8c0-ad95dd83bdf4",
+      "name": "Execute Deletion"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://open.larksuite.com/open-apis/bitable/v1/apps/ClxtbgreEaGMRMsBeYul8TOrglg/tables/tblya0QHnMoSLB5m/records/{{ $json.record_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Call Lark Base').item.json.tenant_access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        384,
+        368
+      ],
+      "id": "1a7a7ef4-6c16-48e8-b89b-4ce901b417c3",
+      "name": "Enforce Deletion"
+    }
+  ],
+  "connections": {
+    "Trigger Time Every 5 Days p Week": {
+      "main": [
+        [
+          {
+            "node": "Call Lark Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Lark Base": {
+      "main": [
+        [
+          {
+            "node": "Read Lark Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Lark Base": {
+      "main": [
+        [
+          {
+            "node": "Execute Deletion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Deletion": {
+      "main": [
+        [
+          {
+            "node": "Enforce Deletion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Trigger Time Every 5 Days p Week": {
+      "recurrenceRules": [
+        187
+      ],
+      "recurrenceRuleSignatures": [
+        "days:5"
+      ]
+    }
+  },
+  "pinData": {},
+  "tags": []
+}

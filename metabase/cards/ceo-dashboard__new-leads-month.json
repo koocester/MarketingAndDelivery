@@ -1,0 +1,39 @@
+{
+  "card_id": 133,
+  "name": "New Leads / Month",
+  "dashboard": "CEO Dashboard (67)",
+  "source": "hubspot.contact",
+  "visualization": "line",
+  "query_type": "mbql",
+  "notes": "source-table 228 = hubspot.contact; breakout field 2309 = property_createdate (month); aggregation = count",
+  "dataset_query": {
+    "lib/type": "mbql/query",
+    "database": 34,
+    "stages": [
+      {
+        "source-table": 228,
+        "lib/type": "mbql.stage/mbql",
+        "aggregation": [
+          [
+            "count",
+            {
+              "lib/uuid": "12e3ad39-2da1-4bd0-ba61-9c3aa2de0990"
+            }
+          ]
+        ],
+        "breakout": [
+          [
+            "field",
+            {
+              "lib/uuid": "9e54aa29-3c12-4f6f-a623-954a25097194",
+              "effective-type": "type/DateTimeWithLocalTZ",
+              "base-type": "type/DateTimeWithLocalTZ",
+              "temporal-unit": "month"
+            },
+            2309
+          ]
+        ]
+      }
+    ]
+  }
+}
