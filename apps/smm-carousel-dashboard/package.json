@@ -1,0 +1,7 @@
+{
+  "name": "koocester-smm-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Koocester SMM Carousel dashboard — live from Lark Base via a Vercel serverless function",
+  "type": "module"
+}

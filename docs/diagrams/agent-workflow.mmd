@@ -1,0 +1,15 @@
+%% Claude Code agent operating workflow
+flowchart TD
+  A[Read README + 00-start-here] --> B[git status]
+  B --> C[Create branch type/desc]
+  C --> D[Verify live via MCP - read only]
+  D --> E{Change writes to prod?}
+  E -->|Yes| F[Get explicit approval]
+  E -->|No| G[Make change on branch]
+  F --> G
+  G --> H[Secret scan + validation]
+  H --> I[Update docs + .env.example + CHANGELOG]
+  I --> J[Final diff summary]
+  J --> K{Told to push?}
+  K -->|No| L[Stop - do not push]
+  K -->|Yes| M[Push]

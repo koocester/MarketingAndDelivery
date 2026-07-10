@@ -1,0 +1,21 @@
+%% System overview — four planes + one app
+flowchart TB
+  LARK["Lark Base (system of record)"]
+  AC["AnyCross (real-time fan-out)"]
+  N8N["n8n Cloud (scheduled + outbound)"]
+  SUPA["Supabase (Postgres warehouse)"]
+  META["Metabase (BI)"]
+  VERCEL["Vercel app (SMM carousel dashboard)"]
+  HS["HubSpot"]; XE["Xero"]; MC["Metricool"]; ASP["Aspire"]; ANTH["Anthropic"]; LM["Lark Messenger"]
+
+  LARK <--> AC
+  LARK -.-> N8N
+  N8N --> META
+  N8N --> LM
+  N8N --> ANTH
+  HS -->|Fivetran| SUPA
+  XE -->|Fivetran| SUPA
+  MC -->|n8n| SUPA
+  ASP -->|n8n| SUPA
+  SUPA --> META
+  LARK --> VERCEL

@@ -1,0 +1,14 @@
+%% Data flow
+flowchart LR
+  subgraph Sources
+    HS[HubSpot]; XE[Xero]; MC[Metricool]; ASP[Aspire]; LARK[Lark Base]
+  end
+  HS -->|Fivetran| SUPA[(Supabase)]
+  XE -->|Fivetran| SUPA
+  MC -->|n8n cron 07-09h| SUPA
+  ASP -->|n8n cron 23h UTC| SUPA
+  LARK -->|post-URL join keys| SUPA
+  SUPA --> META[Metabase CEO/Content]
+  LARK -->|tenant token| VAPP[Vercel /api/carousels]
+  SUPA -->|n8n query| CMD[Command dashboard HTML]
+  LARK -->|n8n reads| CMD

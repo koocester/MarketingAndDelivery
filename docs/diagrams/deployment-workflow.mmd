@@ -1,0 +1,12 @@
+%% Deployment workflow
+flowchart TD
+  A[Change on branch] --> B{Which surface?}
+  B -->|Vercel app| C[vercel env add + vercel --prod]
+  B -->|n8n workflow| D[Edit draft in n8n Cloud UI]
+  B -->|Metabase| E[Duplicate card, edit SQL]
+  C --> V1[Verify /api/carousels + badge]
+  D --> D2[Test on test chat/table] --> D3[Activate after approval]
+  E --> E2[Cross-check vs SELECT] --> E3[Swap into dashboard]
+  V1 --> R[Rollback: promote previous deploy]
+  D3 --> R2[Rollback: workflow version restore]
+  E3 --> R3[Rollback: revert to duplicate]

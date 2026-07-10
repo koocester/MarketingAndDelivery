@@ -1,0 +1,23 @@
+%% n8n workflow map (active)
+flowchart TB
+  subgraph Syncs
+    F[Metricool Followers 07:00] --> SUPA[(Supabase content_perf)]
+    R[Reels SG/MY/ID 08-09h] --> SUPA
+    ASP[Aspire 23:00 UTC] --> FIN[(Supabase finance)]
+  end
+  subgraph Briefs
+    CEO[CEO Daily 08:00] --> LM[Lark Messenger]
+    WK[Weekly Mon 08:00] --> LM
+    MO[Monthly 1st 08:00] --> LM
+    CEO --- ANTH[Anthropic]
+  end
+  subgraph Dashboard
+    CACHE[Command AI Cache 08:00] --> CC[(command_ai_cache)]
+    CMD[Koocester Command webhooks] --> CC
+  end
+  subgraph HR
+    CAND[Candidate Analysis form] -->|HIGH RISK: inline secrets| DOCS[Drive/Docs]
+    DUP[Interviewee Remover 5d] -->|DELETE| LARKB[Lark base]
+    ROT[1-to-1 Rotator biweekly] --> LARKB
+  end
+  ERR[Error Handling STUB - no alerts]
