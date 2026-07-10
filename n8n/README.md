@@ -15,4 +15,4 @@ n8n/
 - Changes to production workflows require approval and testing on a test chat/table (see [../docs/13-deployment-runbook.md](../docs/13-deployment-runbook.md)).
 
 ## Current status
-26 workflows (15 active). Redacted exports are **not yet added** — see `workflows/README.md` for the procedure (deferred because several workflows embed inline secrets that must be rotated first).
+26 workflows (15 active). ✅ **All 15 active workflows are exported** (sanitized) in [`workflows/`](workflows/) — structure byte-identical, secret values replaced by `<REDACTED_*>` placeholders, PII scrubbed, all validated as JSON against live node counts. Also here: [how-briefs-and-command-read-the-base.md](how-briefs-and-command-read-the-base.md). The 7 inactive + 4 archived are not exported (procedure in `workflows/README.md`).

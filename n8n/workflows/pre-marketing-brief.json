@@ -1,0 +1,855 @@
+{
+  "id": "ZkWP6YHhnC7PfdWb",
+  "name": "Pre-Marketing Brief",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        288
+      ],
+      "id": "2f3d31b7-998b-43da-ae37-b5b8e9fa533f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZZ7GdQN0yh2sf6Iw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        304,
+        336
+      ],
+      "id": "c31934f2-3c9d-492d-999f-03fc8999f510",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "JjuDwN40V66Djiaj",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "driveId": "sharedWithMe",
+        "folderId": "={{ $json.id }}",
+        "title": "=Lead Name:{{ $('Webhook').item.json.query.name }}\n"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        -208
+      ],
+      "id": "36f4885b-ef90-4e7b-9c5a-c03da47bd6b0",
+      "name": "Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "McPvan5TYpkL55QB",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Questions Agent').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -224
+      ],
+      "id": "c4829f29-bb44-486d-973d-6167cb50f78d",
+      "name": "Google Docs1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "McPvan5TYpkL55QB",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "26401dd5-2c90-4c76-b17b-bcb0629e1c16",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "e689b36d-61cb-4aed-9e17-ef5384fc23cd",
+      "name": "Webhook",
+      "webhookId": "26401dd5-2c90-4c76-b17b-bcb0629e1c16"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "AI Testing",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1312,
+        0
+      ],
+      "id": "7579ef16-fbc0-43a8-98c6-e6748fecf879",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=🎯 Objective\nYou are a research assistant for Koocester, a street interview video production company. Your task is to gather a well-rounded, insightful research brief on a potential guest using both internal form data and public online sources. This research will be used to craft personalized, story-driven interview questions.\n\n📥 Inputs\nUse the following as your primary research base:\n\nLead Form Submission:\n\nName: {{ $json.query.name }}\n\nCountry: {{ $json.query.country }}\n\nCompany URL: {{ $json.query.company_url }}\n\nSocial Media Links: {{ $json.query.sm_url }}\n\nTitle: {{ $json.query.title }}\n\nObjective: {{ $json.query.plan_objectives }}\n\nIndustry: {{ $json.query.industry }}\n\nPublic Online Sources:\nGoogle search (SERP), LinkedIn, social media, press articles, YouTube, podcasts, etc.\n\nDo at least 10-15 different SERP search. Brainstorm potential searches based on the checklist below\n\n🧠 Research Checklist\nDo deep, specific, and human-centered research. Look for emotional or visual hooks.\n\nA. Personal & Professional Journey\n\nCareer path and notable transitions\n\nEducational or cultural background\n\nEntrepreneurial or creative motivations\n\nB. Online Presence & Media\n\nInterviews, news articles, podcasts - this is critical\n\nSocial media (Instagram, Twitter, YouTube) - heavy focus on Instagram\n\nLinkedIn profile (experience, posts)\n\nC. Material Focus\n\nThe “thing” we’re showcasing: house, car, business, career, etc.\n\nUnique traits or significance of that material\n\nSymbolic or emotional value behind it\n\nD. Business & Industry Context\n\nCompetitors or market context\n\nIndustry-specific challenges they may have faced\n\nMilestones or growth points\n\n📤 Output Format\n1. Summary\n6-8 sentence overview of the guest and what stands out about them and/or their material.\n\n2. Key Research Findings\nOrganize into bullets with headings (e.g. “Career”, “Social Presence”, “Material Focus”, “Challenges”)\nBe as detailed as possible. Bias towards being more verbose.\n\n3. Source Links\nPaste direct links to your sources — e.g., LinkedIn, Instagram, Google SERP results, interviews, etc.\n\nDont call SERP API more than 20 times ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        48,
+        48
+      ],
+      "id": "ad3923bf-84e7-4fa4-8ffb-6a3084f82e23",
+      "name": "Research Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=🎯 Objective\nYou are a creative strategist for Koocester. Based on detailed research about a guest, your task is to generate compelling, storytelling-rich interview questions — half focused on the personal journey, and half on the guest’s material (e.g., business, car, home, career project).\n\nThese interviews are street-style and filmed for TikTok, so questions must be casual, semi-informal, short, and engaging.\n\n📥 Input\nUse all the research to deeply inform your questions. {{ $json.output }}\n\nHooks\nSuggest 3-5 Hooks based on the following examples\n(Feel free to deviate for 1-2)\n- What do you do for a living?\n- How much did it take for you to start a business/renovate/buy the car? (modify accordingly)\n- Why did you choose to do this?\n- I have $120 million in homes up for grabs! - You have seen Dato' Eric Cheng's 50 million dollar home, now he has 120 million dollars worth more!\n\n🧠 Guidelines for Great Questions\nYour questions must:\n\nBe specific to this person’s story\n\nPrompt rich, emotional, or surprising answers\n\nFocus on the why, how, and what it felt like\n\nBlend human curiosity with narrative structure\n\nAvoid surface-level or overly generic phrasing\n\nExample Questions\n\n“You left [old role] in [year] — what was going through your mind at the time?”\n\n“Why this house? What part of your story does it represent?”\n\n“You built your business with $X and no investors — what were the toughest days like?”\n\n“Tell us about the moment you felt you finally made it — where were you, what happened?”\n\n“You posted [quote] on Instagram — what’s the story behind that?”\n\n“How did you stand out in a space where most people give up?”\n\n“Why did you build this? Who is it for?”\n\n“What’s the most you have made in a single year?”\n\n“What’s the target for 2025?”\n\n“What are you doing to achieve your target?”\n\n“How did you survive through COVID?”\n\n“How much did you take to do [xyz]?”\n\n“How did you scale yourself and the company?”\n\n“How do you even start with such a high capital cost?”\n\n“What’s your unit economics?”\n\n“What does it take to start this business besides capital?”\n\n“Why did you choose this business?”\n\n“Where did the [business name] come from?”\n\n“Do you have any idea of the market share you have?”\n\n“Who are your main customers?”\n\n“What has motivated you to keep going?”\n\n“What’s the cost of your machines (or other capital costs)?”\n\n“What are some of your core values for the business?”\n\n--- OUTPUT ---\nEverything below here should be converted to HTML. Headers + Table + List\n\n## Profile\nName: {{ $('Webhook').item.json.query.name }}\nTitle: {{ $('Webhook').item.json.query.title }}\nCountry of Posting: {{ $('Webhook').item.json.query.country }}\nCompany URL: {{ $('Webhook').item.json.query.company_url }}\nSocial Media: {{ $('Webhook').item.json.query.sm_url }}\nWhatsApp: {{ $('Webhook').item.json.query.whatsapp_name }}\nPlan: {{ $('Webhook').item.json.query.plan_objectives }}\n\n## Summary\n(3–4 sentences summarizing who they are and their material focus)\n\n## Hooks\n3-5 Hooks\n\n## Questions\nCategorize the questions based on \"Performance Marketing\"/\"Personal\"/\"Technical\". At least 8 questions for each category.\n\nEnsure the tables lines are drawn. It should be black strokes.\n\n\n<table>\n<thead>\n<tr><th>Question</th><th>Type</th></tr>\n</thead>\n<tbody>\n<tr><td>[Personalized question here]</td><td>Performance Marketing</td></tr>\n<tr><td>[Personalized question here]</td><td>Technical</td></tr>\n...\n</tbody>\n</table>\n\n## Conclusions\n\n\n## Research\n(List research findings here with clickable source links from SERP API)\n",
+        "options": {
+          "systemMessage": "Output in HTML formatting. Table lines must be drawn"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        320,
+        48
+      ],
+      "id": "b0ea2c2b-6634-4f08-97a3-9b9f7f1eeef3",
+      "name": "Questions Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "chatgpt-4o-latest"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        240
+      ],
+      "id": "305fdea5-02e3-47f4-8353-423a0e4d88dd",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZZ7GdQN0yh2sf6Iw",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://v2.api2pdf.com/chrome/pdf/html",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": "={{ $('Translation').item.json.choices[0].message.content }}"
+            },
+            {
+              "name": "fileName",
+              "value": "=Pre-Marketing Brief for: {{ $('Webhook').item.json.query.name }})"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1472,
+        0
+      ],
+      "id": "66507240-5129-4b9f-9637-579411f52ce3",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "jS6TqrKpEIhNb1O6",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.FileUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1632,
+        0
+      ],
+      "id": "1fc42dd5-80ca-4688-89cd-6da0143d31be",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "name": "=Pre-Marketing Brief for: {{ $('Webhook').item.json.query.name }} ({{ $('Webhook').item.json.query.country }} in Bahasa)",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1792,
+        0
+      ],
+      "id": "05c66af4-3b2c-4dbf-9446-2b4894de15a1",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2c5f25d7-8fbc-4416-b53a-424e1b98d4fe",
+              "leftValue": "={{ $('Webhook').item.json.query.country }}",
+              "rightValue": "Singapore",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        32
+      ],
+      "id": "0e52ec5e-3e2b-486d-bfd1-badffe6ea38c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "AI Testing",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        960,
+        288
+      ],
+      "id": "a8b99fe3-42b7-45a8-99f2-2d4542e0628e",
+      "name": "Google Drive2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://v2.api2pdf.com/chrome/pdf/html",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": "={{ $('Questions Agent').item.json.output }}"
+            },
+            {
+              "name": "fileName",
+              "value": "=Pre-Marketing Brief for: {{ $('Webhook').item.json.query.name }} ({{ $('Webhook').item.json.query.company_name }})"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        288
+      ],
+      "id": "d3162050-a7c9-44db-aed1-aba2acb13a7b",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "jS6TqrKpEIhNb1O6",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.FileUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        288
+      ],
+      "id": "a75e7a4b-b72f-49fe-a656-bf9134ff55a7",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "name": "=Pre-Marketing Brief for: {{ $('Webhook').item.json.query.name }} ({{ $('Webhook').item.json.query.country }} in English)",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive2').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        288
+      ],
+      "id": "2653a3ad-aca4-4f9e-963a-72e5e08c4d31",
+      "name": "Google Drive3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "AI Testing",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1968,
+        0
+      ],
+      "id": "325b1418-5272-4215-a621-2f2401bfc120",
+      "name": "Google Drive4",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://v2.api2pdf.com/chrome/pdf/html",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": "={{ $('Questions Agent').item.json.output }}"
+            },
+            {
+              "name": "fileName",
+              "value": "=Pre-Marketing Brief for: {{ $('Webhook').item.json.query.name }} ({{ $('Webhook').item.json.query.company_name }})"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2128,
+        0
+      ],
+      "id": "da34e5ea-ecbb-481e-b19b-7ba87542012b",
+      "name": "HTTP Request2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "SEip2gNC5hdRjApN",
+          "name": "API2PDF "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.FileUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2288,
+        0
+      ],
+      "id": "b433ac07-4d7d-4559-88a2-0d1ec508d2a0",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "name": "=Pre-Marketing Brief for: {{ $('Webhook').item.json.query.name }} ({{ $('Webhook').item.json.query.country }} in English)",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive4').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2448,
+        0
+      ],
+      "id": "76889bd5-b8f0-4608-960c-7b823391cd21",
+      "name": "Google Drive5",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "AI Testing",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        832,
+        -208
+      ],
+      "id": "b929fdfe-dcd5-4805-8cdf-e649e261d409",
+      "name": "Google Drive6",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "vSz4Mu0A9ikDpN7N",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2768,
+        0
+      ],
+      "id": "4c1f9ec7-4e05-4531-a3d9-cd9cc19a8205",
+      "name": "HTTP Request3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-4-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=I need you to translate the following in to Bahasa\n\n {{ $json.output }}\n\nRetaining the same format. HTML. Strictly only return me the HTML. ONLY THE HTML\n\nEnsure the tables lines are drawn."
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        992,
+        0
+      ],
+      "id": "ac76682c-5dcf-4a73-98be-4ebb553fdee1",
+      "name": "Translation",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZZ7GdQN0yh2sf6Iw",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Google Docs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Questions Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Questions Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Questions Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs1": {
+      "main": [
+        []
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Google Drive4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Translation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Drive2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "Google Drive3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "Google Drive5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive6": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translation": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "tags": []
+}

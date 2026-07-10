@@ -1,0 +1,4086 @@
+{
+  "id": "0jSBKXJuzwfzciWH",
+  "name": "Metricool Lark Followers Sync",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "id": "4cd172d5-b45c-42a8-9af1-2311184d99e8",
+      "name": "Daily 7am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -34272,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"app_id\": \"cli_aaab8a2fc3391ed2\", \"app_secret\": \"<REDACTED_LARK_APP_SECRET>\"}",
+        "options": {}
+      },
+      "id": "16a9e436-513c-4e07-b9fa-24fac96ce663",
+      "name": "Get Lark Token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -34048,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4806605"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "e88b45f0-6a08-405e-a98c-337bc3e18710",
+      "name": "IG KOOCESTER",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -33824,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4806605"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "2b848032-6f4d-4290-badc-b39362642c36",
+      "name": "FB KOOCESTER",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -33600,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4806605"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "fead3f04-fa44-4f60-9681-648c03bdc8eb",
+      "name": "TT KOOCESTER",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -33392,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807399"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8eace64c-7c8a-45cd-afec-217c53b06312",
+      "name": "IG Homes SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -33168,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807399"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "1c90277e-2b63-40a4-96b0-b3ef644dfd8f",
+      "name": "FB Homes SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32944,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807399"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "bf02ef05-e816-40e2-9be9-8a7313d88a8b",
+      "name": "TT Homes SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32720,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807376"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "c5498b92-6e48-4a0b-b61f-a86b384b01af",
+      "name": "IG Business SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32512,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807376"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "5c3b3142-3b8a-4f7b-8179-c15fb705b87a",
+      "name": "FB Business SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32288,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807376"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "903454e0-e053-4da2-8c33-73a8cbc10ee8",
+      "name": "TT Business SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32064,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807248"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "0beb33e0-8c3f-4bb0-b3ab-8f22ce4ea354",
+      "name": "IG Autos SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -31840,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807248"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "19d188de-1be3-47f2-baea-e2d12ff291ac",
+      "name": "FB Autos SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -31632,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "4807248"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "0d3cd9c5-3343-461f-aaf0-425339c2658d",
+      "name": "TT Autos SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -31408,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5564643"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "e10276d2-0c20-453d-8102-a0318b479b48",
+      "name": "IG Wealth SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -31184,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5564643"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8bb0e347-5ceb-4ec9-819c-5f4e534ed8e0",
+      "name": "FB Wealth SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -30960,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5564643"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "5b0a14fb-b96b-447a-a6f7-a828e368d330",
+      "name": "TT Wealth SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -30752,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5672788"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "fc3de505-550f-4015-a72f-6e8a5ea4db0d",
+      "name": "IG Foodie SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -30528,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5672788"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "0574f8d1-06c4-473b-9f05-a60e0b5b8fc3",
+      "name": "FB Foodie SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -30304,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5672788"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8d884bbb-6fe3-4170-908e-dc05a1268fdc",
+      "name": "TT Foodie SG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -30080,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5128304"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "1354cd9e-ab4a-49ef-9f72-5fa112a73699",
+      "name": "IG Homes MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -29872,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5128304"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "be20f6bc-b1ec-41a9-9a8b-d376b1b6c7db",
+      "name": "FB Homes MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -29648,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5128304"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "9aea6718-a4e1-4309-a8aa-6584157539b1",
+      "name": "TT Homes MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -29424,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5091067"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "6f6c5521-df40-46d3-8c33-74a8d6f1e00f",
+      "name": "IG Business MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -29200,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5091067"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "7eea33b2-a392-4182-8b70-0833ed325e9f",
+      "name": "FB Business MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -28992,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5091067"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "e3440667-1088-4ddb-85d5-b8ad3a798287",
+      "name": "TT Business MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -28768,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5136849"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "b2d8e228-b494-4d7e-815e-8056ba4fe542",
+      "name": "IG Autos MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -28544,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5136849"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "6e85e063-f4e4-4b8f-afa5-8fa1a006b281",
+      "name": "FB Autos MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -28320,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5136849"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "6661e293-2bb1-4e64-a6a5-7e9c3f34c83a",
+      "name": "TT Autos MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -28112,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5733668"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "9962f2d5-4b45-4614-bb84-29ecdc1aae7d",
+      "name": "IG Wealth MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -27888,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5733668"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "e69d26f8-9fe7-4f37-88e9-2df094c9b3e0",
+      "name": "FB Wealth MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -27664,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5733668"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "79922ccb-4700-41ca-ba12-339dd0c66217",
+      "name": "TT Wealth MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -27440,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5665720"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "be14e9f7-cf4e-4480-b146-c75630044218",
+      "name": "IG Foodie MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -27232,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5665720"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "9ded1de1-938a-420e-857a-9aa9f07e07d1",
+      "name": "FB Foodie MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -27008,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5665720"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "bfc4d318-eb80-4a04-92a9-b819bd540571",
+      "name": "TT Foodie MY",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -26784,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5507400"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "2dc366e1-006a-4e45-91b0-a977ad1b57ea",
+      "name": "IG Homes ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -26560,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5507400"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "76b21d18-9ce2-49d3-9c0b-e15e0a344a6f",
+      "name": "FB Homes ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -26352,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5507400"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "c1993aed-086e-4e6b-8e22-c1f02a8b06ee",
+      "name": "TT Homes ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -26128,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5185663"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "91ced9a0-485c-433c-b5a5-6e503c264723",
+      "name": "IG Business ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -25904,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5185663"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "19d94f9e-cc35-4d34-99dd-3a841001de4a",
+      "name": "FB Business ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -25680,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5185663"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "b8f85031-73b6-4def-ba38-2029ef4d84bb",
+      "name": "TT Business ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -25472,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5507432"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "cbc9943e-994c-4e79-8baf-c1457e4af9cc",
+      "name": "IG Autos ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -25248,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5507432"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "a767c9a5-d3e0-45c2-bce3-d461f3592b5a",
+      "name": "FB Autos ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -25024,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5507432"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "ee5bd702-1911-4388-899a-b2d93ff328da",
+      "name": "TT Autos ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -24800,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5733738"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "c6e01e39-1a5d-4ad5-bf3f-a78b1a0cf141",
+      "name": "IG Wealth ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -24592,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5733738"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "7c57e194-4e24-4fbe-a28c-af1e2011982d",
+      "name": "FB Wealth ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -24368,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5733738"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8823b409-0cb2-4e57-b804-1d2d3aab87f5",
+      "name": "TT Wealth ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -24144,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5665734"
+            },
+            {
+              "name": "network",
+              "value": "instagram"
+            },
+            {
+              "name": "metric",
+              "value": "Followers"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "4f8291be-fd1e-438e-a593-e0b09646bc5f",
+      "name": "IG Foodie ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -23920,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5665734"
+            },
+            {
+              "name": "network",
+              "value": "facebook"
+            },
+            {
+              "name": "metric",
+              "value": "pageFollows"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "de4d58d6-3b2e-4186-a597-2cb2e03a6a27",
+      "name": "FB Foodie ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -23712,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://app.metricool.com/api/v2/analytics/timelines",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "3748116"
+            },
+            {
+              "name": "blogId",
+              "value": "5665734"
+            },
+            {
+              "name": "network",
+              "value": "tiktok"
+            },
+            {
+              "name": "metric",
+              "value": "followers_count"
+            },
+            {
+              "name": "subject",
+              "value": "account"
+            },
+            {
+              "name": "timezone",
+              "value": "Asia/Singapore"
+            },
+            {
+              "name": "from",
+              "value": "={{ DateTime.now().minus({days: 14}).toFormat(\"yyyy-MM-dd\") + \"T00:00:00+08:00\" }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ DateTime.now().toFormat(\"yyyy-MM-dd\") + \"T23:59:59+08:00\" }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Mc-Auth",
+              "value": "<REDACTED_METRICOOL_API_KEY>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "881db40d-cde2-4044-8e25-90e9b97f06c2",
+      "name": "TT Foodie ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -23488,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const combos = [{\"node\": \"IG KOOCESTER\", \"page\": \"KOOCESTER (Main)\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB KOOCESTER\", \"page\": \"KOOCESTER (Main)\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT KOOCESTER\", \"page\": \"KOOCESTER (Main)\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Homes SG\", \"page\": \"Homes SG\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Homes SG\", \"page\": \"Homes SG\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Homes SG\", \"page\": \"Homes SG\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Business SG\", \"page\": \"Business SG\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Business SG\", \"page\": \"Business SG\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Business SG\", \"page\": \"Business SG\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Autos SG\", \"page\": \"Autos SG\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Autos SG\", \"page\": \"Autos SG\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Autos SG\", \"page\": \"Autos SG\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Wealth SG\", \"page\": \"Wealth SG\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Wealth SG\", \"page\": \"Wealth SG\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Wealth SG\", \"page\": \"Wealth SG\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Foodie SG\", \"page\": \"Foodie SG\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Foodie SG\", \"page\": \"Foodie SG\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Foodie SG\", \"page\": \"Foodie SG\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Homes MY\", \"page\": \"Homes MY\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Homes MY\", \"page\": \"Homes MY\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Homes MY\", \"page\": \"Homes MY\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Business MY\", \"page\": \"Business MY\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Business MY\", \"page\": \"Business MY\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Business MY\", \"page\": \"Business MY\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Autos MY\", \"page\": \"Autos MY\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Autos MY\", \"page\": \"Autos MY\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Autos MY\", \"page\": \"Autos MY\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Wealth MY\", \"page\": \"Wealth MY\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Wealth MY\", \"page\": \"Wealth MY\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Wealth MY\", \"page\": \"Wealth MY\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Foodie MY\", \"page\": \"Foodie MY\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Foodie MY\", \"page\": \"Foodie MY\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Foodie MY\", \"page\": \"Foodie MY\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Homes ID\", \"page\": \"Homes ID\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Homes ID\", \"page\": \"Homes ID\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Homes ID\", \"page\": \"Homes ID\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Business ID\", \"page\": \"Business ID\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Business ID\", \"page\": \"Business ID\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Business ID\", \"page\": \"Business ID\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Autos ID\", \"page\": \"Autos ID\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Autos ID\", \"page\": \"Autos ID\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Autos ID\", \"page\": \"Autos ID\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Wealth ID\", \"page\": \"Wealth ID\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Wealth ID\", \"page\": \"Wealth ID\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Wealth ID\", \"page\": \"Wealth ID\", \"field\": \"Followers (TT)\"}, {\"node\": \"IG Foodie ID\", \"page\": \"Foodie ID\", \"field\": \"Followers (IG)\"}, {\"node\": \"FB Foodie ID\", \"page\": \"Foodie ID\", \"field\": \"Followers (FB)\"}, {\"node\": \"TT Foodie ID\", \"page\": \"Foodie ID\", \"field\": \"Followers (TT)\"}];\nconst larkToken = $('Get Lark Token').first().json.tenant_access_token;\n\n// Group by Page → build one record per page with all 3 platform follower counts\nconst pageMap = {};\n\nfor (const combo of combos) {\n  let count = 0;\n  try {\n    const raw = $(combo.node).first().json;\n    const values = raw?.data?.[0]?.values || [];\n    if (values.length > 0) {\n      // Sort by date descending, take latest\n      values.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));\n      count = values[0].value || 0;\n    }\n  } catch (err) {\n    console.error('Error reading ' + combo.node + ': ' + err.message);\n  }\n\n  if (!pageMap[combo.page]) pageMap[combo.page] = { 'Page': combo.page };\n  pageMap[combo.page][combo.field] = count;\n  console.log(combo.page + ' ' + combo.field + ': ' + count);\n}\n\nconst pages = Object.values(pageMap);\nconsole.log('Total pages: ' + pages.length);\nreturn [{ json: { data: pages, larkToken: larkToken } }];"
+      },
+      "id": "a55ef630-6803-4ed8-9e99-89c007bf5caf",
+      "name": "Combine All Followers",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -23264,
+        512
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/BG8PbaZFna1NQksNWkglTN85gSf/tables/tblUscIBwxElzzXi/records",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "page_size",
+              "value": "500"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Combine All Followers').first().json.larkToken }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "32fe85c6-4082-4622-af4d-8836480b3851",
+      "name": "Get Lark Records",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -23040,
+        512
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "e2a592e8-05fc-447e-b90c-fa77129bb670",
+              "leftValue": "={{ $json.operation }}",
+              "rightValue": "update",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "17ab18fd-a0be-4866-a0be-79e4600d9bfb",
+      "name": "Is Update",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -22608,
+        512
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/BG8PbaZFna1NQksNWkglTN85gSf/tables/tblUscIBwxElzzXi/records/batch_update",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Combine All Followers').first().json.larkToken }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({records: $json.records}) }}",
+        "options": {}
+      },
+      "id": "008624c7-6aef-4f44-9e68-52a3311d79bf",
+      "name": "Batch Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -22384,
+        400
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "id": "44561c34-6434-4c18-a7e7-a7b7bb761f2f",
+      "name": "Skip",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -22384,
+        608
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const pages = $('Combine All Followers').first().json.data || [];\nconst larkItems = $input.item.json.data?.items || [];\nconst toCreate = [], toUpdate = [];\n\nfor (const page of pages) {\n  const matched = larkItems.find(r => {\n    const stored = r.fields?.['Page'];\n    if (!stored) return false;\n    return stored.trim() === page.Page.trim();\n  });\n\n  // Build update payload — only follower fields, leave other fields untouched\n  const fields = {\n    'Followers (IG)': page['Followers (IG)'] || 0,\n    'Followers (FB)': page['Followers (FB)'] || 0,\n    'Followers (TT)': page['Followers (TT)'] || 0\n  };\n\n  if (matched) {\n    toUpdate.push({ record_id: matched.record_id, fields });\n  } else {\n    // Page row doesn't exist — skip rather than create (keeps team data integrity)\n    console.log('Page not found in Lark, skipping: ' + page.Page);\n  }\n}\n\nconst results = [];\nif (toUpdate.length > 0) results.push({ json: { operation: 'update', count: toUpdate.length, records: toUpdate } });\nelse results.push({ json: { operation: 'skip', count: 0, records: [] } });\n\nconsole.log('Update batch size: ' + toUpdate.length);\nreturn results;"
+      },
+      "id": "7992ee16-fea6-4c1e-adbe-f6f59037861b",
+      "name": "Loop Against",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -22832,
+        512
+      ],
+      "disabled": true
+    },
+    {
+      "id": "9de8e4b6-a60a-4bfd-a06d-5a659b633be6",
+      "name": "Build Supabase Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -23040,
+        288
+      ],
+      "parameters": {
+        "jsCode": "const pages = $('Combine All Followers').first().json.data || [];\nconst MAP = {\n  'KOOCESTER (Main)': { page: 'Koocester', country: 'Singapore' },\n  'Homes SG': { page: 'Koocester Homes', country: 'Singapore' },\n  'Homes MY': { page: 'Koocester Homes', country: 'Malaysia' },\n  'Homes ID': { page: 'Koocester Homes', country: 'Indonesia' },\n  'Business SG': { page: 'Koocester Business', country: 'Singapore' },\n  'Business MY': { page: 'Koocester Business', country: 'Malaysia' },\n  'Business ID': { page: 'Koocester Business', country: 'Indonesia' },\n  'Autos SG': { page: 'Koocester Autos', country: 'Singapore' },\n  'Autos MY': { page: 'Koocester Autos', country: 'Malaysia' },\n  'Autos ID': { page: 'Koocester Autos', country: 'Indonesia' },\n  'Wealth SG': { page: 'Koocester Wealth', country: 'Singapore' },\n  'Wealth MY': { page: 'Koocester Wealth', country: 'Malaysia' },\n  'Wealth ID': { page: 'Koocester Wealth', country: 'Indonesia' },\n  'Foodie SG': { page: 'Koocester Foodie', country: 'Singapore' },\n  'Foodie MY': { page: 'Koocester Foodie', country: 'Malaysia' },\n  'Foodie ID': { page: 'Koocester Foodie', country: 'Indonesia' }\n};\nconst FIELDS = [\n  { f: 'Followers (IG)', platform: 'Instagram' },\n  { f: 'Followers (FB)', platform: 'Facebook' },\n  { f: 'Followers (TT)', platform: 'TikTok' }\n];\nconst date = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);\nconst q = (s) => \"'\" + String(s).replace(/'/g, \"''\") + \"'\";\nconst rows = [];\nfor (const p of pages) {\n  const m = MAP[p.Page];\n  if (!m) { console.log('Unmapped page: ' + p.Page); continue; }\n  for (const fld of FIELDS) {\n    const followers = Number(p[fld.f]) || 0;\n    const rid = date + '_' + m.page + '_' + fld.platform + '_' + m.country;\n    rows.push('(' + q(rid) + ', DATE ' + q(date) + ', ' + q(m.page) + ', ' + q(fld.platform) + ', ' + q(m.country) + ', ' + followers + ', now())');\n  }\n}\nif (rows.length === 0) { throw new Error('Build Supabase Rows: no rows built'); }\nconst sql = 'INSERT INTO content_perf.metricool_snapshots (record_id, snapshot_date, page, platform, country, followers, loaded_at) VALUES ' + rows.join(', ') + ' ON CONFLICT (record_id) DO UPDATE SET followers = EXCLUDED.followers, snapshot_date = EXCLUDED.snapshot_date, loaded_at = now();';\nreturn [{ json: { query: sql, rowCount: rows.length, date: date } }];"
+      }
+    },
+    {
+      "id": "10ff06e4-da41-48c7-ae30-de065ef5a2d5",
+      "name": "Insert to Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -22816,
+        288
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.query }}",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "iLlaPQLaICzc44cH",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "id": "c2657cdf-5c90-4729-ba3d-5bbf3033f087",
+      "name": "Build Lark Rows (M&D)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -23040,
+        760
+      ],
+      "parameters": {
+        "jsCode": "const pages = $('Combine All Followers').first().json.data || [];\nconst MAP = {\n 'KOOCESTER (Main)':'recvmH8NSUMkCe',\n 'Homes SG':'recvmH8Pzzx3lr','Business SG':'recvmH8QMzrSNg','Autos SG':'recvmH8SaQhbn4','Wealth SG':'recvmH8UFXQ7tL','Foodie SG':'recvmH8WeQw3g2',\n 'Homes MY':'recvmH8XZaactB','Business MY':'recvmH8ZBrwnRb','Autos MY':'recvmH90WS6Xnj','Wealth MY':'recvmH92q2pW92','Foodie MY':'recvmH96VqNjMD',\n 'Homes ID':'recvmH98Bj1eGj','Business ID':'recvmH9agqghJ5','Autos ID':'recvmH9bZyUg0J','Wealth ID':'recvmH9dN10NLL','Foodie ID':'recvmH9fTscW1u'\n};\nconst records = [];\nfor (const p of pages) {\n  const rid = MAP[String(p.Page).trim()];\n  if (!rid) continue;\n  records.push({ record_id: rid, fields: { 'Followers (IG)': Number(p['Followers (IG)'])||0, 'Followers (FB)': Number(p['Followers (FB)'])||0, 'Followers (TT)': Number(p['Followers (TT)'])||0 } });\n}\nreturn [{ json: { records } }];"
+      }
+    },
+    {
+      "id": "efe0bd94-643b-4c79-a53c-7f2e0115562a",
+      "name": "Batch Create M&D",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -22816,
+        760
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/bitable/v1/apps/BG8PbaZFna1NQksNWkglTN85gSf/tables/tblUscIBwxElzzXi/records/batch_update",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get Lark Token').first().json.tenant_access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({records: $json.records}) }}",
+        "options": {}
+      },
+      "onError": "continueRegularOutput",
+      "disabled": false
+    }
+  ],
+  "connections": {
+    "Daily 7am": {
+      "main": [
+        [
+          {
+            "node": "Get Lark Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lark Token": {
+      "main": [
+        [
+          {
+            "node": "IG KOOCESTER",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG KOOCESTER": {
+      "main": [
+        [
+          {
+            "node": "FB KOOCESTER",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB KOOCESTER": {
+      "main": [
+        [
+          {
+            "node": "TT KOOCESTER",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT KOOCESTER": {
+      "main": [
+        [
+          {
+            "node": "IG Homes SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Homes SG": {
+      "main": [
+        [
+          {
+            "node": "FB Homes SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Homes SG": {
+      "main": [
+        [
+          {
+            "node": "TT Homes SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Homes SG": {
+      "main": [
+        [
+          {
+            "node": "IG Business SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Business SG": {
+      "main": [
+        [
+          {
+            "node": "FB Business SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Business SG": {
+      "main": [
+        [
+          {
+            "node": "TT Business SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Business SG": {
+      "main": [
+        [
+          {
+            "node": "IG Autos SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Autos SG": {
+      "main": [
+        [
+          {
+            "node": "FB Autos SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Autos SG": {
+      "main": [
+        [
+          {
+            "node": "TT Autos SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Autos SG": {
+      "main": [
+        [
+          {
+            "node": "IG Wealth SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Wealth SG": {
+      "main": [
+        [
+          {
+            "node": "FB Wealth SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Wealth SG": {
+      "main": [
+        [
+          {
+            "node": "TT Wealth SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Wealth SG": {
+      "main": [
+        [
+          {
+            "node": "IG Foodie SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Foodie SG": {
+      "main": [
+        [
+          {
+            "node": "FB Foodie SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Foodie SG": {
+      "main": [
+        [
+          {
+            "node": "TT Foodie SG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Foodie SG": {
+      "main": [
+        [
+          {
+            "node": "IG Homes MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Homes MY": {
+      "main": [
+        [
+          {
+            "node": "FB Homes MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Homes MY": {
+      "main": [
+        [
+          {
+            "node": "TT Homes MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Homes MY": {
+      "main": [
+        [
+          {
+            "node": "IG Business MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Business MY": {
+      "main": [
+        [
+          {
+            "node": "FB Business MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Business MY": {
+      "main": [
+        [
+          {
+            "node": "TT Business MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Business MY": {
+      "main": [
+        [
+          {
+            "node": "IG Autos MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Autos MY": {
+      "main": [
+        [
+          {
+            "node": "FB Autos MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Autos MY": {
+      "main": [
+        [
+          {
+            "node": "TT Autos MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Autos MY": {
+      "main": [
+        [
+          {
+            "node": "IG Wealth MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Wealth MY": {
+      "main": [
+        [
+          {
+            "node": "FB Wealth MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Wealth MY": {
+      "main": [
+        [
+          {
+            "node": "TT Wealth MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Wealth MY": {
+      "main": [
+        [
+          {
+            "node": "IG Foodie MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Foodie MY": {
+      "main": [
+        [
+          {
+            "node": "FB Foodie MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Foodie MY": {
+      "main": [
+        [
+          {
+            "node": "TT Foodie MY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Foodie MY": {
+      "main": [
+        [
+          {
+            "node": "IG Homes ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Homes ID": {
+      "main": [
+        [
+          {
+            "node": "FB Homes ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Homes ID": {
+      "main": [
+        [
+          {
+            "node": "TT Homes ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Homes ID": {
+      "main": [
+        [
+          {
+            "node": "IG Business ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Business ID": {
+      "main": [
+        [
+          {
+            "node": "FB Business ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Business ID": {
+      "main": [
+        [
+          {
+            "node": "TT Business ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Business ID": {
+      "main": [
+        [
+          {
+            "node": "IG Autos ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Autos ID": {
+      "main": [
+        [
+          {
+            "node": "FB Autos ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Autos ID": {
+      "main": [
+        [
+          {
+            "node": "TT Autos ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Autos ID": {
+      "main": [
+        [
+          {
+            "node": "IG Wealth ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Wealth ID": {
+      "main": [
+        [
+          {
+            "node": "FB Wealth ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Wealth ID": {
+      "main": [
+        [
+          {
+            "node": "TT Wealth ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Wealth ID": {
+      "main": [
+        [
+          {
+            "node": "IG Foodie ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IG Foodie ID": {
+      "main": [
+        [
+          {
+            "node": "FB Foodie ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FB Foodie ID": {
+      "main": [
+        [
+          {
+            "node": "TT Foodie ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TT Foodie ID": {
+      "main": [
+        [
+          {
+            "node": "Combine All Followers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lark Records": {
+      "main": [
+        [
+          {
+            "node": "Loop Against",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Update": {
+      "main": [
+        [
+          {
+            "node": "Batch Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Against": {
+      "main": [
+        [
+          {
+            "node": "Is Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine All Followers": {
+      "main": [
+        [
+          {
+            "node": "Build Supabase Rows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Build Lark Rows (M&D)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Supabase Rows": {
+      "main": [
+        [
+          {
+            "node": "Insert to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Lark Rows (M&D)": {
+      "main": [
+        [
+          {
+            "node": "Batch Create M&D",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": {
+    "node:Daily 7am": {
+      "recurrenceRules": [
+        null
+      ],
+      "recurrenceRuleSignatures": [
+        null
+      ]
+    }
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "id": "H9f8cqaTSBCqASe6",
+      "name": "MY"
+    },
+    {
+      "id": "nYg7dG8aSHHF2I6a",
+      "name": "ID"
+    },
+    {
+      "id": "qILoDF7XnZQOTBc3",
+      "name": "SG"
+    }
+  ]
+}
