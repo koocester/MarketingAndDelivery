@@ -12,6 +12,7 @@
 4. [04-automations.md](04-automations.md) — AnyCross fan-out, auto-assign, stage-gated buttons, notifications, calendar sync.
 5. [05-dashboards.md](05-dashboards.md) — the Lark-native Base dashboards.
 6. [06-conventions-and-gotchas.md](06-conventions-and-gotchas.md) — coloring/must-fill standards, API limits, trigger pitfalls.
+7. 🔴 [07-button-automation-audit.md](07-button-automation-audit.md) — **guard-by-guard audit of all 28 button automations; 7 are unguarded, one is high-risk.**
 
 ## Auth & access
 - Lark app → `tenant_access_token` from `LARK_APP_ID` + `LARK_APP_SECRET` (server-side only).
