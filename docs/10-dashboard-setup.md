@@ -1,6 +1,6 @@
 # 10 — Dashboard Setup
 
-There are **three** dashboard surfaces. Keep them distinct.
+There are **four** dashboard surfaces. Keep them distinct. (A) Metabase BI, (B) the n8n Command cockpit, (C) the Vercel carousel app, and (D) the Lark-native Base dashboards.
 
 ## A. Metabase dashboards (BI) — CEO (67) + Content Performance (100)
 - **Purpose:** finance/sales/content BI for leadership.
@@ -27,6 +27,13 @@ There are **three** dashboard surfaces. Keep them distinct.
 - **Rebuild/redeploy:** `cd apps/smm-carousel-dashboard && npx vercel --prod`; set the 4 `LARK_*` env vars in Vercel. Field mapping in `api/carousels.js` (`mapRecord`) — update if Base columns are renamed.
 - **Risks:** app must be a Base collaborator with `bitable:app:readonly`; secret only ever server-side.
 
+## D. Lark-native Base dashboards (operational)
+Built **inside** the Lark M&D base via computer-use — **Lark Base dashboards have no API**, so they are UI-only to build/edit.
+- **⚠️ Ops Health & Bottlenecks** — an isolated dashboard of alert tiles for the backlog/gap numbers (videos/projects Not Started, finished-but-unposted videos & carousels, missing-objective data gaps).
+- **Main + per-market dashboards** (Regional / SG / MY / ID) — "Videos by Stage" distribution, active workload by Producer/Editor/Copywriter, vertical + country donuts, publish-queue tiles, uploads-over-time.
+- **Where each intelligence lives (decision):** pipeline health / bottlenecks / "where is it stuck" → **Lark** (data lives here); content performance / lead-gen feedback → **Supabase + Metabase**. A **Sankey** flow diagram is **not possible in Lark** (no such chart type) — the insight is covered by the stage bars + an aging view.
+- **Parked build:** a set of "Stuck / aging" grid views (grouped by stage, sorted by Overdue/age, active-only) — API-buildable and non-overlapping; parked pending go-ahead. See [discovery/work-log.md](discovery/work-log.md).
+
 ## Data freshness expectations (summary)
 | Surface | Latency |
 |---|---|
@@ -34,3 +41,4 @@ There are **three** dashboard surfaces. Keep them distinct.
 | Metabase HubSpot/Xero | Fivetran cadence |
 | Command dashboard | live query + daily AI cache |
 | Vercel carousel | ~30–60s |
+| Lark Base dashboards | live (read the base directly) |

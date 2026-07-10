@@ -5,6 +5,10 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 ## [Unreleased]
 
 ### Added
+- Engagement & work log (`docs/discovery/work-log.md`) — consolidated paper trail of decisions, builds, and parked items.
+- Original engineering brief (`docs/discovery/original-brief.md`).
+- Doc 10: the Lark-native Base dashboards (Ops Health & Bottlenecks, per-market) + the dashboard-strategy decision (pipeline health→Lark, performance→Metabase, Sankey not possible in Lark).
+- config: local Claude Code CLI + Playwright MCP + `gh` setup as-built.
 - Initial reconstructed documentation baseline (docs 00–18).
 - SDLC process documentation and review checklists.
 - Future Claude Code operating instructions.
