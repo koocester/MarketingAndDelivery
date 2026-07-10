@@ -5,6 +5,10 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 ## [Unreleased]
 
 ### Added
+- Full Lark Base documentation subtree (`connectors/lark/`) centred on the end-to-end workflow and how the base connects to the dashboards.
+- Build provenance (`docs/discovery/build-provenance.md`) — source systems, staging/CSV/idempotency method, verified migration result, full source→base→dashboard lineage.
+- Metricool→Supabase rebuildable field mapping (`supabase/metricool-sync-mapping.md`) — live-extracted, column-by-column, with upsert keys and unwritten-column caveats.
+- How briefs & the Command dashboard read the base (`n8n/how-briefs-and-command-read-the-base.md`) — per-workflow Lark/Supabase/AI logic; surfaced two additional base tables (Client accounts, Events).
 - Engagement & work log (`docs/discovery/work-log.md`) — consolidated paper trail of decisions, builds, and parked items.
 - Original engineering brief (`docs/discovery/original-brief.md`).
 - Doc 10: the Lark-native Base dashboards (Ops Health & Bottlenecks, per-market) + the dashboard-strategy decision (pipeline health→Lark, performance→Metabase, Sankey not possible in Lark).

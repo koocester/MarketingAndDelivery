@@ -71,4 +71,9 @@ When the SMM posts, they fill **Actual Upload Date** and the **Post URLs (Instag
 - **Operational vs performance are two different questions with two different homes:** "where is work stuck?" → the base + Lark dashboards (live). "did it produce leads/views?" → Metabase over Supabase (synced).
 - If a **dashboard is wrong**, trace it back along its path: Lark dashboards → the base records; Metabase → Supabase → the n8n Metricool sync → the Post URL on the base record.
 
+## Deep dives (the exact, rebuildable mechanics of each hop)
+- **How the base was built** (sources → migration → base): [../../docs/discovery/build-provenance.md](../../docs/discovery/build-provenance.md)
+- **Metricool → Supabase sync** (column-by-column, rebuildable): [../../supabase/metricool-sync-mapping.md](../../supabase/metricool-sync-mapping.md)
+- **How briefs & the Command dashboard read the base** (per-workflow): [../../n8n/how-briefs-and-command-read-the-base.md](../../n8n/how-briefs-and-command-read-the-base.md)
+
 Cross-refs: [../../docs/05-architecture.md](../../docs/05-architecture.md), [../../docs/07-supabase-setup.md](../../docs/07-supabase-setup.md), [../../docs/08-metabase-setup.md](../../docs/08-metabase-setup.md), [../../docs/10-dashboard-setup.md](../../docs/10-dashboard-setup.md).
