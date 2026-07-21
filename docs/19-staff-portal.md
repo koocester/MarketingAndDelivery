@@ -75,7 +75,7 @@ Cloudflare edge nodes can serve the previous deployment for a few minutes — **
 - The hard gates (`_middleware`, `dash`, `hr-feed`, `mgmt-deck`) **fail closed**. Keep them that way.
 - The soft gates (`academy-access.js`, the client guards) **fail open** by design. Never put confidential content behind only a soft gate.
 - 🔴 **Inline server-side secrets.** The three Functions hold their n8n Basic-Auth credentials inline in the source (server-side, never sent to the browser — but still hardcoded). This is the same class of finding as the S1–S6 n8n inline secrets in [16-troubleshooting.md](16-troubleshooting.md). **Values are redacted from this repo.** Rotate + move to Cloudflare env vars when the n8n secrets are rotated. Tracked in the CHANGELOG "Open" list.
-- The Supabase **anon** key is public by design (shipped in browser JS); it is not the concern. The n8n Basic-Auth mantras are.
+- The Supabase **anon** key is shipped in browser JS by design, but it is **not "nothing."** Decoded, it carries only `{ref, role: anon, iat, exp}` — no password, no service key, and its HMAC signature cannot be reversed to the signing secret. But the token *itself* is an `anon`-role bearer credential valid ~10 years, and its blast radius is **whatever Row-Level Security allows** — this system leaked `lb_people` to `anon` through a plain view once. So: keep it out of this repo, keep RLS tight, and treat the n8n Basic-Auth mantras as the higher-severity secret (department logins with no RLS behind them).
 
 ## Rebuild / operate — quick reference
 

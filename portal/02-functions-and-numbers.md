@@ -65,7 +65,7 @@ The roster was read from the **"Manager Updates" Lark group** on 2026-07-20, plu
 Each Function holds its n8n Basic-Auth credential **inline** (server-side; never sent to the browser, but hardcoded in source). **This repo redacts every value.** It is the same finding class as the S1–S6 inline n8n secrets in [../docs/16-troubleshooting.md](../docs/16-troubleshooting.md).
 
 - Rotate and move these to **Cloudflare Pages environment variables** when the n8n secrets are rotated. Tracked in the CHANGELOG "Open" list.
-- The Supabase **anon** key that also appears in these files is public by design (shipped in browser JS) — it is not the concern. The Basic-Auth mantras are.
+- The Supabase **anon** key that also appears in these files is shipped in browser JS by design and embeds no further secret (decoded: `{ref, role: anon, iat, exp}`; its signature cannot yield the signing key). But it is still an `anon`-role bearer credential — its exposure is bounded only by Row-Level Security, so keep it out of the repo and keep RLS tight. The Basic-Auth mantras are the higher-severity secret and must never be committed.
 
 ## Validate in 30 seconds
 

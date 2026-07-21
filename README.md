@@ -40,6 +40,42 @@ Metabase (CEO + Content dashboards)   +   Vercel SMM dashboard
 Staff Portal (Cloudflare Pages) ── one sign-in: training + role tools + manager dashboards
 ```
 
+## Architecture at a glance (container view)
+
+Read the system as **six layers**. Each is a deployable container with one job, one hosting home, and a defined trust boundary. A newcomer (human or AI) should be able to place any file in this repo into exactly one row.
+
+| # | Layer | Container(s) | Responsibility | Hosting | Trust boundary | Doc |
+|---|---|---|---|---|---|---|
+| 1 | **System of record** | Lark Base (M&D + HR bases) | The truth: projects, videos, carousels, pages, people, SLAs | Lark Cloud | Lark tenant auth | [06](docs/06-connectors-and-integrations.md) · [connectors/lark](connectors/lark/README.md) |
+| 2 | **Event fan-out** | AnyCross | React to record changes in real time (assign/notify/calendar) | In-Lark | In-tenant | [11](docs/11-agents-and-cron-jobs.md) |
+| 3 | **Orchestration** | n8n Cloud | Scheduled briefs, metric syncs, dashboard/deck APIs, HR roster sync | n8n Cloud | Basic-Auth webhooks (managed creds) | [09](docs/09-n8n-setup.md) · [n8n/](n8n/README.md) |
+| 4 | **Warehouse** | Supabase (Postgres) | Analytics store + **portal identity** (`auth`, `profiles`) | Supabase Cloud | RLS + service/anon keys | [07](docs/07-supabase-setup.md) · [supabase/](supabase/README.md) |
+| 5 | **BI / read apps** | Metabase, Vercel carousel app | Leadership BI; live carousel view | Metabase / Vercel | Metabase login; server-side Lark token | [08](docs/08-metabase-setup.md) · [10](docs/10-dashboard-setup.md) |
+| 6 | **Staff front end** | **Staff Portal** | One sign-in over 1–5: training, role tools, manager dashboards | Cloudflare Pages | **Edge + hard-gated Functions** | [19](docs/19-staff-portal.md) · [portal/](portal/README.md) |
+
+**Two trust boundaries decide everything about safety:**
+- **Internet-facing vs internal.** The portal edge (`_middleware.js`) and the n8n webhooks are on the public internet; everything they front is not. The edge gate is what makes the difference between "signed-in staff only" and "anyone with `curl`."
+- **Hard gate vs soft gate.** *Hard* gates run server-side and **fail closed** (the portal Functions, the edge middleware) — company financials and salary live only behind these. *Soft* gates run in the browser and **fail open** (deck routing, nav) — nothing confidential goes behind one. Getting this backwards is the exact bug the portal was built to fix. See [portal/01](portal/01-access-and-gates.md).
+
+## How change flows — the SDLC we follow
+
+This repo runs a lightweight but real **8-phase SDLC** ([03](docs/03-sdlc-process.md)). Each phase has a home doc, so "where do I write this down?" always has an answer. A change is not done until it has walked all eight.
+
+| Phase | What happens | Governed by |
+|---|---|---|
+| 1 · Requirement | Capture the goal + who asked | [04 Requirements & decisions](docs/04-requirements-and-decisions.md) |
+| 2 · Analysis | Which layer owns it? What data/secrets does it touch? | [02 Overview](docs/02-system-overview.md) · [15 Security](docs/15-security-and-secrets.md) |
+| 3 · Design | Write it down; an ADR for anything architectural | [05 Architecture](docs/05-architecture.md) · [docs/adr/](docs/adr/) |
+| 4 · Implementation | Branch `type/short-desc`; small, reversible; never inline secrets | [12 Local dev](docs/12-local-development.md) |
+| 5 · Testing | Read-only validation first; no prod writes without approval | [14 Testing & validation](docs/14-testing-and-validation.md) |
+| 6 · Deployment | Vercel / n8n UI / `portal/deploy.sh` (four gates) | [13 Deploy runbook](docs/13-deployment-runbook.md) · [portal/03](portal/03-deploy-nav-ops.md) |
+| 7 · Monitoring | Check executions; error alerting is a known gap | [16 Troubleshooting](docs/16-troubleshooting.md) |
+| 8 · Maintenance | Rotate secrets, prune dead workflows, keep docs in sync | [17 Change-log process](docs/17-change-log-process.md) · [CHANGELOG](CHANGELOG.md) |
+
+- **Agile by default** (connector tweaks, new cards, workflows, dashboard changes): iterate → ship → validate.
+- **Waterfall when it's hard to reverse** (data model, credential architecture, migrations): design fully → sign-off → execute. 21+ people depend on the base.
+- Every PR/release passes the checklists in [03](docs/03-sdlc-process.md) — no secrets, docs updated, validation + rollback written.
+
 ## What was reconstructed from the laptop
 
 - Confirmed **no local runtime** (no n8n install, Docker, cron, or LaunchAgents) — everything is cloud + MCP.
