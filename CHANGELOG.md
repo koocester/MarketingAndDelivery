@@ -59,10 +59,13 @@ The portal (`staffacademy.koocester.com`) post-dates the 2026-07-10 reconstructi
 - Added n8n credential-handling guidance (never export raw credentials; scan workflow JSON before commit).
 - Documented unauthenticated webhooks and the missing error-alerting stub as open risks.
 
+### Security — is_founder() verified, found misnamed (2026-07-21)
+- 🔴 **`is_founder()` is defined as `profiles.is_admin`, not a founder check.** Read the definition end to end via `pg_get_functiondef` in the portal Supabase (`lfppmsppvqtjyusfrlkf`): `SELECT COALESCE((SELECT p.is_admin FROM public.profiles p WHERE p.id = auth.uid()), false)`. It returns true for **any admin**. Currently only one profile (`ceo@koocester.com`) has `is_admin=true`, so today it means "Hakim" by coincidence — but granting `is_admin` to Tech/an academy admin (its documented purpose, to bypass deck locks) would also hand them the Academy founder tools. **Documented, not fixed** — recommended fix is to key it on a dedicated `is_founder` column / fixed uid (production DDL, needs owner go-ahead). Corrects `SOURCES_OF_TRUTH.md` #4, which wrongly said it was "NOT the same as is_admin."
+
 ### Open (tracked, not yet done)
 - Rotate + migrate inline n8n secrets (S1–S6).
-- Rotate the Staff Portal's inline n8n Basic-Auth credentials (in `functions/dash.js`, `mgmt-deck.js`, `hr-feed.js`) to Cloudflare Pages env vars — same finding class as S1–S6; values redacted from this repo.
-- Confirm `is_founder()` is false for a non-founder signed-in staff member (SOURCES_OF_TRUTH #4 is only partially verified).
+- Decouple `is_founder()` from `is_admin` (see Security above) — dedicated column or fixed uid.
+- (Won't-do per owner 2026-07-21: rotating the portal's inline n8n Basic-Auth creds — Hakim opted to leave as-is.)
 - Wire n8n error alerting.
 - Decide on `marts.targets` (wire vs remove) and the unused dbt Xero layer.
 - Confirm the true `.env` home for each cloud secret; locate the dbt source repo.

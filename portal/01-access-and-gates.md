@@ -21,7 +21,7 @@ Each gate asks one of these. Each is answered by a specific `profiles` column or
 | Is this person a manager? | `profiles.is_manager` (boolean) | Admin → Permissions | `portal.html`, `mgmt-deck.js`, `manager/koo-manager-guard.js`, `koo-nav.js` |
 | Which dashboard may they see? | `profiles.dashboard` (`command`\|`growth`\|`sales`\|`finance`\|`hr`\|`tech`\|NULL) | Admin → Permissions | `dash.js` |
 | Are they an admin? | `profiles.is_admin` | Admin → Permissions | guards; also bypasses deck locks |
-| Are they the founder? | DB function **`is_founder()`** (Hakim alone) | database | `academy-access.js` → `KOO_ACCESS.isFounder`; Academy founder tools |
+| Are they the founder? | DB function **`is_founder()`** — ⚠️ actually returns `profiles.is_admin` (any admin; today only Hakim) | database | `academy-access.js` → `KOO_ACCESS.isFounder`; Academy founder tools |
 
 - **Granting access is a one-row edit, no redeploy.** Do it in **Portal → Admin → Permissions** (`admin/permissions.html`).
 - **Hardcoded fallback lists still exist** in `dash.js`, `mgmt-deck.js`, `hr-feed.js`, and `portal.html` as frozen break-glass, consulted only if the `profiles` columns vanish. **Do not edit them to grant access** — edit the column.

@@ -55,14 +55,14 @@ A request passes through up to four checks. The two server-side ones are the rea
 | `knownDecks` | `academy_decks` | every curriculum deck; pages absent here are **never** gated |
 | `isAdmin` | `profiles.is_admin` | also bypasses deck locks |
 | `canReassign` | `profiles.can_reassign` | Hakim **and Bhavani**; gates the role inspector — **not** `is_admin` |
-| `isFounder` | DB function **`is_founder()`** | Hakim alone; defaults **false** on every failure path (fails closed) |
+| `isFounder` | DB function **`is_founder()`** | ⚠️ returns `profiles.is_admin` (any admin; today only Hakim) — see §8; defaults **false** on every failure path (fails closed) |
 | `mismatch` | `academy_me.mismatch` | Lark HR and portal profile disagree on this person |
 | `degraded` | (set on any query/network error) | callers fail **open** |
 
 **Keep the three "elevated" concepts distinct — they are different jobs:**
 - `is_admin` — bypasses deck locks; also true for Tech and the academy admins.
 - `can_reassign` — may reassign roles (Hakim + Bhavani).
-- `is_founder()` — reads the org's whole role map and every unbuilt module (Hakim alone).
+- `is_founder()` — gates reading the org's whole role map and every unbuilt module. ⚠️ **Defined as `profiles.is_admin`** (see §8) — true for any admin; today only Hakim is one.
 
 ## 6. Permissions admin — `admin/permissions.html`
 
@@ -72,19 +72,28 @@ The one place access is changed, and it is **data, not code**: it calls three `S
 
 Reads `roster`, `profiles`, and `progress` (the completion-tracking views/tables in the portal Supabase) to show who has finished which module. This is reporting over the same identity; it is not a gate.
 
-## 8. ⚠️ The one open verification — `is_founder()`
+## 8. ✅ `is_founder()` — VERIFIED 2026-07-21, and it is misnamed (latent bug)
 
-**Confirmed:** `is_founder()` returns **true for Hakim** and **false for anonymous**. It gates the Academy's founder tools (role inspector, dev view, coverage map) and the Permissions page.
+**Read the definition directly** in the Supabase SQL editor (project `lfppmsppvqtjyusfrlkf`), via `pg_get_functiondef`:
 
-**Live re-test — 2026-07-21.** Called `POST /rest/v1/rpc/is_founder` on the portal project `lfppmsppvqtjyusfrlkf` as a non-privileged (anon) caller → **HTTP 200, body `false`**. A bogus function name returned 404 (PGRST202), confirming the real function is what answered. So the function exists, is exposed, and **returns false for any caller without a founder session** — the same code path a signed-in non-founder takes.
+```sql
+CREATE OR REPLACE FUNCTION public.is_founder()
+ RETURNS boolean
+ LANGUAGE sql STABLE SECURITY DEFINER SET search_path TO 'public'
+AS $function$
+  SELECT COALESCE((SELECT p.is_admin FROM public.profiles p WHERE p.id = auth.uid()), false)
+$function$
+```
 
-**Still not proven by definition:** that a *specific signed-in non-founder staff member* gets false. That needs either the function body or that person's session token, and neither is reachable from the organizer machine — Metabase connects to the **warehouse** project (`wnerzolcmjrsktfqferw`), not the portal auth project (`lfppmsppvqtjyusfrlkf`). The anon result makes a broken predicate unlikely, but does not read the predicate.
+**It is not a founder check. It returns `profiles.is_admin` for the caller.** So `is_founder()` is true for **any** admin, not Hakim specifically.
 
-**Close it 100% (either is sufficient):**
-1. In the Supabase SQL editor (project `lfppmsppvqtjyusfrlkf`): `SELECT pg_get_functiondef('is_founder'::regproc);` — read the predicate, confirm it keys on Hakim's `auth.uid()` alone, and paste it here.
-2. Or have one non-founder staff member open `academy.html` and confirm the founder tools do **not** render.
+**Current state (verified same session):** exactly **one** profile has `is_admin = true` — `ceo@koocester.com` (Hakim). So *today* the function returns true for Hakim alone and false for everyone else. The behaviour is correct **right now, by coincidence**, because Hakim is the only admin.
 
-Tracked in the CHANGELOG "Open" list; mirrors `SOURCES_OF_TRUTH.md` #4.
+**⚠️ The latent bug.** `is_admin` is the flag you grant Tech or an academy admin to let them bypass deck locks (see §5). The moment `is_admin` is set on anyone else, that person **also** passes `is_founder()` and gains the founder-only tools — the role inspector, dev view, and coverage map, which expose the org's whole role map and every unbuilt module. The name promises "founder"; the code delivers "any admin." This is the classic name-vs-code drift.
+
+**Recommended fix (not yet applied — needs Hakim's go-ahead, it's a production DDL change):** decouple the two. Either key `is_founder()` on a dedicated `profiles.is_founder` column or on Hakim's fixed `auth.uid()`/email, so granting `is_admin` never widens the founder tools. Until then, treat "grant is_admin" as also granting founder-tool visibility.
+
+This corrects `SOURCES_OF_TRUTH.md` #4, which claimed is_founder is "NOT the same as is_admin." The running code is the fact; the registry entry was fixed the same day.
 
 ## Verify in 30 seconds
 
