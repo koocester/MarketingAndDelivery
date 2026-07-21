@@ -9,6 +9,7 @@
 | Scheduled + outbound | **n8n Cloud** (`koocester.app.n8n.cloud`) | Cron briefs, metric syncs, Command dashboard API | n8n Cloud |
 | Analytics | **Supabase** + **Metabase** | Warehouse + BI | Supabase / Metabase Cloud |
 | Live app | **Vercel** (`apps/smm-carousel-dashboard`) | Read-only carousel dashboard off Lark | Vercel |
+| Front end | **Staff Portal** (`staffacademy.koocester.com`) | One sign-in: training + role tools + manager dashboards | Cloudflare Pages |
 
 ## How a piece of content flows
 1. A **Project** spawns **videos/carousels**; each advances through stage buttons (Sourcing → … → Ready to Upload → Completed).
@@ -25,6 +26,12 @@
 - **n8n Command workflow** serves 6 Basic-Auth webhooks (`/command /growth /sales /finance /hr /tech`) → role-scoped HTML.
 - **n8n brief workflows** push CEO daily / weekly / monthly summaries to Lark Messenger (summarised by Anthropic).
 - **Vercel app** shows the SMM carousel tracker live.
+
+## How staff reach it — the Staff Portal
+- **One sign-in** (Supabase auth, project `lfppmsppvqtjyusfrlkf`) fronts training, role tools, and the manager dashboards.
+- **Edge middleware** gates every request before delivery; three hard-gated Cloudflare Functions (`/dash`, `/mgmt-deck`, `/hr-overview`) verify the token, resolve the role, and **proxy the n8n feeds server-side** so the Basic-Auth logins never reach the browser.
+- **Access is data, not code:** `profiles.is_manager` / `profiles.dashboard` decide who sees what (one row edit, no redeploy). The Lark HR base syncs nightly into the `hr_directory` view behind the People page.
+- Full model: [19-staff-portal.md](19-staff-portal.md) and [../portal/](../portal/README.md).
 
 ## What is NOT in this system (so you don't go looking)
 - No local cron, Docker, or n8n install.

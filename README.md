@@ -28,13 +28,16 @@ AnyCross ── fan-out / assign / notify
    │
    │  scheduled + outbound
    ▼
-n8n Cloud ── briefs, metric syncs, Command dashboard API
+n8n Cloud ── briefs, metric syncs, Command dashboard API, HR roster sync
    │
    ▼
 Supabase (Postgres)  ◄── Fivetran (HubSpot, Xero) + n8n (Metricool, Aspire)
    │
    ▼
 Metabase (CEO + Content dashboards)   +   Vercel SMM dashboard
+   ▲
+   │  proxies (hard-gated, live) + Supabase auth/roles
+Staff Portal (Cloudflare Pages) ── one sign-in: training + role tools + manager dashboards
 ```
 
 ## What was reconstructed from the laptop
@@ -56,6 +59,7 @@ Metabase (CEO + Content dashboards)   +   Vercel SMM dashboard
 | **Xero** | Accounting → warehouse | Fivetran; Xero MCP | [06](docs/06-connectors-and-integrations.md) |
 | **Metricool / Aspire** | Social & card-spend feeds | n8n → Supabase | [06](docs/06-connectors-and-integrations.md) |
 | **MCP connectors** | Agent control plane | Claude Code / Desktop | [06](docs/06-connectors-and-integrations.md) |
+| **Staff Portal** | Company sign-in: training + role tools + manager dashboards | Cloudflare Pages; Supabase auth; proxies n8n | [19](docs/19-staff-portal.md) · [portal/](portal/README.md) |
 
 ## Current data flow
 
@@ -75,7 +79,7 @@ Metabase (CEO + Content dashboards)   +   Vercel SMM dashboard
 
 - **Code:** `apps/` (Vercel dashboard), `scripts/` (utilities).
 - **Docs:** `docs/00`→`18` (start at [docs/00-start-here.md](docs/00-start-here.md)).
-- **Per-system:** `connectors/`, `supabase/`, `metabase/`, `n8n/`, `agents/`, `cron/`, `config/`.
+- **Per-system:** `connectors/`, `supabase/`, `metabase/`, `n8n/`, `portal/`, `agents/`, `cron/`, `config/`.
 
 ## How to configure / run / test / deploy
 
@@ -100,4 +104,4 @@ Metabase (CEO + Content dashboards)   +   Vercel SMM dashboard
 No secret values in the repo — ever. `.env`, MCP configs, and raw n8n credential/workflow exports with embedded secrets are git-ignored. See [15](docs/15-security-and-secrets.md); known findings in [16](docs/16-troubleshooting.md) and the ADR.
 
 ## Deeper docs
-[00 Start here](docs/00-start-here.md) · [01 Exec summary](docs/01-executive-summary.md) · [02 Overview](docs/02-system-overview.md) · [03 SDLC](docs/03-sdlc-process.md) · [04 Requirements & decisions](docs/04-requirements-and-decisions.md) · [05 Architecture](docs/05-architecture.md) · [06 Connectors](docs/06-connectors-and-integrations.md) · [07 Supabase](docs/07-supabase-setup.md) · [08 Metabase](docs/08-metabase-setup.md) · [09 n8n](docs/09-n8n-setup.md) · [10 Dashboards](docs/10-dashboard-setup.md) · [11 Agents & cron](docs/11-agents-and-cron-jobs.md) · [12 Local dev](docs/12-local-development.md) · [13 Deploy](docs/13-deployment-runbook.md) · [14 Testing](docs/14-testing-and-validation.md) · [15 Security](docs/15-security-and-secrets.md) · [16 Troubleshooting](docs/16-troubleshooting.md) · [17 Change-log process](docs/17-change-log-process.md) · [18 Future Claude](docs/18-future-claude-code-instructions.md)
+[00 Start here](docs/00-start-here.md) · [01 Exec summary](docs/01-executive-summary.md) · [02 Overview](docs/02-system-overview.md) · [03 SDLC](docs/03-sdlc-process.md) · [04 Requirements & decisions](docs/04-requirements-and-decisions.md) · [05 Architecture](docs/05-architecture.md) · [06 Connectors](docs/06-connectors-and-integrations.md) · [07 Supabase](docs/07-supabase-setup.md) · [08 Metabase](docs/08-metabase-setup.md) · [09 n8n](docs/09-n8n-setup.md) · [10 Dashboards](docs/10-dashboard-setup.md) · [11 Agents & cron](docs/11-agents-and-cron-jobs.md) · [12 Local dev](docs/12-local-development.md) · [13 Deploy](docs/13-deployment-runbook.md) · [14 Testing](docs/14-testing-and-validation.md) · [15 Security](docs/15-security-and-secrets.md) · [16 Troubleshooting](docs/16-troubleshooting.md) · [17 Change-log process](docs/17-change-log-process.md) · [18 Future Claude](docs/18-future-claude-code-instructions.md) · [19 Staff Portal](docs/19-staff-portal.md)

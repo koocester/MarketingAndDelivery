@@ -4,6 +4,13 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 
 ## [Unreleased]
 
+### Added — Staff Portal documentation (2026-07-21)
+The portal (`staffacademy.koocester.com`) post-dates the 2026-07-10 reconstruction and was the largest undocumented gap. Documented from the live runtime source, not memory.
+- `docs/19-staff-portal.md` — narrative: what it is, the soft-vs-hard gate model, the edge front door, how it links into Lark (HR roster sync + Academy Role), how live numbers reach the dashboards, `deploy.sh`, security posture.
+- `portal/` subtree — `README.md` (file/URL map + golden rules), `01-access-and-gates.md` (identity model, the four `profiles`-driven gates, the traps), `02-functions-and-numbers.md` (the three hard-gated proxy Functions and what each extracts), `03-deploy-nav-ops.md` (the four deploy gates, nav enforcement, propagation, ops checklist).
+- `docs/diagrams/portal-access-flow.mmd` — request/gate flow (edge → functions → n8n → Lark/Supabase).
+- Updated README (integration map, data-flow, per-system list, deep-docs), `docs/02-system-overview.md` (portal plane + "how staff reach it"), `docs/10-dashboard-setup.md` (surface **E**, five surfaces now).
+
 ### Added — replication artifacts (turns the map into a rebuildable backup)
 - `n8n/workflows/*.json` — sanitized exports of the live workflows (structure byte-identical; secret VALUES replaced by `<REDACTED_*>` placeholders; credential names/ids preserved).
 - `metabase/cards/` — the actual SQL for all 35 dashboard cards (33 `.sql` + 2 MBQL `.json`) + rebuild guide.
@@ -47,6 +54,8 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 
 ### Open (tracked, not yet done)
 - Rotate + migrate inline n8n secrets (S1–S6).
+- Rotate the Staff Portal's inline n8n Basic-Auth credentials (in `functions/dash.js`, `mgmt-deck.js`, `hr-feed.js`) to Cloudflare Pages env vars — same finding class as S1–S6; values redacted from this repo.
+- Confirm `is_founder()` is false for a non-founder signed-in staff member (SOURCES_OF_TRUTH #4 is only partially verified).
 - Wire n8n error alerting.
 - Decide on `marts.targets` (wire vs remove) and the unused dbt Xero layer.
 - Confirm the true `.env` home for each cloud secret; locate the dbt source repo.

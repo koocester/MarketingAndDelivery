@@ -1,6 +1,6 @@
 # 10 — Dashboard Setup
 
-There are **four** dashboard surfaces. Keep them distinct. (A) Metabase BI, (B) the n8n Command cockpit, (C) the Vercel carousel app, and (D) the Lark-native Base dashboards.
+There are **five** dashboard surfaces. Keep them distinct. (A) Metabase BI, (B) the n8n Command cockpit, (C) the Vercel carousel app, (D) the Lark-native Base dashboards, and (E) the Staff Portal, which is the **access layer** staff actually use to reach B (and the management deck + HR overview).
 
 ## A. Metabase dashboards (BI) — CEO (67) + Content Performance (100)
 - **Purpose:** finance/sales/content BI for leadership.
@@ -34,6 +34,16 @@ Built **inside** the Lark M&D base via computer-use — **Lark Base dashboards h
 - **Where each intelligence lives (decision):** pipeline health / bottlenecks / "where is it stuck" → **Lark** (data lives here); content performance / lead-gen feedback → **Supabase + Metabase**. A **Sankey** flow diagram is **not possible in Lark** (no such chart type) — the insight is covered by the stage bars + an aging view.
 - **Parked build:** a set of "Stuck / aging" grid views (grouped by stage, sorted by Overdue/age, active-only) — API-buildable and non-overlapping; parked pending go-ahead. See [discovery/work-log.md](discovery/work-log.md).
 
+## E. Staff Portal — the access layer over B (`staffacademy.koocester.com`)
+Staff do **not** hit the raw n8n Command webhooks. They sign in once to the portal, which proxies the right feed to the right person.
+- **Purpose:** one door for training + role tools + the manager dashboards; scope B's role webhooks and the management deck / HR overview to who is asking.
+- **Data source:** none of its own — it verifies a Supabase token, resolves the role from `profiles`, and proxies the live n8n feed server-side (Basic-Auth never sent to the browser).
+- **Auth:** hard-gated Cloudflare Pages Functions `/dash`, `/mgmt-deck`, `/hr-overview` (fail-closed 403). Founder → full Command; each manager → only their department feed.
+- **Access control:** `profiles.is_manager` / `profiles.dashboard` (one row edit, no redeploy). **Validate:** sign in as a department manager → see only that department; signed out → 401.
+- **Rebuild/redeploy:** `./deploy.sh` from `04. Resources/Training/` (four gates; never `wrangler` directly).
+- **Risks:** inline n8n Basic-Auth creds in the Functions (server-side, redacted here — rotate to env vars); Cloudflare edge propagation (re-sweep until two clean).
+- **Full doc:** [19-staff-portal.md](19-staff-portal.md) · [../portal/](../portal/README.md).
+
 ## Data freshness expectations (summary)
 | Surface | Latency |
 |---|---|
@@ -42,3 +52,4 @@ Built **inside** the Lark M&D base via computer-use — **Lark Base dashboards h
 | Command dashboard | live query + daily AI cache |
 | Vercel carousel | ~30–60s |
 | Lark Base dashboards | live (read the base directly) |
+| Staff Portal | live proxy (same freshness as the feed it fronts) |

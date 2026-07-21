@@ -1,0 +1,30 @@
+%% Staff portal — request & gate flow (staffacademy.koocester.com)
+flowchart TD
+  REQ([Browser request]) --> MW{{"_middleware.js (edge)<br/>koo_session cookie valid?"}}
+
+  MW -->|no / bad| BOUNCE["302 to login (page)<br/>401 (asset) — no body"]
+  MW -->|"public path<br/>(login, /dash, /hr-overview, /mgmt-deck)"| PASS
+  MW -->|valid per Supabase| PASS[File served]
+
+  PASS --> PAGE[Static page or deck]
+  PAGE --> SOFT{{"academy-access.js (client)<br/>which decks? — FAILS OPEN"}}
+
+  PAGE -->|fetch Bearer token| DASH{{"dash.js — role → one feed<br/>FAILS CLOSED 403"}}
+  PAGE -->|fetch Bearer token| MGMT{{"mgmt-deck.js — manager?<br/>FAILS CLOSED 403"}}
+  PAGE -->|fetch Bearer token| HRF{{"hr-feed.js — founder/HR?<br/>FAILS CLOSED 403"}}
+
+  DASH -->|Basic-Auth server-side| N8N["n8n webhooks<br/>(live-computed, per-role pruned)"]
+  MGMT -->|Basic-Auth server-side| N8N
+  HRF  -->|Basic-Auth server-side| N8N
+
+  N8N -->|reads live| LARK[(Lark Base)]
+  N8N -->|reads live| SUPA[(Supabase warehouse)]
+
+  MW -.validates.-> AUTH[(Supabase auth<br/>lfppmsppvqtjyusfrlkf)]
+  SOFT -.reads.-> PROF[(profiles / academy views / is_founder)]
+  DASH -.reads role.-> PROF
+  MGMT -.reads role.-> PROF
+  HRF -.reads role.-> PROF
+
+  HRSYNC["n8n HR Roster Sync 8XEtLLl63t3oEhcq<br/>nightly ~02:45"] -->|Employee Data → hr_directory| PROF
+  LARKHR[(Lark HR base)] --> HRSYNC
