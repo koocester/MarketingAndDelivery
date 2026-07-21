@@ -2,7 +2,7 @@
 
 *Verified live via Metabase MCP, 2026-07-10.*
 
-> 🔴 **SUBSCRIPTION RISK — check this first.** Instance `corky-cliff.metabaseapp.com`. On **2026-07-21** the app showed *"last day of your trial."* If the paid plan wasn't started, the trial lapses and **every dashboard/card here goes dark** (CEO 67, Content 100, all cards). The n8n briefs + Command dashboard read Supabase directly and survive; all Metabase BI does not. **Confirm the subscription is active before relying on any Metabase number.**
+> 🔴 **SUBSCRIPTION RISK — check this first.** Instance `koocester.metabaseapp.com`. On **2026-07-21** the app showed *"last day of your trial."* If the paid plan wasn't started, the trial lapses and **every dashboard/card here goes dark** (CEO 67, Content 100, all cards). The n8n briefs + Command dashboard read Supabase directly and survive; all Metabase BI does not. **Confirm the subscription is active before relying on any Metabase number.**
 
 ## Purpose
 Business-intelligence layer over the Supabase warehouse — finance, sales, and content dashboards for leadership.
