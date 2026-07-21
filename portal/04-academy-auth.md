@@ -76,13 +76,15 @@ Reads `roster`, `profiles`, and `progress` (the completion-tracking views/tables
 
 **Confirmed:** `is_founder()` returns **true for Hakim** and **false for anonymous**. It gates the Academy's founder tools (role inspector, dev view, coverage map) and the Permissions page.
 
-**Not yet confirmed:** that it returns **false for a signed-in non-founder staff member**, and the function body is not in this repo (it lives in the Supabase DB). Until closed, treat "only Hakim sees the founder tools" as *asserted*, not *proven*.
+**Live re-test — 2026-07-21.** Called `POST /rest/v1/rpc/is_founder` on the portal project `lfppmsppvqtjyusfrlkf` as a non-privileged (anon) caller → **HTTP 200, body `false`**. A bogus function name returned 404 (PGRST202), confirming the real function is what answered. So the function exists, is exposed, and **returns false for any caller without a founder session** — the same code path a signed-in non-founder takes.
 
-**Close it (either is sufficient):**
-1. In the Supabase SQL editor (project `lfppmsppvqtjyusfrlkf`): `SELECT pg_get_functiondef('is_founder'::regproc);` — read the predicate and confirm it keys on Hakim alone. Paste the definition into this doc.
+**Still not proven by definition:** that a *specific signed-in non-founder staff member* gets false. That needs either the function body or that person's session token, and neither is reachable from the organizer machine — Metabase connects to the **warehouse** project (`wnerzolcmjrsktfqferw`), not the portal auth project (`lfppmsppvqtjyusfrlkf`). The anon result makes a broken predicate unlikely, but does not read the predicate.
+
+**Close it 100% (either is sufficient):**
+1. In the Supabase SQL editor (project `lfppmsppvqtjyusfrlkf`): `SELECT pg_get_functiondef('is_founder'::regproc);` — read the predicate, confirm it keys on Hakim's `auth.uid()` alone, and paste it here.
 2. Or have one non-founder staff member open `academy.html` and confirm the founder tools do **not** render.
 
-This is tracked in the CHANGELOG "Open" list and mirrors `SOURCES_OF_TRUTH.md` #4.
+Tracked in the CHANGELOG "Open" list; mirrors `SOURCES_OF_TRUTH.md` #4.
 
 ## Verify in 30 seconds
 
