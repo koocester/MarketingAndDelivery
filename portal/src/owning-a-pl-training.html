@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Owning a P&L</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* MC pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* diagnose · funnel + matrix */
+.funnel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.fstage{border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:24px;background:var(--maroon-tint)}
+.farr{color:var(--maroon);font-weight:800}
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fff;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr 1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* ===== P&L waterfall (this module) ===== */
+.pnl{margin-top:14px;max-width:820px}
+.pbar{display:flex;align-items:center;gap:14px;margin:9px 0}
+.pbar .plab{width:190px;text-align:right;font-size:13.5px;font-weight:700;color:var(--ink);flex:none;line-height:1.25}
+.pbar .plab small{display:block;font-size:10.5px;font-weight:600;color:var(--muted)}
+.pbar .ptrack{flex:1;height:38px;background:#fff;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.pbar .pfill{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:13px;font-size:12.5px;font-weight:800;color:#fff;white-space:nowrap}
+.pfill.rev{background:var(--ink)}
+.pfill.sub{background:#E49D9F;color:#000}
+.pfill.gm{background:var(--maroon)}
+.pfill.profit{background:var(--ok)}
+.pbar .pval{width:66px;font-size:14px;font-weight:800;color:var(--ink);flex:none}
+.pnlkey{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11.5px;color:var(--muted)}
+.pnlkey span{display:flex;align-items:center;gap:6px}
+.pnlkey i{width:13px;height:13px;border-radius:3px;display:inline-block}
+/* ===== LTV:CAC scale (this module) ===== */
+.scale{margin-top:18px;max-width:860px}
+.scaletrack{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.zone{flex:1;padding:16px 10px;text-align:center;border-right:1px solid #fff}
+.zone:last-child{border-right:0}
+.zone.bad{background:var(--maroon-tint)}
+.zone.mid{background:#fff}
+.zone.good{background:rgba(26,127,55,.12)}
+.zone .zr{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
+.zone.bad .zr{color:var(--maroon)}.zone.mid .zr{color:var(--muted)}.zone.good .zr{color:var(--ok)}
+.zone .zt{font-size:11px;font-weight:700;margin-top:5px;color:var(--body);line-height:1.3}
+.scalax{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px;font-weight:600}
+/* equation strip */
+.eqn{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+.eqbox{border:2px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);min-width:150px}
+.eqbox.hot{border-color:var(--maroon);background:var(--maroon-tint)}
+.eqbox .el{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.eqbox .ev{font-size:1.35rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-top:3px}
+.eqbox.hot .ev{color:var(--maroon)}
+.eqop{font-size:1.6rem;font-weight:800;color:var(--maroon)}
+/* capital allocation and cash */
+.decision-gates{display:grid;grid-template-columns:1fr 32px 1fr 32px 1fr;gap:7px;align-items:stretch;margin-top:17px}
+.decision-gate{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;box-shadow:var(--shadow)}.decision-gate.hot{border:3px solid var(--maroon);background:var(--maroon-tint)}
+.decision-gate .n{font-size:10px;color:var(--maroon);font-weight:800;letter-spacing:.07em;text-transform:uppercase}.decision-gate b{display:block;color:var(--ink);font-size:1rem;margin:7px 0 5px}.decision-gate p{font-size:12px;line-height:1.4;color:var(--muted);margin:0}.decision-arrow{display:flex;align-items:center;justify-content:center;color:var(--maroon);font-size:20px;font-weight:800}
+.decision-outcomes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.decision-outcome{border:1px solid var(--line);border-radius:11px;padding:11px 14px;background:#fff;font-size:12px;color:var(--body)}.decision-outcome b{display:block;color:var(--ink);font-size:14px;margin-bottom:3px}.decision-outcome.invest{border-color:var(--ok);background:rgba(26,127,55,.12)}.decision-outcome.protect{border-color:var(--maroon);background:var(--maroon-tint)}
+.book-lens{font-size:11px;color:var(--muted);margin-top:10px}.book-lens b{color:var(--maroon)}
+.cash-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}.cash-king{font-size:clamp(2.6rem,6vw,4rem);font-weight:800;letter-spacing:-.04em;color:var(--maroon);line-height:1}.cash-eq{font-size:1.05rem;color:var(--ink);font-weight:800;border-left:4px solid var(--maroon);padding:9px 13px;background:var(--maroon-tint)}
+.cash-cycle{display:grid;grid-template-columns:1fr 25px 1fr 25px 1fr 25px 1fr;gap:5px;align-items:stretch;margin-top:17px}.cash-step{border:1px solid var(--line);border-radius:11px;padding:13px 12px;background:#fff;box-shadow:var(--shadow)}.cash-step.hot{border:3px solid var(--maroon);background:var(--maroon-tint)}.cash-step .n{font-size:10px;color:var(--maroon);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.cash-step b{display:block;color:var(--ink);font-size:13px;margin:6px 0 4px}.cash-step p{font-size:11px;line-height:1.35;color:var(--muted);margin:0}.cash-arrow{display:flex;align-items:center;justify-content:center;color:var(--maroon);font-weight:800}
+.cash-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:11px}.cash-action{border-top:4px solid var(--maroon);border-radius:8px 8px 10px 10px;padding:10px 11px;background:#fff;box-shadow:var(--shadow);font-size:11px;line-height:1.35;color:var(--body)}.cash-action b{display:block;color:var(--ink);font-size:12.5px;margin-bottom:3px}.runway-strip{margin-top:11px;border:2px solid var(--maroon);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;gap:14px;align-items:center;color:var(--body);font-size:12px}.runway-strip b{font-size:14px;color:var(--ink)}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#fff;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:rgba(26,127,55,.12)}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:320px;padding:13px 16px}
+.fb.ok{background:rgba(26,127,55,.12);color:var(--ok);border:1px solid var(--ok)}
+.fb.no{background:var(--maroon-tint);color:var(--maroon);border:1px solid #E49D9F}
+.fb b{font-weight:800}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:rgba(26,127,55,.12);color:var(--ok)}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:var(--maroon)}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide,.wins,.decision-outcomes,.cash-actions{grid-template-columns:1fr}.decision-gates,.cash-cycle{grid-template-columns:1fr}.decision-arrow,.cash-arrow{display:none}.vrow{grid-template-columns:1fr}.pbar .plab{width:130px}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · command tier · Heads of Department</div>
+      <h1><span class="lnwrap"><span class="ln">Owning</span></span><span class="lnwrap"><span class="ln">a Profit</span></span><span class="lnwrap"><span class="ln">and Loss</span></span></h1>
+      <p class="lead" style="margin-top:20px">Run your department like a business you own. Revenue, cost, margin — and the trade-offs between them are yours to make.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHY THIS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why this matters</div>
+      <h2>A department is a business inside a business.</h2>
+      <p class="lead">The Profit and Loss statement — the <b>P&amp;L</b> — is the scoreboard for that business. It shows what came in, what it cost to deliver, and what was left. Own the P&amp;L and you stop managing tasks; you start managing an outcome.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT SUCCESS LOOKS LIKE (front) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>You can read your P&amp;L top to bottom</b><span>revenue, cost of delivery, margin, profit — no gaps</span></div>
+        <div class="win"><b>You know your unit economics cold</b><span>what a customer costs to win vs what they're worth</span></div>
+        <div class="win"><b>You make trade-offs on purpose</b><span>invest or protect margin — a choice, not an accident</span></div>
+        <div class="win"><b>You never plan spend you can't fund</b><span>cash and runway checked before the commitment</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you clear it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 4 · REVENUE vs PROFIT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The distinction that decides everything</div>
+      <div class="big">Revenue is what you <em>bill</em>. Profit is what you <em>keep</em>.</div>
+      <p class="lead">Revenue is vanity. Profit is sanity. A department can grow revenue every month and still lose money — because revenue says nothing about what it cost to earn. The number that matters is what's left after every cost comes out.</p>
+      <div class="callout"><b>Growth without margin is just expensive noise.</b> Chase the number you keep, not the number you announce.</div>
+    </div>
+  </section>
+
+  <!-- 5 · THE P&L WATERFALL -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How to read a P&amp;L · top to bottom</div>
+      <h2>Every P&amp;L flows the same way.</h2>
+      <div class="pnl">
+        <div class="pbar"><span class="plab">Revenue<small>what clients pay you</small></span><span class="ptrack"><span class="pfill rev" style="width:100%">S$100k</span></span><span class="pval">S$100k</span></div>
+        <div class="pbar"><span class="plab">− Cost of delivery<small>producing the work</small></span><span class="ptrack"><span class="pfill sub" style="width:40%">− S$40k</span></span><span class="pval">−S$40k</span></div>
+        <div class="pbar"><span class="plab">= Gross margin<small>what delivery leaves</small></span><span class="ptrack"><span class="pfill gm" style="width:60%">S$60k</span></span><span class="pval">S$60k</span></div>
+        <div class="pbar"><span class="plab">− Operating costs<small>salaries, tools, overhead</small></span><span class="ptrack"><span class="pfill sub" style="width:35%">− S$35k</span></span><span class="pval">−S$35k</span></div>
+        <div class="pbar"><span class="plab">= Operating profit<small>what you actually keep</small></span><span class="ptrack"><span class="pfill profit" style="width:25%">S$25k</span></span><span class="pval">S$25k</span></div>
+      </div>
+      <div class="callout"><b>Read it as a subtraction, not a total.</b> Revenue at the top, profit at the bottom, and every line in between is a cost you either control or you don't.</div>
+    </div>
+  </section>
+
+  <!-- 6 · GROSS MARGIN -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The line most owners skip · don't</div>
+      <div class="big">Gross margin is the truth about <em>delivery</em>.</div>
+      <p class="lead">Gross margin is revenue minus the cost of actually producing the work — before overhead. It tells you whether the thing you sell is even worth selling. A department with thin gross margin can never operate its way to profit: the leak is in the product, not the admin.</p>
+      <div class="callout"><b>Fix margin at the source.</b> If it costs S$90 of delivery to earn S$100 of revenue, no amount of cost-cutting elsewhere saves it.</div>
+    </div>
+  </section>
+
+  <!-- 7 · DIVIDER · UNIT ECONOMICS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Unit economics</h2>
+      <p class="lead" style="color:#CCC">The health of one customer, before you scale to a thousand.</p>
+    </div>
+  </section>
+
+  <!-- 8 · LTV -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The value side</div>
+      <div class="big">Lifetime Value — what a customer is <em>worth</em>.</div>
+      <p class="lead">Lifetime Value (LTV) is the total gross margin one customer brings across the whole time they stay with you — not their first invoice, their whole relationship. Longer retention and higher margin per month both push it up. LTV is the size of the prize for winning one customer.</p>
+    </div>
+  </section>
+
+  <!-- 9 · CAC -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The cost side</div>
+      <div class="big">Customer Acquisition Cost — what a customer costs to <em>win</em>.</div>
+      <p class="lead">Customer Acquisition Cost (CAC) is everything you spend to land one new customer — ads, content, sales time, tooling — divided by the number of customers it won. If you spend S$5,000 in a month and win 10 customers, your CAC is S$500. It is the price of the ticket to play.</p>
+    </div>
+  </section>
+
+  <!-- 10 · LTV:CAC SCALE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The ratio that says go or stop</div>
+      <h2>Value must clear cost by a healthy multiple.</h2>
+      <div class="eqn">
+        <div class="eqbox"><div class="el">Lifetime Value</div><div class="ev">S$900</div></div>
+        <div class="eqop">÷</div>
+        <div class="eqbox"><div class="el">Acquisition Cost</div><div class="ev">S$300</div></div>
+        <div class="eqop">=</div>
+        <div class="eqbox hot"><div class="el">LTV : CAC</div><div class="ev">3 : 1</div></div>
+      </div>
+      <div class="scale">
+        <div class="scaletrack">
+          <div class="zone bad"><div class="zr">Below 1:1</div><div class="zt">You lose money on every customer</div></div>
+          <div class="zone bad"><div class="zr">1:1 – 2:1</div><div class="zt">Too thin — no room for overhead</div></div>
+          <div class="zone mid"><div class="zr">3:1</div><div class="zt">Healthy — the working floor</div></div>
+          <div class="zone good"><div class="zr">4:1 +</div><div class="zt">Strong — spend more to grow faster</div></div>
+        </div>
+        <div class="scalax"><span>bleeding</span><span>fragile</span><span>healthy</span><span>scalable</span></div>
+      </div>
+      <div class="callout"><b>3:1 is the working floor.</b> Below it, growth burns cash. Well above it, you're likely under-investing — there's room to spend more to win faster.</div>
+    </div>
+  </section>
+
+  <!-- 11 · CONTRIBUTION MARGIN -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Know which clients and products actually pay</div>
+      <div class="big">Contribution margin — <em>per client, per product</em>.</div>
+      <p class="lead">Contribution margin is what a single client or product leaves after its own direct costs — the margin it <b>contributes</b> to covering your overhead. Averages hide the truth: some clients subsidise the business, others quietly drain it.</p>
+      <div class="decide">
+        <div class="dbox ok"><h3>Contributes →</h3><ul>
+          <li>Revenue comfortably above its delivery cost</li>
+          <li>Retains — value compounds over time</li>
+          <li>Low to serve, high to keep</li>
+        </ul></div>
+        <div class="dbox no"><h3>Drains ✕</h3><ul>
+          <li>Heavy to deliver, barely above cost</li>
+          <li>High-maintenance, churns fast</li>
+          <li>Looks like revenue, lands as a loss</li>
+        </ul></div>
+      </div>
+      <p class="cite">Rank your clients and products by contribution. Double down on the top; fix, reprice, or exit the bottom.</p>
+    </div>
+  </section>
+
+  <!-- 12 · DIVIDER · TRADE-OFFS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>The owner's trade-offs</h2>
+      <p class="lead" style="color:#CCC">Where the real job is — choosing, not just reporting.</p>
+    </div>
+  </section>
+
+  <!-- 13 · INVEST vs PROTECT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Capital allocation · cash gate first</div>
+      <h2>Cash buys the right to invest. Economics decide where.</h2>
+      <div class="decision-gates">
+        <div class="decision-gate hot"><span class="n">Gate 1 · Cash</span><b>Can we fund the full bet?</b><p>Runway and the reserve survive even if the return arrives late.</p></div><div class="decision-arrow">→</div>
+        <div class="decision-gate"><span class="n">Gate 2 · Economics</span><b>Does each sale create value?</b><p>Contribution margin and customer value comfortably clear acquisition and delivery cost.</p></div><div class="decision-arrow">→</div>
+        <div class="decision-gate"><span class="n">Gate 3 · Constraint</span><b>Does this unlock growth?</b><p>The spend relieves the limiting point rather than making a non-constraint busier.</p></div>
+      </div>
+      <div class="decision-outcomes"><div class="decision-outcome invest"><b>✓ Invest</b>All three gates pass. Fund the bet, name the return and watch the cash.</div><div class="decision-outcome protect"><b>✕ Protect first</b>Any gate fails. Preserve cash, repair the economics or attack the actual constraint.</div></div>
+      <div class="book-lens"><b>Book lens:</b> The Goal — improve throughput at the constraint; do not mistake local activity for business progress.</div>
+    </div>
+  </section>
+
+  <!-- 14 · CASH & RUNWAY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The operating truth</div>
+      <div class="cash-hero"><div class="cash-king">Cash is king.</div><div class="cash-eq">Revenue ≠ profit ≠ cash in the bank</div></div>
+      <div class="cash-cycle">
+        <div class="cash-step"><span class="n">01 · Sell</span><b>Win the work</b><p>A signed deal creates a receivable, not cash.</p></div><div class="cash-arrow">→</div>
+        <div class="cash-step"><span class="n">02 · Invoice</span><b>Bill promptly</b><p>Delay here lengthens the cash gap immediately.</p></div><div class="cash-arrow">→</div>
+        <div class="cash-step hot"><span class="n">03 · Collect</span><b>Cash arrives</b><p>The business can now fund payroll, delivery and growth.</p></div><div class="cash-arrow">→</div>
+        <div class="cash-step"><span class="n">04 · Allocate</span><b>Spend deliberately</b><p>Protect obligations and reserve before the next bet.</p></div>
+      </div>
+      <div class="cash-actions"><div class="cash-action"><b>Collect faster</b>Invoice immediately and follow receivables actively.</div><div class="cash-action"><b>Stage long work</b>Use deposits, retainers or milestones where contracts allow.</div><div class="cash-action"><b>Match timing</b>Align major outflows with contracted inflows.</div><div class="cash-action"><b>Forecast forward</b>Maintain a rolling 13-week cash view and reserve.</div></div>
+      <div class="runway-strip"><b>Runway = available cash ÷ monthly net cash burn</b><span>Fund commitments to completion, not merely to launch.</span></div>
+    </div>
+  </section>
+
+  <!-- 15 · READ MONTHLY & ACT (interactive checklist) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The monthly discipline · tick as you go</div>
+      <h2 style="margin-bottom:6px">Numbers you don't read can't help you.</h2>
+      <p class="lead" style="margin-bottom:8px">A P&amp;L reviewed once a year is a post-mortem. Reviewed monthly, it's a steering wheel. Run this every month:</p>
+      <div class="check" id="review">
+        <label><input type="checkbox"><span>Read the P&amp;L top to bottom — revenue, cost of delivery, gross margin, operating costs, profit.</span></label>
+        <label><input type="checkbox"><span>Compare against last month and the plan — what moved, and why?</span></label>
+        <label><input type="checkbox"><span>Recalculate LTV:CAC — is it still clearing the 3:1 floor?</span></label>
+        <label><input type="checkbox"><span>Rank clients and products by contribution margin — top and bottom.</span></label>
+        <label><input type="checkbox"><span>Check cash and runway — is planned spend fully funded?</span></label>
+        <label><input type="checkbox"><span>Make one decision from what you saw — invest, protect, fix, or exit.</span></label>
+      </div>
+      <div class="gstate" id="revstate" style="margin-top:14px">Tick all six to complete the monthly review. (0/6)</div>
+    </div>
+  </section>
+
+  <!-- 16 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#CCC">Three calls an owner has to make. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 17 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · revenue vs profit</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Revenue up 30% tells you nothing on its own. S$4k kept on S$120k billed is a ~3% profit margin — razor-thin. The signal to act on is the margin, not the top-line growth."
+        data-no="<b>Look lower down the P&amp;L.</b> Revenue growth is the top line; it says nothing about what you kept. S$4k profit on S$120k revenue is a ~3% margin — the real story, and it's thin.">
+        <div class="scenario">Your department billed <b>S$120,000</b> this month, up 30%. After cost of delivery and operating costs, it kept <b>S$4,000</b>.</div>
+        <div class="q">What is the real health signal here?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Revenue is up 30% — the department is clearly winning</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>The ~3% profit margin — strong revenue, but almost nothing kept</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Nothing to read yet — one month isn't enough data</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · unit economics</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> S$900 ÷ S$500 is 1.8:1 — below the 3:1 floor. You're barely clearing acquisition before delivery and overhead come out. Scaling this spend burns cash. Fix the ratio before you pour in more."
+        data-no="<b>Do the ratio.</b> S$900 ÷ S$500 = 1.8:1, which sits below the 3:1 working floor. It's too thin to leave room for delivery and overhead — spending harder here loses money faster, it doesn't fix it.">
+        <div class="scenario">You spend <b>S$500</b> to win a client (Customer Acquisition Cost) who's worth <b>S$900</b> in lifetime margin (Lifetime Value).</div>
+        <div class="q">Is this healthy enough to scale the spend?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Yes — value beats cost, so pour more money in to grow</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Yes — any ratio above 1:1 is profitable</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>No — 1.8:1 is below the 3:1 floor; fix the ratio first</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · cash &amp; the trade-off</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Spend you can't fund is a plan to fail. The bet needs S$20k; you have S$8k. Resize it to what's funded, or secure the cash first — then commit. Keep a margin of safety either way."
+        data-no="<b>Don't commit unfunded spend.</b> The bet needs S$20k over three months and only S$8k is funded. Committing the full amount on hope risks running out of cash mid-way. Resize to what's funded, or secure the cash first.">
+        <div class="scenario">A promising growth bet needs <b>S$20,000</b> of spend over three months. Your department's funded budget covers <b>S$8,000</b>.</div>
+        <div class="q">As the P&amp;L owner, what do you do?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Commit the full S$20k — the upside justifies the risk</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Resize the bet to what's funded, or secure the cash first</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Start now and find the other S$12k later once it's working</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you run your department like a business you own?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Can you read your P&amp;L top to bottom — revenue, cost, margin, profit?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you know the difference between revenue and profit cold?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you know your LTV:CAC and that it must clear a healthy multiple?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you name the contribution margin of each client and product?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you make trade-offs that protect both growth and margin?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you refuse to plan spend you can't fund?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock certification.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 21 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Own the number you keep.</h2>
+      <p class="lead">A Head of Department who reads their P&amp;L, knows their unit economics, and makes trade-offs on purpose runs a business — not a to-do list. That's the command-tier standard.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · owning a P&amp;L</div>
+<div class="nav">
+  <span class="count" id="count">1 / 21</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // monthly review checklist — progress counter
+  var rboxes=[].slice.call(document.querySelectorAll('#review input'));
+  var revstate=document.getElementById('revstate');
+  function rupd(){
+    var done=rboxes.filter(function(b){return b.checked;}).length;
+    if(done===rboxes.length){revstate.className='gstate ready';revstate.textContent='✓ Monthly review complete — now make the call.';}
+    else{revstate.className='gstate';revstate.textContent='Tick all six to complete the monthly review. ('+done+'/'+rboxes.length+')';}
+  }
+  rboxes.forEach(function(b){b.addEventListener('change',rupd);});
+  rupd();
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-pl-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can run your department like a business you own.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock certification. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#999;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#999;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-cmd-power -->
+<style>
+body{background:radial-gradient(900px 520px at 88% -8%,rgba(192,32,37,.06),transparent 58%),radial-gradient(700px 460px at 4% 106%,rgba(192,32,37,.045),transparent 60%),var(--bg,#fff)}
+.koo-cmd-band{position:fixed;left:0;right:0;height:4px;z-index:60;background:linear-gradient(90deg,#C02025,#D76C6F,#C02025);background-size:200% 100%;animation:kcBand 5s linear infinite;pointer-events:none}
+.koo-cmd-band.top{top:0}.koo-cmd-band.bot{bottom:0;animation-direction:reverse}
+@keyframes kcBand{0%{background-position:0 0}100%{background-position:-200% 0}}
+</style>
+<div class="koo-cmd-band bot"></div>
+<!-- /koo-cmd-power -->
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

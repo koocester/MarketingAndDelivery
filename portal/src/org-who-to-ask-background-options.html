@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Koocester Academy · Lava-lamp background options</title>
+<style>
+:root{
+  --maroon:#C02025;
+  --maroon-80:#C93B3F;
+  --maroon-60:#D76C6F;
+  --maroon-40:#E49D9F;
+  --maroon-20:#F2CECF;
+  --black:#000;
+  --body:#333;
+  --muted:#666;
+  --line:#CCC;
+  --white:#fff;
+  --font:"Helvetica Neue",Helvetica,Inter,"SF Pro Text",Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --px:0px;
+  --py:0px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--white);color:var(--body);font-family:var(--font);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit}
+.deck{position:fixed;inset:0;overflow:hidden}
+.option{position:absolute;inset:0;display:flex;align-items:center;visibility:hidden;opacity:0;transform:translateX(30px);transition:opacity .4s var(--ease),transform .55s var(--ease),visibility .4s;overflow:hidden;isolation:isolate;background:var(--white)}
+.option.active{visibility:visible;opacity:1;transform:none}
+.lava-field{position:absolute;inset:-8%;overflow:hidden;pointer-events:none;z-index:0;transform:translate3d(var(--px),var(--py),0);transition:transform 1.45s var(--ease)}
+.blob{position:absolute;display:block;border-radius:50%;will-change:transform,border-radius;transform:translateZ(0);box-shadow:0 24px 80px rgb(188 10 15 / 10%)}
+.content{position:relative;z-index:4;width:min(1040px,calc(100% - 68px));margin:auto}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;margin-bottom:22px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin-bottom:9px}
+h1{font-size:clamp(2rem,4.5vw,3.2rem);line-height:1.02;letter-spacing:-.045em;color:var(--black);margin:0;font-weight:800}
+h1 em{font-style:normal;color:var(--maroon)}
+.tag{flex:none;border:1px solid var(--maroon);background:var(--white);color:var(--maroon);border-radius:999px;padding:9px 13px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.compare{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:stretch}
+.manager,.decision{position:relative;overflow:hidden;border-radius:18px;padding:23px 24px;min-height:270px;transform:translateZ(0)}
+.manager{background:var(--white);border:3px solid var(--maroon);box-shadow:0 20px 65px rgb(0 0 0 / 12%)}
+.decision{background:var(--black);border:2px solid var(--black);border-top:5px solid var(--maroon);box-shadow:0 20px 65px rgb(0 0 0 / 22%);color:var(--white)}
+.card-k{font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--maroon);margin-bottom:13px}
+.decision .card-k{color:var(--maroon-40)}
+.manager h2,.decision h2{font-size:clamp(1.55rem,3vw,2.1rem);line-height:1.05;letter-spacing:-.03em;margin:0 0 12px;color:var(--black)}
+.decision h2{color:var(--white)}
+.manager p,.decision p{font-size:14px;line-height:1.48;margin:0;max-width:39ch}
+.decision p{color:var(--line)}
+.route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px;margin-top:20px}
+.route span{background:var(--maroon-20);border:1px solid var(--maroon-40);border-radius:9px;padding:10px;text-align:center;color:var(--black);font-size:11px;font-weight:800}
+.route b{font-size:20px;color:var(--maroon)}
+.seal{display:inline-flex;align-items:center;gap:7px;margin-top:21px;border:1px solid var(--muted);border-radius:999px;padding:7px 10px;color:var(--line);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.seal i{width:7px;height:7px;border-radius:50%;background:var(--maroon)}
+.caption{display:flex;gap:10px;align-items:center;margin-top:15px;color:var(--muted);font-size:12px}
+.caption b{color:var(--black)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--maroon);animation:livePulse 2.8s ease-in-out infinite}
+@keyframes livePulse{50%{transform:scale(1.5);opacity:.42}}
+
+/* A · Classic Rise */
+.classic{background:linear-gradient(180deg,var(--white) 0%,var(--white) 72%,var(--maroon-20) 100%)}
+.classic .b1{width:330px;height:390px;left:-90px;bottom:-430px;background:var(--maroon-20);animation:classicRise1 22s linear infinite}
+.classic .b2{width:180px;height:230px;left:18%;bottom:-270px;background:var(--maroon-40);opacity:.55;animation:classicRise2 17s linear infinite;animation-delay:-7s}
+.classic .b3{width:280px;height:320px;right:10%;bottom:-360px;background:var(--maroon);opacity:.11;animation:classicRise3 25s linear infinite;animation-delay:-15s}
+.classic .b4{width:150px;height:190px;right:-35px;bottom:-230px;background:var(--maroon-60);opacity:.33;animation:classicRise2 19s linear infinite;animation-delay:-12s}
+.classic .b5{width:110px;height:140px;left:48%;bottom:-190px;border:3px solid var(--maroon);opacity:.16;animation:classicRise3 16s linear infinite;animation-delay:-4s}
+@keyframes classicRise1{0%{transform:translate3d(0,0,0) scale(.82);border-radius:45% 55% 60% 40% / 62% 38% 62% 38%}45%{border-radius:63% 37% 42% 58% / 38% 61% 39% 62%}100%{transform:translate3d(28vw,-145vh,0) scale(1.08);border-radius:42% 58% 64% 36% / 58% 36% 64% 42%}}
+@keyframes classicRise2{0%{transform:translate3d(0,0,0) rotate(0) scale(.76)}50%{border-radius:38% 62% 51% 49% / 65% 34% 66% 35%}100%{transform:translate3d(-20vw,-138vh,0) rotate(24deg) scale(1.12)}}
+@keyframes classicRise3{0%{transform:translate3d(0,0,0) rotate(0)}48%{border-radius:64% 36% 57% 43% / 42% 61% 39% 58%}100%{transform:translate3d(16vw,-150vh,0) rotate(-22deg)}}
+
+/* B · Sideways Lava */
+.sideways{background:linear-gradient(90deg,var(--maroon-20) 0%,var(--white) 22%,var(--white) 78%,var(--maroon-20) 100%)}
+.sideways .blob{top:50%}
+.sideways .b1{width:460px;height:260px;left:-520px;margin-top:-300px;background:var(--maroon-20);animation:sideFlow1 25s linear infinite}
+.sideways .b2{width:250px;height:190px;left:-310px;margin-top:-35px;background:var(--maroon-40);opacity:.5;animation:sideFlow2 19s linear infinite;animation-delay:-9s}
+.sideways .b3{width:390px;height:230px;right:-450px;margin-top:115px;background:var(--maroon);opacity:.09;animation:sideFlowBack 29s linear infinite;animation-delay:-14s}
+.sideways .b4{width:135px;height:105px;right:-170px;margin-top:-225px;border:3px solid var(--maroon);opacity:.17;animation:sideFlowBack 17s linear infinite;animation-delay:-4s}
+.sideways .b5{width:175px;height:135px;left:-210px;margin-top:180px;background:var(--maroon-60);opacity:.3;animation:sideFlow1 21s linear infinite;animation-delay:-16s}
+@keyframes sideFlow1{0%{transform:translate3d(0,0,0) rotate(0);border-radius:58% 42% 48% 52% / 37% 61% 39% 63%}50%{transform:translate3d(58vw,10vh,0) rotate(15deg);border-radius:38% 62% 64% 36% / 61% 35% 65% 39%}100%{transform:translate3d(calc(100vw + 960px),-5vh,0) rotate(-8deg)}}
+@keyframes sideFlow2{0%{transform:translate3d(0,0,0) scale(.75)}55%{transform:translate3d(62vw,-18vh,0) scale(1.15);border-radius:64% 36% 45% 55% / 42% 63% 37% 58%}100%{transform:translate3d(calc(100vw + 620px),9vh,0) scale(.9)}}
+@keyframes sideFlowBack{0%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(-55vw,-12vh,0) rotate(-17deg);border-radius:39% 61% 58% 42% / 66% 36% 64% 34%}100%{transform:translate3d(calc(-100vw - 900px),7vh,0) rotate(8deg)}}
+
+/* C · Twin Columns */
+.columns{background:var(--white)}
+.lamp{position:absolute;top:2%;bottom:2%;width:210px;border:2px solid var(--maroon-40);border-radius:100px;background:var(--maroon-20);overflow:hidden;opacity:.72}
+.lamp.left{left:2%}.lamp.right{right:2%}
+.lamp .blob{left:50%;transform:translateX(-50%);box-shadow:none}
+.lamp .b1{width:180px;height:220px;bottom:-240px;background:var(--maroon);opacity:.18;animation:columnRise1 17s linear infinite}
+.lamp .b2{width:115px;height:145px;bottom:-170px;background:var(--maroon-60);opacity:.55;animation:columnRise2 13s linear infinite;animation-delay:-6s}
+.lamp .b3{width:150px;height:180px;top:-205px;background:var(--maroon-40);opacity:.7;animation:columnFall 19s linear infinite;animation-delay:-11s}
+.lamp.right .b1{animation-delay:-9s;animation-duration:21s}.lamp.right .b2{animation-delay:-2s;animation-duration:16s}.lamp.right .b3{animation-delay:-15s;animation-duration:23s}
+@keyframes columnRise1{0%{transform:translate3d(-50%,0,0) scale(.75)}48%{border-radius:65% 35% 44% 56% / 37% 62% 38% 63%}100%{transform:translate3d(-50%,-130vh,0) scale(1.08)}}
+@keyframes columnRise2{0%{transform:translate3d(-50%,0,0) rotate(0)}50%{border-radius:38% 62% 58% 42% / 64% 36% 64% 36%}100%{transform:translate3d(-50%,-126vh,0) rotate(28deg)}}
+@keyframes columnFall{0%{transform:translate3d(-50%,0,0) scale(.85)}50%{border-radius:61% 39% 42% 58% / 35% 66% 34% 65%}100%{transform:translate3d(-50%,132vh,0) scale(1.1)}}
+
+/* D · Orbit Blobs */
+.orbit{background:radial-gradient(circle at center,var(--white) 0%,var(--white) 58%,var(--maroon-20) 100%)}
+.orbit .ring{position:absolute;left:50%;top:50%;width:820px;height:520px;margin:-260px 0 0 -410px;border:1px solid var(--maroon-40);border-radius:50%;opacity:.32;animation:ringBreathe 10s ease-in-out infinite alternate}
+.orbit .b1{width:270px;height:220px;left:calc(50% - 135px);top:calc(50% - 110px);background:var(--maroon-20);animation:orbit1 21s linear infinite}
+.orbit .b2{width:160px;height:200px;left:calc(50% - 80px);top:calc(50% - 100px);background:var(--maroon-40);opacity:.55;animation:orbit2 17s linear infinite reverse}
+.orbit .b3{width:190px;height:140px;left:calc(50% - 95px);top:calc(50% - 70px);background:var(--maroon);opacity:.11;animation:orbit3 25s linear infinite}
+.orbit .b4{width:95px;height:115px;left:calc(50% - 48px);top:calc(50% - 58px);border:3px solid var(--maroon);opacity:.18;animation:orbit4 14s linear infinite reverse}
+@keyframes ringBreathe{to{transform:scale(1.13) rotate(6deg);border-radius:42% 58% 53% 47% / 61% 38% 62% 39%}}
+@keyframes orbit1{0%{transform:rotate(0) translateX(48vw) rotate(0)}50%{border-radius:39% 61% 56% 44% / 63% 36% 64% 37%}100%{transform:rotate(360deg) translateX(48vw) rotate(-360deg)}}
+@keyframes orbit2{0%{transform:rotate(0) translateX(38vw) rotate(0)}50%{border-radius:62% 38% 43% 57% / 36% 65% 35% 64%}100%{transform:rotate(360deg) translateX(38vw) rotate(-360deg)}}
+@keyframes orbit3{0%{transform:rotate(0) translateX(30vw) rotate(0)}50%{border-radius:44% 56% 64% 36% / 59% 41% 59% 41%}100%{transform:rotate(360deg) translateX(30vw) rotate(-360deg)}}
+@keyframes orbit4{0%{transform:rotate(0) translateX(22vw) rotate(0)}100%{transform:rotate(360deg) translateX(22vw) rotate(-360deg)}}
+
+/* E · Slow Melt */
+.melt{background:var(--white)}
+.melt .top-pool,.melt .bottom-pool{position:absolute;left:-8%;width:116%;height:46%;will-change:transform,border-radius}
+.melt .top-pool{top:-35%;background:var(--maroon-20);border-radius:0 0 45% 55% / 0 0 72% 66%;animation:topMelt 16s ease-in-out infinite alternate}
+.melt .bottom-pool{bottom:-39%;background:var(--maroon);opacity:.08;border-radius:52% 48% 0 0 / 72% 66% 0 0;animation:bottomMelt 19s ease-in-out infinite alternate}
+.melt .b1{width:320px;height:370px;left:-150px;top:12%;background:var(--maroon-40);opacity:.45;animation:meltBlob1 14s ease-in-out infinite alternate}
+.melt .b2{width:410px;height:330px;right:-190px;bottom:8%;background:var(--maroon-20);animation:meltBlob2 17s ease-in-out infinite alternate}
+.melt .b3{width:135px;height:175px;left:52%;top:-190px;border:3px solid var(--maroon);opacity:.18;animation:meltDrop 15s ease-in-out infinite}
+@keyframes topMelt{to{transform:translate3d(7vw,25vh,0);border-radius:0 0 62% 38% / 0 0 48% 76%}}
+@keyframes bottomMelt{to{transform:translate3d(-8vw,-24vh,0);border-radius:38% 62% 0 0 / 54% 78% 0 0}}
+@keyframes meltBlob1{to{transform:translate3d(25vw,19vh,0) rotate(18deg) scale(1.12);border-radius:38% 62% 59% 41% / 66% 36% 64% 34%}}
+@keyframes meltBlob2{to{transform:translate3d(-29vw,-17vh,0) rotate(-14deg) scale(.88);border-radius:63% 37% 44% 56% / 38% 64% 36% 62%}}
+@keyframes meltDrop{0%{transform:translate3d(0,0,0) scale(.7)}50%{border-radius:36% 64% 51% 49% / 67% 33% 67% 33%}100%{transform:translate3d(-24vw,120vh,0) scale(1.1)}}
+
+.controls{position:fixed;z-index:20;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:7px;align-items:center;background:var(--black);border:1px solid var(--muted);border-radius:999px;padding:7px;box-shadow:0 12px 42px rgb(0 0 0 / 24%)}
+.controls button{height:40px;min-width:42px;border:0;border-radius:999px;background:transparent;color:var(--line);font-size:12px;font-weight:800;cursor:pointer;padding:0 14px}
+.controls button:hover,.controls button.active{background:var(--maroon);color:var(--white)}
+.controls .motion{border-left:1px solid var(--muted);border-radius:0;margin-left:2px;padding-left:16px}
+.hint{position:fixed;right:22px;bottom:27px;z-index:20;color:var(--muted);font-size:11px}
+body.paused *{animation-play-state:paused!important}
+@media(max-width:820px){.content{width:calc(100% - 34px)}.compare{grid-template-columns:1fr}.manager,.decision{min-height:202px;padding:18px}.head{margin-bottom:12px}.route{margin-top:12px}.caption{display:none}.hint{display:none}.controls{bottom:9px}.lamp{width:120px;opacity:.45}.orbit .ring{width:620px;margin-left:-310px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.lava-field{transform:none!important}}
+</style>
+</head>
+<body>
+<main class="deck" aria-label="Lava-lamp background options for slides 10 and 11">
+  <section class="option classic active" data-name="Classic Rise">
+    <div class="lava-field"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span><span class="blob b5"></span></div>
+    <div class="content">
+      <div class="head"><div><div class="eyebrow">Option A · Classic Rise</div><h1>Traditional lava blobs rise behind the <em>critical rule.</em></h1></div><span class="tag">Classic · vertical</span></div>
+      <div class="compare">
+        <article class="manager"><div class="card-k">Slide 10 · default route</div><h2>Your Manager first</h2><p>Large organic blobs rise from bottom to top at different speeds, continuously changing shape.</p><div class="route"><span>Question</span><b>→</b><span>Right owner</span></div></article>
+        <article class="decision"><div class="card-k">Slide 11 · authority</div><h2>One decision-maker</h2><p>The movement feels unmistakably like a classic lava lamp while the lesson stays still.</p><span class="seal"><i></i>Final authority</span></article>
+      </div>
+      <div class="caption"><span class="live-dot"></span><b>Motion:</b> five independent blobs rise, morph and re-enter from below.</div>
+    </div>
+  </section>
+
+  <section class="option sideways" data-name="Sideways Lava">
+    <div class="lava-field"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span><span class="blob b5"></span></div>
+    <div class="content">
+      <div class="head"><div><div class="eyebrow">Option B · Sideways Lava</div><h1>Lava stretches and drifts <em>across the whole screen.</em></h1></div><span class="tag">Wide · cinematic</span></div>
+      <div class="compare">
+        <article class="manager"><div class="card-k">Slide 10 · default route</div><h2>Your Manager first</h2><p>Elongated blobs cross left to right and right to left, keeping visible motion throughout the frame.</p><div class="route"><span>Question</span><b>→</b><span>Right owner</span></div></article>
+        <article class="decision"><div class="card-k">Slide 11 · authority</div><h2>One decision-maker</h2><p>This is the clearest edge-to-edge version and feels more like motion graphics than a literal lamp.</p><span class="seal"><i></i>Final authority</span></article>
+      </div>
+      <div class="caption"><span class="live-dot"></span><b>Motion:</b> opposing horizontal currents create a slow cinematic parallax.</div>
+    </div>
+  </section>
+
+  <section class="option columns" data-name="Twin Columns">
+    <div class="lava-field">
+      <div class="lamp left"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+      <div class="lamp right"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+    </div>
+    <div class="content">
+      <div class="head"><div><div class="eyebrow">Option C · Twin Columns</div><h1>Two lava chambers frame the <em>important instruction.</em></h1></div><span class="tag">Focused · framed</span></div>
+      <div class="compare">
+        <article class="manager"><div class="card-k">Slide 10 · default route</div><h2>Your Manager first</h2><p>Movement stays inside two perimeter columns, leaving the centre calm and highly readable.</p><div class="route"><span>Question</span><b>→</b><span>Right owner</span></div></article>
+        <article class="decision"><div class="card-k">Slide 11 · authority</div><h2>One decision-maker</h2><p>This is the most controlled version: clearly a lava lamp, but least likely to compete with the teaching.</p><span class="seal"><i></i>Final authority</span></article>
+      </div>
+      <div class="caption"><span class="live-dot"></span><b>Motion:</b> six blobs rise and fall inside two glass-like columns.</div>
+    </div>
+  </section>
+
+  <section class="option orbit" data-name="Orbit Blobs">
+    <div class="lava-field"><span class="ring"></span><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span></div>
+    <div class="content">
+      <div class="head"><div><div class="eyebrow">Option D · Orbit Blobs</div><h1>Lava forms orbit the lesson in a <em>slow hypnotic loop.</em></h1></div><span class="tag">Eccentric · orbital</span></div>
+      <div class="compare">
+        <article class="manager"><div class="card-k">Slide 10 · default route</div><h2>Your Manager first</h2><p>Four morphing forms circle the frame instead of only rising, creating the most unusual option.</p><div class="route"><span>Question</span><b>→</b><span>Right owner</span></div></article>
+        <article class="decision"><div class="card-k">Slide 11 · authority</div><h2>One decision-maker</h2><p>The centre remains the visual anchor while the background keeps the eye engaged around it.</p><span class="seal"><i></i>Final authority</span></article>
+      </div>
+      <div class="caption"><span class="live-dot"></span><b>Motion:</b> four separate orbital speeds create a continuous slow loop.</div>
+    </div>
+  </section>
+
+  <section class="option melt" data-name="Slow Melt">
+    <div class="lava-field"><span class="top-pool"></span><span class="bottom-pool"></span><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+    <div class="content">
+      <div class="head"><div><div class="eyebrow">Option E · Slow Melt</div><h1>Large lava masses almost meet, then <em>melt apart again.</em></h1></div><span class="tag">Bold · sculptural</span></div>
+      <div class="compare">
+        <article class="manager"><div class="card-k">Slide 10 · default route</div><h2>Your Manager first</h2><p>Top and bottom pools breathe toward the centre while separate blobs squeeze between them.</p><div class="route"><span>Question</span><b>→</b><span>Right owner</span></div></article>
+        <article class="decision"><div class="card-k">Slide 11 · authority</div><h2>One decision-maker</h2><p>This is the boldest, most sculptural version, with fewer forms but much larger movement.</p><span class="seal"><i></i>Final authority</span></article>
+      </div>
+      <div class="caption"><span class="live-dot"></span><b>Motion:</b> two large pools and three blobs create a slow compression-and-release cycle.</div>
+    </div>
+  </section>
+</main>
+
+<nav class="controls" aria-label="Choose a lava-lamp background">
+  <button class="pick active" type="button" data-index="0" aria-label="Option A">A</button>
+  <button class="pick" type="button" data-index="1" aria-label="Option B">B</button>
+  <button class="pick" type="button" data-index="2" aria-label="Option C">C</button>
+  <button class="pick" type="button" data-index="3" aria-label="Option D">D</button>
+  <button class="pick" type="button" data-index="4" aria-label="Option E">E</button>
+  <button class="motion" id="motion" type="button">Pause motion</button>
+</nav>
+<div class="hint">Move the pointer · use A–E or ← →</div>
+
+<script>
+(function(){
+  var options=[].slice.call(document.querySelectorAll('.option'));
+  var picks=[].slice.call(document.querySelectorAll('.pick'));
+  var index=0;
+  function show(next){
+    index=(next+options.length)%options.length;
+    options.forEach(function(option,i){option.classList.toggle('active',i===index)});
+    picks.forEach(function(pick,i){pick.classList.toggle('active',i===index)});
+    document.title='Option '+String.fromCharCode(65+index)+' · '+options[index].getAttribute('data-name');
+  }
+  picks.forEach(function(pick){pick.addEventListener('click',function(){show(Number(pick.getAttribute('data-index')));});});
+  document.addEventListener('keydown',function(event){
+    if(event.key==='ArrowRight'){show(index+1)}
+    if(event.key==='ArrowLeft'){show(index-1)}
+    if(/^[a-eA-E]$/.test(event.key)){show(event.key.toUpperCase().charCodeAt(0)-65)}
+  });
+  window.addEventListener('pointermove',function(event){
+    var x=((event.clientX/window.innerWidth)-.5)*16;
+    var y=((event.clientY/window.innerHeight)-.5)*12;
+    document.documentElement.style.setProperty('--px',x.toFixed(2)+'px');
+    document.documentElement.style.setProperty('--py',y.toFixed(2)+'px');
+  },{passive:true});
+  document.documentElement.addEventListener('pointerleave',function(){document.documentElement.style.setProperty('--px','0px');document.documentElement.style.setProperty('--py','0px');});
+  var motion=document.getElementById('motion');
+  motion.addEventListener('click',function(){var paused=document.body.classList.toggle('paused');motion.textContent=paused?'Resume motion':'Pause motion';});
+})();
+</script>
+</body>
+</html>

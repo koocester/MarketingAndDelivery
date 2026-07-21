@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<script src="admin/koo-admin-guard.js?v=2026072005"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training Completions · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b; --warn:#b8860b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+  --pop:cubic-bezier(.22,1.12,.4,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(18px,5vw,56px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:20px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:5px;padding:4px 9px;background:var(--maroon-tint);font-family:var(--mono)}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.wrap{max-width:1000px;margin:0 auto;padding:clamp(26px,5vw,48px) clamp(18px,5vw,56px) 90px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:10px}
+h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.05;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 6px}
+.lead{color:var(--muted);margin:0 0 26px;font-size:.98rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:30px}
+.card{border:1.5px solid var(--line);border-radius:14px;padding:16px 18px}
+.card b{display:block;font-size:1.9rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.card span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.card.ok b{color:var(--ok)}
+.dept{margin:26px 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:800;font-family:var(--mono)}
+.row{display:flex;align-items:center;gap:14px;border:1.5px solid var(--line);border-radius:13px;padding:13px 16px;margin-bottom:9px;transition:transform .15s var(--pop),border-color .15s}
+.row:hover{transform:translateY(-2px);border-color:var(--maroon)}
+.rname{flex:1;min-width:0}
+.rname b{display:block;font-size:1rem;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.rname span{font-size:.8rem;color:var(--muted)}
+.rbar{flex:none;width:130px}
+.rbar .t{height:8px;border-radius:6px;background:var(--line2);overflow:hidden}
+.rbar .t i{display:block;height:100%;background:var(--maroon);border-radius:6px;transition:width .5s var(--pop)}
+.rbar small{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);display:block;margin-top:4px;text-align:right}
+.rcount{flex:none;width:64px;text-align:center}
+.rcount b{display:block;font-size:1.25rem;font-weight:800;color:var(--ink);line-height:1}
+.rcount span{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.rlast{flex:none;width:96px;text-align:right;font-size:.78rem;color:var(--muted)}
+.done{color:var(--ok);font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(27,127,75,.09);border:1px solid rgba(27,127,75,.22);padding:4px 8px;border-radius:12px}
+.pending{color:var(--muted);text-align:center;padding:50px 0}
+.note{margin-top:26px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;background:#fafafa;font-size:.86rem;color:var(--muted)}
+.note b{color:var(--ink)}
+@media(max-width:620px){.rbar,.rlast{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="koocester-logo.png" alt="Koocester"><span class="tag">Completions</span></div>
+  <a class="back" href="portal.html">← Portal</a>
+</header>
+<main class="wrap">
+  <div class="eyebrow">Admin · Academy</div>
+  <h1>Training completions</h1>
+  <p class="lead">Who has completed what, by department. Live from the Academy.</p>
+  <div class="cards" id="stats"></div>
+  <div id="list"><div class="pending">Loading the roster and progress…</div></div>
+  <div class="note"><b>How this reads.</b> Each person's completed courses are counted the moment they pass a deck's quiz in the Academy. "Last active" is their most recent Academy activity. Full sign-in history lives in the Supabase Auth log. Staff not yet signed in show zero until their first login.</div>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase = createClient('https://lfppmsppvqtjyusfrlkf.supabase.co','<SUPABASE_ANON_KEY>');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ago(d){ if(!d) return '—'; const t=new Date(d).getTime(), m=Math.floor((Date.now()-t)/60000); if(m<1)return 'now'; if(m<60)return m+'m'; const h=Math.floor(m/60); if(h<24)return h+'h'; const dd=Math.floor(h/24); return dd<30?dd+'d':Math.floor(dd/30)+'mo'; }
+async function load(){
+  try{ await supabase.auth.getSession(); }catch(e){}
+  const [{data:roster},{data:profiles},{data:prog}] = await Promise.all([
+    supabase.from('roster').select('email,full_name,department,role'),
+    supabase.from('profiles').select('id,email,department,role,full_name'),
+    supabase.from('progress').select('user_id,deck,status,completed_at,updated_at').eq('status','completed'),
+  ]);
+  const list=document.getElementById('list');
+  if(!roster){ list.innerHTML='<div class="pending">Could not load (admin access needed).</div>'; return; }
+  const pById={}; (profiles||[]).forEach(p=>{ pById[p.id]=p; });
+  const byEmail={}; (profiles||[]).forEach(p=>{ if(p.email) byEmail[p.email.toLowerCase()]=p; });
+  const doneByUser={}, lastByUser={};
+  (prog||[]).forEach(r=>{ (doneByUser[r.user_id]=doneByUser[r.user_id]||new Set()).add(r.deck); const t=r.completed_at||r.updated_at; if(!lastByUser[r.user_id]||new Date(t)>new Date(lastByUser[r.user_id])) lastByUser[r.user_id]=t; });
+  // build people from roster (all staff), attach progress if they've logged in
+  const people = roster.map(r=>{ const prof=byEmail[(r.email||'').toLowerCase()]; const uid=prof&&prof.id; const done=uid&&doneByUser[uid]?doneByUser[uid].size:0; return { name:r.full_name||r.email, dept:r.department||'Unassigned', role:r.role||'', done, last:uid?lastByUser[uid]:null, active:!!uid }; });
+  const maxDone=Math.max(1,...people.map(p=>p.done));
+  // stats
+  const active=people.filter(p=>p.active).length, withDone=people.filter(p=>p.done>0).length;
+  document.getElementById('stats').innerHTML =
+    '<div class="card"><b>'+people.length+'</b><span>On roster</span></div>'+
+    '<div class="card"><b>'+active+'</b><span>Signed in</span></div>'+
+    '<div class="card ok"><b>'+withDone+'</b><span>Started training</span></div>'+
+    '<div class="card"><b>'+(prog?prog.length:0)+'</b><span>Courses passed</span></div>';
+  // group by department, sort people by done desc within
+  const groups={}; people.forEach(p=>{ (groups[p.dept]=groups[p.dept]||[]).push(p); });
+  const depts=Object.keys(groups).sort();
+  list.innerHTML = depts.map(dep=>{
+    const rows=groups[dep].sort((a,b)=>b.done-a.done).map(p=>{
+      const pct=Math.round(p.done/maxDone*100);
+      const status = !p.active ? '<span class="rlast">not signed in</span>'
+        : '<div class="rbar"><div class="t"><i style="width:'+pct+'%"></i></div><small>'+p.done+' passed</small></div>';
+      return '<div class="row"><div class="rname"><b>'+esc(p.name)+'</b><span>'+esc(p.role)+'</span></div>'+
+        status+
+        '<div class="rcount"><b>'+p.done+'</b><span>courses</span></div>'+
+        '<div class="rlast">'+(p.active?('active '+ago(p.last)):'—')+'</div></div>';
+    }).join('');
+    return '<div class="dept">'+esc(dep)+'</div>'+rows;
+  }).join('');
+}
+supabase.auth.onAuthStateChange(()=>load());
+load();
+</script>
+</body>
+</html>

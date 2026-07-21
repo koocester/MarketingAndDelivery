@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · How to storyboard</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow (reused as arc chain) */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:110px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:14px}
+.dlnode .s{font-size:11px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px;font-size:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
+.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* arc-checklist cards — numbered maroon badge + stage title */
+.archead{display:flex;align-items:center;margin-bottom:4px}
+.arcbadge{display:inline-flex;flex:none;width:38px;height:38px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:16px;align-items:center;justify-content:center;margin-right:14px}
+.archead .at{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.arcsub{font-size:13.5px;color:var(--muted);margin:0 0 14px 52px;max-width:760px;line-height:1.4}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide{grid-template-columns:1fr}.arcsub{margin-left:0}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · skill module</div>
+      <h1><span class="lnwrap"><span class="ln">How to</span></span><span class="lnwrap"><span class="ln">storyboard</span></span></h1>
+      <p class="lead" style="margin-top:20px">Plan the whole faceless-interview video before anyone shoots a frame. Hook to Trust, arc by arc, so every scene earns the next and the CTA feels inevitable.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Every arc passes its own quality questions</b><span>no scene survives on vibes alone</span></div>
+        <div class="win"><b>The hook stops the scroll in 2 seconds</b><span>or it doesn't ship</span></div>
+        <div class="win"><b>The CTA is irresistible</b><span>stupid not to take it, on every video</span></div>
+        <div class="win"><b>The data lands as story, not a flex</b><span>authority earned through a lesson, never a raw stat</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · DIVIDER PART ONE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>The arc</h2>
+      <p class="lead" style="color:#bbb">A video is not a list of scenes. It's a chain — each stage earns the next.</p>
+    </div>
+  </section>
+
+  <!-- 4 · WHAT A STORYBOARD IS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What a storyboard is · and why it matters</div>
+      <div class="big">A great arc makes people watch to the end — <em>and act.</em></div>
+      <p class="lead" style="margin-bottom:6px">A storyboard is the plan for that arc, built stage by stage before the shoot. Every video, faceless-interview format, follows the same eight-stage chain:</p>
+      <div class="dlflow">
+        <div class="dlnode hot"><div class="t">Hook</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Establishment</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Arc 1</div><div class="s">people first</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Arc 2</div><div class="s">value of tour</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Arc 3</div><div class="s">mid CTA</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Arc 4</div><div class="s">celebration</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Resolve</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">Trust · CTA</div></div>
+      </div>
+      <div class="callout"><b>Storyboard it before you shoot it.</b> Every stage has its own pass/fail questions. If a stage can't answer them on paper, it won't answer them on camera either — fix it in the plan, not in the edit.</div>
+      <div class="callout"><b>This isn't just for producers.</b> Every Koocester video runs through this exact chain — it's the shared language marketing, strategists, editors, and CS all speak when they talk about a video. Know the arc, and you can read, brief, or critique any video in the pipeline.</div>
+    </div>
+  </section>
+
+  <!-- 5 · VIDEO DETAILS SETUP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Set the video up first · Video Details</div>
+      <h2 style="margin-bottom:6px">Before you storyboard a single scene, lock these.</h2>
+      <div class="wins">
+        <div class="win"><b>Page featured in</b><span>which Page this video belongs to</span></div>
+        <div class="win"><b>Objective</b><span>default = revenue / lead generation, unless deliberately routed to brand awareness, authority, sales enablement, or community</span></div>
+        <div class="win"><b>Target audience</b><span>a specific persona, not "everyone"</span></div>
+        <div class="win"><b>Dream outcome</b><span>the viewer's win</span></div>
+        <div class="win"><b>Win metric</b><span>the company's win</span></div>
+        <div class="win"><b>Offer / CTA</b><span>what they get, what they do</span></div>
+        <div class="win"><b>Interviewee outfit cluster</b><span>set before the shoot, not on the day</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · WHAT TO GATHER FROM THE GUEST -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Before you plan · what to gather from the guest, in the call</div>
+      <h2 style="margin-bottom:6px">Five things to pull from every guest — mark the musts.</h2>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3>Must gather</h3>
+          <div class="sub">no storyboard without these</div>
+          <ul>
+            <li><b>Story &amp; credibility</b> — their journey, the turning points</li>
+            <li><b>The numbers</b> — revenue, costs, timelines — the stuff that lands as story</li>
+            <li><b>Dream outcome</b> — the win they deliver to a viewer</li>
+            <li><b>Offer for the CTA</b> — paid: the client's offer · unpaid: our lead-gen offer</li>
+          </ul>
+        </div>
+        <div class="obx aware">
+          <h3>Good to have</h3>
+          <div class="sub">shapes the plan, not a blocker</div>
+          <ul>
+            <li><b>Winning picture</b> — what success looks like to them. Set expectations, don't overpromise.</li>
+            <li><b>Outfit cluster</b> — set before the shoot, not on the day.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout"><b>Get this in the call, before you plan.</b> Everything else in this deck builds on these five things.</div>
+    </div>
+  </section>
+
+  <!-- 7 · PAID VS UNPAID -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Paid vs unpaid · plan every video, by default</div>
+      <p class="lead" style="margin-bottom:6px">Every video gets planned. By default, every video is planned as <b>unpaid</b> — objective is our lead generation, and you don't need the guest present to plan it. Gather what you need from them first (previous slide), then storyboard solo.</p>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3>Unpaid</h3>
+          <div class="sub">organic · the default — plan it yourself</div>
+          <ul>
+            <li>You storyboard it <b>yourself</b> — the guest doesn't need to be present</li>
+            <li>Objective is <b>always our lead generation</b></li>
+            <li><b>DO NOT show the template</b></li>
+            <li>Set expectations clearly — never overpromise</li>
+          </ul>
+        </div>
+        <div class="obx aware">
+          <h3>Paid</h3>
+          <div class="sub">client-funded</div>
+          <ul>
+            <li>Storyboard it <b>WITH the interviewee</b>, together</li>
+            <li><b>Client controls the objective</b></li>
+            <li><b>Show them the template</b></li>
+            <li>Set expectations clearly — never overpromise</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout"><b>Plan every video.</b> No guest, no problem — unpaid videos get storyboarded solo, using what you gathered in the call.</div>
+    </div>
+  </section>
+
+  <!-- 8 · DIVIDER PART TWO -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Design the questions and the shot</h2>
+      <p class="lead" style="color:#bbb">Five rules for questions. One formula for every visual.</p>
+    </div>
+  </section>
+
+  <!-- 9 · QUESTION DESIGN SOP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question Design SOP · 5 rules</div>
+      <ol class="pts">
+        <li><b>One ask per question</b> — never stack two questions in one.</li>
+        <li><b>Max ten words</b> — long questions get long, wandering answers.</li>
+        <li><b>Specific over abstract</b> — "This Ferrari" beats "your car."</li>
+        <li><b>Force topic-first answers</b> — the single highest-leverage edit you can make to a question.</li>
+        <li><b>Coach the guest's tone</b> — vary pace, let the number land, vocal smile, avoid monotone, conversational not presentational.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 10 · VISUAL PROMPTING FORMULA -->
+  <section class="slide">
+    <div class="inner">
+      <div class="tags"><span class="tag" style="background:var(--maroon);color:#fff">★ the core skill</span></div>
+      <div class="eyebrow">Visual prompting formula · every shot on the storyboard</div>
+      <div class="callout" style="font-size:1.05rem;margin-bottom:16px"><b>This is the skill that matters most.</b> If you can't picture the shot, you can't storyboard it — every single item on this storyboard must resolve to a visual prompt.</div>
+      <div class="big" style="font-size:clamp(1.6rem,4.2vw,2.6rem)">[person] + [action] + [environment] + [emotional state] + [framing]</div>
+      <div class="callout"><b>Production rule.</b> A visual prompt must include [person] + [action] at minimum — an empty environment with no one doing anything is not a shot.</div>
+    </div>
+  </section>
+
+  <!-- 11 · DIVIDER PART THREE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Build the arc, stage by stage</h2>
+      <p class="lead" style="color:#bbb">Hook. Establishment. Four arcs. Resolve. Trust. Each with its own pass/fail bar.</p>
+    </div>
+  </section>
+
+  <!-- 12 · HOOK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">1</span><span class="at">Hook</span><span class="tag" style="background:var(--maroon);color:#fff;margin-left:14px;font-size:11px;padding:5px 12px">most important scene</span></div>
+      <p class="arcsub">Suggest <b>3 hooks</b> per video. Each must pass ALL three tests, or it's rejected. This is the single highest-leverage scene in the video.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Would I stop scrolling in under 2 seconds?</span></label>
+        <label><input type="checkbox"><span>Would I need to know the answer to keep watching?</span></label>
+        <label><input type="checkbox"><span>Would I watch this if it landed on my own feed?</span></label>
+        <label><input type="checkbox"><span>Does the hook have its own visual prompt — [person] + [action] + scene, not just words?</span></label>
+      </div>
+      <div class="callout"><b>Example.</b> "What do you do for a living?" → "I own Snoopy IP" → hook = an overview of the Snoopy Truck as the interviewee steps out; title card: "1 of 1 Snoopy Truck in Singapore." <b>Visual prompt:</b> [interviewee] + [steps out of the 1-of-1 Snoopy Truck] + [driveway] + [excited, proud] + [wide reveal shot].</div>
+    </div>
+  </section>
+
+  <!-- 13 · ESTABLISHMENT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">2</span><span class="at">Establishment</span></div>
+      <p class="arcsub">Passes when it earns the next 30 seconds — never by stating credentials.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Has this person earned my next 30 seconds?</span></label>
+        <label><input type="checkbox"><span>Have they proven they know what they're talking about?</span></label>
+        <label><input type="checkbox"><span>Will I walk away with something specific?</span></label>
+        <label><input type="checkbox"><span>Would I regret scrolling away?</span></label>
+        <label><input type="checkbox"><span>Am I stupid if I don't continue?</span></label>
+      </div>
+      <div class="callout"><b>Rule.</b> Pull authority through a lesson, an insight, or a story — NEVER a raw stat or self-praise. Two worked examples, with the exact shot to visualize, are on the next slide.</div>
+    </div>
+  </section>
+
+  <!-- 14 · ESTABLISHMENT IN PRACTICE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Establishment in practice · see the shot before you shoot it</div>
+      <h2 style="margin-bottom:6px">Same rule, two worked examples.</h2>
+      <div class="decide">
+        <div class="dbox" style="border-color:var(--maroon)">
+          <h3 style="color:var(--maroon)">$250k renovation</h3>
+          <p style="margin:0 0 10px;font-size:.95rem">"What's the BEST investment in that?!" turns the number into a story, not a flex.</p>
+          <p class="small" style="margin:0"><b>Visual prompt:</b> [interviewee] + [walks through, gesturing at a detail] + [the renovated room] + [proud, animated] + [medium tracking shot]</p>
+        </div>
+        <div class="dbox" style="border-color:var(--maroon)">
+          <h3 style="color:var(--maroon)">$10M revenue, up from $2M</h3>
+          <p style="margin:0 0 10px;font-size:.95rem">"When you crossed $10M, what changed about how you run the business?" — educational, not a flex.</p>
+          <p class="small" style="margin:0"><b>Visual prompt:</b> [interviewee] + [sits back, reflecting] + [office desk] + [thoughtful] + [close-up]</p>
+        </div>
+      </div>
+      <div class="callout"><b>Picture it on the field.</b> Authority comes through the story — and the story only lands if you can already see the shot before you call action.</div>
+    </div>
+  </section>
+
+  <!-- 15 · ARC 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">3</span><span class="at">Arc 1 · People first</span></div>
+      <p class="arcsub">Must tie back to the Hook and forward to the CTA.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Did this pay off the hook?</span></label>
+        <label><input type="checkbox"><span>Does this stat or insight tie back to the CTA?</span></label>
+        <label><input type="checkbox"><span>Will I want to know what's next?</span></label>
+      </div>
+      <div class="callout"><b>Example.</b> Theme of the house — Japanese × Middle-east. "Offices are emotionally dead — Snoopy brings emotion back."</div>
+    </div>
+  </section>
+
+  <!-- 16 · ARC 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">4</span><span class="at">Arc 2 · Value of the tour</span></div>
+      <p class="arcsub">The money-worth beat — makes the tour feel super valuable.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Makes sense to showcase, and ties to the CTA</span></label>
+        <label><input type="checkbox"><span>Reveals satisfaction, and makes them stay</span></label>
+        <label><input type="checkbox"><span>Helps the viewer decide</span></label>
+        <label><input type="checkbox"><span>Builds trust to keep watching</span></label>
+      </div>
+      <div class="callout"><b>Example.</b> The curves + open-kitchen must-have. "30 full-timers, ~$100k monthly overheads" — heartfelt, come-a-long-way, not a brag.</div>
+    </div>
+  </section>
+
+  <!-- 17 · ARC 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">5</span><span class="at">Arc 3 · Mid CTA</span></div>
+      <p class="arcsub">Must feel natural — never a bolted-on ad break.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Scene looks natural and raw</span></label>
+        <label><input type="checkbox"><span>CTA is an action word</span></label>
+        <label><input type="checkbox"><span>Would I feel stupid not to take this?</span></label>
+        <label><input type="checkbox"><span>Builds trust and liking</span></label>
+        <label><input type="checkbox"><span>Client can actually deliver it</span></label>
+        <label><input type="checkbox"><span>CTA is value-packed</span></label>
+      </div>
+      <div class="callout"><b>Example.</b> Giveaway of a height-adjustable table + ergonomic chair + a 1-of-300 limited Snoopy collectible. "What do they comment to get this?" → "COMMENT SNOOPY!"</div>
+    </div>
+  </section>
+
+  <!-- 18 · ARC 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">6</span><span class="at">Arc 4 · Celebratory scene</span></div>
+      <p class="arcsub">Short. A real feeling, not a montage for its own sake.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Feels like a real celebration</span></label>
+        <label><input type="checkbox"><span>I see what it took to get here</span></label>
+        <label><input type="checkbox"><span>Makes me feel something</span></label>
+      </div>
+      <div class="callout"><b>Example.</b> Giant beanbags, lockers, a meeting pod. "A space for everyone in the family."</div>
+    </div>
+  </section>
+
+  <!-- 19 · RESOLVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">7</span><span class="at">Resolve</span></div>
+      <p class="arcsub">Settles the video — closes the loop the Hook opened.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Answered something I was very curious about</span></label>
+        <label><input type="checkbox"><span>I trust them more now</span></label>
+        <label><input type="checkbox"><span>I'll remember this</span></label>
+      </div>
+      <div class="callout"><b>Example.</b> "Stopped being the bottleneck. Built systems that ran without me." → the CRM / PM / SOP six-months-of-unsexy-work story → lesson: "most owners think they have a revenue problem; usually it's a systems problem. Build the machine, then let it run."</div>
+    </div>
+  </section>
+
+  <!-- 20 · TRUST -->
+  <section class="slide">
+    <div class="inner">
+      <div class="archead"><span class="arcbadge">8</span><span class="at">Trust · Application + Ending CTA</span></div>
+      <p class="arcsub"><b>Application</b> = a real-life implementation viewers can try themselves.</p>
+      <div class="check">
+        <label><input type="checkbox"><span>Stupid not to participate — super irresistible</span></label>
+        <label><input type="checkbox"><span>Wins hearts, builds brand trust</span></label>
+        <label><input type="checkbox"><span>Delivers real fulfilment for the client</span></label>
+      </div>
+      <div class="fillrest" style="margin-top:16px">
+        <span class="fr"><span class="fn">Tier 1</span> directly owns the revenue — the CTA IS the transaction</span>
+        <span class="fr"><span class="fn">Tier 2</span> high-intent leads to convert fast</span>
+        <span class="fr"><span class="fn">Tier 3</span> indirect — nurture later</span>
+      </div>
+      <div class="callout"><b>Core rule — client success.</b> For paid videos, the win is the client's fulfilment and great word of mouth. Storyboard toward the client's revenue / success, always.</div>
+      <div class="callout"><b>Examples.</b> "Comment FOUNDER for 50% off the next Founder event." · "Comment RENOVATE — first 100 free slots + a chance at $10,000 off."</div>
+    </div>
+  </section>
+
+  <!-- 21 · DIVIDER PART FOUR -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Ship it</h2>
+      <p class="lead" style="color:#bbb">Final checks, production rules, compliance, and the mindset that runs it all.</p>
+    </div>
+  </section>
+
+  <!-- 22 · FINAL CHECKS + PRODUCTION + COMPLIANCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Final checks · before it's a real storyboard</div>
+      <div class="check">
+        <label><input type="checkbox"><span>Every arc passed its own questions</span></label>
+        <label><input type="checkbox"><span>Scenes bridge smoothly — no dead air</span></label>
+        <label><input type="checkbox"><span>Would I feel stupid skipping this?</span></label>
+        <label><input type="checkbox"><span>Ending / CTA is worth the watch, and fits our GUIDE values</span></label>
+        <label><input type="checkbox"><span>Drives client success (paid) or our lead generation (unpaid) — always</span></label>
+      </div>
+      <div class="decide">
+        <div class="dbox ok"><h3>Production</h3><ul>
+          <li>Visual prompt has [person] + [action] minimum</li>
+          <li>Short, confident questions</li>
+          <li>Flag anything that needs visualisation</li>
+          <li>Sincere conversation, not a presentation</li>
+        </ul></div>
+        <div class="dbox no"><h3>Compliance — never</h3><ul>
+          <li>Unverifiable claims — no "best in Singapore"</li>
+          <li>Unclear music or footage IP</li>
+          <li>Sensitive content left unflagged</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 · HOW TO VISUALIZE THE SHOT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The most important storyboarding skill · not a footnote</div>
+      <div class="big">How to visualize the shot.</div>
+      <p class="lead" style="margin-bottom:10px">Every stage, every question, every CTA — none of it matters if you can't see it before you shoot it. This is the skill.</p>
+      <ol class="pts">
+        <li><b>Picture the space first.</b> Read the location before you plan a single beat — where does the person stand, where do they move, what's behind them?</li>
+        <li><b>See the A-roll and the B-roll.</b> For every beat: A-roll = [person] + [action] + [emotion] + [framing]. B-roll = the cutaway that proves it's true.</li>
+        <li><b>Run the whole video in your head.</b> Start to finish — does each scene bridge to the next? No dead air, no gap you can't picture.</li>
+        <li><b>Write it so a stranger could shoot it.</b> If someone else read your visual prompt with zero context, could they get the shot right, without you on set?</li>
+        <li><b>Ask what the viewer would shout at the screen.</b> Then make sure the shot answers it — not just the words.</li>
+      </ol>
+      <div class="callout"><b>Worked example.</b> Answer: "We stopped taking on every client — now we're selective." A-roll: [interviewee] + [shakes head, half-smiles recalling it] + [office, seated] + [reflective, a little rueful] + [close-up]. B-roll: [hand] + [flips through a thick stack of old client files] + [desk] + [busy, overwhelmed energy] + [overhead shot] — proves the "before," without a single stat on screen.</div>
+    </div>
+  </section>
+
+  <!-- 24 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part five</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#bbb">Four calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 25 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · Visual prompting</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A visual prompt needs [person] + [action] at minimum — mood, environment, and framing add polish, but an empty scene with no one doing anything isn't a shot."
+        data-no="<b>Not quite.</b> Mood or environment alone isn't a shot — every visual prompt needs [person] + [action] at minimum.">
+        <div class="scenario">Your storyboard for a scene reads: "[warm, sunset lighting]." No person, no action.</div>
+        <div class="q">Is this a valid visual prompt?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Yes — the mood alone is enough</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>No — the minimum is [person] + [action]</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Yes, as long as the environment is described in detail</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 26 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · the Hook</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> A hook fails if it misses any one of the three tests — stop the scroll in 2 seconds, need the answer to keep watching, and would I watch this on my own feed. All three, every time, or it's rejected."
+        data-no="<b>Not the rule.</b> A hook is rejected if it fails ANY of the three tests, not just one specific test. All three must pass together.">
+        <div class="scenario">You've drafted a hook. It stops the scroll fast, but you're not sure viewers would need to know the answer to keep watching.</div>
+        <div class="q">A hook fails if ___.</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>It fails even one of the three pass tests</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>It's longer than 5 seconds</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>It doesn't mention the offer</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · Paid vs unpaid</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> Paid = storyboard WITH the interviewee, client controls the objective, and you show them the template. Unpaid = you storyboard it yourself, objective is always our lead generation, and the template is never shown."
+        data-no="<b>Wrong pairing.</b> The template is only shown on paid shoots, where you storyboard WITH the interviewee and the client controls the objective. Unpaid is the opposite — you plan it yourself, objective is always our lead gen, template stays hidden.">
+        <div class="scenario">You're about to storyboard an unpaid, organic shoot with a self-sourced guest.</div>
+        <div class="q">Which is correct for this shoot?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Show them the template, let them pick the objective</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Storyboard it together, objective is whatever they prefer</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Plan it yourself while discussing, objective is always our lead generation, no template shown</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 28 · MCQ 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · The CTA</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A CTA must be an action word, value-packed, and irresistible — 'feel free to check out' is passive and forgettable. Compare: 'COMMENT SNOOPY!' or 'Comment RENOVATE — first 100 free slots.'"
+        data-no="<b>Not quite.</b> A CTA that's polite but passive doesn't clear the bar. It needs to be an action word, value-packed, and something the viewer would feel stupid not to take.">
+        <div class="scenario">Your mid-video CTA reads: "Feel free to check out our services if you're interested."</div>
+        <div class="q">Does this CTA meet the bar?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Yes — it's polite and clear</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>No — it's not an action word, and isn't stupid-not-to-take</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Yes, as long as it's mentioned once</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 29 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all six?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Does every hook pass all 3 tests AND have a visual prompt?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Does every shot have a visual prompt — at least [person] + [action]?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you picture the whole video on the field before it's shot?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Is the CTA an irresistible action-word, value-packed?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Does authority come through a story, never a raw stat?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Does the plan drive client success / our lead-gen outcome?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 30 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Plan the arc. The shoot writes itself.</h2>
+      <p class="lead">Hook to Trust, every stage earning the next. Storyboard it right, and the producer walks in with nothing to guess.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="producer-shoot-training.html">How to shoot →</a>
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · how to storyboard</div>
+<div class="nav">
+  <span class="count" id="count">1 / 30</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-storyboard-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

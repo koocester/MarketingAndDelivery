@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Leading the Koocester way</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* fill order chips */
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up compare */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline / cascade flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / hand-off (two-column verdict) */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
+.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+/* GUIDE values */
+.gvals{display:flex;flex-direction:column;gap:10px;margin-top:12px;max-width:860px}
+.gval{display:flex;gap:16px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:14px 18px;box-shadow:var(--shadow)}
+.gval .gl{flex:none;width:44px;height:44px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
+.gval .gt{font-weight:800;color:var(--ink);font-size:15px}
+.gval .gd{font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+/* generations comparison table */
+.gens{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:920px;margin-top:12px}
+.gxrow{display:grid;grid-template-columns:1fr 1.3fr 1.3fr;border-bottom:1px solid var(--line2)}
+.gxrow:last-child{border-bottom:0}
+.gxrow>span{padding:10px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.gxrow>span:last-child{border-right:0}
+.gxrow.gxhead>span{background:#fafafa;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+@media (max-width:760px){.gens .gxrow{grid-template-columns:1fr}.gens .gxrow.gxhead{display:none}}
+.gxrow span:first-child{font-weight:800;color:var(--ink)}
+.gxrow:not(.gxhead) span:last-child{background:var(--maroon-tint)}
+/* trait grid (ten traits) */
+.traits{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px;max-width:960px}
+.trait{border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.trait .tt{font-weight:800;color:var(--maroon);font-size:14px;margin-bottom:5px;letter-spacing:-.01em}
+.trait .td{font-size:12.5px;color:var(--body);line-height:1.4}
+/* four-beats numbered cards (1-on-1) */
+.beats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+.beat{border:1px solid var(--line);border-radius:14px;padding:18px 16px;box-shadow:var(--shadow)}
+.beat .bn{width:32px;height:32px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.beat .bt{font-weight:800;color:var(--ink);font-size:14.5px;line-height:1.32}
+/* listening patterns: listen for / ask / they speak */
+.lsn{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.lbox{border:2px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+.lbox.hear{border-color:var(--maroon);background:var(--maroon-tint)}
+.lbox.speak{border-color:var(--ok);background:#f3fbf6}
+.lbox h3{margin:0 0 10px;font-size:1.02rem}
+.lbox.hear h3{color:var(--maroon)}
+.lbox.speak h3{color:var(--ok)}
+.lbox ul{margin:0;padding-left:17px}
+.lbox li{margin:.35em 0;font-size:.86rem;line-height:1.4}
+/* common-trap flagged items inside do/steer-clear lists */
+.dbox li.trap{background:var(--maroon-tint);border-radius:8px;padding:.4em .5em;margin:.35em -6px;list-style:none}
+.dbox li.trap b{color:var(--maroon)}
+.dbox li.trap .small{display:block;color:#7a1418;font-size:11.5px;margin-top:1px}
+/* tier ladder (meet people where they are) */
+.ladder{display:flex;flex-direction:column;gap:10px;margin-top:14px;max-width:780px}
+.rung{display:flex;align-items:center;gap:18px;border:1px solid var(--line);border-radius:12px;padding:13px 20px;box-shadow:var(--shadow)}
+.rung .rt{flex:none;width:130px;font-weight:800;color:var(--ink);font-size:15px}
+.rung .ra{font-size:13.5px;color:var(--body)}
+.rung.top{border-color:var(--ok);background:#f3fbf6}
+.rung.top .rt{color:var(--ok)}
+.rung.bottom{border-color:var(--maroon);background:var(--maroon-tint)}
+.rung.bottom .rt{color:var(--maroon)}
+/* punchy warning cards (first-manager traps) */
+.wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;max-width:900px}
+.wcard{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.wcard .wt{font-weight:800;color:var(--maroon);font-size:1.02rem;margin-bottom:5px}
+.wcard .wd{font-size:13px;color:#7a1418;line-height:1.4}
+@media (max-width:660px){.duo,.decide{grid-template-columns:1fr}.gval{flex-direction:row}.brandmark{display:none}.traits{grid-template-columns:repeat(2,1fr)}.beats{grid-template-columns:1fr}.lsn{grid-template-columns:1fr}.wgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · manager leadership</div>
+      <h1><span class="lnwrap"><span class="ln">Leading the</span></span><span class="lnwrap"><span class="ln">Koocester way</span></span></h1>
+      <p class="lead" style="margin-top:20px">Managing, guiding and growing people with abundance. Empowering Growth. Built on Trust.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Your people feel your abundance</b><span>managed, guided and trained well</span></div>
+        <div class="win"><b>The team hits its outcomes</b><span>without you chasing anyone</span></div>
+        <div class="win"><b>Hard things are said early</b><span>with care, not left to fester</span></div>
+        <div class="win"><b>You could step away two weeks</b><span>and the team runs without you</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you get there — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHY YOU'RE HERE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why you're here</div>
+      <div class="big">You're a <em>player-coach</em> now.</div>
+      <p class="lead">Part of your week is still doing the work. The other part is leading it. Keep only the work only you can do — everything else is now a lever, not a task. Your real output is no longer what you personally produce. It's what your <b>team</b> produces.</p>
+      <div class="callout"><b>The one shift:</b> fewer hours doing, more hours making your team better.</div>
+    </div>
+  </section>
+
+  <!-- 4 · HIGH VS LOW LEVERAGE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Where your hours go</div>
+      <h2>Spend your time where only you can.</h2>
+      <div class="decide">
+        <div class="dbox ok"><h3>High-leverage → this is you</h3><ul>
+          <li>Set priorities and direction</li>
+          <li>A focused 1-on-1</li>
+          <li>Feedback and coaching</li>
+          <li>Train once — it saves twenty hours later</li>
+          <li>Unblock the team</li>
+          <li>Make the decision they're waiting on</li>
+        </ul></div>
+        <div class="dbox no"><h3>Low-leverage → hand it off</h3><ul>
+          <li>Redoing their work</li>
+          <li>Tasks anyone on the team could do</li>
+          <li>Meetings you're not needed in</li>
+          <li>Weekly firefighting</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · GUIDE VALUES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">GUIDE, applied to leading people</div>
+      <h2 style="margin-bottom:10px">The values don't change. The job does.</h2>
+      <div class="gvals">
+        <div class="gval"><span class="gl">G</span><div><div class="gt">Growth &amp; curiosity</div><div class="gd">Grow your people and yourself. Ask before you assume.</div></div></div>
+        <div class="gval"><span class="gl">U</span><div><div class="gt">Uniting through trust</div><div class="gd">Kept promises. Straight talk, every time.</div></div></div>
+        <div class="gval"><span class="gl">I</span><div><div class="gt">Impact through inspiration</div><div class="gd">Lead with meaning. Show them why, not just what.</div></div></div>
+        <div class="gval"><span class="gl">D</span><div><div class="gt">Dare to be bold</div><div class="gd">Make the brave call. Back your people to try, and to learn.</div></div></div>
+        <div class="gval"><span class="gl">E</span><div><div class="gt">Empathy &amp; giving</div><div class="gd">See the person first. Give before you take.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · THE JOB · FOUR DUTIES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The job, in four duties</div>
+      <h2>What a manager actually owns.</h2>
+      <ol class="pts">
+        <li><b>Set direction</b> — the team knows what matters this week and why.</li>
+        <li><b>Grow people</b> — coach, don't rescue.</li>
+        <li><b>Drive outcomes</b> — numbers over busyness.</li>
+        <li><b>Hold the standard</b> — it's kept by what you tolerate.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7 · MANAGER SCORECARD -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How you're actually measured</div>
+      <div class="big">The manager scorecard.</div>
+      <div class="wins">
+        <div class="win"><b>Business results</b><span>the numbers your team is accountable for</span></div>
+        <div class="win"><b>People development</b><span>are they visibly growing under you</span></div>
+        <div class="win"><b>Team health</b><span>workload, morale, nobody quietly burning out</span></div>
+        <div class="win"><b>Culture &amp; values</b><span>GUIDE, lived, not just posted</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px">You are measured by what your team achieves — not by what you personally produce.</p>
+    </div>
+  </section>
+
+  <!-- 8 · KPI OWNERSHIP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Key performance indicators cascade down</div>
+      <h2>Company → Department → Team → Individual.</h2>
+      <div class="dlflow">
+        <div class="dlnode"><div class="t">Company</div><div class="s">the top-line target</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Department</div><div class="s">its share of the target</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">Team</div><div class="s">your number, week to week</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Individual</div><div class="s">each person's part in it</div></div>
+      </div>
+      <div class="callout"><b>Your job:</b> set the target, track it, remove obstacles, drive accountability. Activity is not the same as results.</div>
+    </div>
+  </section>
+
+  <!-- 9 · DIVIDER · RUNNING THE OPERATIONAL FLOOR -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Beyond your team</div>
+      <hr class="rule">
+      <h2>Running the operational floor</h2>
+      <p class="lead" style="color:#bbb">People leadership isn't the whole job. You also own the pipeline in the Marketing &amp; Delivery base.</p>
+    </div>
+  </section>
+
+  <!-- 14 · YOUR PIPELINE DUTY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your operational duty</div>
+      <div class="big">Clear the road. Don't drive the car.</div>
+      <p class="lead">Your team owns the stages. You own the flow. Live in the <b>Manager Pipeline</b> view every morning — overdue first, then the queue.</p>
+      <div class="dlflow" style="margin-top:18px">
+        <div class="dlnode"><div class="t">Sourcing</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Planning</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Shoot</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">Editing</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">QC</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Approval</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Upload</div></div>
+      </div>
+      <p class="cite" style="margin-top:16px">Your job starts the moment a record stops moving.</p>
+    </div>
+  </section>
+
+  <!-- 15 · GUARD THE LEAD TIMES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Guard the lead times</div>
+      <h2>The daily read, in order.</h2>
+      <ol class="pts">
+        <li><b>What's overdue?</b> Anything past its clock is a dropped ball — chase it first.</li>
+        <li><b>Where's the wall?</b> The stage with the most records piled up is today's bottleneck.</li>
+        <li><b>Who's overloaded?</b> Rebalance the queue before someone drowns.</li>
+      </ol>
+      <div class="callout"><b>The gates are deliberate.</b> Every stage change is a button someone presses — that's what stops half-baked work moving forward. Your job is making sure the right person presses it, on time.</div>
+    </div>
+  </section>
+
+  <!-- 16 · OPERATIONAL ESCALATION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">When it's stuck</div>
+      <h2>Chase the person, not the record.</h2>
+      <ul class="pts">
+        <li><b>Overdue at a gate?</b> The approver is the blocker. Go to them directly, today.</li>
+        <li><b>Bouncing in amendments?</b> The notes weren't specific enough — get one clear pass.</li>
+        <li><b>Aging in Ready to Upload?</b> That's a backlog, not a mystery — rebalance or reprioritise.</li>
+      </ul>
+      <p class="cite">This is separate from escalating <b>people</b> matters to Human Resources — this is you, running the floor.</p>
+    </div>
+  </section>
+
+  <!-- 17 · THE 10 TRAITS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What a strong Koocester manager looks like</div>
+      <h2 style="margin-bottom:10px">Ten traits, no shortcuts.</h2>
+      <div class="traits">
+        <div class="trait"><div class="tt">Accountability</div><div class="td">The outcome is mine.</div></div>
+        <div class="trait"><div class="tt">Communication</div><div class="td">Clarity prevents poor performance.</div></div>
+        <div class="trait"><div class="tt">Decisiveness</div><div class="td">Progress beats perfection.</div></div>
+        <div class="trait"><div class="tt">Reliability</div><div class="td">Trust through consistency.</div></div>
+        <div class="trait"><div class="tt">Coaching</div><div class="td">Build people, not dependency.</div></div>
+        <div class="trait"><div class="tt">Emotional maturity</div><div class="td">Calm leaders, stable teams.</div></div>
+        <div class="trait"><div class="tt">Problem solving</div><div class="td">Here's the issue + my recommendation.</div></div>
+        <div class="trait"><div class="tt">Empathy</div><div class="td">Care deeply, demand excellence.</div></div>
+        <div class="trait"><div class="tt">Strategic thinking</div><div class="td">See beyond the task.</div></div>
+        <div class="trait"><div class="tt">Execution focus</div><div class="td">Results, not meetings.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · SELF-AWARENESS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Before you lead others</div>
+      <h2>Know yourself. Know your team.</h2>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3>Know yourself</h3>
+          <div class="sub">your own operating manual</div>
+          <ul><li>Your strengths</li><li>Your development areas</li><li>Your triggers — what sets you off, and why</li></ul>
+        </div>
+        <div class="obx aware">
+          <h3>Know your team</h3>
+          <div class="sub">theirs is different from yours</div>
+          <ul><li>Different strengths</li><li>Different motivations</li><li>Different aspirations — help each perform at their best</li></ul>
+        </div>
+      </div>
+      <p class="cite">Build on strengths. Coach the gaps.</p>
+    </div>
+  </section>
+
+  <!-- 15 · UNDERSTAND YOUR PEOPLE · GENERATIONS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Understand your people</div>
+      <h2 style="margin-bottom:8px">Different generations, different expectations.</h2>
+      <div class="gens">
+        <div class="gxrow gxhead"><span>Dimension</span><span>Established generations</span><span>Millennials &amp; Gen Z</span></div>
+        <div class="gxrow"><span>Motivation</span><span>Stability, tenure, security</span><span>Purpose, speed of growth</span></div>
+        <div class="gxrow"><span>Communication</span><span>Formal, structured</span><span>Direct, fast, informal</span></div>
+        <div class="gxrow"><span>Feedback</span><span>Annual, formal review</span><span>Frequent, real-time</span></div>
+        <div class="gxrow"><span>Learning</span><span>Structured training</span><span>Self-directed, on-demand</span></div>
+        <div class="gxrow"><span>Recognition</span><span>Private, understated</span><span>Public, immediate</span></div>
+      </div>
+      <p class="cite">Lead to the person, not the age. Hold the same high standard for everyone.</p>
+    </div>
+  </section>
+
+  <!-- 16 · BASIC 1 OF 4 · EXPECTATIONS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The 4 basics · 1 of 4</div>
+      <div class="big">Set crystal-clear expectations.</div>
+      <ul class="pts">
+        <li><b>Outcomes, not tasks.</b> Tell them what "done well" produces, not just what to do.</li>
+        <li><b>Define what good looks like</b> — show an example.</li>
+        <li><b>Always give the why.</b></li>
+        <li><b>Agree, then write it down.</b></li>
+      </ul>
+      <p class="cite"><b>Most performance problems are clarity problems.</b></p>
+    </div>
+  </section>
+
+  <!-- 17 · BASIC 2 OF 4 · WEEKLY 1-ON-1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The 4 basics · 2 of 4</div>
+      <div class="big">The weekly 1-on-1.</div>
+      <p class="lead" style="margin-bottom:8px">It's their meeting, not your status update.</p>
+      <div class="beats">
+        <div class="beat"><div class="bn">1</div><div class="bt">How are you?</div></div>
+        <div class="beat"><div class="bn">2</div><div class="bt">What's working or stuck?</div></div>
+        <div class="beat"><div class="bn">3</div><div class="bt">Feedback both ways</div></div>
+        <div class="beat"><div class="bn">4</div><div class="bt">Growth &amp; next step</div></div>
+      </div>
+      <p class="cite" style="margin-top:16px">Default: weekly, 30 minutes, every direct report — on video across Singapore, Malaysia and Indonesia. Never skip it.</p>
+    </div>
+  </section>
+
+  <!-- 18 · RUNNING GREAT 1-ON-1S -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How you run it</div>
+      <div class="big">Listening isn't just words.</div>
+      <p class="lead">A great 1-on-1 runs on three moves: you listen for the pattern, you ask the open question, then you get out of the way.</p>
+      <div class="lsn">
+        <div class="lbox hear"><h3>Listen for</h3><ul>
+          <li>Hesitation before a "yes"</li>
+          <li>What they don't say</li>
+          <li>Energy dropping on a topic</li>
+          <li>Repeating the same worry</li>
+          <li>Over-explaining</li>
+          <li>"I'm fine" that isn't</li>
+        </ul></div>
+        <div class="lbox"><h3>Ask</h3><ul>
+          <li>"What's really going on?"</li>
+          <li>"What's the hard part?"</li>
+          <li>"What do you need from me?"</li>
+          <li>"What am I missing?"</li>
+        </ul></div>
+        <div class="lbox speak"><h3>They speak</h3><ul>
+          <li>Talking 70%, you 30%</li>
+          <li>They surface the real issue</li>
+          <li>You guide, you don't lead the witness</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · COMMUNICATION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How you communicate</div>
+      <h2>Do this. Steer clear of that.</h2>
+      <div class="decide">
+        <div class="dbox ok"><h3>Do</h3><ul>
+          <li>Listen first</li>
+          <li>Be specific</li>
+          <li>Ask, don't assume</li>
+          <li>Explain why</li>
+          <li>Address behaviour, not personality</li>
+          <li>Praise in public, coach in private</li>
+          <li>Stay calm</li>
+          <li>Confirm understanding</li>
+        </ul></div>
+        <div class="dbox no"><h3>Steer clear</h3><ul>
+          <li>Interrupting</li>
+          <li class="trap"><b>⚠ Assuming intent</b><span class="small">common trap — easy to default to, must catch yourself</span></li>
+          <li class="trap"><b>⚠ Vague feedback</b><span class="small">common trap — specific is harder, do it anyway</span></li>
+          <li>Public embarrassment</li>
+          <li class="trap"><b>⚠ Speaking from emotion</b><span class="small">common trap — pause before you react</span></li>
+          <li>Empty promises</li>
+          <li class="trap"><b>⚠ Avoiding hard talks</b><span class="small">common trap — hardest to avoid, most costly to skip</span></li>
+        </ul></div>
+      </div>
+      <p class="cite">Standard: Clear · Respectful · Honest · Timely.</p>
+    </div>
+  </section>
+
+  <!-- 20 · BASIC 3 OF 4 · SBI-F FEEDBACK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The 4 basics · 3 of 4</div>
+      <div class="big">Feedback, direct and kind.</div>
+      <ol class="pts">
+        <li><b>Situation</b> — when and where it happened.</li>
+        <li><b>Behaviour</b> — exactly what you observed.</li>
+        <li><b>Impact</b> — the effect it had.</li>
+        <li><b>Forward</b> — what happens next.</li>
+      </ol>
+      <p class="cite"><b>Care personally, challenge directly.</b> Praise in public, correct in private.</p>
+    </div>
+  </section>
+
+  <!-- 21 · COACHING FOR PERFORMANCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Coach, don't rescue</div>
+      <h2>The GROW shape.</h2>
+      <ol class="pts">
+        <li><b>Understand</b> — what's really going on.</li>
+        <li><b>Explore</b> — the options with them, not for them.</li>
+        <li><b>Ownership</b> — they choose the path.</li>
+        <li><b>Support</b> — you back them, you don't take over.</li>
+      </ol>
+      <div class="callout">Don't solve every problem for them — or you become the bottleneck.</div>
+    </div>
+  </section>
+
+  <!-- 22 · BASIC 4 OF 4 · DELEGATE OUTCOMES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The 4 basics · 4 of 4</div>
+      <div class="big">Delegate outcomes, not tasks.</div>
+      <p class="lead" style="margin-bottom:10px">Hand over the result, and the why. Match the leash to the skill.</p>
+      <div class="duo" style="grid-template-columns:repeat(3,1fr)">
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.2rem">New</h3><div class="sub">just starting</div><ul><li>Do it together</li></ul></div>
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.2rem">Growing</h3><div class="sub">getting there</div><ul><li>Check the plan, not every step</li></ul></div>
+        <div class="obx lead-gen"><h3 style="font-size:1.2rem">Trusted</h3><div class="sub">proven</div><ul><li>Just the result — leave the how to them</li></ul></div>
+      </div>
+      <p class="cite" style="margin-top:16px">Let them fail safely. Credit goes up, ownership stays down.</p>
+    </div>
+  </section>
+
+  <!-- 23 · DEVELOP WITH ABUNDANCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Abundance, not scarcity</div>
+      <div class="big">Develop your replacement.</div>
+      <div class="wins">
+        <div class="win"><b>You can't be promoted if no one can do your job</b><span>hoarding the work blocks your own next step</span></div>
+        <div class="win"><b>A team that runs without you is the real win</b><span>that's what abundance looks like, in practice</span></div>
+        <div class="win"><b>Hoarding keeps everyone small</b><span>you, and everyone under you</span></div>
+        <div class="win"><b>It multiplies your impact</b><span>you become one of many, not the only one</span></div>
+      </div>
+      <div class="eyebrow" style="margin-top:20px;font-size:11px">How</div>
+      <ul class="pts" style="margin-top:4px">
+        <li>Patience with the new — they're not you on day one.</li>
+        <li>Lift the people around you, not just yourself.</li>
+        <li>Run a bi-annual growth check-in with every report.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 24 · MEET PEOPLE WHERE THEY ARE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Not everyone gets the same conversation</div>
+      <h2 style="margin-bottom:8px">Meet people where they are.</h2>
+      <div class="ladder">
+        <div class="rung top"><span class="rt">Exceptional</span><span class="ra">Stretch them.</span></div>
+        <div class="rung top"><span class="rt">High</span><span class="ra">Develop and recognise.</span></div>
+        <div class="rung"><span class="rt">Solid</span><span class="ra">Strengthen what's working.</span></div>
+        <div class="rung"><span class="rt">Developing</span><span class="ra">Coach closely.</span></div>
+        <div class="rung bottom"><span class="rt">Concern</span><span class="ra">Name it, act early.</span></div>
+      </div>
+      <p class="cite">Fair, not identical.</p>
+    </div>
+  </section>
+
+  <!-- 25 · WHEN THERE'S A GAP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">When performance falls short</div>
+      <h2>Work the gap, in order.</h2>
+      <ol class="pts">
+        <li><b>Clarify expectations</b> — make sure "good" was ever actually defined.</li>
+        <li><b>Discuss the gap</b> — facts, not feelings.</li>
+        <li><b>Understand the cause</b> — skill, motivation, resources, or clarity.</li>
+        <li><b>Agree improvement actions.</b></li>
+        <li><b>Follow up.</b></li>
+      </ol>
+      <p class="cite">Early beats formal.</p>
+    </div>
+  </section>
+
+  <!-- 26 · THE HARD PART · ACCOUNTABILITY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The hard part · accountability</div>
+      <div class="big">The hard thing goes <em>first</em>.</div>
+      <p class="lead">Fast. Every time. Never deferred. As a leader, the hard — and the heart — things are always addressed first, immediately, ahead of everything else on your list.</p>
+      <div class="callout"><b>Not eventually. Not when it's convenient. First.</b></div>
+      <ul class="pts">
+        <li>Name it early.</li>
+        <li>Name it without softening.</li>
+        <li>Separate the person from the problem.</li>
+        <li>Agree the fix, and the date.</li>
+      </ul>
+      <p class="cite"><b>The kindest thing is to be honest early.</b></p>
+    </div>
+  </section>
+
+  <!-- 27 · THE DIFFICULT CONVERSATION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Having the conversation</div>
+      <h2>Care first. Then the truth.</h2>
+      <ol class="pts">
+        <li><b>Open with care</b> — "I'm telling you this because I back you."</li>
+        <li><b>State the gap plainly.</b></li>
+        <li><b>Listen, really.</b></li>
+        <li><b>Land on forward</b> — and the next check-in.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 28 · REMOTE & HYBRID -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leading across Singapore, Malaysia and Indonesia</div>
+      <h2>Remote and hybrid.</h2>
+      <ul class="pts">
+        <li><b>Communicate clearly</b> — nothing left to guess.</li>
+        <li><b>Stay connected</b> — weekly 1-on-1s, video when it matters.</li>
+        <li><b>Create visibility</b> — key performance indicators, dashboards, not vibes.</li>
+        <li><b>Build trust</b> — deliberately, it doesn't happen by accident remotely.</li>
+      </ul>
+      <p class="cite">Presence is not the same as productivity.</p>
+    </div>
+  </section>
+
+  <!-- 29 · KNOW WHEN TO ESCALATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Know the line</div>
+      <h2>What you own. What you escalate.</h2>
+      <div class="decide">
+        <div class="dbox ok"><h3>You own</h3><ul>
+          <li>Setting expectations</li>
+          <li>Giving feedback</li>
+          <li>Coaching</li>
+          <li>Documenting the facts</li>
+          <li>Raising concerns early</li>
+        </ul></div>
+        <div class="dbox no"><h3>Escalate to Human Resources</h3><ul>
+          <li>Harassment</li>
+          <li>Misconduct</li>
+          <li>Disciplinary action</li>
+          <li>Medical matters</li>
+          <li>Grievances</li>
+        </ul></div>
+      </div>
+      <p class="cite">Never promise promotions, raises, or guarantees — that's not yours to give.</p>
+    </div>
+  </section>
+
+  <!-- 30 · FIRST-MANAGER TRAPS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Watch for these</div>
+      <div class="big">First-manager traps.</div>
+      <div class="wgrid">
+        <div class="wcard"><div class="wt">⚠ Hiding in the doing</div><div class="wd">Still doing the job instead of leading it.</div></div>
+        <div class="wcard"><div class="wt">⚠ Being everyone's friend</div><div class="wd">Popularity traded for performance.</div></div>
+        <div class="wcard"><div class="wt">⚠ Dodging conflict</div><div class="wd">Letting problems fester quietly.</div></div>
+        <div class="wcard"><div class="wt">⚠ Taking the credit</div><div class="wd">Your team's win becomes yours.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 31 · BUILDING FUTURE LEADERS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Beyond your own team</div>
+      <h2>Building future leaders.</h2>
+      <ul class="pts">
+        <li>Who's ready for more?</li>
+        <li>Who needs development?</li>
+        <li>Who could step up?</li>
+        <li>Who could lead?</li>
+      </ul>
+      <div class="callout">Develop with intent: exposure, ownership, feedback, opportunity.</div>
+      <p class="cite">Leave every person stronger than you found them.</p>
+    </div>
+  </section>
+
+  <!-- 32 · THE BAR -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The bar</div>
+      <div class="big">A great Koocester manager.</div>
+      <div class="wins">
+        <div class="win"><b>People visibly growing</b><span>under your leadership</span></div>
+        <div class="win"><b>Outcomes hit without chasing</b><span>the team runs itself</span></div>
+        <div class="win"><b>Hard things said early</b><span>with care, every time</span></div>
+        <div class="win"><b>People feel the abundance</b><span>not scarcity or fear</span></div>
+        <div class="win"><b>You could step away two weeks</b><span>and nothing breaks</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 33 · YOUR FIRST 30 DAYS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Getting started</div>
+      <h2 style="margin-bottom:10px">Your first 30 days.</h2>
+      <div class="check">
+        <label><input type="checkbox"><span>Meet each report 1-on-1 in week one</span></label>
+        <label><input type="checkbox"><span>Learn what "good" looks like from your own manager</span></label>
+        <label><input type="checkbox"><span>Set clear expectations with every report</span></label>
+        <label><input type="checkbox"><span>Book the recurring weekly 1-on-1 slot</span></label>
+        <label><input type="checkbox"><span>Identify your one highest-leverage habit to build</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 34 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · the player-coach shift</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> As a manager your real output is your team's output. The shift is fewer hours doing the work yourself, more hours making your team better at it."
+        data-no="<b>Not quite.</b> A player-coach still does some of the work — but the shift that matters is spending fewer hours doing and more hours making the team better. Your output is now theirs.">
+        <div class="scenario">You're now managing three people, but your calendar still looks like an individual contributor's — full of tasks you could hand off.</div>
+        <div class="q">What is "the one shift" a new manager needs to make?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Work longer hours so both the old and new job get done</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Fewer hours doing, more hours making the team better</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Stop doing any hands-on work immediately</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 35 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · high vs low leverage</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> A focused 1-on-1 is high-leverage — it's coaching and unblocking, work only you can do as their manager. Redoing someone's work is low-leverage and should be handed back to them."
+        data-no="<b>Not quite.</b> A focused 1-on-1 is high-leverage — it's coaching, only you can do it. Redoing a report's slide deck yourself is low-leverage; hand it back so they learn and you free the hour.">
+        <div class="scenario">Your afternoon has two options: a scheduled 1-on-1 with a struggling report, or quietly redoing a report's slide deck yourself because it's faster than explaining the fix.</div>
+        <div class="q">Which is the high-leverage use of your time?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>The 1-on-1 — coaching is work only you can do</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Redoing the deck — it ships faster today</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Both are equally high-leverage</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 36 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · SBI-F feedback</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> SBI-F is Situation, Behaviour, Impact, Forward — anchored in what actually happened and its effect, then what happens next. Not a character judgment."
+        data-no="<b>No.</b> SBI-F stands for Situation, Behaviour, Impact, Forward — it's built on specific facts and effect, not a general trait label like 'not a team player'.">
+        <div class="scenario">You need to give a report feedback on missing yesterday's deadline without their update.</div>
+        <div class="q">What does the SBI-F feedback model stand for?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Style, Behaviour, Intent, Follow-up</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Situation, Blame, Impact, Fix</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Situation, Behaviour, Impact, Forward</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 37 · MCQ 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · when to escalate</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A harassment complaint always goes to Human Resources. Missed deadlines and a rough patch are exactly what you coach and document yourself — that's your job, not HR's."
+        data-no="<b>No.</b> A missed deadline or a personal rough patch is yours to coach and document. A harassment complaint is never yours to handle alone — it goes straight to Human Resources.">
+        <div class="scenario">Three things land on your desk this week: a missed deadline, a report going through a rough patch, and a harassment complaint between two team members.</div>
+        <div class="q">Which one must go straight to Human Resources?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>The missed deadline — document and escalate everything</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>The harassment complaint</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>None — a manager should resolve all three alone</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 38 · CERTIFICATION GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all six?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Do you run weekly 1-on-1s with every report?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you give feedback SBI-F style — specific, not personal?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you coach your team, instead of rescuing them?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you delegate outcomes, not just tasks?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you name performance gaps early, with care?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you escalate the right things to Human Resources?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 39 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Set the direction. Grow the people. Hold the standard.</h2>
+      <p class="lead">Empowering Growth. Built on Trust. That is what leading the Koocester way means — every week, with every person on your team.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="manager-training.html">Manager · base workflow →</a>
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · leading the koocester way</div>
+<div class="nav">
+  <button class="arrow play" id="play" aria-label="Read this slide aloud" title="Read aloud · auto-advances like a video">▶</button>
+  <span class="count" id="count">1 / 39</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){stopPlay();show(i+1)};prev.onclick=function(){stopPlay();show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();stopPlay();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();stopPlay();show(i-1)}
+  });
+  // ===== read-aloud "watch it" mode: reads the slide, then auto-advances like a video =====
+  var playBtn=document.getElementById('play'),playing=false,hasTTS=('speechSynthesis' in window);
+  function slideText(){var el=slides[i].querySelector('.inner');return el?el.innerText.replace(/\s+/g,' ').trim():'';}
+  function speakNow(){
+    if(!hasTTS)return; window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(slideText()); u.rate=1; u.pitch=1;
+    u.onend=function(){ if(playing){ if(i<n-1){ show(i+1); setTimeout(speakNow,450); } else { stopPlay(); } } };
+    window.speechSynthesis.speak(u);
+  }
+  function startPlay(){ if(!hasTTS){alert('Read-aloud needs a modern browser (Chrome/Safari).');return;} playing=true; if(playBtn){playBtn.textContent='❚❚';playBtn.classList.add('on');} speakNow(); }
+  function stopPlay(){ playing=false; if(playBtn){playBtn.textContent='▶';playBtn.classList.remove('on');} if(hasTTS)window.speechSynthesis.cancel(); }
+  if(playBtn) playBtn.onclick=function(){ playing?stopPlay():startPlay(); };
+  window.addEventListener('beforeunload',stopPlay);
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-leading-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-cmd-power -->
+<style>
+body{background:radial-gradient(900px 520px at 88% -8%,rgba(192,32,37,.06),transparent 58%),radial-gradient(700px 460px at 4% 106%,rgba(192,32,37,.045),transparent 60%),var(--bg,#fff)}
+.koo-cmd-band{position:fixed;left:0;right:0;height:4px;z-index:60;background:linear-gradient(90deg,#C02025,#e0777a,#C02025);background-size:200% 100%;animation:kcBand 5s linear infinite;pointer-events:none}
+.koo-cmd-band.top{top:0}.koo-cmd-band.bot{bottom:0;animation-direction:reverse}
+@keyframes kcBand{0%{background-position:0 0}100%{background-position:-200% 0}}
+</style>
+<div class="koo-cmd-band bot"></div>
+<!-- /koo-cmd-power -->
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

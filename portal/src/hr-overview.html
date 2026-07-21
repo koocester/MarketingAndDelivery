@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>People &amp; HR Overview — Koocester</title>
+<style>
+:root{
+  --bg:#fff;--pnl:#fff;--pnl2:#F6F6F6;--ln:#E4E4E4;--ln2:#F0F0F0;--ink:#0a0a0a;--mut:#767676;--mut2:#9a9a9a;
+  --mr:#C02025;--mrb:#C02025;--mrs:#faf3f3;--hot:#C02025;--warn:#B5731A;--wbg:#FBF3E6;--clr:#1b7f4b;--cbg:#E9F5EE;
+  --sh1:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07);
+  --sans:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,monospace;
+}
+@media(prefers-color-scheme:dark){:root{--bg:#0E0F11;--pnl:#16181B;--pnl2:#1B1E22;--ln:#24272C;--ln2:#2E3238;--ink:#F2F0EE;--mut:#8B9099;--mut2:#5E636B;--mrb:#E23B41;--mrs:#2A1416;--hot:#E23B41;--warn:#E0A33A;--wbg:#241C10;--clr:#3FB6A8;--cbg:#10201D;--sh1:0 .5px 1.5px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.5)}}
+:root[data-theme=dark]{--bg:#0E0F11;--pnl:#16181B;--pnl2:#1B1E22;--ln:#24272C;--ln2:#2E3238;--ink:#F2F0EE;--mut:#8B9099;--mut2:#5E636B;--mrb:#E23B41;--mrs:#2A1416;--hot:#E23B41;--warn:#E0A33A;--wbg:#241C10;--clr:#3FB6A8;--cbg:#10201D;--sh1:0 .5px 1.5px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.5)}
+:root[data-theme=light]{--bg:#fff;--pnl:#fff;--pnl2:#F6F6F6;--ln:#E4E4E4;--ln2:#F0F0F0;--ink:#0a0a0a;--mut:#767676;--mut2:#9a9a9a;--mrb:#C02025;--mrs:#faf3f3;--hot:#C02025;--warn:#B5731A;--wbg:#FBF3E6;--clr:#1b7f4b;--cbg:#E9F5EE;--sh1:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07)}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.bd{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:13px}
+.bd small{color:var(--mut);font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mrb);box-shadow:0 0 0 4px var(--mrs);animation:p 2.4s infinite}@keyframes p{50%{opacity:.4}}
+.stamp{font-family:var(--mono);font-size:12px;color:var(--mut)}.stamp .live{color:var(--clr);font-weight:700}
+.badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--mrb);background:var(--mrs);border-radius:99px;padding:5px 10px}
+h2{color:var(--mut);letter-spacing:.14em;text-transform:uppercase;font-size:11px;font-weight:700;margin:22px 2px 10px}
+.pnl{background:var(--pnl);border:1.5px solid var(--ln);border-radius:16px;padding:18px 20px;box-shadow:var(--sh1)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.g2{grid-template-columns:1fr}}
+.ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}.ph h3{margin:0;font-size:13px;letter-spacing:-.01em;color:var(--ink)}.ph .m{font-family:var(--mono);font-size:11px;color:var(--mut2)}
+/* KPI tiles */
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--pnl);border:1.5px solid var(--ln);border-radius:14px;padding:14px;box-shadow:var(--sh1)}
+.tile .tl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--mut);margin-bottom:7px}
+.tile .tv{font-family:var(--mono);font-size:23px;font-weight:700;color:var(--mrb);letter-spacing:-.01em}
+.tile .tn{font-size:11px;color:var(--mut2);margin-top:4px}
+/* AI card */
+.ai{background:var(--pnl2);border:1.5px solid var(--ln);border-left:3px solid var(--mr);border-radius:14px;padding:18px 20px;margin-bottom:4px}
+.ai .lab{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mrb);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.ai .head{font-size:16px;font-weight:800;letter-spacing:-.01em;line-height:1.4;margin:0 0 16px;color:var(--ink)}
+.ai .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}@media(max-width:760px){.ai .cols{grid-template-columns:1fr;gap:14px}}
+.ai h4{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut);margin:0 0 8px}
+.ai ul{margin:0;padding:0;list-style:none}
+.ai li{font-size:12.5px;line-height:1.5;color:var(--ink);padding-left:13px;position:relative;margin:8px 0}
+.ai li:before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--mrb)}
+.ai li b{color:var(--ink)}
+/* bars */
+.br{display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:12px;margin:8px 0;font-size:12.5px}
+.br .l{color:var(--ink)}
+.tk{height:8px;background:var(--pnl2);border-radius:99px;overflow:hidden}
+.fl{height:100%;background:var(--mr);width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.br .v{font-family:var(--mono);font-size:12px;font-weight:700;text-align:right;min-width:150px;color:var(--mut)}
+/* tables */
+ul.plain{margin:0;padding-left:2px;font-size:13px;line-height:1.9;list-style:none}ul.plain li:before{content:"🎂 ";}
+.muted{color:var(--mut)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+td,th{text-align:left;padding:8px 9px;border-bottom:1px solid var(--ln)}
+tbody tr:hover{background:var(--pnl2)}
+th{color:var(--mut2);font-weight:700;text-transform:uppercase;font-size:9.5px;letter-spacing:.05em}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+.note{font-size:11px;color:var(--mut2);margin-top:10px;line-height:1.5}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--pnl2);border:1px solid var(--ln);border-radius:99px;padding:5px 12px;margin:3px 5px 3px 0;color:var(--mut)}
+.load{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;color:var(--mut)}
+.spin{width:30px;height:30px;border:3px solid var(--ln);border-top-color:var(--mr);border-radius:50%;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div id="app" class="wrap"><div class="load"><div class="spin"></div><div><b>Loading your people overview</b><div class="note">Headcount, payroll and lifecycle, plus the AI read.</div></div></div></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+try{ var _t=new URLSearchParams(location.search).get('theme'); if(_t) document.documentElement.setAttribute('data-theme',_t); }catch(e){}
+window.addEventListener('message',function(e){ if(e.data&&e.data.koohrTheme){ document.documentElement.setAttribute('data-theme',e.data.koohrTheme); } });
+const SUPABASE_URL='https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY='<SUPABASE_ANON_KEY>';
+const app=document.getElementById('app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nf=n=>Number(n||0).toLocaleString('en-US');
+function state(t,m){ app.innerHTML='<div class="load"><div><b>'+esc(t)+'</b><div class="note">'+m+'</div></div></div>'; }
+function bars(obj,{money=false,unit=''}={}){
+  const items=Object.entries(obj||{}).sort((a,b)=>b[1]-a[1]); const mx=Math.max(1,...items.map(x=>x[1]));
+  return items.map(([k,v])=>{const w=Math.round(v/mx*100);const val=money?('S$'+nf(Math.round(v))):(nf(v)+unit);
+    return '<div class="br"><div class="l">'+esc(k)+'</div><div class="tk"><div class="fl" data-w="'+w+'"></div></div><div class="v">'+val+'</div></div>';}).join('');
+}
+function statPanel(d){
+  const SL={CPF:'CPF · Singapore',EPF:'EPF · Malaysia',BPJS:'BPJS · Indonesia'};
+  const SC={CPF:'SGD',EPF:'MYR',BPJS:'IDR'};
+  const st=d.statutory||{}; const tot=Math.max(1,d.stat_sgd_total||0);
+  const rows=Object.entries(st).sort((a,b)=>b[1][1]-a[1][1]).map(([k,v])=>{const w=Math.round(v[1]/tot*100);
+    return '<div class="br"><div class="l">'+esc(SL[k]||k)+'</div><div class="tk"><div class="fl" data-w="'+w+'"></div></div><div class="v">'+esc(SC[k]||'')+' '+nf(v[0])+' · S$'+nf(v[1])+' · '+v[2]+'p</div></div>';}).join('');
+  const tc=Math.max(1,d.total_cost_sgd||0);
+  const cost='<div class="br"><div class="l">Payroll</div><div class="tk"><div class="fl" data-w="'+Math.round((d.sgd_total||0)/tc*100)+'"></div></div><div class="v">S$'+nf(d.sgd_total)+'</div></div>'+
+    '<div class="br"><div class="l">Statutory (employer)</div><div class="tk"><div class="fl" data-w="'+Math.round((d.stat_sgd_total||0)/tc*100)+'"></div></div><div class="v">S$'+nf(d.stat_sgd_total)+'</div></div>';
+  return '<h2>Statutory contributions &amp; total cost</h2><div class="g2">'+
+    '<div class="pnl reveal"><div class="ph"><h3>Statutory · employer (est.)</h3><span class="m">CPF · EPF · BPJS</span></div>'+rows+
+      '<div class="note">Employer share, estimated. CPF 17% (cap S$8,000, Singapore citizens and PRs only). EPF 13% (12% above RM5,000). BPJS about 10.24% (JHT, JKK, JKM, JP, health, with pension and health caps). Work-pass foreigners are exempt from CPF, so tell me who to exclude.</div></div>'+
+    '<div class="pnl reveal"><div class="ph"><h3>Total monthly cost</h3><span class="m">SGD-eq</span></div>'+cost+
+      '<div class="note" style="font-size:15px;color:var(--ink);margin-top:12px"><b>Total S$'+nf(d.total_cost_sgd)+' / month</b> (payroll plus statutory)</div></div></div>';
+}
+function aiCard(ai){
+  if(!ai) return '<div class="ai reveal"><div class="lab"><span class="dot"></span>Claude analysis</div><div class="head">The AI read is generating. Refresh in a moment.</div></div>';
+  const li=a=>(a||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
+  const hire=a=>(a||[]).map(x=>(x&&typeof x==='object')?'<li><b>'+esc(x.role||'')+'.</b> '+esc(x.why||'')+'</li>':'<li>'+esc(x)+'</li>').join('');
+  return '<div class="ai reveal"><div class="lab"><span class="dot"></span>Claude analysis · live</div>'+
+    '<div class="head">'+esc(ai.headline||'')+'</div><div class="cols">'+
+    '<div><h4>Needs attention</h4><ul>'+li(ai.attention)+'</ul></div>'+
+    '<div><h4>Hire next</h4><ul>'+hire(ai.hire_next)+'</ul></div>'+
+    '<div><h4>Strengthen people ops</h4><ul>'+li(ai.people_management)+'</ul></div></div></div>';
+}
+function render(d){
+  const cur=(c,v)=>c+' '+nf(v);
+  const paycur=Object.entries(d.paycur||{}).sort((a,b)=>(b[1][0]*(b[0]==='SGD'?1:(d.fx[b[0]]||0)))-(a[1][0]*(a[0]==='SGD'?1:(d.fx[a[0]]||0))))
+    .map(([c,v])=>{const s=Math.round(v[0]*(c==='SGD'?1:(d.fx[c]||0)));const w=Math.round(s/Math.max(1,d.sgd_total)*100);
+      return '<div class="br"><div class="l">'+esc(c)+'</div><div class="tk"><div class="fl" data-w="'+w+'"></div></div><div class="v">'+cur(c,v[0])+' · '+v[1]+'p</div></div>';}).join('');
+  const bdays=(d.birthdays||[]).map(b=>'<li><b>'+esc(b.name)+'</b> · '+esc(b.md)+'</li>').join('')||'<li class="muted">None this month</li>';
+  const line=(a,l,s)=>(a&&a.length)?('<b>'+l+':</b> '+a.map(x=>esc(x.name)+(x.d!=null?(' ('+x.d+s+')'):'')).join(', ')):('<b>'+l+':</b> none');
+  const alumni=(d.alumni||[]).map(a=>'<tr><td>'+esc(a.name)+'</td><td>'+esc(a.dept)+'</td><td>'+esc(a.country)+'</td><td class="muted">'+esc(a.reason)+'</td></tr>').join('');
+  const persons=(d.persons||[]).map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+esc(p.dept)+'</td><td>'+esc(p.country)+'</td><td>'+esc(p.cur||'—')+'</td><td class="num">'+nf(p.pay)+'</td><td class="num">S$'+nf(p.sgd)+'</td><td>'+esc(p.scheme||'—')+'</td><td class="num">'+nf(p.cl)+'</td><td class="num">S$'+nf(p.cs)+'</td><td style="font-weight:700;color:'+(p.perf==='Performing'?'var(--clr)':p.perf==='Underperforming'?'var(--mrb)':'var(--mut)')+'">'+esc(p.perf||'Normal')+'</td></tr>').join('');
+  const kpi=(n,l,tn,fmt)=>'<div class="tile"><div class="tl">'+l+'</div><div class="tv" data-count="'+n+'" data-fmt="'+(fmt||'int')+'">0</div><div class="tn">'+tn+'</div></div>';
+  app.innerHTML=
+  '<div class="top"><div class="bd"><span class="dot"></span>People <small>/ HR</small></div>'+
+   '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span class="stamp"><span class="live">● LIVE</span> · '+esc(d.generated)+'</span><span class="badge">FOUNDER + HR</span></div></div>'+
+  aiCard(d.ai)+
+  '<h2>Headline numbers</h2><div class="tiles reveal">'+kpi(d.n_active,'Active staff','headcount')+kpi(d.new90,'Joined 90d','new hires')+kpi(d.n_left,'Alumni','all-time')+kpi(d.sgd_total,'Payroll / mo','SGD-eq','sgd')+kpi(d.avg_sgd,'Avg / head','SGD-eq','sgd')+'</div>'+
+  '<div class="g2">'+
+   '<div class="pnl reveal"><div class="ph"><h3>Headcount by department</h3><span class="m">active</span></div>'+bars(d.dept,{unit:' p'})+'</div>'+
+   '<div class="pnl reveal"><div class="ph"><h3>Headcount by country</h3><span class="m">active</span></div>'+bars(d.country,{unit:' p'})+'</div>'+
+  '</div>'+
+  '<div class="g2" style="margin-top:14px">'+
+   '<div class="pnl reveal"><div class="ph"><h3>Needs attention</h3><span class="m">this week</span></div><ul class="plain">'+bdays+'</ul>'+
+     '<div class="note">'+line(d.attn.ending,'Contracts ending ≤60d','d')+'<br>'+line(d.attn.prob,'Probation ending ≤7d','d')+'<br>'+line(d.attn.expired,'Expired but active','d ago')+'<br>'+line(d.attn.yc,'Active yellow cards','')+'</div></div>'+
+   '<div class="pnl reveal"><div class="ph"><h3>Tenure of active staff</h3><span class="m">how long aboard</span></div>'+bars(d.tenure,{unit:' p'})+'</div>'+
+  '</div>'+
+  '<div class="g2" style="margin-top:14px">'+
+   '<div class="pnl reveal"><div class="ph"><h3>Payroll by currency</h3><span class="m">raw · scaled by SGD-eq</span></div>'+paycur+'<div class="note">SGD-eq total <b>S$'+nf(d.sgd_total)+'</b> · live FX MYR '+d.fx.MYR+', IDR '+d.fx.IDR+'.</div></div>'+
+   '<div class="pnl reveal"><div class="ph"><h3>Payroll by department</h3><span class="m">SGD-eq</span></div>'+bars(d.paydept,{money:true})+'</div>'+
+  '</div>'+
+  statPanel(d)+
+  '<h2>Salary · per person (SGD-eq)</h2><div class="pnl reveal scroll"><table><thead><tr><th>Name</th><th>Dept</th><th>Country</th><th>Cur</th><th class="num">Monthly</th><th class="num">SGD-eq</th><th>Scheme</th><th class="num">Statutory</th><th class="num">Stat SGD-eq</th><th>Performance</th></tr></thead><tbody>'+persons+'</tbody></table></div>'+
+  '<h2>Alumni · '+d.n_left+' departed</h2><div class="pnl reveal scroll"><table><thead><tr><th>Name</th><th>Dept</th><th>Country</th><th>Reason</th></tr></thead><tbody>'+alumni+'</tbody></table></div>'+
+  '<h2>People-ops signals</h2><div class="pnl reveal"><span class="pill">Active yellow cards: '+((d.attn.yc||[]).length)+'</span><span class="pill">PIPs: 0</span><span class="pill">On leave: 0</span><span class="pill">Open hiring: 1</span><div class="note">Live, gated to founder + HR. Salary is read from the HR base on demand, never stored in the portal. Panels fill as HR uses the PIP, Leave and Hiring tables.</div></div>';
+  motion();
+}
+function animateCount(el){const t=+el.dataset.count||0,fmt=el.dataset.fmt||'int',d=1000,t0=performance.now();
+  (function tick(x){const p=Math.min(1,(x-t0)/d),e=1-Math.pow(1-p,3),v=Math.round(t*e);el.textContent=fmt==='sgd'?('S$'+v.toLocaleString('en-US')):v.toLocaleString('en-US');if(p<1)requestAnimationFrame(tick);})(t0);}
+function motion(){const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('in');setTimeout(()=>{el.querySelectorAll('[data-w]').forEach(b=>b.style.width=b.dataset.w+'%');el.querySelectorAll('[data-count]').forEach(animateCount);},100);io.unobserve(el);});},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i,8)*40)+'ms';io.observe(el);});}
+(async function(){
+  try{
+    const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    const { data:{ session } }=await supabase.auth.getSession();
+    if(!session){ state('Sign in to the portal first','This overview needs a signed-in founder or HR session.'); return; }
+    const res=await fetch('/hr-feed',{ headers:{ Authorization:'Bearer '+session.access_token } });
+    if(res.status===403){ state('For founder and HR only','You are signed in, but this overview is restricted to the founder and HR.'); return; }
+    if(!res.ok){ state('Could not load','The HR feed returned '+res.status+'. Give it a moment and refresh.'); return; }
+    render(await res.json());
+  }catch(e){ state('Something went wrong', esc(e&&e.message||e)); }
+})();
+</script>
+</body>
+</html>

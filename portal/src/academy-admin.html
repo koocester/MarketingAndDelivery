@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Academy assignment · Koocester</title>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<style>
+  :root{
+    --maroon:#C02025; --ink:#111; --muted:#6b6b6b; --line:#e4e4e4;
+    --bg:#fff; --soft:#faf9f9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,40px)}
+
+  header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:34px}
+  .htop{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .logo{font-weight:800;font-size:19px;letter-spacing:-.02em}
+  .tag{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+       color:var(--maroon);margin-left:10px}
+  .back{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+        color:var(--muted);text-decoration:none;border:1px solid var(--line);
+        border-radius:20px;padding:8px 15px;white-space:nowrap}
+  .back:hover{border-color:var(--maroon);color:var(--maroon)}
+
+  h1{font-size:clamp(26px,4vw,36px);margin:0 0 10px;letter-spacing:-.02em}
+  .sub{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 26px;max-width:70ch}
+
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+  .pill{border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 14px;
+        font-size:12.5px;font-weight:700;cursor:pointer}
+  .pill.on{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+  .count{font-size:12.5px;color:var(--muted);margin-left:auto}
+  input.search{border:1px solid var(--line);border-radius:20px;padding:9px 15px;
+               font-size:13px;font-family:inherit;min-width:210px}
+  input.search:focus{outline:none;border-color:var(--maroon)}
+
+  .warn{border:1px solid var(--maroon);border-left-width:4px;background:#fdf6f6;
+        border-radius:4px;padding:14px 16px;margin-bottom:22px;font-size:14px;line-height:1.55}
+  .warn b{color:var(--maroon)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+     color:var(--muted);padding:0 12px 9px;border-bottom:1px solid var(--line);font-weight:800}
+  td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tr.mm{background:#fdf6f6}
+  .nm{font-weight:700}
+  .em{color:var(--muted);font-size:11.5px}
+  .src{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+       color:var(--muted);border:1px solid var(--line);border-radius:12px;padding:2px 8px;
+       display:inline-block}
+  .src.admin{color:var(--maroon);border-color:var(--maroon)}
+  .flag{color:var(--maroon);font-weight:800;font-size:11.5px}
+  select{font-family:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
+         border-radius:4px;background:#fff;min-width:170px}
+  select:focus{outline:none;border-color:var(--maroon)}
+  .none{color:var(--muted);font-style:italic}
+  .save{font-size:11.5px;color:var(--maroon);font-weight:700;opacity:0;transition:opacity .2s}
+  .save.on{opacity:1}
+
+  .state{padding:60px 0;text-align:center;color:var(--muted);font-size:15px}
+  footer{margin:50px 0 40px;color:var(--muted);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap htop">
+    <div><span class="logo">koocester</span><span class="tag">Academy assignment</span></div>
+    <a class="back" href="academy.html">‹ Academy</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="app"><div class="state">Loading the roster…</div></div>
+</main>
+
+<footer>Roles come from the HR base. Changes made here override it until the role is corrected at source.</footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SB_URL='https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SB_KEY='<SUPABASE_ANON_KEY>';
+const sb = createClient(SB_URL, SB_KEY);
+const $ = (id)=>document.getElementById(id);
+const esc = (s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let ROLES=[], ROWS=[], FILTER='all', Q='';
+
+function state(msg){ $('app').innerHTML='<div class="state">'+esc(msg)+'</div>'; }
+
+async function boot(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session){ state('Sign in to continue.'); return; }
+
+  // The database decides who may see this, not the browser. A non-admin gets
+  // an empty result from RLS rather than a hidden-but-present page.
+  const [rRes, aRes] = await Promise.all([
+    sb.from('academy_roles').select('slug,label,sort').order('sort'),
+    sb.from('academy_assignments').select('*').order('email')
+  ]);
+
+  if(rRes.error || aRes.error){
+    state('Could not load the roster. '+((rRes.error||aRes.error).message||'')); return;
+  }
+  ROLES = rRes.data||[];
+  ROWS  = aRes.data||[];
+
+  if(!ROWS.length){
+    state('You do not have access to Academy assignment, or the roster has not synced yet.');
+    return;
+  }
+  render();
+}
+
+function render(){
+  const mism = ROWS.filter(r=>r.mismatch).length;
+  const unassigned = ROWS.filter(r=>!r.role_slug).length;
+
+  let html = '<h1>Who sees what</h1>'
+    + '<p class="sub">Every person the Academy knows about, the role each source reports, and the curriculum that resolves from it. '
+    + 'Changing a role here overrides the HR base for that person. Fix it in the HR base when you can, so the two agree again.</p>';
+
+  if(mism || unassigned){
+    html += '<div class="warn">';
+    if(mism) html += '<b>'+mism+' mismatch'+(mism===1?'':'es')+'.</b> The HR base and the portal profile disagree. Nobody is assigned automatically while they disagree. Resolve each one below. ';
+    if(unassigned) html += '<b>'+unassigned+' with no role.</b> These people see no curriculum until a role is set.';
+    html += '</div>';
+  }
+
+  html += '<div class="bar">'
+    + ['all','mismatch','unassigned'].map(f=>
+        '<button class="pill'+(FILTER===f?' on':'')+'" data-f="'+f+'">'
+        + (f==='all'?'Everyone':f==='mismatch'?'Mismatches':'No role')+'</button>').join('')
+    + '<input class="search" id="q" placeholder="Search name or email" value="'+esc(Q)+'">'
+    + '<span class="count" id="cnt"></span></div>';
+
+  html += '<table><thead><tr><th>Person</th><th>HR base</th><th>Portal profile</th>'
+        + '<th>Assigned curriculum</th><th>Source</th></tr></thead><tbody id="tb"></tbody></table>';
+
+  $('app').innerHTML = html;
+
+  document.querySelectorAll('.pill').forEach(b=>b.onclick=()=>{ FILTER=b.dataset.f; render(); });
+  const q=$('q'); if(q){ q.oninput=()=>{ Q=q.value; paint(); }; }
+  paint();
+}
+
+function paint(){
+  const needle = Q.trim().toLowerCase();
+  const rows = ROWS.filter(r=>{
+    if(FILTER==='mismatch' && !r.mismatch) return false;
+    if(FILTER==='unassigned' && r.role_slug) return false;
+    if(needle && !((r.email||'').toLowerCase().includes(needle))) return false;
+    return true;
+  });
+
+  $('cnt').textContent = rows.length+' of '+ROWS.length+' shown';
+  $('tb').innerHTML = rows.map(r=>{
+    const opts = ['<option value="">No role assigned</option>']
+      .concat(ROLES.map(x=>'<option value="'+esc(x.slug)+'"'
+        +(x.slug===r.role_slug?' selected':'')+'>'+esc(x.label)+'</option>')).join('');
+    const name = (r.email||'').split('@')[0].replace(/[._-]+/g,' ')
+      .replace(/\b\w/g,c=>c.toUpperCase());
+    return '<tr class="'+(r.mismatch?'mm':'')+'">'
+      + '<td><div class="nm">'+esc(name)+(r.mismatch?' <span class="flag">MISMATCH</span>':'')
+      + '</div><div class="em">'+esc(r.email)+'</div></td>'
+      + '<td>'+(r.lark_role?esc(r.lark_role):'<span class="none">not set</span>')
+      + '<div class="em">'+esc(r.lark_dept||'')+'</div></td>'
+      + '<td>'+(r.profile_role?esc(r.profile_role):'<span class="none">not set</span>')
+      + '<div class="em">'+esc(r.profile_dept||'')+'</div></td>'
+      + '<td><select data-em="'+esc(r.email)+'">'+opts+'</select> '
+      + '<span class="save" id="s-'+esc(r.email)+'">saved</span></td>'
+      + '<td><span class="src'+(r.source==='admin'?' admin':'')+'">'+esc(r.source||'lark')+'</span></td>'
+      + '</tr>';
+  }).join('');
+
+  document.querySelectorAll('#tb select').forEach(sel=>{
+    sel.onchange = ()=>saveRole(sel.dataset.em, sel.value, sel);
+  });
+}
+
+async function saveRole(email, slug, sel){
+  sel.disabled = true;
+  const { error } = await sb.from('academy_assignments').update({
+    role_slug: slug || null,
+    source: 'admin',
+    mismatch: false,
+    mismatch_note: null,
+    updated_at: new Date().toISOString()
+  }).eq('email', email);
+  sel.disabled = false;
+
+  if(error){ alert('Could not save: '+(error.message||error)); return; }
+
+  const row = ROWS.find(r=>r.email===email);
+  if(row){ row.role_slug = slug||null; row.source='admin'; row.mismatch=false; }
+  const tick = $('s-'+email);
+  if(tick){ tick.classList.add('on'); setTimeout(()=>tick.classList.remove('on'),1600); }
+}
+
+boot().catch(e=>state('Something went wrong: '+(e.message||e)));
+</script>
+</body>
+</html>

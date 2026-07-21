@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · HubSpot</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* deadline / flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* watch · responsive video embed */
+.vwrap{position:relative;padding-bottom:56.25%;height:0;max-width:820px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vcap{font-size:13.5px;color:var(--muted);margin-top:10px}
+.vcap a{color:var(--maroon);font-weight:700;text-decoration:none}
+.vcap a:hover{text-decoration:underline}
+.vblock{margin-top:22px}
+.vblock:first-of-type{margin-top:14px}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#EEE;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#E9F7EC}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#E9F7EC;color:#1A7F37;border:1px solid #1A7F37}
+.fb.no{background:var(--maroon-tint);color:#C02025;border:1px solid #E49D9F}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#EEE;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#E9F7EC;color:#1A7F37}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#C02025}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:#fff;backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:#fff;backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.vrow{grid-template-columns:1fr}.brandmark{display:none}}
+@media (max-height:800px){.grow{padding:8px 0}.gq{font-size:.94rem}.gstate{margin-top:10px;padding:10px 14px}.proceed{margin-top:8px;padding:10px 20px}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · module</div>
+      <h1><span class="lnwrap"><span class="ln">The</span></span><span class="lnwrap"><span class="ln">HubSpot CRM</span></span></h1>
+      <p class="lead" style="margin-top:20px">Sales. This is where every lead, every conversation and every deal lives — one place, one truth, no lost follow-ups.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Every lead gets added</b><span>the moment it comes in, no exceptions</span></div>
+        <div class="win"><b>Every touch gets logged</b><span>calls, emails, notes — the full history in one place</span></div>
+        <div class="win"><b>Deals move through the pipeline</b><span>stage reflects reality, not wishful thinking</span></div>
+        <div class="win"><b>You never lose a follow-up</b><span>a task is always set for the next action</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT HUBSPOT IS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The CRM, in plain English</div>
+      <div class="big">One place. Every contact. <em>Every deal.</em></div>
+      <p class="lead">HubSpot CRM is where Sales keeps track of the people you're talking to (<b>contacts</b>) and the businesses they work for (<b>companies</b>), the opportunities you're chasing as they move through a <b>pipeline</b>, what you need to do next (<b>tasks</b>), and the full history of every call, email and note tied to them.</p>
+    </div>
+  </section>
+
+  <!-- 4 · WHY SALES USES IT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why Sales uses it</div>
+      <h2>It's not admin. It's how you don't drop a deal.</h2>
+      <ul class="pts">
+        <li><b>Never lose a lead</b> — everything's logged, nothing lives in your head or a notepad.</li>
+        <li><b>See the whole pipeline at a glance</b> — who's where, what's stuck, what's about to close.</li>
+        <li><b>Always know your next action</b> — a task tells you exactly what to do and when.</li>
+        <li><b>Seamless team continuity</b> — anyone can see the full history and continue the work confidently.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 · CORE OBJECTS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The five things you'll touch every day</div>
+      <h2 style="margin-bottom:6px">The core objects</h2>
+      <ol class="pts">
+        <li><b>Contacts</b> — a person: name, email, phone, job title. Every call, email and note attaches here.</li>
+        <li><b>Companies</b> — the business a contact works for. One company can hold many contacts.</li>
+        <li><b>Deals</b> — a real opportunity, moving through defined stages toward a close.</li>
+        <li><b>Pipeline stages</b> — the steps a deal moves through, e.g. appointment scheduled → qualified → proposal sent → closed won/lost.</li>
+        <li><b>Tasks</b> — the to-dos and reminders tied to a contact or deal, so nothing gets forgotten.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 6 · DAILY FLOW -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your daily flow · a new lead comes in</div>
+      <h2>Leads come in. Stages move. Every touch gets logged.</h2>
+      <div class="dlflow">
+        <div class="dlnode hot"><div class="t">1 · Leads come in</div><div class="s">create them in HubSpot</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">2 · Move the stages</div><div class="s">keep the pipeline current</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">3 · Log every touch</div><div class="s">calls, emails and notes</div></div>
+      </div>
+      <div class="callout"><b>HubSpot must match reality.</b> Log each touch, keep the stage current and set the next task before you leave.</div>
+    </div>
+  </section>
+
+  <!-- 7 · WATCH -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Watch · two beginner walkthroughs</div>
+      <h2 style="margin-bottom:10px">See it live before you touch it.</h2>
+      <p class="lead" style="margin-bottom:4px">Ten minutes each. Watch both before you open your own HubSpot account.</p>
+      <div class="vblock">
+        <div class="vwrap"><iframe src="https://www.youtube.com/embed/MDQVBE4T6lk" title="How to Use HubSpot CRM - Tutorial for Beginners" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vcap"><b>How to Use HubSpot CRM - Tutorial for Beginners</b> · Kevin Stratvert · <a href="https://www.youtube.com/watch?v=MDQVBE4T6lk" target="_blank" rel="noopener">youtube.com/watch?v=MDQVBE4T6lk</a></div>
+      </div>
+      <div class="vblock">
+        <div class="vwrap"><iframe src="https://www.youtube.com/embed/t8QM5zunC44" title="HubSpot CRM Tutorial for Beginners 2026 (Step-by-Step)" allowfullscreen loading="lazy"></iframe></div>
+        <div class="vcap"><b>HubSpot CRM Tutorial for Beginners 2026 (Step-by-Step)</b> · Metics Media · <a href="https://www.youtube.com/watch?v=t8QM5zunC44" target="_blank" rel="noopener">youtube.com/watch?v=t8QM5zunC44</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · HOW IT FITS KOOCESTER -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How it fits Koocester</div>
+      <div class="big">Marketing provides the warm lead. <em>Sales works it.</em></div>
+      <p class="lead">When a warm direct-message lead comes from Marketing or the Social Media Manager (SMM), create it as a lead in HubSpot and move it through the pipeline stage by stage. HubSpot is the single source of truth: if it is not in HubSpot, it did not happen.</p>
+    </div>
+  </section>
+
+  <!-- 9 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Your turn</div>
+      <hr class="rule">
+      <h2>Three calls. Get them graded.</h2>
+      <p class="lead" style="color:#CCC">Then the certification gate.</p>
+    </div>
+  </section>
+
+  <!-- 10 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · contacts vs deals</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A contact is the person — their name, email, phone. A deal is the opportunity moving through the pipeline. Every deal needs a contact, but not every contact has an open deal."
+        data-no="<b>Not quite.</b> A contact is the person record — name, email, phone. A deal is the opportunity, tracked separately as it moves through pipeline stages toward a close.">
+        <div class="scenario">You're setting up a new prospect in HubSpot for the first time.</div>
+        <div class="q">What's the difference between a contact and a deal?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>They're the same thing, just different names</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>A contact is the person, a deal is the opportunity moving through the pipeline</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>A contact is for companies, a deal is for individuals</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · a new lead lands</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> Create the warm lead in HubSpot immediately. It can now be worked stage by stage and remains visible to the team."
+        data-no="<b>Not first.</b> Create the warm lead in HubSpot as soon as it arrives. Waiting or working outside HubSpot breaks the single source of truth.">
+        <div class="scenario">A warm direct-message lead arrives from Marketing or the Social Media Manager (SMM).</div>
+        <div class="q">What's the first thing you do?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Create the lead in HubSpot immediately</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Move straight to setting a pipeline stage</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Wait until they reply before touching HubSpot</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · after the call</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> Log the touch, keep the stage accurate and set the next task before you close the tab."
+        data-no="<b>Not enough.</b> Every touch belongs in HubSpot, and every conversation needs a clear next task so the follow-up does not live in your memory.">
+        <div class="scenario">You just finished a call with a prospect and agreed on next steps.</div>
+        <div class="q">What should you do in HubSpot before closing the tab?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Nothing — you'll remember the follow-up</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Move the deal to "Closed Won" straight away</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Log the call, and set the next task</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · CHECKLIST / GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all five?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Do you know the difference between a contact, a company and a deal?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you create every warm lead in HubSpot as soon as it arrives?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do your pipeline stages always reflect reality?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you log every touch and set the next task?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Is HubSpot your single source of truth — not a notebook or your memory?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all five to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 14 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Leads come in. Stages move. Every touch gets logged.</h2>
+      <p class="lead">HubSpot is the single source of truth for every lead you touch. Create the lead, keep its stage current, log every touch and set the next task.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="sales-training.html">Sales role →</a>
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · hubspot</div>
+<div class="nav">
+  <button class="arrow play" id="play" aria-label="Read this slide aloud" title="Read aloud · auto-advances like a video">▶</button>
+  <span class="count" id="count">1 / 14</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){stopPlay();show(i+1)};prev.onclick=function(){stopPlay();show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();stopPlay();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();stopPlay();show(i-1)}
+  });
+  // ===== read-aloud "watch it" mode: reads the slide, then auto-advances like a video =====
+  var playBtn=document.getElementById('play'),playing=false,hasTTS=('speechSynthesis' in window);
+  var vVoice=null;
+  function pickVoice(){
+    var vs=window.speechSynthesis.getVoices(),want=['Ava (Premium)','Zoe (Premium)','Samantha (Enhanced)','Allison (Enhanced)','Nicky (Enhanced)','Serena (Premium)','Ava','Samantha','Allison','Serena','Karen','Google UK English Female','Microsoft Zira','Google US English'];
+    for(var w=0;w<want.length;w++){var m=vs.filter(function(x){return x.name===want[w];})[0];if(m){vVoice=m;return;}}
+    vVoice=vs.filter(function(x){return /^en/i.test(x.lang)&&/female|samantha|ava|zira|karen|serena|victoria/i.test(x.name);})[0]||vs.filter(function(x){return /^en/i.test(x.lang);})[0]||vs[0]||null;
+  }
+  if(hasTTS){ pickVoice(); window.speechSynthesis.onvoiceschanged=pickVoice; }
+  function slideText(){var el=slides[i].querySelector('.inner');return el?el.innerText.replace(/\s+/g,' ').trim():'';}
+  function speakNow(){
+    if(!hasTTS)return; window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(slideText()); if(vVoice)u.voice=vVoice; u.rate=.97; u.pitch=1.03;
+    u.onend=function(){ if(playing){ if(i<n-1){ show(i+1); setTimeout(speakNow,450); } else { stopPlay(); } } };
+    window.speechSynthesis.speak(u);
+  }
+  function startPlay(){ if(!hasTTS){alert('Read-aloud needs a modern browser (Chrome/Safari).');return;} playing=true; if(playBtn){playBtn.textContent='❚❚';playBtn.classList.add('on');} speakNow(); }
+  function stopPlay(){ playing=false; if(playBtn){playBtn.textContent='▶';playBtn.classList.remove('on');} if(hasTTS)window.speechSynthesis.cancel(); }
+  if(playBtn) playBtn.onclick=function(){ playing?stopPlay():startPlay(); };
+  window.addEventListener('beforeunload',stopPlay);
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-hubspot-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.06)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#999;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#999;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.55);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:#fff;border:0;color:#C02025;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

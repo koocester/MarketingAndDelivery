@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../koo-manager-guard.js?v=2026072005"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Town Hall · June 2026</title>
+<style>
+:root{
+  --maroon:#C02025; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#EEE; --bg:#fff;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(26px);transition:opacity .25s ease,transform .25s ease}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:20px}
+h1{font-size:clamp(2.6rem,6.5vw,3.8rem);line-height:1.06;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0}
+h2{font-size:clamp(1.9rem,4.4vw,2.7rem);line-height:1.12;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0 0 22px}
+.lead{font-size:clamp(1.05rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:780px;margin:0}
+.logo{height:40px;width:auto;display:block;margin-bottom:38px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:26px 0 0}
+/* big number */
+.bignum{font-size:clamp(7rem,26vw,20rem);line-height:.82;font-weight:800;letter-spacing:-.04em;color:var(--maroon);margin:0}
+.bigrow{display:flex;align-items:center;gap:clamp(24px,5vw,64px);flex-wrap:wrap}
+.bigrow .txt{max-width:460px}
+.bigrow .txt .big{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:700;color:var(--ink);line-height:1.12;margin:0 0 12px}
+.bigrow .txt p{font-size:clamp(1rem,2vw,1.25rem);color:var(--body);margin:.4em 0}
+.up{color:var(--maroon);font-weight:700}
+/* stat grid */
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.stat .num{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.stat .lbl{font-size:.92rem;font-weight:700;color:var(--body);margin-top:10px}
+.stat .sub{font-size:.82rem;color:var(--muted);margin-top:4px}
+.stat .sub b{color:var(--maroon)}
+.stat .sub .down{color:var(--muted)}
+.note{font-size:.82rem;color:var(--muted);font-style:italic;margin-top:20px}
+/* funnel */
+.funnel{margin-top:10px;max-width:840px}
+.frow{display:flex;align-items:center;gap:16px;margin:13px 0}
+.frow .fl{flex:none;width:150px;font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--body);text-align:right;font-weight:600}
+.fbar{position:relative;height:38px;width:var(--w);min-width:54px;background:#EFEFEF;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding:0 14px}
+.fbar b{color:var(--ink);font-size:1.05rem}
+.fbar.hot{background:var(--maroon)}.fbar.hot b{color:#fff}
+.fbar.done{background:var(--ink)}.fbar.done b{color:#fff}
+/* team wins */
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:820px}
+ul.pts li{margin:.6em 0;font-size:clamp(1.05rem,2vw,1.28rem);line-height:1.5}
+ul.pts li b{color:var(--ink)}
+/* moves */
+.move{display:flex;gap:20px;align-items:flex-start;margin:20px 0}
+.move .n{flex:none;width:46px;height:46px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:700;font-size:1.3rem;display:flex;align-items:center;justify-content:center}
+.move h3{margin:6px 0 4px;font-size:clamp(1.15rem,2.2vw,1.45rem);color:var(--ink)}
+.move p{margin:0;font-size:clamp(.98rem,1.8vw,1.15rem);color:var(--body);line-height:1.45}
+/* dark close */
+.slide.dark{background:var(--ink)}
+.slide.dark h2{color:#fff}
+.slide.dark .lead{color:#bbb}
+.slide.dark .rule{background:var(--maroon)}
+.mark{font-weight:800;letter-spacing:-.02em;font-size:clamp(1.4rem,3vw,2rem)}
+.mark .d{color:var(--maroon)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .25s ease;z-index:10}
+.nav{position:fixed;bottom:22px;right:26px;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:44px;height:44px;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon)}
+.arrow:disabled{opacity:.3;cursor:default}
+.brandmark{position:fixed;bottom:24px;left:26px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+@media (max-width:640px){.statgrid{grid-template-columns:1fr 1fr}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide{transition:opacity .01s}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+
+<div class="deck" id="deck">
+
+  <section class="slide">
+    <div class="inner">
+      <img class="logo" style="height:46px" src="../../koocester.png" alt="koocester">
+      <div class="eyebrow">Koocester Town Hall</div>
+      <h1>June 2026 recap</h1>
+      <p class="lead" style="margin-top:20px">The month in numbers, and where we go next.</p>
+      <hr class="rule">
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The headline</div>
+      <div class="bigrow">
+        <p class="bignum">49</p>
+        <div class="txt">
+          <p class="big">videos shipped in June</p>
+          <p>Up from 13 in May &nbsp;<span class="up">+277%</span></p>
+          <p>The factory found its pace. Now we hold it, and protect the quality behind it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Company scorecard</div>
+      <h2>June vs May</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="num">49</div><div class="lbl">Videos shipped</div><div class="sub"><b>▲</b> vs 13</div></div>
+        <div class="stat"><div class="num">S$96k</div><div class="lbl">Collected</div><div class="sub"><span class="down">▼</span> vs S$104k</div></div>
+        <div class="stat"><div class="num">3.2%</div><div class="lbl">Avg engagement</div><div class="sub"><b>▲</b> vs 2.8%</div></div>
+        <div class="stat"><div class="num">15.0M</div><div class="lbl">Reach (views)</div><div class="sub"><span class="down">▼</span> vs 49.0M</div></div>
+        <div class="stat"><div class="num">457</div><div class="lbl">Posts published</div><div class="sub"><span class="down">▼</span> vs 630</div></div>
+        <div class="stat"><div class="num">667k</div><div class="lbl">Total followers</div><div class="sub">steady</div></div>
+      </div>
+      <p class="note">Reach softened as we posted less; engagement per post rose. Quality over volume is the read.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The machine behind it</div>
+      <div class="bigrow">
+        <p class="bignum">888</p>
+        <div class="txt">
+          <p class="big">videos in the system</p>
+          <p>The 49 we shipped are the tip. Behind them the team has planned and built a pipeline of 888 videos across every vertical and market.</p>
+          <p><span class="up">This is a content engine, not a content calendar.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Built to convert</div>
+      <h2>The lead engine</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="num">342</div><div class="lbl">Lead-gen videos</div><div class="sub">built to capture, not just reach</div></div>
+        <div class="stat"><div class="num">196</div><div class="lbl">Carousels</div><div class="sub">the second lead surface</div></div>
+        <div class="stat"><div class="num">207</div><div class="lbl">Offers attached</div><div class="sub">videos carrying a lead magnet</div></div>
+      </div>
+      <p class="note">Reach is the top of the funnel. These are the assets that turn views into leads, the whole point of the pivot.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The people behind it</div>
+      <h2>Team wins</h2>
+      <ul class="pts">
+        <li><b>SMM:</b> Talulla posted all 49 videos live, the whole month's output through one pair of hands.</li>
+        <li><b>Content Strategists:</b> Wendi 25 and Audrey 24 videos shipped, an even, heavy load across both.</li>
+        <li><b>Editors:</b> led by Riza 11, Stanley 9, Maulana 8.</li>
+        <li><b>Producers &amp; Copywriters:</b> building the base of the funnel. Shoot-logging and carousels are the next habits to lock in.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The flow</div>
+      <h2>Where every video sits</h2>
+      <div class="funnel">
+        <div class="frow"><span class="fl">Not started</span><span class="fbar" style="--w:92%"><b>286</b></span></div>
+        <div class="frow"><span class="fl">Editing</span><span class="fbar" style="--w:5%"><b>3</b></span></div>
+        <div class="frow"><span class="fl">Strategist QC</span><span class="fbar hot" style="--w:32%"><b>97</b></span></div>
+        <div class="frow"><span class="fl">Ready to upload</span><span class="fbar" style="--w:29%"><b>87</b></span></div>
+        <div class="frow"><span class="fl">Posted</span><span class="fbar done" style="--w:42%"><b>128</b></span></div>
+      </div>
+      <p class="note">The queue bulges at Strategist QC. Clear that one gate and everything downstream moves.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The one thing to fix</div>
+      <div class="bigrow">
+        <p class="bignum">97</p>
+        <div class="txt">
+          <p class="big">videos waiting in Strategist QC</p>
+          <p>Every video passes through it, and only two strategists hold the gate.</p>
+          <p><span class="up">Clear this queue and the whole line speeds up.</span> It is the single highest-leverage move.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Where we go next</div>
+      <h2>Focus for July</h2>
+      <div class="move"><div class="n">1</div><div><h3>Clear the QC wall</h3><p>Add a third reviewer or a daily QC block so no video waits more than a day.</p></div></div>
+      <div class="move"><div class="n">2</div><div><h3>Log every shoot &amp; carousel</h3><p>Fill Shoot Date and ship carousels so producers and copywriters show up in the numbers.</p></div></div>
+      <div class="move"><div class="n">3</div><div><h3>Rebuild reach</h3><p>Fewer, sharper posts. Copy the formats that engaged, not the ones that just filled the calendar.</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <div class="inner">
+      <hr class="rule" style="margin:0 0 26px">
+      <p class="mark"><span>koocester</span><span class="d"> · town hall</span></p>
+      <h2 style="margin-top:14px">Empowering growth. Built on trust.</h2>
+      <p class="lead">Thank you, team. See you next month.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> · town hall · June 2026</div>
+<div class="nav">
+  <span class="count" id="count">1 / 10</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>

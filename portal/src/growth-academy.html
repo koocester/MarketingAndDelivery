@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Growth Academy · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,monospace;
+  --pop:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:inherit;text-decoration:none}
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);z-index:50}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.03em;font-size:1.24rem;color:var(--ink)}
+.tagpill{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);border:1px solid rgba(192,32,37,.3);border-radius:20px;padding:5px 11px;font-weight:700}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.hero{padding:clamp(38px,6vw,62px) clamp(20px,5vw,64px) 8px;max-width:1100px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:13px}
+h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800}
+.lead{margin-top:15px;color:var(--muted);font-size:clamp(1rem,1.7vw,1.12rem);max-width:680px}
+.wrap{max-width:1100px;margin:0 auto;padding:34px clamp(20px,5vw,64px) 60px}
+.mkt{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.mchip{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:7px 13px;border-radius:20px;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:#fff;transition:.18s}
+.mchip.on,.mchip:hover{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-tint)}
+.sec{margin-top:38px}
+.sec h2{font-size:1.16rem;letter-spacing:-.02em;color:var(--ink);font-weight:800;margin-bottom:4px}
+.sec .sub{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:15px}
+.card{position:relative;border:1px solid var(--line);border-radius:14px;padding:20px;background:#fff;box-shadow:var(--shadow);transition:transform .25s var(--pop),border-color .25s,box-shadow .25s;display:block}
+a.card:hover{transform:translateY(-4px);border-color:var(--maroon);box-shadow:0 22px 44px -20px rgba(192,32,37,.32)}
+.card.empty{border-style:dashed;background:#fcfcfc;opacity:.9}
+.ico{font-size:1.5rem;margin-bottom:11px}
+.card h3{font-size:1.02rem;color:var(--ink);font-weight:800;letter-spacing:-.015em;margin-bottom:5px}
+.card p{font-size:.88rem;color:var(--muted);line-height:1.5}
+.chip{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:4px 9px;border-radius:20px}
+.chip.live{background:rgba(27,127,75,.1);color:var(--ok)}
+.chip.soon{background:#f2f2f2;color:var(--muted)}
+.chip.all{background:rgba(192,32,37,.09);color:var(--maroon)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:6px}
+.step{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:0 12px 12px 0;padding:16px 18px;background:#fff}
+.step .n{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:6px}
+.step h4{font-size:.96rem;color:var(--ink);font-weight:800;margin-bottom:4px}
+.step p{font-size:.86rem;color:var(--muted);line-height:1.48}
+/* curriculum rows: numbered, so the teaching order is impossible to miss */
+.classrow{position:relative;display:flex;gap:18px;align-items:flex-start;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow);padding:22px;margin-bottom:14px;transition:border-color .25s,box-shadow .25s}
+.classrow:hover{border-color:var(--maroon);box-shadow:0 22px 44px -22px rgba(192,32,37,.3)}
+.classrow.next{background:#fcfcfc;border-style:dashed}
+.cnum{flex:none;width:46px;height:46px;border-radius:12px;background:var(--maroon);color:#fff;font-weight:800;font-size:1.12rem;display:flex;align-items:center;justify-content:center;font-family:var(--mono);letter-spacing:-.02em}
+.classrow.next .cnum{background:#e6e6e6;color:var(--muted)}
+.cbody{flex:1;min-width:0}
+.cbody h3{font-size:1.14rem;color:var(--ink);font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.cmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:9px}
+.cbody p{font-size:.92rem;color:var(--body);line-height:1.55;margin-bottom:11px}
+.frames{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.fr{font-size:.76rem;font-weight:700;color:var(--ink);background:var(--maroon-tint);border:1px solid rgba(192,32,37,.18);border-radius:20px;padding:4px 11px}
+.clinks{display:flex;flex-wrap:wrap;gap:14px}
+.clinks a{font-size:.84rem;font-weight:700;color:var(--maroon);border-bottom:1px solid rgba(192,32,37,.35);padding-bottom:1px}
+.clinks a:hover{border-bottom-color:var(--maroon)}
+.classrow .chip{position:absolute;top:18px;right:18px;margin:0}
+@media(max-width:640px){.classrow .chip{position:static;display:inline-block;margin-top:10px}}
+.note{margin-top:26px;border-left:3px solid var(--maroon);background:var(--maroon-tint);border-radius:0 10px 10px 0;padding:15px 18px;font-size:.92rem;color:var(--ink)}
+.vpv{border-top:1px solid var(--line2);background:var(--maroon-tint);padding:30px clamp(20px,5vw,64px) 26px}
+.vpv-in{max-width:1100px;margin:0 auto}
+.vpv-say{font-size:clamp(1.05rem,2vw,1.28rem);font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:4px}
+.vpv-say b{color:var(--maroon)}
+.vpv-vision{color:var(--body);font-size:.9rem;max-width:760px;margin-bottom:18px}
+.vpv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.vpv-v{background:#fff;border:1px solid rgba(192,32,37,.16);border-radius:10px;padding:11px 12px}
+.vpv-v .l{font-weight:800;color:var(--maroon);font-size:1rem;line-height:1}
+.vpv-v .n{font-weight:700;color:var(--ink);font-size:.78rem;margin-top:5px;line-height:1.25}
+@media(max-width:820px){.vpv-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.vpv-grid{grid-template-columns:1fr}}
+.foot{border-top:1px solid var(--line2);padding:24px clamp(20px,5vw,64px);text-align:center;color:var(--muted);font-size:11px;letter-spacing:.08em;font-family:var(--mono);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">koocester <span class="tagpill">Growth Academy</span></div>
+  <a class="back" href="portal.html">← Portal</a>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">For trainers · Singapore · Malaysia · Indonesia</div>
+  <h1>Growth Academy</h1>
+  <p class="lead">The classes we teach externally, in one place. If you deliver a Koocester class in any market, teach it from here so a student in Jakarta gets the same standard as a student in Singapore.</p>
+  <div class="mkt">
+    <span class="mchip on">All markets</span>
+    <span class="mchip">Singapore</span>
+    <span class="mchip">Malaysia</span>
+    <span class="mchip">Indonesia</span>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <div class="sec">
+    <h2>How a class runs</h2>
+    <div class="sub">The same four beats every time, whichever market you are teaching in.</div>
+    <div class="steps">
+      <div class="step"><div class="n">Step one</div><h4>Prepare</h4><p>Pull the deck and the handout for your class below. Check the market notes for local examples and pricing.</p></div>
+      <div class="step"><div class="n">Step two</div><h4>Deliver</h4><p>Teach to the standard, not to the room. Same structure, same core examples, localised only where the notes say so.</p></div>
+      <div class="step"><div class="n">Step three</div><h4>Capture</h4><p>Collect attendance and contact details. Every class is also a lead source, and it only counts if it is logged.</p></div>
+      <div class="step"><div class="n">Step four</div><h4>Feed back</h4><p>Tell us what landed and what did not. The curriculum improves from the room, not from a meeting.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>The curriculum</h2>
+    <div class="sub">Taught in order. Content Systems first, because AI amplifies a system and cannot replace one.</div>
+
+    <div class="classrow">
+      <div class="cnum">01</div>
+      <div class="cbody">
+        <h3>Content Systems</h3>
+        <div class="cmeta">2 day intensive &nbsp;·&nbsp; founders and creators &nbsp;·&nbsp; 51 slides</div>
+        <p>How to make content that compounds instead of content that exhausts you. Day one builds the system: values, purpose and vision, who the content is for, the standard every piece is measured against, and the order that wins. Day two is The Virality Engine.</p>
+        <div class="frames">
+          <span class="fr">The 6 Pillars</span>
+          <span class="fr">HEAAAART</span>
+          <span class="fr">SHARE</span>
+          <span class="fr">Hook engines</span>
+          <span class="fr">The Value Equation</span>
+        </div>
+        <div class="clinks">
+          <a href="../../02.%20Projects/Growth-Academy/content-systems-2day.html">Class outline</a>
+          <a href="../../02.%20Projects/Growth-Academy/script-worksheet.html">Script worksheet</a>
+          <a href="../../02.%20Projects/Growth-Academy/Brand-Retention-Toolkit.html">Retention toolkit</a>
+        </div>
+      </div>
+      <span class="chip live">Ready to teach</span>
+    </div>
+
+    <div class="classrow">
+      <div class="cnum">02</div>
+      <div class="cbody">
+        <h3>AI for Creators and Founders</h3>
+        <div class="cmeta">Built on the AI Atomic course &nbsp;·&nbsp; founders and operators</div>
+        <p>What AI actually does for a content business once the system exists. Students leave able to build the small agents that remove the repetitive work, so their time goes to judgment, taste and speed rather than production grind.</p>
+        <div class="frames">
+          <span class="fr">Agent building</span>
+          <span class="fr">Prompt to workflow</span>
+          <span class="fr">Automating production</span>
+          <span class="fr">Where AI must not be used</span>
+        </div>
+        <div class="clinks">
+          <a href="../../02.%20Projects/ai-atomic-course.html">Course study guide</a>
+          <a href="how-we-use-ai-training.html">How we use AI</a>
+        </div>
+      </div>
+      <span class="chip soon">Deck in build</span>
+    </div>
+
+    <div class="classrow next">
+      <div class="cnum">03</div>
+      <div class="cbody">
+        <h3>Later in the ladder</h3>
+        <div class="cmeta">Sequenced after the first two land</div>
+        <p>Branding and Content Advanced, Automation and Conversion Systems, then Monetise as a Creator. Do not teach these before a student has a working content system, or nothing sticks.</p>
+        <div class="clinks">
+          <a href="../../02.%20Projects/Growth-Academy/Automation-Conversion-Toolkit.html">Automation toolkit</a>
+        </div>
+      </div>
+      <span class="chip soon">Planned</span>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>Trainer resources</h2>
+    <div class="sub">What you are allowed to put on a screen in front of an audience.</div>
+    <div class="grid">
+      <a class="card" href="brand-assets.html">
+        <div class="ico">🎨</div>
+        <h3>Brand assets</h3>
+        <p>Logos, colours, fonts and the guideline. Every slide you show carries our name, so keep it on-brand.</p>
+        <span class="chip live">Live</span>
+      </a>
+      <a class="card" href="media-kit-slides.html">
+        <div class="ico">📄</div>
+        <h3>Media kits</h3>
+        <p>The company numbers and credibility slides, by market. Use these when you introduce Koocester.</p>
+        <span class="chip live">Live</span>
+      </a>
+      <a class="card" href="sales-kits.html">
+        <div class="ico">💼</div>
+        <h3>Sales kits</h3>
+        <p>Pitch kits by vertical, for when a class turns into a conversation about working together.</p>
+        <span class="chip live">Live</span>
+      </a>
+      <a class="card" href="academy.html">
+        <div class="ico">🎓</div>
+        <h3>Internal Academy</h3>
+        <p>Your own onboarding, SOPs and role training. Different thing: that one is for us, this one is for them.</p>
+        <span class="chip live">Live</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Teaching a class that is not listed?</b> It does not exist yet as far as the company is concerned. Send it in so it gets added here, otherwise three markets drift into three different companies.
+  </div>
+
+</div>
+
+<section class="vpv">
+  <div class="vpv-in">
+    <p class="vpv-say">Empowering Growth. <b>Built on Trust.</b></p>
+    <p class="vpv-vision"><b>Our purpose:</b> a Symbol of Inspiration, Empowering Growth, Powered by People. &nbsp;<b>Vision 2035:</b> to be the world's most trusted and influential growth ecosystem, inspiring over 1 billion people a year through influential media, impactful education and data intelligence.</p>
+    <div class="vpv-grid">
+      <div class="vpv-v"><div class="l">G</div><div class="n">Growth and Curiosity</div></div>
+      <div class="vpv-v"><div class="l">U</div><div class="n">Uniting through trust and relationships</div></div>
+      <div class="vpv-v"><div class="l">I</div><div class="n">Impact through inspiration</div></div>
+      <div class="vpv-v"><div class="l">D</div><div class="n">Dare to be bold and innovate</div></div>
+      <div class="vpv-v"><div class="l">E</div><div class="n">Empathy and Giving</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">Koocester trainers · one curriculum across Singapore, Malaysia and Indonesia</footer>
+
+<script>
+// market filter: cosmetic for now, ready to filter class cards once the catalogue is filled
+document.querySelectorAll('.mchip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.mchip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on');
+}));
+</script>
+
+</body>
+</html>

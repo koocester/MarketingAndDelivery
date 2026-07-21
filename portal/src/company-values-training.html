@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Company &amp; values</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* MC pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* diagnose a video · funnel + matrix */
+.funnel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.fstage{border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:24px;background:var(--maroon-tint)}
+.farr{color:var(--maroon);font-weight:800}
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fafafa;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr 1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
+.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide{grid-template-columns:1fr}.vrow{grid-template-columns:1fr}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+/* slide · subtle Singapore flag backdrop */
+.sg .sgflag{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.sg .sgflag svg{position:absolute;inset:0;width:100%;height:100%;opacity:.08}
+.sg .inner{position:relative;z-index:1}
+/* memory aid */
+.memaid{margin-top:16px;border:2px solid var(--maroon);border-radius:16px;padding:18px 20px;background:var(--maroon-tint);box-shadow:var(--shadow);max-width:860px}
+.memaid .ml{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:10px}
+.memchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.memchip{display:flex;align-items:baseline;gap:7px;background:#fff;border:1px solid var(--maroon);border-radius:10px;padding:8px 12px}
+.memchip b{color:var(--maroon);font-size:20px;font-weight:800;line-height:1}
+.memchip span{font-size:13px;color:var(--ink);font-weight:600}
+.memsay{font-size:14.5px;color:var(--body);line-height:1.5}
+.memsay b{color:var(--ink)}
+/* vision 2035 hero */
+.vhero{position:relative;border:2px solid var(--maroon);border-radius:20px;padding:24px 28px;background:var(--maroon-tint);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.vhero .vtag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:2px}
+.vhero .vyear{font-size:clamp(3.4rem,11vw,6.4rem);font-weight:800;letter-spacing:-.04em;line-height:.88;color:var(--maroon);margin:0}
+.vhero .vstate{font-size:clamp(1.45rem,3.4vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.12;color:var(--ink);margin:10px 0 0}
+.vhero .vstate em{color:var(--maroon);font-style:normal}
+/* accountability */
+.owncard{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:18px 22px;margin-top:18px;box-shadow:var(--shadow);max-width:860px}
+.owncard b{color:var(--maroon)}
+.ownbig{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.2;margin:0 0 6px}
+.ownbig em{color:var(--maroon);font-style:normal}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · foundation</div>
+      <h1><span class="lnwrap"><span class="ln">Company</span></span><span class="lnwrap"><span class="ln">&amp; values</span></span></h1>
+      <p class="lead" style="margin-top:20px">The closest thing we have to a constitution — why we exist, where we're going, and how we behave when no one is watching. Every campaign, hire and client ladders up to this.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You've got this when…</div>
+      <div class="wins">
+        <div class="win"><b>You've internalised the mission</b><span>you can say why we exist, in your own words</span></div>
+        <div class="win"><b>GUIDE guides your decisions</b><span>the five values steer your calls, not just a poster</span></div>
+        <div class="win"><b>Your work ladders up</b><span>every campaign, hire and client points back to this</span></div>
+        <div class="win"><b>You behave the same unwatched</b><span>the values hold when no one is checking</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is the constitution behind it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · FOUNDER NOTE / WHY THIS EXISTS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">A note from the founder · why this page exists</div>
+      <div class="big">A living document. <em>Not a poster.</em></div>
+      <p class="lead">This is our constitution: why we exist, where we're going, and how we behave when no one is watching. Every campaign, every hire and every client should ladder up to it. Read it as something you live by — and something we keep sharpening as we grow.</p>
+    </div>
+  </section>
+
+  <!-- 4 · ABOUT KOOCESTER -->
+  <section class="slide sg">
+    <div class="sgflag" aria-hidden="true">
+      <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="1200" height="400" fill="#C02025"/>
+        <circle cx="230" cy="200" r="120" fill="#fff"/>
+        <circle cx="282" cy="188" r="104" fill="#C02025"/>
+        <g fill="#fff">
+          <polygon points="0,-28 6.47,-8.9 26.6,-8.65 10.46,3.4 16.45,22.65 0,11 -16.45,22.65 -10.46,3.4 -26.6,-8.65 -6.47,-8.9" transform="translate(470,128) scale(.62)"/>
+          <polygon points="0,-28 6.47,-8.9 26.6,-8.65 10.46,3.4 16.45,22.65 0,11 -16.45,22.65 -10.46,3.4 -26.6,-8.65 -6.47,-8.9" transform="translate(538.5,177.7) scale(.62)"/>
+          <polygon points="0,-28 6.47,-8.9 26.6,-8.65 10.46,3.4 16.45,22.65 0,11 -16.45,22.65 -10.46,3.4 -26.6,-8.65 -6.47,-8.9" transform="translate(512.3,258.3) scale(.62)"/>
+          <polygon points="0,-28 6.47,-8.9 26.6,-8.65 10.46,3.4 16.45,22.65 0,11 -16.45,22.65 -10.46,3.4 -26.6,-8.65 -6.47,-8.9" transform="translate(427.7,258.3) scale(.62)"/>
+          <polygon points="0,-28 6.47,-8.9 26.6,-8.65 10.46,3.4 16.45,22.65 0,11 -16.45,22.65 -10.46,3.4 -26.6,-8.65 -6.47,-8.9" transform="translate(401.5,177.7) scale(.62)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="inner">
+      <div class="eyebrow">About Koocester</div>
+      <h2>A Singapore media company built on performance and storytelling.</h2>
+      <p class="lead" style="margin-bottom:14px">We specialise in performance marketing and brand storytelling. We partner with credible brands to produce content, manage campaigns, build audiences, and deliver high-quality marketing results.</p>
+      <div class="tags">
+        <span class="tag">Businesses</span>
+        <span class="tag">Homes</span>
+        <span class="tag">Automotive</span>
+        <span class="tag">Wealth</span>
+        <span class="tag">Food</span>
+      </div>
+      <p class="cite">Performance marketing means marketing measured by outcomes, not impressions. Brand storytelling means building a brand people trust through the stories we tell.</p>
+    </div>
+  </section>
+
+  <!-- 5 · PURPOSE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Our purpose</div>
+      <div class="big"><em>Symbol of Inspiration.</em> Empowering Growth. Powered by People.</div>
+      <p class="lead">We exist to be the growth partner businesses trust to deliver outcomes that matter — not vanity metrics. We turn credible brands into category-defining ones, ideas into audiences, marketing spend into measurable impact.</p>
+      <div class="callout"><b>None of it happens without people</b> — our audience, our team, our community. Our culture is the product. It always has been.</div>
+    </div>
+  </section>
+
+  <!-- 6 · DIVIDER · THE VALUES -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">How we behave</div>
+      <hr class="rule">
+      <h2>The values spell GUIDE</h2>
+      <p class="lead" style="color:#bbb">Five words that steer every decision. One at a time.</p>
+    </div>
+  </section>
+
+  <!-- 7 · G -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Value · G of GUIDE</div>
+      <div class="mcpipe">
+        <div class="pst hot"><div class="po">G</div><div class="pn">Growth &amp; Curiosity</div></div>
+        <div class="pa">·</div>
+        <div class="pst"><div class="po">U</div><div class="pn">Uniting</div></div>
+        <div class="pst"><div class="po">I</div><div class="pn">Impact</div></div>
+        <div class="pst"><div class="po">D</div><div class="pn">Dare</div></div>
+        <div class="pst"><div class="po">E</div><div class="pn">Empathy</div></div>
+      </div>
+      <div class="big"><em>G</em> — Growth &amp; Curiosity</div>
+      <p class="lead">We stay students. Curiosity is the engine, growth is the output. We ask sharper questions, learn faster than the market, and never assume we've arrived.</p>
+    </div>
+  </section>
+
+  <!-- MCQ · Growth &amp; Curiosity -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Check · living G of GUIDE</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Growth &amp; Curiosity means staying a student. We never assume we've arrived — we question the playbook and learn what changed."
+        data-no="<b>Not quite.</b> Growth &amp; Curiosity means never assuming you've arrived. Question the playbook and keep learning — don't coast on last quarter.">
+        <div class="scenario">A campaign you ran last quarter worked well. This quarter you're tempted to run the exact same playbook without asking what's changed.</div>
+        <div class="q">Which action best reflects Growth &amp; Curiosity?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Repeat last quarter's playbook exactly — it already worked</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Stay a student: question what's changed and sharpen the approach</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Wait for a manager to tell you what to change</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · U -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Value · U of GUIDE</div>
+      <div class="mcpipe">
+        <div class="pst"><div class="po">G</div><div class="pn">Growth</div></div>
+        <div class="pst hot"><div class="po">U</div><div class="pn">Uniting · trust</div></div>
+        <div class="pst"><div class="po">I</div><div class="pn">Impact</div></div>
+        <div class="pst"><div class="po">D</div><div class="pn">Dare</div></div>
+        <div class="pst"><div class="po">E</div><div class="pn">Empathy</div></div>
+      </div>
+      <div class="big"><em>U</em> — Uniting through trust and relationships</div>
+      <p class="lead">We win by earning trust. Relationships are the real asset. We keep our word and unite people around a shared outcome, because trust compounds and can't be bought back once broken.</p>
+    </div>
+  </section>
+
+  <!-- MCQ · Uniting through trust -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Check · living U of GUIDE</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Uniting is built on trust, and trust can't be bought back once broken. You keep your word and protect the relationship over a quiet shortcut."
+        data-no="<b>Not quite.</b> Uniting through trust means keeping your word. Trust compounds and can't be bought back once broken — flag it early, don't cut a quiet corner.">
+        <div class="scenario">You promised a client a deliverable by Friday. Midweek it's looking tight. Cutting a corner would let you hit the date without anyone noticing.</div>
+        <div class="q">Which action best reflects Uniting through trust?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Ship the corner-cut version on time — the date matters most</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Flag it early and keep your word on quality, protecting the trust</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Stay silent and hope they don't spot the shortcut</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · I -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Value · I of GUIDE</div>
+      <div class="mcpipe">
+        <div class="pst"><div class="po">G</div><div class="pn">Growth</div></div>
+        <div class="pst"><div class="po">U</div><div class="pn">Uniting</div></div>
+        <div class="pst hot"><div class="po">I</div><div class="pn">Impact · inspire</div></div>
+        <div class="pst"><div class="po">D</div><div class="pn">Dare</div></div>
+        <div class="pst"><div class="po">E</div><div class="pn">Empathy</div></div>
+      </div>
+      <div class="big"><em>I</em> — Impact through inspiration</div>
+      <p class="lead">We inspire people to act, so they move because they want to. We chase impact that matters, real outcomes over vanity metrics. If the work changes nothing, it isn't done.</p>
+    </div>
+  </section>
+
+  <!-- MCQ · Impact through inspiration -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Check · living I of GUIDE</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Impact through inspiration means we move people by inspiring them, not pressuring them — and we chase real outcomes over numbers that only look good."
+        data-no="<b>Not quite.</b> Impact through inspiration means inspiring people to act, not pressuring them — and chasing outcomes that matter, not vanity numbers.">
+        <div class="scenario">Two ways to hit the target: a high-pressure hard-sell that nags people into clicking, or a story that genuinely moves them to act.</div>
+        <div class="q">Which reflects Impact through inspiration?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>The hard-sell — pressure gets faster clicks</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>The story that moves people to act, because we inspire rather than pressure</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Whichever produces the bigger number on the report</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · D -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Value · D of GUIDE</div>
+      <div class="mcpipe">
+        <div class="pst"><div class="po">G</div><div class="pn">Growth</div></div>
+        <div class="pst"><div class="po">U</div><div class="pn">Uniting</div></div>
+        <div class="pst"><div class="po">I</div><div class="pn">Impact</div></div>
+        <div class="pst hot"><div class="po">D</div><div class="pn">Dare · innovate</div></div>
+        <div class="pst"><div class="po">E</div><div class="pn">Empathy</div></div>
+      </div>
+      <div class="big"><em>D</em> — Dare to be bold and innovate</div>
+      <p class="lead">We take the bold bet and build what doesn't exist yet. We'd rather try the untried format than repeat the safe one. Playing safe is the real risk.</p>
+    </div>
+  </section>
+
+  <!-- MCQ · Dare to be bold and innovate -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Check · living D of GUIDE</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Dare to be bold and innovate means backing the untried bet that fits the goal and building what doesn't exist yet. Playing safe is the real risk."
+        data-no="<b>Not quite.</b> Dare to be bold and innovate means taking the bold bet, not defaulting to the safe, done-before route. Playing safe is the real risk — pitch the untried format that fits the goal.">
+        <div class="scenario">A big client launch is coming up. The safe option is the format everyone's seen a hundred times. You have a bolder, untested concept that fits the brief better but carries more risk.</div>
+        <div class="q">Which action best reflects Dare to be bold and innovate?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Default to the safe, done-before format — it's the low-risk choice</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Take the bold bet: pitch the untested concept that fits the brief better</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Copy exactly what a competitor did last month to be safe</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · E -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Value · E of GUIDE</div>
+      <div class="mcpipe">
+        <div class="pst"><div class="po">G</div><div class="pn">Growth</div></div>
+        <div class="pst"><div class="po">U</div><div class="pn">Uniting</div></div>
+        <div class="pst"><div class="po">I</div><div class="pn">Impact</div></div>
+        <div class="pst"><div class="po">D</div><div class="pn">Dare</div></div>
+        <div class="pst hot"><div class="po">E</div><div class="pn">Empathy · giving</div></div>
+      </div>
+      <div class="big"><em>E</em> — Empathy and Giving</div>
+      <p class="lead">We lead with empathy and give first. Understand people before selling to them, help before being asked. As the founder says: win the hearts of people, win everything.</p>
+    </div>
+  </section>
+
+  <!-- MCQ · Empathy and Giving -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Check · living E of GUIDE</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Empathy and Giving means we give first and help before we're asked — win the hearts of people, win everything. Value isn't conditional on a sale."
+        data-no="<b>Not quite.</b> Empathy and Giving means giving first and helping before we're asked, whether or not there's a sale in it. Win the hearts of people, win everything.">
+        <div class="scenario">Someone in the community asks a genuine question in your DMs. They're not a client and may never be. Answering it properly will cost you 20 minutes.</div>
+        <div class="q">What does Empathy and Giving call for?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Ignore it — they're not paying, so it's not worth your time</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Give first: help properly, because we help before we're asked</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Send a quick link and move on to save the effort</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Your turn</div>
+      <hr class="rule">
+      <h2>Which value applies?</h2>
+      <p class="lead" style="color:#bbb">Three calls. Match the moment to a GUIDE value.</p>
+    </div>
+  </section>
+
+  <!-- 13 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · which value applies?</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> This is D — Dare to be bold and innovate. The safe, done-before route is the real risk; we take the bold bet that fits the goal."
+        data-no="<b>Not quite.</b> The move here is D — Dare to be bold and innovate. We'd rather try the untested format that fits the goal than repeat the safe one.">
+        <div class="scenario">A client asks for the same safe campaign everyone runs. You see an untested, bolder format that fits their goal better — and you pitch it.</div>
+        <div class="q">Which GUIDE value are you living?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>U — Uniting through trust and relationships</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>I — Impact through inspiration</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>D — Dare to be bold and innovate</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · which value applies?</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> This is E — Empathy and Giving. You noticed, you gave your time first, and you helped before being asked."
+        data-no="<b>Not quite.</b> This is E — Empathy and Giving. Leading with empathy and giving first, without being asked, is the value in action.">
+        <div class="scenario">A teammate is drowning before a deadline. Nobody asked you to help — you notice, step in, and give your time to get them over the line.</div>
+        <div class="q">Which GUIDE value are you living?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>E — Empathy and Giving</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>G — Growth &amp; Curiosity</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>D — Dare to be bold and innovate</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · our purpose in practice</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Our purpose is to deliver outcomes that matter, not vanity metrics. A big view count with no real result isn't success — you'd push for measurable impact."
+        data-no="<b>Reread the purpose.</b> We exist to deliver outcomes that matter, not vanity metrics. Impressive-looking numbers with no real result are exactly what we don't celebrate.">
+        <div class="scenario">A campaign racks up a huge view count, but produces no leads and no real result for the client.</div>
+        <div class="q">How should you read this against our purpose?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>A win — the reach numbers look great on a report</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Not a win — it's a vanity metric, not an outcome that matters</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Fine as-is — results aren't our responsibility</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 · CHECKLIST · SELF-CHECK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Make it yours · tick what you can already do</div>
+      <h2 style="margin-bottom:8px">Recall GUIDE from memory</h2>
+      <div class="check">
+        <label><input type="checkbox"><span><b>G</b> — Growth &amp; Curiosity: stay a student, learn faster than the market</span></label>
+        <label><input type="checkbox"><span><b>U</b> — Uniting through trust and relationships: trust is the real asset</span></label>
+        <label><input type="checkbox"><span><b>I</b> — Impact through inspiration: outcomes that matter, not vanity metrics</span></label>
+        <label><input type="checkbox"><span><b>D</b> — Dare to be bold and innovate: safe is the real risk</span></label>
+        <label><input type="checkbox"><span><b>E</b> — Empathy and Giving: understand people, give first</span></label>
+      </div>
+      <div class="memaid">
+        <div class="ml">Memory hook · lock it in for good</div>
+        <div class="memchips">
+          <div class="memchip"><b>G</b><span>Growth</span></div>
+          <div class="memchip"><b>U</b><span>Uniting</span></div>
+          <div class="memchip"><b>I</b><span>Impact</span></div>
+          <div class="memchip"><b>D</b><span>Dare</span></div>
+          <div class="memchip"><b>E</b><span>Empathy</span></div>
+        </div>
+        <p class="memsay">The word is already the memory trick: a good leader is a <b>GUIDE</b>. Anchor it with one sentence, <b>"A great GUIDE grows, unites, makes impact, dares, and gives."</b> Now the recall drill: cover this slide, and say all five out loud, in order, <b>G · U · I · D · E</b>. Can't reach five? Scroll back and run it again until it's automatic.</p>
+      </div>
+      <p class="cite">Tick each once you can say what it means in your own words. Five out of five is the goal.</p>
+    </div>
+  </section>
+
+  <!-- 17 · VISION 2035 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Vision 2035</div>
+      <div class="vhero">
+        <div class="vtag">By the year</div>
+        <div class="vyear">2035</div>
+        <div class="vstate">Be the world's most trusted and influential <em>growth ecosystem</em>.</div>
+      </div>
+      <p class="lead" style="margin-bottom:14px">To inspire over <b>1 billion people</b> a year and shape industries — through influential media, impactful education, and data intelligence.</p>
+      <div class="dlflow">
+        <div class="dlnode"><div class="t">Influential media</div><div class="s">reach and trust at scale</div></div>
+        <div class="dlarr">+</div>
+        <div class="dlnode"><div class="t">Impactful education</div><div class="s">we make people better</div></div>
+        <div class="dlarr">+</div>
+        <div class="dlnode"><div class="t">Data intelligence</div><div class="s">decisions backed by data</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">1 billion+ / year</div><div class="s">people inspired</div></div>
+      </div>
+      <div class="callout"><b>Not a Singapore agency that happens to expand.</b> We aim for media dominance and market leadership in every country we enter — the world's most trusted growth ecosystem, headquartered in Singapore.</div>
+    </div>
+  </section>
+
+  <!-- 18 · THREE QUOTES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Three quotes the founder lives by</div>
+      <h2 style="margin-bottom:14px">The mindset behind the mission.</h2>
+      <ol class="pts">
+        <li><b>"To get something you never had, you have to do something you never did."</b></li>
+        <li><b>"The harder you work, the luckier you get."</b></li>
+        <li><b>"Win the hearts of people, win everything."</b></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 19 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Do you know what Koocester stands for?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Can you say, in your own words, why Koocester exists?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you name all five GUIDE values from memory?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you let GUIDE shape your decisions, not just decorate a wall?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you measure success by outcomes that matter, not vanity metrics?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Does your work ladder up to the Vision 2035?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Would you behave the same way when no one is watching?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 20 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">You are the values now.</h2>
+      <p class="lead">Knowing GUIDE isn't the job. Living it is. From here, the culture is exactly as strong as the way you personally behave when no one is watching — in every campaign, every hire, every client.</p>
+      <div class="owncard">
+        <p class="ownbig"><em>This is on you.</em></p>
+        <p style="margin:0;font-size:1.02rem;line-height:1.5;color:var(--body)">Nobody hands the culture down to you. You carry it. When you're in the room, GUIDE shows up because <b>you</b> bring it. That's the commitment you're making by finishing this. Now go live it.</p>
+      </div>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · company &amp; values</div>
+<div class="nav">
+  <span class="count" id="count">1 / 25</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-values-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that part before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you know what Koocester stands for. Proceed to your role path.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

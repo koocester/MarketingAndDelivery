@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · How we use AI</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* MC pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* build-loops cycle */
+.loopviz{margin:18px 0 4px;max-width:660px}
+.loopviz svg{width:100%;height:auto;display:block}
+/* diagnose a video · funnel + matrix */
+.funnel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.fstage{border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:24px;background:var(--maroon-tint)}
+.farr{color:var(--maroon);font-weight:800}
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fff;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr 1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* 70/20 split bar */
+.split{display:flex;gap:10px;margin:18px 0 6px;max-width:840px}
+.seg{border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.seg.ai{flex:7;background:var(--maroon-tint);border:2px solid var(--maroon)}
+.seg.you{flex:3;border:2px solid var(--ink)}
+.seg .pc{font-size:2rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+.seg.ai .pc{color:var(--maroon)}
+.seg.you .pc{color:var(--ink)}
+.seg .lb{font-size:13.5px;color:var(--body);margin-top:8px;line-height:1.35}
+.seg .lb b{color:var(--ink)}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* AI-native operating model */
+.native-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:16px}
+.native-card{border:1px solid var(--line);border-radius:14px;padding:17px 16px;background:#fff;box-shadow:var(--shadow);min-height:144px}
+.native-card.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.native-card .nn{display:inline-flex;width:25px;height:25px;align-items:center;justify-content:center;border-radius:50%;background:var(--maroon);color:#fff;font-size:11px;font-weight:800;margin-bottom:12px}
+.native-card b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+.native-card span{display:block;color:var(--muted);font-size:12.5px;line-height:1.42}
+/* command centre map */
+.ccmap{display:grid;grid-template-columns:1fr 1.2fr 1fr;grid-template-rows:auto auto;gap:11px;align-items:stretch;margin-top:14px}
+.ccnode{appearance:none;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:16px;font-family:var(--base);cursor:pointer;box-shadow:var(--shadow);transition:transform .15s var(--ease),border-color .15s,background .15s}
+.ccnode:hover,.ccnode.active{transform:translateY(-2px);border-color:var(--maroon)}
+.ccnode.active{background:var(--maroon-tint)}
+.ccnode b{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
+.ccnode span{display:block;color:var(--muted);font-size:12px;line-height:1.35}
+.cccore{grid-column:2;grid-row:1 / span 2;border:3px solid var(--maroon);background:var(--maroon);color:#fff;border-radius:18px;padding:22px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 18px 48px rgba(192,32,37,.22)}
+.cccore .ck{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--maroon-tint);margin-bottom:7px}
+.cccore b{font-size:1.55rem;line-height:1.05;letter-spacing:-.03em;margin-bottom:9px}
+.cccore span{font-size:12.5px;line-height:1.4;color:#fff}
+.ccdetail{margin-top:12px;border-left:3px solid var(--maroon);padding:10px 14px;background:var(--maroon-tint);font-size:13px;line-height:1.4;min-height:58px}
+.ccdetail b{color:var(--maroon)}
+.command-slide .inner{max-width:1100px;padding:0 clamp(28px,6vw,88px)}
+.command-ui{display:grid;grid-template-columns:190px minmax(0,1fr) 205px;gap:12px;margin-top:15px;border:1px solid var(--line);border-radius:19px;padding:13px;background:#fff;box-shadow:var(--shadow)}
+.cmd-rail{border-right:1px solid var(--line);padding-right:10px}
+.cmd-rail .rail-title,.cmd-outcome .rail-title{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:5px 4px 9px}
+.cmd-task{appearance:none;width:100%;border:1px solid transparent;border-radius:10px;background:#fff;text-align:left;padding:11px 12px;font-family:var(--base);cursor:pointer;margin-bottom:6px}
+.cmd-task b{display:block;color:var(--ink);font-size:12.5px;margin-bottom:3px}
+.cmd-task span{display:block;color:var(--muted);font-size:10px;line-height:1.3}
+.cmd-task.active{border-color:var(--maroon);background:var(--maroon-tint)}
+.cmd-task.active b{color:var(--maroon)}
+.cmd-session{min-width:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cmd-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.cmd-top b{font-size:13px;color:var(--ink)}
+.cmd-top span{font-size:9.5px;color:var(--muted)}
+.cmd-chat{padding:15px;display:grid;gap:12px}
+.chat-row{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.chat-avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:9px;font-weight:800}
+.chat-avatar.ai{background:var(--maroon)}
+.chat-bubble{border:1px solid var(--line);border-radius:0 11px 11px 11px;padding:11px 12px;font-size:11.5px;line-height:1.4;color:var(--body)}
+.chat-bubble b{color:var(--ink)}
+.worklog{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:2px}
+.worklog span{border:1px solid var(--line);border-radius:8px;padding:7px 5px;text-align:center;color:var(--muted);font-size:8.5px;font-weight:700}
+.worklog span.done{border-color:var(--maroon);color:var(--maroon);background:var(--maroon-tint)}
+.cmd-outcome{padding:0 4px}
+.outcome-card{border:2px solid var(--maroon);border-radius:12px;padding:12px;background:var(--maroon-tint)}
+.outcome-card b{display:block;color:var(--maroon);font-size:13px;margin-bottom:5px}
+.outcome-card span{display:block;color:var(--body);font-size:11px;line-height:1.4}
+.cmd-proof{margin-top:9px;border-left:3px solid var(--maroon);padding:8px 10px;font-size:10.5px;line-height:1.38;color:var(--body)}
+/* session practice */
+.session-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.session-card{border:1px solid var(--line);border-radius:16px;padding:19px;background:#fff;box-shadow:var(--shadow)}
+.session-card.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.session-card .sk{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:8px}
+.session-card b{display:block;color:var(--ink);font-size:1.15rem;margin-bottom:7px}
+.session-card p{font-size:13px;line-height:1.42;color:var(--body);margin:0}
+.session-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:17px}
+.session-step{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px 9px;min-height:78px;font-family:var(--base);cursor:pointer;text-align:center;transition:border-color .15s,background .15s,transform .15s var(--ease)}
+.session-step:hover,.session-step.active{border-color:var(--maroon);transform:translateY(-2px)}
+.session-step.active{background:var(--maroon);color:#fff}
+.session-step span{display:block;font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--maroon);margin-bottom:5px}
+.session-step.active span{color:var(--maroon-tint)}
+.session-step b{display:block;font-size:12.5px;color:var(--ink)}
+.session-step.active b{color:#fff}
+.session-detail{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 15px;margin-top:11px;font-size:13px;line-height:1.42;min-height:64px;background:#fff}
+.session-detail b{color:var(--maroon)}
+.session-anatomy{display:grid;grid-template-columns:160px 1fr 188px;gap:10px;align-items:stretch;margin-top:15px}
+.session-shell{grid-column:1 / span 2;border:2px solid var(--maroon);border-radius:16px;overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.session-shell-head{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;background:var(--maroon-tint);border-bottom:1px solid var(--maroon)}
+.session-shell-head b{color:var(--maroon);font-size:12px}
+.session-shell-head span{color:var(--body);font-size:9.5px}
+.session-thread{padding:12px 14px;display:grid;gap:8px}
+.thread-line{display:grid;grid-template-columns:68px 1fr;gap:10px;align-items:start;font-size:10.5px;line-height:1.35}
+.thread-line b{color:var(--ink);font-size:10px}
+.thread-line span{color:var(--body)}
+.thread-line.ai span{border-left:3px solid var(--maroon);padding-left:9px}
+.session-memory{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.session-memory .sk{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:8px}
+.session-memory b{display:block;color:var(--ink);font-size:13px;margin-bottom:7px}
+.session-memory span{display:block;color:var(--muted);font-size:10.5px;line-height:1.4}
+.session-rule{grid-column:1 / -1;display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:10.5px;color:var(--body)}
+.session-rule i{width:8px;height:8px;border-radius:50%;background:var(--maroon);flex:none}
+.session-equation{display:grid;grid-template-columns:1fr auto 1fr auto 1.25fr;gap:9px;align-items:center;margin-top:13px}
+.session-platform,.session-result{border:1px solid var(--line);border-radius:13px;padding:12px 14px;text-align:center;background:#fff;box-shadow:var(--shadow)}
+.session-platform span,.session-result span{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.session-platform b,.session-result b{display:block;color:var(--ink);font-size:13px}
+.session-result{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.session-result span,.session-result b{color:var(--maroon)}
+.session-eq{color:var(--maroon);font-size:20px;font-weight:800;text-align:center}
+.brief-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:17px}
+.brief-chip{border:1px solid var(--line);border-top:3px solid var(--maroon);border-radius:12px;padding:15px;background:#fff;box-shadow:var(--shadow)}
+.brief-chip span{font-size:1.5rem;color:var(--maroon);font-weight:800;display:block;margin-bottom:7px}
+.brief-chip b{display:block;color:var(--ink);font-size:13px;margin-bottom:4px}
+.brief-chip small{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.loop-brief{margin-top:15px;border:1px solid var(--line);border-radius:16px;padding:15px;background:#fff;box-shadow:var(--shadow)}
+.loop-track{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;align-items:stretch}
+.loop-step{position:relative;border:1px solid var(--line);border-radius:11px;padding:11px 8px;text-align:center;min-height:78px;background:#fff}
+.loop-step:not(:last-child)::after{content:"→";position:absolute;right:-10px;top:29px;z-index:2;color:var(--maroon);font-weight:800}
+.loop-step span{display:block;color:var(--maroon);font-size:9px;font-weight:800;letter-spacing:.08em;margin-bottom:5px}
+.loop-step b{display:block;color:var(--ink);font-size:11px}
+.loop-step.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.loop-return{margin-top:9px;border-radius:999px;background:var(--maroon);color:#fff;text-align:center;padding:8px 12px;font-size:10px;font-weight:800;letter-spacing:.03em}
+.loop-command{margin-top:11px;border-left:3px solid var(--maroon);padding:9px 12px;background:var(--maroon-tint);font-size:11px;line-height:1.42;color:var(--body)}
+.loop-command b{color:var(--maroon)}
+/* Wispr Flow */
+.wispr-head{display:flex;align-items:center;gap:16px;margin-bottom:6px}
+.wispr-logo{width:154px;height:auto;display:block;object-fit:contain}
+.voice-pipe{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin:18px 0}
+.voice-node{border:1px solid var(--line);border-radius:14px;padding:16px 12px;text-align:center;background:#fff;box-shadow:var(--shadow);min-height:88px;display:flex;flex-direction:column;justify-content:center}
+.voice-node.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.voice-node b{color:var(--ink);font-size:13px;margin-bottom:5px}
+.voice-node span{color:var(--muted);font-size:11px;line-height:1.3}
+.voice-arrow{color:var(--maroon);font-size:21px;font-weight:800}
+.flow-tabs{display:flex;gap:8px;margin:15px 0 10px;flex-wrap:wrap}
+.flow-mode{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font-family:var(--base);font-size:12px;font-weight:800;color:var(--body);cursor:pointer;transition:.15s}
+.flow-mode:hover,.flow-mode.active{border-color:var(--maroon);background:var(--maroon);color:#fff}
+.flow-detail{border:1px solid var(--line);border-radius:14px;padding:18px 20px;min-height:126px;background:#fff;box-shadow:var(--shadow)}
+.flow-detail b{display:block;color:var(--maroon);font-size:1.15rem;margin-bottom:8px}
+.flow-detail p{margin:0;color:var(--body);font-size:14px;line-height:1.45}
+.privacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.privacy-card{border:1px solid var(--line);border-radius:16px;padding:20px;background:#fff;box-shadow:var(--shadow)}
+.privacy-card.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.toggle-viz{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.toggle-viz i{width:44px;height:24px;border-radius:999px;background:var(--maroon);position:relative;flex:none}
+.toggle-viz i::after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;right:3px;top:3px}
+.privacy-card b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+.privacy-card span{display:block;color:var(--muted);font-size:12.5px;line-height:1.42}
+/* maturity ladder */
+.maturity{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:17px}
+.maturity-step{appearance:none;border:1px solid var(--line);border-radius:14px;padding:15px 13px;background:#fff;text-align:left;font-family:var(--base);cursor:pointer;min-height:132px;transition:.15s}
+.maturity-step:hover,.maturity-step.active{border-color:var(--maroon);transform:translateY(-2px)}
+.maturity-step.active{background:var(--maroon-tint);border-width:2px}
+.maturity-step span{display:block;color:var(--maroon);font-size:10px;font-weight:800;letter-spacing:.08em;margin-bottom:9px}
+.maturity-step b{display:block;color:var(--ink);font-size:14px;margin-bottom:6px}
+.maturity-step small{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.maturity-step::after{content:"Tap to open →";display:block;color:var(--maroon);font-size:9px;font-weight:800;margin-top:10px}
+.maturity-step.active::after{content:"Open now ✓"}
+.tap-cue{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--maroon);border-radius:999px;padding:7px 11px;color:var(--maroon);font-size:10px;font-weight:800;margin-top:10px;animation:tapPulse 2.6s ease-in-out infinite}
+.tap-cue i{width:8px;height:8px;border-radius:50%;background:var(--maroon)}
+@keyframes tapPulse{50%{transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,32,37,.16)}}
+.maturity-detail{margin-top:11px;border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:11px 15px;font-size:13px;line-height:1.4;min-height:58px}
+.maturity-detail b{color:var(--maroon)}
+.output-loop{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:14px}
+.output-loop div{position:relative;border:1px solid var(--line);border-radius:11px;padding:10px 7px;text-align:center;background:#fff}
+.output-loop div:not(:last-child)::after{content:"→";position:absolute;right:-10px;top:17px;color:var(--maroon);font-weight:800;z-index:2}
+.output-loop b{display:block;color:var(--ink);font-size:10.5px}
+.output-loop span{display:block;color:var(--muted);font-size:8.5px;margin-top:3px}
+.output-loop .hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.output-loop .hot::after{content:"↺";right:-11px}
+.source-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:15px}
+.source-card{display:block;text-decoration:none;border:1px solid var(--line);border-radius:13px;padding:15px 17px;background:#fff;transition:.15s}
+.source-card:hover{border-color:var(--maroon);transform:translateY(-2px)}
+.source-card b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:4px}
+.source-card span{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.source-map{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.source-hub{border:1px solid var(--line);border-radius:16px;padding:18px;background:#fff;box-shadow:var(--shadow);min-height:210px;display:flex;flex-direction:column}
+.source-hub.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.source-mark{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:10px;background:var(--ink);color:#fff;font-size:13px;font-weight:800;margin-bottom:13px}
+.source-hub.hot .source-mark{background:var(--maroon)}
+.source-hub h3{font-size:1.05rem;color:var(--ink);margin:0 0 7px}
+.source-hub p{font-size:12px;line-height:1.4;color:var(--body);margin:0 0 14px}
+.source-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.source-links a{display:inline-flex;align-items:center;min-height:32px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;text-decoration:none;color:var(--maroon);background:#fff;font-size:9px;font-weight:800}
+.source-links a:hover{border-color:var(--maroon)}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#fff;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#E9F7EC}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#E9F7EC;color:#1A7F37;border:1px solid #1A7F37}
+.fb.no{background:var(--maroon-tint);color:#C02025;border:1px solid #E49D9F}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#E9F7EC;color:#1A7F37}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#C02025}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:760px){.native-grid,.brief-grid,.maturity{grid-template-columns:1fr 1fr}.ccmap{grid-template-columns:1fr 1fr}.cccore{grid-column:1 / span 2;grid-row:auto}.command-ui{grid-template-columns:1fr 1.5fr}.cmd-outcome{grid-column:1 / -1}.voice-pipe{grid-template-columns:1fr}.voice-arrow{transform:rotate(90deg)}.session-flow{grid-template-columns:repeat(3,1fr)}.session-anatomy{grid-template-columns:1fr}.session-shell{grid-column:auto}.session-rule{grid-column:auto}.loop-track{grid-template-columns:repeat(3,1fr)}.output-loop{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:660px){.duo,.decide,.split,.session-pair,.privacy-grid,.source-grid,.source-map{grid-template-columns:1fr;flex-direction:column}.vrow{grid-template-columns:1fr}.brandmark{display:none}.native-grid,.brief-grid,.maturity{grid-template-columns:1fr 1fr}.session-equation{grid-template-columns:1fr}.session-eq{transform:rotate(90deg)}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · foundation</div>
+      <h1><span class="lnwrap"><span class="ln">Working</span></span><span class="lnwrap"><span class="ln">Artificial Intelligence</span></span><span class="lnwrap"><span class="ln">native</span></span></h1>
+      <p class="lead" style="margin-top:20px">How Koocester works from the command centre: one outcome per session, voice into clear intent, Artificial Intelligence (AI) doing the heavy lifting, and humans owning the judgment.</p>
+    </div>
+  </section>
+
+  <!-- 2 · MINDSET -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The mindset</div>
+      <div class="big">AI is a <em>force-multiplier</em>, not a replacement.</div>
+      <p class="lead">It does not replace you. It multiplies you. The Large Language Model (LLM) is the sharpest junior you've ever had — tireless, fast, and only as good as the direction you give it. You stay the one in charge.</p>
+    </div>
+  </section>
+
+  <!-- AI-NATIVE OPERATING MODEL -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Artificial Intelligence native · an operating model</div>
+      <h2>It is not “everyone uses a chatbot.” It is how work moves.</h2>
+      <div class="native-grid">
+        <div class="native-card hot"><span class="nn">1</span><b>Humans set direction</b><span>Name the outcome, give judgment, make the decision and own the consequence.</span></div>
+        <div class="native-card"><span class="nn">2</span><b>AI executes</b><span>Researches, drafts, builds, checks and handles bounded multi-step work.</span></div>
+        <div class="native-card"><span class="nn">3</span><b>Systems hold truth</b><span>The approved record lands in the Base, Lark, customer relationship management system or Academy.</span></div>
+        <div class="native-card"><span class="nn">4</span><b>Reviews protect quality</b><span>People approve high-impact decisions and external actions before they move.</span></div>
+      </div>
+      <div class="callout"><b>The rule:</b> an AI output that never lands in the system that owns the record is unfinished work.</div>
+    </div>
+  </section>
+
+  <!-- COMMAND CENTRE -->
+  <section class="slide command-slide">
+    <div class="inner">
+      <div class="eyebrow">Slide 4 · the command centre</div>
+      <h2>Think of it as your control room for AI work.</h2>
+      <div class="command-ui" aria-label="Command centre interface showing separate AI work sessions">
+        <div class="cmd-rail">
+          <div class="rail-title">Separate workrooms</div>
+          <button class="cmd-task active" type="button"><b>AI Foundation module</b><span>Active · one deck outcome</span></button>
+          <button class="cmd-task" type="button"><b>Org deck review</b><span>Paused · different outcome</span></button>
+          <button class="cmd-task" type="button"><b>Academy redeploy</b><span>Waiting for approval</span></button>
+        </div>
+        <div class="cmd-session">
+          <div class="cmd-top"><b>AI Foundation module</b><span>Codex or Claude Code session</span></div>
+          <div class="cmd-chat">
+            <div class="chat-row"><div class="chat-avatar">YOU</div><div class="chat-bubble"><b>Direction:</b> improve slides 4, 5, 7, 8, 11, 21 and 25. Keep it on-brand. Do not deploy.</div></div>
+            <div class="chat-row"><div class="chat-avatar ai">AI</div><div class="chat-bubble"><b>Work:</b> inspect the deck, use approved sources, edit the files, verify the result and bring it back for review.<div class="worklog"><span class="done">Inspect ✓</span><span class="done">Build ✓</span><span>Review next</span></div></div></div>
+          </div>
+        </div>
+        <div class="cmd-outcome">
+          <div class="rail-title">Control panel</div>
+          <div class="outcome-card"><b>One outcome</b><span>Revised AI-native module ready for Hakim's review.</span></div>
+          <div class="cmd-proof"><b>Context</b><br>Deck + brand guideline<br><br><b>Boundary</b><br>No deployment<br><br><b>Proof</b><br>Palette + script checks</div>
+        </div>
+      </div>
+      <div class="ccdetail"><b>Command centre = the collection of workrooms.</b> Each workroom keeps one outcome, its conversation, files, tool activity, decisions and review together.</div>
+    </div>
+  </section>
+
+  <!-- ONE SESSION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Slide 5 · what a session actually is</div>
+      <div class="big">Different names. The same <em>focused workroom.</em></div>
+      <div class="session-equation" aria-label="A Codex task and a Claude Code conversation are both sessions or workrooms">
+        <div class="session-platform"><span>In Codex</span><b>A task</b></div>
+        <div class="session-eq">+</div>
+        <div class="session-platform"><span>In Claude Code</span><b>A conversation</b></div>
+        <div class="session-eq">=</div>
+        <div class="session-result"><span>Same idea</span><b>One session / workroom</b></div>
+      </div>
+      <div class="session-anatomy">
+        <div class="session-shell">
+          <div class="session-shell-head"><b>One workroom · AI Foundation module</b><span>One outcome + its conversation + work history</span></div>
+          <div class="session-thread">
+            <div class="thread-line"><b>You direct</b><span>“Improve these seven slides. Research loops. Add the Wispr Flow logo. Do not deploy.”</span></div>
+            <div class="thread-line ai"><b>AI works</b><span>Reads the relevant files, researches, edits, checks and reports inside this same workroom.</span></div>
+            <div class="thread-line"><b>You refine</b><span>Review the result, ask for changes and approve only when the outcome is right.</span></div>
+          </div>
+        </div>
+        <div class="session-memory"><div class="sk">What stays together</div><b>The conversation and working context.</b><span>Your instructions, the AI's actions, tool results, decisions and follow-up requests remain connected so the work can continue coherently.</span></div>
+        <div class="session-rule"><i></i><b>Open a new session</b> when the outcome, project or source of truth changes. Resume this one when you are continuing the same outcome.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SESSION RHYTHM -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The session rhythm · click each stage</div>
+      <h2>Brief → plan → work → review → land.</h2>
+      <div class="session-flow" id="sessionFlow">
+        <button class="session-step active" type="button" data-session-step="0"><span>01</span><b>Brief</b></button>
+        <button class="session-step" type="button" data-session-step="1"><span>02</span><b>Plan</b></button>
+        <button class="session-step" type="button" data-session-step="2"><span>03</span><b>Work</b></button>
+        <button class="session-step" type="button" data-session-step="3"><span>04</span><b>Review</b></button>
+        <button class="session-step" type="button" data-session-step="4"><span>05</span><b>Land</b></button>
+      </div>
+      <div class="session-detail" id="sessionDetail"><b>Brief.</b> State the goal, context, constraints and what must be true when the work is done.</div>
+      <div class="callout"><b>Close cleanly:</b> record the decision, save the output, name what remains and open a fresh session for the next outcome.</div>
+    </div>
+  </section>
+
+  <!-- SESSION BRIEF -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Slide 7 · direct a loop, not a one-shot prompt</div>
+      <h2>Give the finish line, then make the work repeat until it is met.</h2>
+      <div class="loop-brief">
+        <div class="loop-track" aria-label="Inspect, plan, execute, verify, critique and improve loop">
+          <div class="loop-step hot"><span>01</span><b>Inspect</b></div>
+          <div class="loop-step"><span>02</span><b>Plan</b></div>
+          <div class="loop-step"><span>03</span><b>Execute</b></div>
+          <div class="loop-step"><span>04</span><b>Verify</b></div>
+          <div class="loop-step"><span>05</span><b>Critique</b></div>
+          <div class="loop-step"><span>06</span><b>Improve</b></div>
+        </div>
+        <div class="loop-return">↺ Repeat until the done criteria pass, or stop at an approval boundary</div>
+        <div class="loop-command"><b>Reusable instruction:</b> “Work in a loop: inspect → plan → execute → verify → critique → improve. After each pass, report the evidence, remaining gap and next action. Repeat until the done criteria pass. Stop and ask before deployment or any approval boundary.”</div>
+      </div>
+      <div class="callout"><b>The brief still matters.</b> Goal + context + constraints tell the loop what to work on. <b>Done when</b> tells it when to stop.</div>
+    </div>
+  </section>
+
+  <!-- WISPR INPUT LAYER -->
+  <section class="slide">
+    <div class="inner">
+      <div class="wispr-head"><img class="wispr-logo" src="brand/wispr-flow-logo-dark.png" alt="Wispr Flow"><div class="eyebrow" style="margin:0">Slide 8 · voice becomes structured intent</div></div>
+      <h2>Speak the whole thought. Let Flow clean the typing.</h2>
+      <div class="voice-pipe">
+        <div class="voice-node hot"><b>Your voice</b><span>goal, context, boundaries</span></div><div class="voice-arrow">→</div>
+        <div class="voice-node"><b>Wispr Flow</b><span>clean text and formatting</span></div><div class="voice-arrow">→</div>
+        <div class="voice-node"><b>Command centre</b><span>reason, use tools, create</span></div><div class="voice-arrow">→</div>
+        <div class="voice-node"><b>Finished work</b><span>reviewed and recorded</span></div>
+      </div>
+      <div class="callout"><b>Voice is the input layer, not the decision-maker.</b> Pause, think in complete outcomes and review the text before sending high-impact instructions.</div>
+    </div>
+  </section>
+
+  <!-- WISPR MODES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Wispr Flow · click the mode</div>
+      <h2>Use voice at three levels.</h2>
+      <div class="flow-tabs" id="flowTabs">
+        <button class="flow-mode active" type="button" data-flow-mode="0">1 · Dictate</button>
+        <button class="flow-mode" type="button" data-flow-mode="1">2 · Personalise</button>
+        <button class="flow-mode" type="button" data-flow-mode="2">3 · Transform</button>
+      </div>
+      <div class="flow-detail" id="flowDetail"><b>Dictate naturally.</b><p>Place the cursor in any text field, use push-to-talk or hands-free mode, speak normally and review the cleaned result before sending.</p></div>
+      <div class="callout"><b>Build your vocabulary:</b> add Koocester, client names, tool names and role terms to the dictionary so prompts stay accurate.</div>
+    </div>
+  </section>
+
+  <!-- WISPR PRIVACY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Wispr Flow · privacy before speed</div>
+      <h2>Configure the data controls before you build the habit.</h2>
+      <div class="privacy-grid">
+        <div class="privacy-card hot"><div class="toggle-viz"><i></i><b>Privacy Mode · on</b></div><span>Wispr says this prevents dictation data from being used to evaluate, train or improve its models.</span></div>
+        <div class="privacy-card"><div class="toggle-viz"><i></i><b>Private Cloud Sync · choose deliberately</b></div><span>Turning sync off means audio and transcripts are processed and discarded after each request, but some synced features become unavailable.</span></div>
+      </div>
+      <div class="callout"><b>Koocester rule:</b> voice does not change the confidentiality standard. Passwords, payment details, personal identifiers and restricted client information stay out of unapproved tools.</div>
+    </div>
+  </section>
+
+  <!-- AI-NATIVE MATURITY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Slide 11 · how an Artificial Intelligence native company evolves</div>
+      <h2>From individual help to governed workflows.</h2>
+      <div class="tap-cue"><i></i>Tap each level below to reveal what changes</div>
+      <div class="maturity" id="maturity">
+        <button class="maturity-step active" type="button" data-maturity="0"><span>01</span><b>Assist</b><small>AI drafts, summarises and answers.</small></button>
+        <button class="maturity-step" type="button" data-maturity="1"><span>02</span><b>Collaborate</b><small>Human and AI iterate inside a session.</small></button>
+        <button class="maturity-step" type="button" data-maturity="2"><span>03</span><b>Delegate</b><small>AI completes bounded multi-step outcomes.</small></button>
+        <button class="maturity-step" type="button" data-maturity="3"><span>04</span><b>Orchestrate</b><small>Reusable agents and automations run approved workflows.</small></button>
+      </div>
+      <div class="maturity-detail" id="maturityDetail"><b>Assist.</b> Start by removing blank pages and repetitive first drafts. The human still performs most of the workflow.</div>
+      <div class="callout"><b>The destination:</b> company context, approved tools, scoped permissions, visible logs and human approval gates for sensitive actions.</div>
+    </div>
+  </section>
+
+  <!-- THE HUMAN / AI SPLIT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How the work splits</div>
+      <h2>It does the first 70% fast. You direct and own the final 30%.</h2>
+      <div class="split">
+        <div class="seg ai"><div class="pc">70%</div><div class="lb"><b>AI does this fast</b> — the draft, the research, the restructure, the boilerplate</div></div>
+        <div class="seg you"><div class="pc">30%</div><div class="lb"><b>You direct and decide</b> — the taste, verification, approval and final accountability</div></div>
+      </div>
+      <div class="callout"><b>Automate the mundane, own the judgment.</b> Let AI clear the busywork so your hours go to the decisions that actually move the number.</div>
+    </div>
+  </section>
+
+  <!-- 4 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're using AI well when…</div>
+      <div class="wins">
+        <div class="win"><b>You open a session with one outcome</b><span>the goal, context, constraints and finish line are clear</span></div>
+        <div class="win"><b>You use approved context</b><span>the correct project, files and connected systems shape the work</span></div>
+        <div class="win"><b>You verify and own every output</b><span>you review before it ships because the result carries your name</span></div>
+        <div class="win"><b>The result lands in its system</b><span>decisions, tasks and records return to the source of truth</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 5 · DIVIDER · WHEN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>When to reach for it</h2>
+      <p class="lead" style="color:#CCC">And when to keep your hands on the wheel.</p>
+    </div>
+  </section>
+
+  <!-- 6 · WHEN TO USE / WHEN NOT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Where AI earns its keep · and where it doesn't</div>
+      <div class="decide">
+        <div class="dbox ok"><h3>Reach for it →</h3><ul>
+          <li><b>Ideation</b> — angles, hooks, names, first ideas</li>
+          <li><b>First drafts</b> — captions, emails, briefs, outlines</li>
+          <li><b>Research &amp; summarising</b> — digest long things fast</li>
+          <li><b>Restructuring</b> — reshape messy notes into order</li>
+          <li><b>Coding &amp; automation</b> — scripts, workflows, formulas</li>
+          <li><b>Analysis</b> — spot patterns, sanity-check numbers</li>
+        </ul></div>
+        <div class="dbox no"><h3>Keep it human ✕</h3><ul>
+          <li><b>The final judgment call</b> — the decision is yours to own</li>
+          <li><b>Costly-if-wrong, unchecked</b> — anything a mistake would hurt, without a human review</li>
+          <li><b>True secrets</b> — passwords, logins, payment details, personal identifiers (client strategy &amp; campaign work goes into Poppy)</li>
+        </ul></div>
+      </div>
+      <p class="cite">AI does the heavy lifting. The call, the check, and the confidential stuff stay with you.</p>
+    </div>
+  </section>
+
+  <!-- 7 · DIVIDER · GUARDRAILS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Guardrails</h2>
+      <p class="lead" style="color:#CCC">Non-negotiable. These three protect us and our clients.</p>
+    </div>
+  </section>
+
+  <!-- 8 · GUARDRAIL 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Guardrail 1 · confidentiality</div>
+      <div class="big"><em>Never</em> paste confidential data into a public AI tool.</div>
+      <p class="lead">A client's private brief, internal financials, personal data — none of it goes into a public chatbot. Assume anything you paste could be stored or seen. If it's confidential, keep it out. No exceptions.</p>
+      <div class="callout"><b>The test:</b> could exposing this cause significant financial or reputational harm to Koocester or a client? If yes, or the answer is on the edge, keep it out of public AI tools.</div>
+    </div>
+  </section>
+
+  <!-- 9 · GUARDRAIL 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Guardrail 2 · you own the output</div>
+      <div class="big">AI can be <em>confidently wrong</em>. Always verify.</div>
+      <p class="lead">A Large Language Model (LLM) will invent facts, figures and sources and state them with total confidence — this is called a <b>hallucination</b>. Never ship what it gives you unchecked. You put your name on the output, so the result is yours to verify — every claim, every number, every quote.</p>
+      <div class="callout"><b>Source rule:</b> always ask for relevant citations. Open every link and confirm it leads to the stated website or article and actually supports the claim. A citation-looking link is not proof.</div>
+    </div>
+  </section>
+
+  <!-- 10 · GUARDRAIL 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Guardrail 3 · honesty</div>
+      <div class="big">Disclose AI use where honesty <em>requires</em> it.</div>
+      <p class="lead">AI is a tool, and using it is not something to hide. But where being open matters — a client expecting your own work, a claim of authorship, anything where the truth would change how someone reads it — say so. Never let AI make us look dishonest.</p>
+    </div>
+  </section>
+
+  <!-- 11 · DIVIDER · GOOD OUTPUTS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Getting good outputs</h2>
+      <p class="lead" style="color:#CCC">Garbage in, garbage out. Great brief in, great work out.</p>
+    </div>
+  </section>
+
+  <!-- 12 · GETTING GOOD -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Brief it like you'd brief a sharp junior</div>
+      <h2>A prompt opens the work. A loop gets it to done.</h2>
+      <div class="output-loop" aria-label="Brief, draft, critique, improve and verify loop">
+        <div><b>Brief</b><span>context + done</span></div>
+        <div><b>Draft</b><span>first pass</span></div>
+        <div><b>Critique</b><span>find the gap</span></div>
+        <div><b>Improve</b><span>fix the gap</span></div>
+        <div class="hot"><b>Verify ↺</b><span>pass or loop</span></div>
+      </div>
+      <ol class="pts" style="margin-top:13px">
+        <li><b>Start with evidence</b> — give the source files, examples, constraints and audience</li>
+        <li><b>Name the test</b> — define what must be true, checked or approved at the end</li>
+        <li><b>Run the critique</b> — ask what is weak, missing, inconsistent or unverified</li>
+        <li><b>Loop deliberately</b> — feed the evidence back in until the test passes or approval is needed</li>
+      </ol>
+      <div class="callout"><b>Every pass reports three things:</b> evidence, remaining gap and next action.</div>
+    </div>
+  </section>
+
+  <!-- 13 · BUILD LOOPS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Go past a single prompt</div>
+      <h2>Chain the steps. Feed the output back in.</h2>
+      <div class="loopviz">
+        <svg viewBox="0 0 760 268" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A loop of four steps — Research, Draft, Critique, Refine — where each output is fed back in as the next input.">
+          <defs>
+            <marker id="lah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0 0 L9 4.5 L0 9 Z" fill="#C02025"/>
+            </marker>
+          </defs>
+          <!-- forward arrows -->
+          <line x1="167" y1="72" x2="201" y2="72" stroke="#C02025" stroke-width="2.5" marker-end="url(#lah)"/>
+          <line x1="357" y1="72" x2="391" y2="72" stroke="#C02025" stroke-width="2.5" marker-end="url(#lah)"/>
+          <line x1="547" y1="72" x2="581" y2="72" stroke="#C02025" stroke-width="2.5" marker-end="url(#lah)"/>
+          <!-- return loop -->
+          <path d="M660 104 V210 Q660 235 636 235 H124 Q100 235 100 210 V108" fill="none" stroke="#C02025" stroke-width="2.5" marker-end="url(#lah)"/>
+          <!-- centre label -->
+          <text x="380" y="166" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#C02025">THE LOOP · OUTPUT → NEXT INPUT</text>
+          <!-- nodes -->
+          <rect x="15" y="40" width="150" height="64" rx="13" fill="#F2CECF" stroke="#C02025" stroke-width="2.5"/>
+          <text x="90" y="68" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#666">STEP 1</text>
+          <text x="90" y="92" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="16" font-weight="800" fill="#C02025">Research</text>
+          <rect x="205" y="40" width="150" height="64" rx="13" fill="#fff" stroke="#C02025" stroke-width="2"/>
+          <text x="280" y="68" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#666">STEP 2</text>
+          <text x="280" y="92" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="16" font-weight="800" fill="#000">Draft</text>
+          <rect x="395" y="40" width="150" height="64" rx="13" fill="#fff" stroke="#C02025" stroke-width="2"/>
+          <text x="470" y="68" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#666">STEP 3</text>
+          <text x="470" y="92" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="16" font-weight="800" fill="#000">Critique</text>
+          <rect x="585" y="40" width="150" height="64" rx="13" fill="#fff" stroke="#C02025" stroke-width="2"/>
+          <text x="660" y="68" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#666">STEP 4</text>
+          <text x="660" y="92" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="16" font-weight="800" fill="#000">Refine</text>
+          <!-- return label -->
+          <rect x="298" y="218" width="164" height="34" rx="17" fill="#C02025"/>
+          <text x="380" y="240" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif" font-size="13" font-weight="800" fill="#fff">Feed the output back in</text>
+        </svg>
+      </div>
+      <p class="lead" style="margin-top:14px">The power isn't in one clever prompt — it's in the <b>loop</b>. Take one output and make it the next input. When a loop is worth running again and again, that's where <b>automation</b> comes in: build it once, let it run.</p>
+    </div>
+  </section>
+
+  <!-- THE AI-NATIVE STACK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The stack · roles, not favourite brands</div>
+      <div class="duo" style="grid-template-columns:repeat(4,1fr)">
+        <div class="obx lead-gen"><h3 style="font-size:1.12rem">Command centre</h3><div class="sub">direct the outcome</div><ul><li>Codex or Claude Code</li><li>Sessions, tools and review</li><li>Files and company context</li></ul></div>
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.12rem">Voice layer</h3><div class="sub">capture intent</div><ul><li>Wispr Flow</li><li>Dictionary and snippets</li><li>Fast, natural briefs</li></ul></div>
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.12rem">Specialist AI</h3><div class="sub">role-specific work</div><ul><li>Poppy for content</li><li>Approved role tools</li><li>Repeatable expertise</li></ul></div>
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.12rem">Automation</h3><div class="sub">run the stable loop</div><ul><li>n8n and integrations</li><li>Scheduled workflows</li><li>Alerts and records</li></ul></div>
+      </div>
+      <p class="cite">Tools will change. The architecture stays: intent → context → execution → review → system of record.</p>
+    </div>
+  </section>
+
+  <!-- 15 · AI IN YOUR ROLE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your job now</div>
+      <div class="big">Move from doing every step to <em>directing the system.</em></div>
+      <p class="lead">Your value shifts upward: from typing every word to defining the outcome, supplying context, reviewing quality and making the call. When a session works repeatedly, turn it into a playbook. When the playbook stabilises, turn it into a skill, agent or automation.</p>
+      <div class="callout"><b>The standard:</b> each month, identify one repeated workflow to improve, document or automate without weakening ownership or review.</div>
+    </div>
+  </section>
+
+  <!-- SOURCES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Slide 25 · the research in three takeaways</div>
+      <h2>You do not need to read the sources. Remember this.</h2>
+      <div class="source-map">
+        <article class="source-hub hot"><span class="source-mark">O</span><h3>OpenAI</h3><p><b>Plan → execute → verify.</b><br>Keep human approval at important checkpoints.</p><div class="source-links"><a href="https://learn.chatgpt.com/guides/best-practices" target="_blank" rel="noopener">Codex guidance ↗</a><a href="https://openai.com/business/workspace-agents/" target="_blank" rel="noopener">Workspace agents ↗</a></div></article>
+        <article class="source-hub"><span class="source-mark">C</span><h3>Claude Code</h3><p><b>One outcome per session.</b><br>The conversation, context and work stay together.</p><div class="source-links"><a href="https://code.claude.com/docs/en/how-claude-code-works" target="_blank" rel="noopener">How it works ↗</a></div></article>
+        <article class="source-hub"><span class="source-mark">W</span><h3>Wispr Flow</h3><p><b>Voice makes input faster.</b><br>Human review and privacy controls still apply.</p><div class="source-links"><a href="https://wisprflow.ai/features" target="_blank" rel="noopener">Features ↗</a><a href="https://wisprflow.ai/privacy" target="_blank" rel="noopener">Privacy ↗</a></div></article>
+      </div>
+      <div class="callout"><b>The stable rule:</b> tools will change. Ownership, confidentiality, verification and clean handoff remain.</div>
+    </div>
+  </section>
+
+  <!-- 16 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#CCC">Three calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 17 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · what belongs in Poppy</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Client strategies, campaign plans and briefs are exactly what Poppy is built for — feed it your work context and it gets genuinely useful. The one thing that stays out is true secrets: passwords, logins, card and payment details, personal identifiers."
+        data-no="<b>Not quite.</b> Client strategy and campaign context aren't the kind of secret that blocks AI — they're precisely what Poppy needs to help. Feed the plan in. The only things that never go in are true secrets: passwords, logins, card/payment details, personal identifiers.">
+        <div class="scenario">You're planning a client campaign. You have their <b>strategy and campaign plan</b>, plus the <b>password to their ad account</b>. You want Poppy's help building the content.</div>
+        <div class="q">What do you put into Poppy?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Nothing — anything client-related is off-limits to AI</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>The strategy and campaign plan — that's what Poppy is for; keep the password out</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Everything, password included — give Poppy full access to move faster</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · a confident answer</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Ask for relevant sources, open the links and confirm the cited website or article supports the statistic before it ships. Confidence and citation formatting are not proof."
+        data-no="<b>No.</b> Ask for relevant sources, open every link and confirm the cited website or article supports the number. AI can invent both facts and citations.">
+        <div class="scenario">AI gives you a <b>specific, confident statistic</b> to use in a client deck — an exact figure, stated with total certainty.</div>
+        <div class="q">What do you do before using it?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Use it — it sounded precise and sure</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Ask for sources, open the links and verify the claim against the cited article</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Ask the AI again; if it repeats the number it's true</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · a weak result</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> Vague prompt, vague answer. Give it context, a role, an example and the exact format you want — then iterate. A great brief in is what gets great work out."
+        data-no="<b>Not quite.</b> The tool isn't the problem — the brief is. A one-line vague prompt gives a vague answer. Add context, a role, an example and the format you want, then iterate.">
+        <div class="scenario">You typed <b>one vague line</b> into the AI and got back a generic, forgettable result.</div>
+        <div class="q">What's the fix?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Give it context, a role, an example and the exact format — then iterate</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Give up — AI can't do this kind of task well</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Paste the same prompt into a different tool and hope</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you use AI the Koocester way?</h2>
+      <p class="lead" style="font-size:1.05rem;margin-bottom:10px">Clear sessions, safe inputs, verified outputs and clean handoffs.</p>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Do you open each session with one owned outcome?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you provide the goal, context, constraints and what done means?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you keep confidential data out of public AI tools, always?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you review Wispr Flow text before sending high-impact instructions?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you request relevant citations, open every link and verify the claim yourself?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you chain steps into loops instead of stopping at one prompt?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you land decisions, tasks and records in their source of truth?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you identify a repeated workflow to document or automate?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all eight to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 21 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Direct the system. Own the judgment.</h2>
+      <p class="lead">Work from one clear session at a time. Speak intent quickly, give the right context, let AI do the heavy lifting, review the result and land it where the company can trust it.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · working AI-native</div>
+<div class="nav">
+  <span class="count" id="count">1 / 31</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // command centre · learner-selected detail
+  var ccBtns=[].slice.call(document.querySelectorAll('.ccnode'));
+  var ccDetail=document.getElementById('ccDetail');
+  var ccData={
+    sources:['Approved context.','Start in the correct project or folder and point the session to the files and systems that can change the answer.'],
+    workers:['AI workers.','Let AI research, build, analyse, test and document inside the boundaries of the task.'],
+    review:['Human review.','The named owner checks quality, makes the judgment call and approves high-impact or external actions.'],
+    records:['Systems of record.','Finish by updating the Base, Lark, customer relationship management system, Academy or other system that owns the record.']
+  };
+  ccBtns.forEach(function(btn){btn.addEventListener('click',function(){ccBtns.forEach(function(b){b.classList.toggle('active',b===btn)});var d=ccData[btn.getAttribute('data-cc')];if(ccDetail&&d)ccDetail.innerHTML='<b>'+d[0]+'</b> '+d[1];});});
+  [].forEach.call(document.querySelectorAll('.cmd-task'),function(btn){btn.addEventListener('click',function(){[].forEach.call(document.querySelectorAll('.cmd-task'),function(b){b.classList.toggle('active',b===btn);});});});
+  // session rhythm · learner-selected stage
+  var sessionBtns=[].slice.call(document.querySelectorAll('.session-step'));
+  var sessionDetail=document.getElementById('sessionDetail');
+  var sessionData=[
+    ['Brief.','State the goal, context, constraints and what must be true when the work is done.'],
+    ['Plan.','For complex work, ask AI to inspect the context, surface assumptions and show the route before changing anything.'],
+    ['Work.','Let the session execute, use approved tools and keep progress visible without changing the outcome midstream.'],
+    ['Review.','Inspect the result, evidence and changes. Challenge weak assumptions and request corrections before approval.'],
+    ['Land.','Save the output, update the source of truth, record decisions and name any remaining work.']
+  ];
+  sessionBtns.forEach(function(btn){btn.addEventListener('click',function(){sessionBtns.forEach(function(b){b.classList.toggle('active',b===btn)});var d=sessionData[Number(btn.getAttribute('data-session-step'))];if(sessionDetail&&d)sessionDetail.innerHTML='<b>'+d[0]+'</b> '+d[1];});});
+  // Wispr Flow · use modes
+  var flowBtns=[].slice.call(document.querySelectorAll('.flow-mode'));
+  var flowDetail=document.getElementById('flowDetail');
+  var flowData=[
+    ['Dictate naturally.','Place the cursor in any text field, use push-to-talk or hands-free mode, speak normally and review the cleaned result before sending.'],
+    ['Personalise the input layer.','Use the dictionary for names and terminology. Use snippets for repeated blocks such as session briefs, meeting links or standard updates.'],
+    ['Transform with a command.','Where Command Mode is enabled, highlight text and speak the change you want, such as “make this concise.” Review the replacement and undo if needed.']
+  ];
+  flowBtns.forEach(function(btn){btn.addEventListener('click',function(){flowBtns.forEach(function(b){b.classList.toggle('active',b===btn)});var d=flowData[Number(btn.getAttribute('data-flow-mode'))];if(flowDetail&&d)flowDetail.innerHTML='<b>'+d[0]+'</b><p>'+d[1]+'</p>';});});
+  // AI-native maturity ladder
+  var maturityBtns=[].slice.call(document.querySelectorAll('.maturity-step'));
+  var maturityDetail=document.getElementById('maturityDetail');
+  var maturityData=[
+    ['Assist.','Start by removing blank pages and repetitive first drafts. The human still performs most of the workflow.'],
+    ['Collaborate.','Run the work as a session: give context, iterate, critique and use AI as a configured teammate.'],
+    ['Delegate.','Give AI a bounded multi-step outcome, the tools it needs and a clear human checkpoint.'],
+    ['Orchestrate.','Turn stable work into shared agents and automations with permissions, logs, evaluation and approval gates.']
+  ];
+  maturityBtns.forEach(function(btn){btn.addEventListener('click',function(){maturityBtns.forEach(function(b){b.classList.toggle('active',b===btn)});var d=maturityData[Number(btn.getAttribute('data-maturity'))];if(maturityDetail&&d)maturityDetail.innerHTML='<b>'+d[0]+'</b> '+d[1];});});
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-ai-gate-v2';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#CCC;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#CCC;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#E9F7EC;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+
+<style>.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Koocester · Client onboarding review for Rina</title>
+<style>
+:root{
+  --maroon:#C02025;--maroon80:#C93B3F;--maroon60:#D76C6F;--tint:#F2CECF;
+  --black:#000;--text:#333;--muted:#666;--soft:#999;--line:#CCC;--white:#fff;--ok:#1A7F37;
+  --font:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--font);color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased;overflow:hidden}
+.deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;display:flex;align-items:center;visibility:hidden;opacity:0;transform:translateX(34px);transition:opacity .24s ease,transform .3s ease,visibility .24s}
+.slide.active{visibility:visible;opacity:1;transform:none}
+.inner{width:min(1000px,calc(100% - 72px));margin:auto;padding:20px 0 54px}
+.wordmark{display:inline-flex;align-items:baseline;font-weight:800;letter-spacing:-.04em;font-size:1.3rem;margin-bottom:28px;color:var(--black)}
+.wordmark span{color:var(--maroon);font-size:.68em;letter-spacing:.02em;margin-left:4px}
+.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:16px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(3rem,7vw,5.1rem);line-height:.98;letter-spacing:-.055em;color:var(--black);margin-bottom:22px;max-width:900px}
+h2{font-size:clamp(2.25rem,5vw,3.65rem);line-height:1.03;letter-spacing:-.045em;color:var(--black);margin-bottom:24px;max-width:960px}
+h3{font-size:1.2rem;line-height:1.2;color:var(--black);margin-bottom:8px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.35rem);line-height:1.5;max-width:860px;margin:0;color:var(--text)}
+.accent{color:var(--maroon)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.card{border:1px solid var(--line);border-radius:15px;padding:22px;background:var(--white);box-shadow:0 12px 30px rgba(0,0,0,.05)}
+.card.hot{border:2px solid var(--maroon);background:var(--tint)}
+.card .role{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:8px}
+.card ul{margin:9px 0 0;padding-left:19px}
+.card li{margin:7px 0;line-height:1.35;font-size:.96rem}
+.callout{border-left:4px solid var(--maroon);background:var(--tint);padding:14px 17px;margin-top:18px;border-radius:0 10px 10px 0;line-height:1.4}
+.callout b{color:var(--maroon)}
+.flow{display:flex;align-items:stretch;gap:7px;margin-top:18px;flex-wrap:nowrap}
+.node{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;padding:14px 12px;background:var(--white);box-shadow:0 8px 22px rgba(0,0,0,.04)}
+.node.hot{border:2px solid var(--maroon);background:var(--tint);flex:1.35}
+.node .n{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:5px}
+.node .t{font-size:14px;line-height:1.28;color:var(--black);font-weight:750}
+.arr{display:flex;align-items:center;color:var(--maroon);font-size:19px;font-weight:800;flex:none}
+.rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.rows{border:1px solid var(--line);border-radius:14px;padding:6px 20px;background:var(--white)}
+.row{display:grid;grid-template-columns:140px 1fr;gap:18px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.row:last-child{border-bottom:0}
+.row .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;padding-top:2px}
+.row .v{font-size:15px;line-height:1.35;color:var(--black);font-weight:650}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:16px}
+.check{border:1px solid var(--line);border-left:4px solid var(--maroon);border-radius:10px;padding:13px 15px;font-size:15px;line-height:1.35;background:var(--white)}
+.steps{display:flex;align-items:stretch;gap:7px;margin-top:18px}
+.step{flex:1;border:1px solid var(--line);border-radius:12px;padding:14px 12px;min-width:0}
+.step .num{width:25px;height:25px;border-radius:50%;background:var(--maroon);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-bottom:10px}
+.step b{display:block;color:var(--black);font-size:14px;line-height:1.25;margin-bottom:4px}
+.step span{display:block;color:var(--muted);font-size:12px;line-height:1.3}
+.update-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.update{border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.update b{display:block;color:var(--black);margin-bottom:5px;font-size:1rem}
+.update span{font-size:13px;line-height:1.35;color:var(--muted)}
+.gate{margin-top:12px;border-top:1px solid var(--line)}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid var(--line)}
+.gq{font-weight:650;line-height:1.3;color:var(--black)}
+.gopt{display:flex;gap:7px;flex:none}
+.gbtn{border:1px solid var(--line);background:var(--white);color:var(--muted);font:800 12px var(--font);padding:7px 15px;border-radius:22px;cursor:pointer}
+.grow.yes .gbtn.y{background:var(--ok);border-color:var(--ok);color:var(--white)}
+.grow.no .gbtn.n{background:var(--maroon);border-color:var(--maroon);color:var(--white)}
+.state{margin-top:14px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-weight:750}
+.state.ready{border-color:var(--ok);color:var(--ok);background:rgba(26,127,55,.12)}
+.state.blocked{border-color:var(--maroon);color:var(--maroon);background:var(--tint)}
+.chrome{position:fixed;left:28px;right:28px;bottom:18px;display:flex;align-items:center;justify-content:space-between;z-index:20;pointer-events:none}
+.brand{font-size:12px;color:var(--muted)}
+.brand b{color:var(--black)}
+.nav{display:flex;align-items:center;gap:10px;pointer-events:auto}
+.btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--white);color:var(--black);font-size:18px;cursor:pointer}
+.btn:hover{border-color:var(--maroon);color:var(--maroon)}
+.count{font-size:12px;color:var(--muted);min-width:50px;text-align:center}
+.progress{position:fixed;left:0;top:0;height:3px;background:var(--maroon);transition:width .25s ease;z-index:30}
+@media(max-width:760px){.duo,.rule-grid,.update-grid,.checks{grid-template-columns:1fr}.flow,.steps{flex-wrap:wrap}.arr{display:none}.node,.step{flex:1 1 42%}.inner{width:calc(100% - 40px)}h2{font-size:2rem}.chrome{left:18px;right:18px}.brand{display:none}}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<main class="deck">
+  <section class="slide active">
+    <div class="inner">
+      <div class="wordmark">koocester<span>academy</span></div>
+      <div class="eyebrow">Review for Rina · client onboarding</div>
+      <h1>One client.<br><span class="accent">One clear owner.</span></h1>
+      <p class="lead">The proposed operating standard for the moment a deal is signed, the internal team is briefed and CX takes over the client relationship.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The operating decision</div>
+      <h2>Sales hands over. CX owns from the introduction onward.</h2>
+      <div class="duo">
+        <div class="card"><div class="role">Sales · before and at signing</div><h3>Own the promise and the transfer</h3><ul><li>Document signed scope, exclusions and commitments</li><li>Create the client group and add CX</li><li>Introduce CX as the single contact</li><li>Answer for commercial accuracy</li></ul></div>
+        <div class="card hot"><div class="role">CX · from the introduction</div><h3>Own the client and the outcome</h3><ul><li>Accept the complete handoff</li><li>Own onboarding and communication</li><li>Schedule the internal pre-brief</li><li>Lead kickoff and the ongoing cadence</li></ul></div>
+      </div>
+      <div class="callout"><b>The handoff is complete only when</b> the brief is documented, CX is introduced and the internal pre-brief is booked.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Required sequence</div>
+      <h2>The team aligns before meeting the client.</h2>
+      <div class="flow">
+        <div class="node"><div class="n">1 · Client</div><div class="t">Briefs Sales during the sales process</div></div><div class="arr">→</div>
+        <div class="node"><div class="n">2 · Sales</div><div class="t">Documents the signed scope and exclusions</div></div><div class="arr">→</div>
+        <div class="node hot"><div class="n">3 · Internal pre-brief</div><div class="t">CX + Content Strategist + Producer + Sales</div></div><div class="arr">→</div>
+        <div class="node"><div class="n">4 · Client kickoff</div><div class="t">CX leads; specialists join prepared</div></div><div class="arr">→</div>
+        <div class="node"><div class="n">5 · Delivery</div><div class="t">CX owns updates and client cadence</div></div>
+      </div>
+      <div class="callout"><b>Stop rule:</b> if the internal team has not seen and challenged the scope, the client campaign discussion is not ready to happen.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Client group chat · created at signing</div>
+      <h2>Sales creates and introduces. CX takes over.</h2>
+      <div class="rule-grid">
+        <div class="rows">
+          <div class="row"><div class="k">Group name</div><div class="v">Koocester · Client name · Page · Project No.</div></div>
+          <div class="row"><div class="k">Created by</div><div class="v">Sales, immediately after signing</div></div>
+          <div class="row"><div class="k">Core members</div><div class="v">Client · CX · Sales for the introduction</div></div>
+          <div class="row"><div class="k">Add as needed</div><div class="v">Content Strategist · Producer</div></div>
+        </div>
+        <div class="card hot"><div class="role">Ownership rule</div><h3>CX is the single contact</h3><ul><li>Sales makes the formal introduction</li><li>CX confirms the next step and cadence</li><li>Specialists answer through a prepared discussion</li><li>Commercial changes return to Sales</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Internal pre-brief · minimum content</div>
+      <h2>Leave aligned on five things.</h2>
+      <div class="checks">
+        <div class="check"><b>1 · Client objective</b><br>What business result did they hire us to achieve?</div>
+        <div class="check"><b>2 · Scope and exclusions</b><br>What was sold, and what was not?</div>
+        <div class="check"><b>3 · Deliverables and timeline</b><br>What ships, on which Page and by when?</div>
+        <div class="check"><b>4 · Risks and dependencies</b><br>What access, assets or decisions could block delivery?</div>
+        <div class="check"><b>5 · Client questions</b><br>What must the kickoff confirm, and who will ask?</div>
+        <div class="check"><b>Output</b><br>CX can lead the kickoff without discovering scope live.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">CX onboarding sequence</div>
+      <h2>Set the client up to win from day one.</h2>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><b>Join through Sales</b><span>The client knows CX is now the single contact.</span></div>
+        <div class="step"><div class="num">2</div><b>Confirm the promise</b><span>Scope, exclusions and success criteria.</span></div>
+        <div class="step"><div class="num">3</div><b>Gather inputs</b><span>Assets, access and required information.</span></div>
+        <div class="step"><div class="num">4</div><b>Set the cadence</b><span>Channel, response expectation and update rhythm.</span></div>
+        <div class="step"><div class="num">5</div><b>Send the recap</b><span>Decisions, owners and next dates in writing.</span></div>
+      </div>
+      <div class="callout"><b>CX handles the client communication.</b> Sales remains available when a commercial promise or scope change needs clarification.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Offers and landing pages · ownership</div>
+      <h2>One outcome. Three different jobs.</h2>
+      <div class="flow">
+        <div class="node"><div class="n">CX</div><div class="t">Client inputs, approvals, communication and overall outcome</div></div><div class="arr">→</div>
+        <div class="node hot"><div class="n">Content Strategist</div><div class="t">Offer strategy, page requirements and conversion diagnosis</div></div><div class="arr">→</div>
+        <div class="node"><div class="n">Marketing Coordinator</div><div class="t">Landing-page build and approved amendments</div></div>
+      </div>
+      <div class="callout"><b>If conversion is low:</b> CX coordinates, Content Strategy diagnoses and the Marketing Coordinator implements the approved fix.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Training changes included</div>
+      <h2>One operating rule, updated everywhere it appears.</h2>
+      <div class="update-grid">
+        <div class="update"><b>Customer Success Training</b><span>Ownership transfer, internal pre-brief, CX onboarding, role clarity, graded scenario and certification.</span></div>
+        <div class="update"><b>Sales Training</b><span>Sales owns commercial accuracy and formal handoff; CX leads the relationship after introduction.</span></div>
+        <div class="update"><b>Sales Admin Training</b><span>The Lark delivery record and the full client handoff are now distinguished.</span></div>
+        <div class="update"><b>Marketing &amp; Delivery Base Guide</b><span>Client group is created at signing, includes CX and is owned by CX after Sales' introduction.</span></div>
+      </div>
+      <div class="callout"><b>Navigation fixed:</b> linked training pills open in a new tab, so the learner's current slide is preserved.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Rina's confirmation gate</div>
+      <h2>Can we standardise this workflow?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Sales creates the client group and formally introduces CX at signing.</span><span class="gopt"><button class="gbtn y">Yes</button><button class="gbtn n">No</button></span></div>
+        <div class="grow"><span class="gq">CX becomes the single client contact from that introduction.</span><span class="gopt"><button class="gbtn y">Yes</button><button class="gbtn n">No</button></span></div>
+        <div class="grow"><span class="gq">The internal pre-brief happens before every client campaign discussion.</span><span class="gopt"><button class="gbtn y">Yes</button><button class="gbtn n">No</button></span></div>
+        <div class="grow"><span class="gq">CX, Content Strategy and Marketing Coordinator ownership is accurate.</span><span class="gopt"><button class="gbtn y">Yes</button><button class="gbtn n">No</button></span></div>
+        <div class="grow"><span class="gq">Commercial scope changes return to Sales for confirmation.</span><span class="gopt"><button class="gbtn y">Yes</button><button class="gbtn n">No</button></span></div>
+      </div>
+      <div class="state" id="state">Answer all five. Any No identifies the exact rule to revise.</div>
+    </div>
+  </section>
+</main>
+
+<div class="chrome">
+  <div class="brand"><b>koocester</b> academy · client onboarding review</div>
+  <div class="nav"><button class="btn" id="prev" aria-label="Previous">‹</button><span class="count" id="count">1 / 9</span><button class="btn" id="next" aria-label="Next">›</button></div>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide')),i=0,n=slides.length;
+  var prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count'),progress=document.getElementById('progress');
+  function show(k){i=Math.max(0,Math.min(n-1,k));slides.forEach(function(s,x){s.classList.toggle('active',x===i)});count.textContent=(i+1)+' / '+n;progress.style.width=((i+1)/n*100)+'%';prev.disabled=i===0;next.disabled=i===n-1;}
+  prev.onclick=function(){show(i-1)};next.onclick=function(){show(i+1)};
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}});
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow')),state=document.getElementById('state');
+  rows.forEach(function(row){row.querySelector('.y').onclick=function(){row.className='grow yes';update()};row.querySelector('.n').onclick=function(){row.className='grow no';update()}});
+  function update(){var yes=rows.filter(function(r){return r.classList.contains('yes')}).length,no=rows.filter(function(r){return r.classList.contains('no')}).length;if(no){state.className='state blocked';state.textContent=no+' item'+(no>1?'s':'')+' to revise before approval.'}else if(yes===rows.length){state.className='state ready';state.textContent='✓ Confirmed. This workflow is ready to standardise.'}else{state.className='state';state.textContent='Answer all five. '+yes+' of '+rows.length+' confirmed.'}}
+  show(0);
+})();
+</script>
+</body>
+</html>

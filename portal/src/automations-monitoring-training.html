@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Automations and Monitoring</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:960px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:20px}
+h1{font-size:clamp(2.4rem,6vw,3.4rem);line-height:1.08;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0}
+h2{font-size:clamp(1.9rem,4.4vw,2.6rem);line-height:1.12;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0 0 18px}
+.lead{font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.55;color:var(--body);max-width:760px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.8rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 24px}
+.step{padding:8px 13px;border:1px solid var(--line);border-radius:4px;font-size:14px;color:var(--body);background:#fff}
+.step.you{background:var(--maroon);border-color:var(--maroon);color:#fff;font-weight:700}
+.arw{color:var(--line);font-size:14px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
+.tag{padding:7px 13px;border:1px solid var(--line);border-radius:4px;font-size:14.5px;color:var(--body)}
+.tag.btn{border-color:var(--maroon);color:var(--maroon);font-weight:700}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px}
+.duo .box{border:1px solid var(--line);border-radius:8px;padding:20px}
+.duo h3{margin:0 0 8px;font-size:1rem;color:var(--maroon);letter-spacing:.02em}
+.duo ul{margin:0;padding-left:18px}
+.big{font-size:clamp(2rem,5vw,3rem);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.1;margin:0 0 16px}
+.big em{color:var(--maroon);font-style:normal}
+ul.pts,ol.pts{margin:8px 0 0;padding-left:20px;max-width:760px}
+ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1.5}
+table{border-collapse:collapse;width:100%;max-width:860px;margin-top:8px;font-size:15px}
+th{text-align:left;padding:10px 12px;border-bottom:2px solid var(--ink);color:var(--ink);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line2);color:var(--body);vertical-align:top}
+td.q{color:var(--ink);font-weight:700;width:30%}
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:rgba(26,127,55,.12);color:var(--ok)}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:var(--maroon)}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+.layers{display:flex;flex-direction:column;gap:12px;margin-top:8px;max-width:880px}
+.layer{display:grid;grid-template-columns:38px 1fr;gap:16px;align-items:start;border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.layer .ln0{font-family:var(--base);font-weight:800;color:var(--maroon);font-size:20px;line-height:1}
+.layer b{display:block;color:var(--ink);font-size:1.06rem;margin-bottom:3px}
+.layer span{font-size:14px;color:var(--body);line-height:1.45}
+.layer .to{display:inline-block;margin-top:6px;font-size:12px;color:var(--muted)}
+.layer .to b0{color:var(--maroon)}
+.healthgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:17px}
+.healthcard{border:1px solid var(--line);border-radius:14px;padding:17px 14px;background:#fff;box-shadow:var(--shadow);min-height:150px}
+.healthcard .status{display:inline-flex;align-items:center;gap:6px;color:var(--ok);font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:800}
+.healthcard .status::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--ok)}
+.healthcard b{display:block;font-size:1rem;color:var(--ink);margin:13px 0 6px}.healthcard p{font-size:12px;line-height:1.4;color:var(--muted);margin:0}
+.readflow{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;padding:11px;border-top:1px solid var(--line);font-size:13px;font-weight:800;color:var(--ink)}
+.readflow span{color:var(--maroon);font-size:18px}
+.alertgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:17px}
+.alertstep{position:relative;border:1px solid var(--line);border-radius:12px;padding:14px 15px;background:#fff;box-shadow:var(--shadow);min-height:115px}
+.alertstep .n{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--maroon);font-weight:800}.alertstep b{display:block;color:var(--ink);margin:7px 0 4px;font-size:14px}.alertstep p{margin:0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+.alertstep.escalate{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.truthstack{display:flex;flex-direction:column;gap:8px;margin-top:15px;max-width:850px}
+.truthrow{display:grid;grid-template-columns:42px 200px 1fr;gap:12px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:11px 14px;background:#fff;box-shadow:var(--shadow)}
+.truthrow .num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--maroon);color:#fff;font-weight:800;font-size:12px}.truthrow b{color:var(--ink);font-size:14px}.truthrow span{color:var(--muted);font-size:12.5px;line-height:1.4}
+.safetyrail{margin-top:12px;border-left:4px solid var(--maroon);background:var(--maroon-tint);padding:11px 15px;color:var(--maroon);font-size:13px;font-weight:700}
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#fff;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:rgba(26,127,55,.12)}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:rgba(26,127,55,.12);color:var(--ok);border:1px solid var(--ok)}
+.fb.no{background:var(--maroon-tint);color:var(--maroon);border:1px solid #E49D9F}
+.fb b{font-weight:800}
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .25s ease;z-index:10}
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:44px;height:44px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon)}
+.arrow:disabled{opacity:.3;cursor:default;border-color:var(--line);color:var(--ink)}
+.brandmark{position:fixed;bottom:24px;left:26px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:20px;left:26px;z-index:10;font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:#fff}
+.home:hover{color:var(--maroon);border-color:var(--maroon)}
+@media (max-width:600px){.duo,.wins{grid-template-columns:1fr}.healthgrid{grid-template-columns:1fr 1fr}.alertgrid{grid-template-columns:1fr 1fr}.truthrow{grid-template-columns:36px 1fr}.truthrow span{grid-column:2}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · tech operations</div>
+      <h1><span class="lnwrap"><span class="ln">Automations</span></span><span class="lnwrap"><span class="ln">and monitoring</span></span></h1>
+      <p class="lead" style="margin-top:20px">How the machine watches itself, and how you keep it honest.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your mission</div>
+      <h2>Know how the machine watches itself.</h2>
+      <p class="lead">Dozens of automations run the company while everyone sleeps. Your job is to know when one goes quiet, trust the alerts that reach you, and act before anything reaches a client.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The one rule</div>
+      <h2>Silence means healthy.</h2>
+      <p class="lead">A good monitor is quiet. You should hear nothing when all is well, and a clear message the moment something truly changes. If you are being pinged all day, the monitor is broken, not the system.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You are winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Everything is green</b><span>systems up, workflows live, no red states</span></div>
+        <div class="win"><b>Alerts are rare and real</b><span>a message means something actually changed</span></div>
+        <div class="win"><b>You catch it first</b><span>you see it before a client or Hakim does</span></div>
+        <div class="win"><b>Every layer is covered</b><span>failures, outages, and the monitor itself</span></div>
+      </div>
+      <p class="small" style="margin-top:16px"><b>This is the bar.</b> The final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>The automation stack</h2>
+      <p class="lead" style="color:#CCC">Two engines run the work.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Two engines</div>
+      <h2>n8n and Lark do the running.</h2>
+      <div class="duo">
+        <div class="box"><h3>n8n workflows</h3><ul><li>The heavy engines</li><li>Dashboards, briefs, reports</li><li>Syncs to Supabase and Metabase</li><li>Content engine, leaderboards</li><li>Event driven and scheduled</li></ul></div>
+        <div class="box"><h3>Lark Base automations</h3><ul><li>Live inside each base</li><li>Buttons that move stages</li><li>Scheduled scans and digests</li><li>Notifications to Updates channels</li><li>Auto assign and fan out</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why it matters for monitoring</div>
+      <h2>Only one of them has an open door.</h2>
+      <p class="lead">n8n exposes an API, so we can read every workflow and every failed run from the outside. Lark automations do not, so we watch them a different way. Know which engine a job lives on before you go looking for it.</p>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>The three layers of monitoring</h2>
+      <p class="lead" style="color:#CCC">Three failure modes, three tools.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The whole model on one screen</div>
+      <table>
+        <tr><th>Layer</th><th>Catches</th><th>Tells you</th></tr>
+        <tr><td class="q">Error Handler</td><td>Any workflow that runs and errors</td><td>Tech Updates, instantly</td></tr>
+        <tr><td class="q">Watchdog</td><td>A site or system going down</td><td>Tech Updates, on change only</td></tr>
+        <tr><td class="q">Healthchecks</td><td>The watchdog itself dying</td><td>Email, if it goes silent</td></tr>
+      </table>
+      <p class="small" style="margin-top:12px">Three layers, because no single tool catches all three failure modes.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Layer one · failures</div>
+      <h2>The Error Handler catches every crash.</h2>
+      <p class="lead">One n8n error workflow listens across all workflows. The moment any workflow errors, it posts to the Tech Updates group. It is event driven, so it costs nothing until something breaks. A repeat from the same workflow is muted for an hour so a single fault cannot spam you.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Layer two · outages</div>
+      <h2>The Watchdog checks, and stays quiet.</h2>
+      <p class="lead">Every twenty minutes the watchdog pings the portal, the sign in, the dashboards and the site. It only messages you when a state changes, once when something goes down and once when it recovers. Checking often is cheap. Messaging often is not, so it does not.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Layer three · the monitor itself</div>
+      <h2>Healthchecks watches the watchdog.</h2>
+      <p class="lead">The watchdog pings an outside service on every healthy run. If those pings stop, that service emails the team. It lives outside our own n8n, so it catches the one thing the watchdog never could, its own death. This is the answer to who watches the watchdog.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why three and not one</div>
+      <div class="big">Each layer covers a <em>blind spot</em>.</div>
+      <p class="lead">The Error Handler cannot see a workflow that never ran. The Watchdog cannot see itself die. Healthchecks cannot read a single failed run. Stacked together, nothing slips between them.</p>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Lark's own quota guard</h2>
+      <p class="lead" style="color:#CCC">A different kind of alarm.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Lark admin · usage alerts</div>
+      <h2>Lark warns you about volume.</h2>
+      <p class="lead">In Lark admin there is a usage alerts and auto deactivation page. It watches how many times automations run, warns when the count climbs, and switches off any single automation that runs away. It also tracks the monthly run quota. Keep it on. It protects your bill.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Do not confuse the two</div>
+      <h2>Volume is not failure.</h2>
+      <div class="duo">
+        <div class="box"><h3>Quota guard (Lark)</h3><ul><li>Answers, is it running too much</li><li>Catches runaway loops</li><li>Protects the monthly quota</li><li>Auto deactivates the offender</li></ul></div>
+        <div class="box"><h3>Health monitoring (ours)</h3><ul><li>Answers, did it fail or stop</li><li>Catches crashes and outages</li><li>Catches silent death</li><li>Alerts a human to act</li></ul></div>
+      </div>
+      <p class="small" style="margin-top:14px">A workflow can be perfectly quiet and completely dead. Only our health layers catch that.</p>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Reading the Tech dashboard</h2>
+      <p class="lead" style="color:#CCC">Where the whole picture lives.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The Tech tab</div>
+      <h2>One tab, the whole health picture.</h2>
+      <table>
+        <tr><th>Section</th><th>What it tells you</th></tr>
+        <tr><td class="q">Projects</td><td>Live tech projects by status and priority, plus critical and blocked</td></tr>
+        <tr><td class="q">Systems online</td><td>Each site up or down, with response time</td></tr>
+        <tr><td class="q">Automations n8n</td><td>How many workflows are live, and how many failed in the last day</td></tr>
+        <tr><td class="q">Heartbeats</td><td>Which monitored automations pinged recently, and which are stale</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Reading the numbers</div>
+      <h2>Green is the resting state.</h2>
+      <div class="healthgrid">
+        <div class="healthcard"><span class="status">Expected</span><b>Systems online</b><p>Every monitored site is up and responding normally.</p></div>
+        <div class="healthcard"><span class="status">Steady</span><b>Live workflows</b><p>The live count matches the expected workflow total.</p></div>
+        <div class="healthcard"><span class="status">Explainable</span><b>Failed runs · 24h</b><p>Low is good. Every failure must still have a known story.</p></div>
+        <div class="healthcard"><span class="status">Zero</span><b>Stale heartbeats</b><p>Every monitored automation has checked in on time.</p></div>
+      </div>
+      <div class="readflow">Red number <span>→</span> open the detail <span>→</span> explain the story <span>→</span> act</div>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part five</div>
+      <hr class="rule">
+      <h2>When you get an alert</h2>
+      <p class="lead" style="color:#CCC">A calm order of moves.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The alert playbook</div>
+      <h2>Read, confirm, then fix.</h2>
+      <div class="alertgrid">
+        <div class="alertstep"><span class="n">01 · Read</span><b>Name the failure</b><p>Identify the workflow, system and reported error.</p></div>
+        <div class="alertstep"><span class="n">02 · Open</span><b>Go to the exact run</b><p>Use the alert link; do not inspect a different instance.</p></div>
+        <div class="alertstep"><span class="n">03 · Confirm</span><b>Check it is still real</b><p>A single blip may already have self-recovered.</p></div>
+        <div class="alertstep"><span class="n">04 · Diagnose</span><b>Read the failed node</b><p>Follow the evidence and find the cause. Never guess.</p></div>
+        <div class="alertstep"><span class="n">05 · Fix &amp; rerun</span><b>Change the smallest part</b><p>Rerun it and watch the result pass before closing.</p></div>
+        <div class="alertstep escalate"><span class="n">06 · Escalate</span><b>Stop at structural risk</b><p>Money, access, client impact or system design goes to your manager or Hakim.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Where the truth lives</div>
+      <h2>The system documents itself.</h2>
+      <div class="truthstack">
+        <div class="truthrow"><span class="num">1</span><b>Alert link</b><span>The exact incident and affected run.</span></div>
+        <div class="truthrow"><span class="num">2</span><b>Execution / health check</b><span>The evidence: node output, error and current system state.</span></div>
+        <div class="truthrow"><span class="num">3</span><b>Tech Base</b><span>The owner, priority, status and operational record.</span></div>
+        <div class="truthrow"><span class="num">4</span><b>Training &amp; change log</b><span>The expected design and what changed.</span></div>
+      </div>
+      <div class="safetyrail">Password Vault only for credentials. Never paste secrets into chat. Structural risk → your manager or Hakim.</div>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part six</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#CCC">Four calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · a quiet automation</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A workflow that never runs throws no error, so the Error Handler never fires. Silent death is caught by heartbeats and freshness checks, not by the failure alert."
+        data-no="<b>Not quite.</b> The Error Handler only fires when a workflow runs and errors. A workflow that stopped running produces no error at all, so you need a heartbeat or freshness check to catch it.">
+        <div class="scenario">A nightly Lark automation quietly stopped running a week ago. No error alert ever came.</div>
+        <div class="q">Why did the Error Handler stay silent?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>The Error Handler was switched off</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>A workflow that never runs never errors, so there was nothing to catch</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>The alert went to the wrong channel</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · the watchdog goes dark</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> Healthchecks is the outside service. The watchdog pings it on every healthy run, so if the watchdog dies the pings stop and Healthchecks emails the team."
+        data-no="<b>Not this one.</b> The watchdog cannot report its own death, and the Error Handler only sees workflow errors. The external Healthchecks service is the layer that notices the pings stopping.">
+        <div class="scenario">The watchdog itself crashes and stops running entirely.</div>
+        <div class="q">Which layer tells you?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>The Watchdog raises its own alert</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>The Error Handler, because a crash is an error</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Healthchecks, because the pings stop arriving</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · volume versus failure</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> The Lark usage and auto deactivation page guards volume and quota. It switches off a runaway automation, but it says nothing about a workflow that failed or silently stopped."
+        data-no="<b>Not the right tool.</b> Lark's usage guard is about how many times things run, not whether they failed. Health failures are caught by the Error Handler, Watchdog and Healthchecks, not the quota page.">
+        <div class="scenario">One automation is looping and running thousands of times an hour, eating the monthly quota.</div>
+        <div class="q">Which system handles this?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Lark's usage alerts and auto deactivation page</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>The n8n Error Handler</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Healthchecks</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · the first move</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Open the link and confirm the failure is real before you change anything. A single blip can self recover, and a blind fix can break a working part."
+        data-no="<b>Slow down.</b> The safe first move is to open the alert link and confirm the failure is real. Rerunning or editing before you understand the cause risks breaking something that still works.">
+        <div class="scenario">A failure alert lands in Tech Updates for a workflow you do not recognise.</div>
+        <div class="q">What is the safe first move?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Immediately rerun the workflow to clear it</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Open the link, go to the failed run, and confirm the cause before touching anything</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Edit the failing node right away to fix it</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all six?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Can you name the two engines that run our automations?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you name the three monitoring layers and what each one catches?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you understand why silence means healthy?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you tell a volume alert apart from a failure alert?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you confirm a failure is real before you change anything?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you escalate anything structural to Hakim?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Empowering growth. Built on trust.</h2>
+      <p class="lead">You are the calm when an alert lands. Read first, confirm before you touch, and let silence tell you the machine is healthy.</p>
+      <p class="small" style="margin-top:18px">Tech operations module of the Academy path.</p>
+      <div class="tags" style="margin-top:10px"><a class="tag btn" href="academy.html" style="text-decoration:none;display:inline-block">Back to Academy →</a></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · automations and monitoring</div>
+<div class="nav">
+  <span class="count" id="count">1 / 29</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-automon-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet, a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified, you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+</body>
+</html>

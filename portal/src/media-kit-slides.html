@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Koocester · Media Kit</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-2:#e0555a; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E6E4E1; --line2:#F1F0EE; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 14px 40px rgba(0,0,0,.07); --glass:saturate(1.4) blur(14px);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;overflow:hidden}
+.bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bgfx .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;mix-blend-mode:multiply}
+.bgfx .o1{width:46vw;height:46vw;left:-10vw;top:-12vw;background:radial-gradient(circle,#f7d9da,transparent 68%);animation:drift1 22s ease-in-out infinite}
+.bgfx .o2{width:38vw;height:38vw;right:-8vw;bottom:-10vw;background:radial-gradient(circle,#f3e3e4,transparent 66%);animation:drift2 27s ease-in-out infinite}
+.bgfx .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(10,10,10,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.022) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(circle at 50% 45%,#000 30%,transparent 78%)}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(6vw,4vw)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-5vw,-3vw)}}
+.deck{position:fixed;inset:0;overflow:hidden;z-index:1}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(60px) scale(.97);filter:blur(6px);transition:opacity .42s var(--ease),transform .58s var(--pop),filter .4s var(--ease),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none;filter:none}
+.slide.prev{transform:translateX(-60px) scale(.97);filter:blur(6px)}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .56s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.04s}
+.slide.active .inner>*:nth-child(2){animation-delay:.11s}
+.slide.active .inner>*:nth-child(3){animation-delay:.18s}
+.slide.active .inner>*:nth-child(4){animation-delay:.25s}
+.slide.active .inner>*:nth-child(n+5){animation-delay:.32s}
+@keyframes pop{0%{opacity:0;transform:translateY(24px) scale(.96)}100%{opacity:1;transform:none}}
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .85s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .64s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:9px}
+.eyebrow:before{content:"";width:22px;height:2px;background:var(--maroon);display:inline-block}
+h1{font-size:clamp(2.5rem,6.3vw,3.8rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h1 em,.lead em,.mega em{color:var(--maroon);font-style:normal}
+h2{font-size:clamp(1.9rem,4.3vw,2.6rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
+.lead{font-size:clamp(1.02rem,2vw,1.28rem);line-height:1.5;color:var(--body);max-width:760px;margin:6px 0 0}
+img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
+.cite{font-size:12px;color:var(--muted);margin-top:18px}
+/* three points */
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.tri .ti{border:1px solid var(--line);border-radius:16px;padding:22px 22px;box-shadow:var(--shadow);background:rgba(255,255,255,.72);backdrop-filter:var(--glass)}
+.tri .ti b{display:block;font-size:1.3rem;font-weight:800;color:var(--maroon);letter-spacing:-.02em}
+.tri .ti span{display:block;margin-top:8px;font-size:13.5px;color:var(--body);line-height:1.5}
+/* single-statement slides (purpose/vision) */
+.mega{font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.35;color:var(--ink);font-weight:700;letter-spacing:-.02em;max-width:16ch;margin-top:20px}
+.threep{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+.threep span{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--maroon);border:1px solid var(--maroon);border-radius:99px;padding:9px 16px;font-weight:700}
+.vislead{font-size:clamp(1.3rem,2.8vw,1.9rem);line-height:1.4;color:var(--ink);font-weight:600;max-width:22ch;margin-top:20px}
+.vislead em{color:var(--maroon);font-style:normal;white-space:nowrap}
+.bigone{margin-top:24px;font-family:var(--mono);font-size:clamp(2.4rem,6vw,4rem);font-weight:800;color:var(--maroon);letter-spacing:-.02em;line-height:1}
+.bigone small{display:block;font-family:var(--base);font-size:13px;color:var(--muted);font-weight:600;letter-spacing:0;margin-top:8px}
+/* values */
+.vals{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+.vcard{border:1px solid var(--line);border-radius:16px;padding:20px 14px;text-align:center;box-shadow:var(--shadow);background:rgba(255,255,255,.72);backdrop-filter:var(--glass);transition:.2s var(--ease)}
+.vcard:hover{border-color:var(--maroon);transform:translateY(-4px)}
+.vcard .g{width:52px;height:52px;margin:0 auto 12px;border-radius:14px;background:var(--maroon);color:#fff;font-size:1.7rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.vcard b{display:block;font-size:14px;color:var(--ink);line-height:1.2}
+.vcard span{display:block;font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+/* stats */
+.bigs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+.bstat{position:relative;padding:6px 0}
+.bstat .n{font-size:clamp(2rem,4.6vw,3.1rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1;text-shadow:0 0 22px rgba(192,32,37,.12)}
+.bstat .n em{color:var(--maroon);font-style:normal}
+.bstat .l{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:10px;border-top:2px solid var(--line);padding-top:9px}
+.slide.active .bstat{animation:warpin .6s var(--pop) both}
+.slide.active .bstat:nth-child(2){animation-delay:.08s}.slide.active .bstat:nth-child(3){animation-delay:.16s}.slide.active .bstat:nth-child(4){animation-delay:.24s}
+@keyframes warpin{0%{opacity:0;transform:translateY(14px) scale(.9);filter:blur(6px)}100%{opacity:1;transform:none;filter:none}}
+.netnote{margin-top:18px;font-size:13px;color:var(--muted)}
+.netnote b{color:var(--maroon)}
+/* momentum */
+.cbfull{border:1px solid var(--line);border-radius:16px;padding:16px 22px 8px;box-shadow:var(--shadow);background:rgba(255,255,255,.72);backdrop-filter:var(--glass);margin-top:16px}
+.cbfull .ct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.cbfull .ct .gr{color:var(--ok);display:inline-flex;align-items:center;gap:6px}
+.up{display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--ok);animation:bob 1.3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(2px)}50%{transform:translateY(-3px)}}
+.chartwrap{position:relative}
+.pushline path.ln2{animation:draw 3s ease-in-out infinite}
+@keyframes draw{0%{stroke-dashoffset:1400}45%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+.gdot{animation:pulseDot 3s ease-in-out infinite}
+@keyframes pulseDot{0%,40%{opacity:0}55%{opacity:1}70%{opacity:1;r:8}100%{opacity:.9;r:4}}
+.rlow{border:1px solid var(--line);border-radius:14px;padding:12px 20px 14px;box-shadow:var(--shadow);margin:12px 0 34px;background:rgba(255,255,255,.72);display:flex;align-items:center;gap:20px}
+.rlow .rt{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap;min-width:78px}
+.rbars{display:flex;align-items:flex-end;gap:12px;height:66px;flex:1}
+.rbars .rb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px}
+.rbars .rb i{width:100%;background:linear-gradient(180deg,var(--maroon),var(--maroon-2));border-radius:4px 4px 0 0;transition:height .8s var(--pop)}
+.rbars .rb small{font-family:var(--mono);font-size:8.5px;color:var(--muted)}
+.rbars .rb b{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--ink)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font:700 11px var(--mono);padding:5px 9px;border-radius:7px;opacity:0;transform:translate(-50%,-120%);transition:opacity .1s;white-space:nowrap;z-index:5}
+/* platform */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}
+.pcard{border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);transition:.22s var(--ease);background:rgba(255,255,255,.72);backdrop-filter:var(--glass)}
+.pcard:hover{border-color:var(--maroon);transform:translateY(-4px)}
+.pcard .ph{font-size:16px;font-weight:800;color:var(--ink)}
+.pcard .foll{color:var(--maroon);font-family:var(--mono);font-size:12px;font-weight:700;margin:3px 0 12px}
+.pcard .kv{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line2);font-size:13px}
+.pcard .kv:first-of-type{border-top:0}
+.pcard .kv .k{color:var(--muted)}
+.pcard .kv .v{font-family:var(--mono);font-weight:700;color:var(--ink)}
+.note{border-left:3px solid var(--maroon);padding-left:15px;color:var(--maroon);font-weight:700;font-size:14px;margin-top:16px}
+/* verticals */
+.vb{display:flex;flex-direction:column;gap:11px;margin-top:18px}
+.vrow{display:grid;grid-template-columns:140px 1fr auto;gap:14px;align-items:center}
+.vrow .vn{font-weight:700;font-size:14px;color:var(--ink)}
+.vrow .vt{height:20px;background:var(--line2);border-radius:6px;overflow:hidden}
+.vrow .vt i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--maroon),var(--maroon-2));border-radius:6px;transition:width .85s var(--pop)}
+.vrow .vv{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--ink);min-width:112px;text-align:right}
+.vrow .vv small{color:var(--muted);font-weight:400;margin-left:8px}
+/* content */
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.tc{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:.22s var(--ease);text-decoration:none;display:block}
+.tc:hover{transform:translateY(-4px);border-color:var(--maroon)}
+.tc .th{aspect-ratio:9/12;position:relative;display:flex;align-items:flex-end;padding:12px;background:linear-gradient(150deg,#2a2226,#4a3c42 60%,#5a4a50);overflow:hidden}
+.tc .th:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.14),transparent 60%)}
+.tc .play{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);border:1.5px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center}
+.tc .play:before{content:"";border-left:12px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px}
+.tc .pf{position:relative;font-family:var(--mono);font-size:9px;color:#fff;background:rgba(0,0,0,.42);padding:3px 8px;border-radius:99px;letter-spacing:.04em}
+.tc .vov{position:absolute;top:12px;right:12px;font-family:var(--mono);font-weight:800;font-size:15px;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.tc .b{padding:11px 12px;background:#fff}
+.tc .er{color:var(--ok);font-family:var(--mono);font-size:11px;font-weight:700}
+.tc .t{display:block;font-size:11.5px;color:var(--body);margin-top:5px;line-height:1.35;max-height:2.7em;overflow:hidden}
+/* our brands */
+.brands{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.brc{border:1px solid var(--line);border-radius:16px;padding:26px 20px;text-align:center;box-shadow:var(--shadow);background:rgba(255,255,255,.72);transition:.2s var(--ease)}
+.brc:hover{border-color:var(--maroon);transform:translateY(-3px)}
+.brc img{height:34px;width:auto;max-width:80%;object-fit:contain;margin-bottom:10px}
+.brc span{display:block;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em}
+/* client logos */
+.logos{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px}
+.lgo{border:1px solid var(--line);border-radius:12px;padding:18px 12px;min-height:66px;flex:0 0 calc(25% - 9px);display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:14px;color:#6f6f6f;letter-spacing:.01em;box-shadow:var(--shadow);background:rgba(255,255,255,.72);filter:grayscale(1);transition:.2s var(--ease)}
+.lgo img{max-height:30px;max-width:78%;width:auto;object-fit:contain}
+.lgo:hover{border-color:var(--maroon);color:var(--maroon);filter:none;transform:translateY(-3px)}
+/* testimonials */
+.tst{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.tstc{border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);background:rgba(255,255,255,.72)}
+.tstc .q{font-size:clamp(1.02rem,1.9vw,1.22rem);line-height:1.5;color:var(--ink);font-weight:500}
+.tstc .q:before{content:"\201C";color:var(--maroon);font-weight:800;margin-right:2px}
+.tstc .who{margin-top:14px;font-size:12.5px;color:var(--muted)}
+.tstc .who b{color:var(--ink)}
+.tstc.ph{border-style:dashed;background:transparent}
+.tstc.ph .q{color:var(--muted);font-style:italic;font-weight:400}
+/* for who */
+.forwho{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:22px}
+.fw{border:1px solid var(--line);border-radius:16px;padding:20px 24px;box-shadow:var(--shadow);background:rgba(255,255,255,.72)}
+.fw.yes{border-color:var(--maroon)}
+.fw .h{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:12px}
+.fw.yes .h{color:var(--maroon)}.fw.no .h{color:var(--muted)}
+.fw li{list-style:none;font-size:14px;color:var(--ink);padding:6px 0 6px 24px;position:relative;line-height:1.35}
+.fw.yes li:before{content:"✓";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--maroon);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.fw.no li{color:var(--muted)}
+.fw.no li:before{content:"";position:absolute;left:3px;top:12px;width:10px;height:2px;background:#c9c4c6}
+/* comparison */
+.cmp{width:100%;border-collapse:collapse;margin-top:16px;font-size:12.5px}
+.cmp th{text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 6px;border-bottom:1px solid var(--line)}
+.cmp th:first-child{text-align:left}
+.cmp th.us{color:#fff;background:var(--maroon);border-radius:8px 8px 0 0}
+.cmp td{padding:9px 6px;border-bottom:1px solid var(--line2);text-align:center;color:var(--body)}
+.cmp td:first-child{text-align:left;font-weight:600;color:var(--ink)}
+.cmp td.us{background:var(--maroon-tint);font-weight:800;color:var(--maroon)}
+.cmp .full{color:var(--ok);font-weight:800}.cmp .part{color:var(--maroon-2);font-weight:800}.cmp .none{color:#c9c4c6;font-weight:700}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend .full{color:var(--ok)}.legend .part{color:var(--maroon-2)}.legend .none{color:#c9c4c6}
+/* value stack */
+.stack{margin-top:18px;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.srow{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:13px 20px;border-bottom:1px solid var(--line2)}
+.srow:last-child{border-bottom:0}
+.srow .sl{font-size:14px;color:var(--ink)}
+.srow .sl b{color:var(--maroon)}
+.srow .sv{font-family:var(--mono);font-weight:700;color:var(--muted);font-size:13px;white-space:nowrap}
+.srow.total{background:var(--maroon-tint)}
+.srow.total .sl{font-weight:800;color:var(--maroon)}.srow.total .sv{color:var(--maroon);font-size:15px}
+/* pricing */
+.pk{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;align-items:stretch}
+.pkc{border:1px solid var(--line);border-radius:18px;padding:22px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;background:rgba(255,255,255,.75);backdrop-filter:var(--glass);transition:.22s var(--ease)}
+.pkc:hover{transform:translateY(-5px);border-color:var(--maroon)}
+.pkc.pop2{border:1.5px solid var(--maroon);box-shadow:0 18px 50px rgba(192,32,37,.14);transform:scale(1.03)}
+.pkc.pop2:hover{transform:scale(1.03) translateY(-5px)}
+.pkc .badge{align-self:flex-start;background:var(--maroon);color:#fff;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:99px;margin-bottom:8px}
+.pkc .tier{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon)}
+.pkc h4{font-size:20px;font-weight:800;margin:4px 0 2px;color:var(--ink)}
+.pkc .price{font-size:13px;color:var(--muted);margin-bottom:14px}
+.pkc ul{list-style:none;padding:0;margin:0;flex:1}
+.pkc li{font-size:12.5px;padding:6px 0 6px 26px;position:relative;color:var(--body);line-height:1.4}
+.pkc li:before{content:"✓";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--maroon);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+.pkc .cta{margin-top:16px;text-align:center;font-family:var(--base);font-weight:800;font-size:13px;padding:11px;border-radius:12px;border:1.5px solid var(--maroon);color:var(--maroon);background:#fff}
+.pkc.pop2 .cta{background:var(--maroon);color:#fff}
+/* plan */
+.plan{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.pl{border:1px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);background:rgba(255,255,255,.75);backdrop-filter:var(--glass)}
+.pl .num{width:34px;height:34px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.pl b{display:block;font-size:1.05rem;color:var(--ink);margin-bottom:4px}
+.pl span{font-size:13px;color:var(--muted);line-height:1.45}
+.urg{margin-top:22px;display:inline-flex;align-items:center;gap:9px;background:var(--maroon-tint);border:1px solid var(--maroon);color:var(--maroon);font-weight:700;font-size:13px;padding:10px 16px;border-radius:99px}
+.urg .pulse{width:8px;height:8px;border-radius:50%;background:var(--maroon);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.slide.close{background:var(--ink)}
+.slide.close h1{color:#fff}
+.slide.close .lead,.slide.close .cite{color:#c9c4c6}
+.slide.close .eyebrow{color:#fff;opacity:.7}.slide.close .eyebrow:before{background:#fff}
+.slide.close .inner{text-align:center}
+.ctybar{position:fixed;top:20px;left:26px;z-index:12;display:inline-flex;gap:6px}
+.langbar{position:fixed;top:20px;right:26px;z-index:12;display:inline-flex;gap:6px}
+.seg button{appearance:none;border:1.5px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);color:var(--muted);font-family:var(--base);font-size:12px;font-weight:800;letter-spacing:.03em;padding:8px 14px;border-radius:22px;cursor:pointer;transition:.15s}
+.seg button:hover{border-color:var(--maroon);color:var(--maroon)}
+.seg button.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* export to PDF: sits just under the language bar so all controls stay together */
+.pdfbar{position:fixed;top:62px;right:26px;z-index:12}
+/* deliberately the odd one out: the bar above filters the deck, this one acts on it */
+.pdfbar button{position:relative;overflow:hidden;appearance:none;display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--maroon);
+  background:linear-gradient(135deg,#d02a30 0%,var(--maroon) 45%,#9d161a 100%);
+  color:#fff;font-family:var(--base);font-size:12px;font-weight:800;letter-spacing:.05em;
+  padding:9px 17px;border-radius:22px;cursor:pointer;
+  box-shadow:0 6px 18px -6px rgba(192,32,37,.65),inset 0 1px 0 rgba(255,255,255,.28);
+  transition:transform .18s var(--pop),box-shadow .25s var(--ease)}
+.pdfbar button:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(192,32,37,.8),inset 0 1px 0 rgba(255,255,255,.35)}
+.pdfbar button:active{transform:translateY(0)}
+/* a shine that keeps sweeping so the eye catches it */
+.pdfbar button::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.6) 50%,transparent);
+  transform:skewX(-20deg);animation:pdfShine 3.8s var(--ease) infinite}
+@keyframes pdfShine{0%,58%{left:-70%}100%{left:135%}}
+.pdfbar svg{position:relative;z-index:1;width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pdfbar span{position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce){.pdfbar button::after{animation:none;display:none}}
+
+/* iOS fallback for present mode: no Fullscreen API there, so hide the chrome */
+body.presenting .ctybar,body.presenting .langbar,body.presenting .pdfbar,body.presenting .brandmark{display:none}
+body.presenting .presentbar{top:12px;right:12px}
+/* present mode: sits under the PDF button, ghost styling so PDF stays the hero */
+.presentbar{position:fixed;top:104px;right:26px;z-index:12}
+.presentbar button{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);
+  background:rgba(255,255,255,.85);backdrop-filter:blur(8px);color:var(--muted);font-family:var(--base);
+  font-size:12px;font-weight:800;letter-spacing:.03em;padding:8px 14px;border-radius:22px;cursor:pointer;transition:.15s}
+.presentbar button:hover{border-color:var(--maroon);color:var(--maroon)}
+.presentbar svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* in fullscreen, hide the chrome so it is a clean deck */
+:fullscreen .ctybar,:fullscreen .langbar,:fullscreen .pdfbar,:fullscreen .presentbar,:fullscreen .brandmark{display:none}
+:-webkit-full-screen .ctybar,:-webkit-full-screen .langbar,:-webkit-full-screen .pdfbar,:-webkit-full-screen .presentbar,:-webkit-full-screen .brandmark{display:none}
+
+/* ===== PHONE ===== the deck was built for a wide screen; on a handset the
+   fixed 16:9 slide squashed the content. Let each slide scroll instead. */
+@media (max-width:760px){
+  .ctybar{top:12px;left:12px;gap:4px}
+  .langbar{top:12px;right:12px;gap:4px}
+  .seg button{padding:6px 10px;font-size:11px}
+  .pdfbar{top:52px;right:12px}
+  .presentbar{top:92px;right:12px}
+  .deck{position:absolute;inset:0;overflow:visible}
+  .slide{padding:70px 16px 96px;align-items:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .slide .inner{width:100%}
+  .nav{bottom:14px;gap:10px}
+  .brandmark{display:none}
+}
+
+/* ===== PRINT / SAVE AS PDF =====
+   On screen only the active slide is visible. For export every slide must be
+   laid flat, one per page, with the entrance animations resolved. */
+@media print{
+  @page{size:A4 landscape;margin:0}
+  html,body{background:#fff!important;width:auto!important;height:auto!important;overflow:visible!important}
+  .bgfx,.ctybar,.langbar,.pdfbar,.nav,.brandmark,#bar{display:none!important}
+  .deck{position:static!important;inset:auto!important;overflow:visible!important;height:auto!important;z-index:auto!important}
+  .slide{position:relative!important;inset:auto!important;opacity:1!important;visibility:visible!important;
+    transform:none!important;filter:none!important;transition:none!important;
+    display:flex!important;align-items:center;width:100%;height:100vh;
+    page-break-after:always;break-after:page;page-break-inside:avoid;break-inside:avoid}
+  .slide:last-child{page-break-after:auto;break-after:auto}
+  .slide .inner>*{opacity:1!important;animation:none!important;transform:none!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+#bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--maroon),var(--maroon-2));width:0;transition:width .4s var(--ease);z-index:14}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:12}
+.count{font-size:13px;color:var(--muted);font-family:var(--mono)}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.14s var(--ease)}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;color:var(--muted);z-index:12}
+.brandmark b{color:var(--ink)}
+/* centered statement slides (purpose / vision) */
+.inner.center{text-align:center}
+.inner.center .eyebrow{justify-content:center}
+.inner.center .tri,.inner.center .vislead,.inner.center .bigone,.inner.center .lead{margin-left:auto;margin-right:auto}
+.inner.center .ti{text-align:left}
+/* balance the "not the fit" column against the taller left column */
+.fw.no{display:flex;flex-direction:column;justify-content:center}
+/* purpose — website purpose cards, maroon top rule */
+.pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.pucard{border:1px solid var(--line);border-top:3px solid var(--maroon);border-radius:12px;padding:26px 24px;background:#fff;box-shadow:var(--shadow);transition:.28s var(--popp)}
+.pucard:hover{transform:translateY(-6px)}
+.pucard .pw{font-size:1.22rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px}
+.pucard p{font-size:.92rem;color:var(--body);line-height:1.5;margin:0}
+/* values — website GUIDE cells */
+.vgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:26px}
+.vcell2{border:1px solid var(--line);border-radius:12px;padding:24px 18px;background:#fff;box-shadow:var(--shadow);text-align:center;transition:.28s var(--popp)}
+.vcell2:hover{transform:translateY(-6px);border-color:var(--maroon)}
+.vcell2 .letter{font-size:2.4rem;font-weight:800;color:var(--maroon);line-height:1;letter-spacing:-.03em;margin-bottom:12px}
+.vcell2 h3{font-size:.95rem;font-weight:700;margin:0 0 8px;color:var(--ink);line-height:1.2}
+.vcell2 p{font-size:.82rem;color:var(--body);line-height:1.45;margin:0}
+/* vision — website dark 2035 band */
+.slide.vision{background:var(--ink)}
+.slide.vision:before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(120% 90% at 82% 12%,#000,transparent 62%);mask-image:radial-gradient(120% 90% at 82% 12%,#000,transparent 62%)}
+.slide.vision .eyebrow{color:var(--maroon-2)}
+.slide.vision .eyebrow:before{background:var(--maroon)}
+.slide.vision .vyear{font-size:clamp(3rem,8vw,5.4rem);font-weight:800;color:var(--maroon);letter-spacing:-.04em;line-height:1;margin:4px 0 10px}
+.slide.vision h2{color:#fff;max-width:20ch}
+.slide.vision h2 em{color:var(--maroon-2);font-style:normal}
+.slide.vision .vlead{margin-top:18px;font-size:clamp(1.02rem,2vw,1.26rem);line-height:1.55;color:rgba(255,255,255,.78);max-width:720px}
+.slide.vision .vbillion{color:#fff;font-weight:700}
+@media(max-width:720px){.bigs,.cards3,.pk,.plan,.tri,.tst,.forwho,.brands,.pcards{grid-template-columns:1fr}.vgrid{grid-template-columns:repeat(2,1fr)}.cg{grid-template-columns:1fr 1fr}.lgo{flex:0 0 calc(50% - 6px)}.cmp{font-size:10.5px}.brandmark{display:none}.pkc.pop2{transform:none}}
+</style>
+</head>
+<body>
+<div class="bgfx"><div class="orb o1"></div><div class="orb o2"></div><div class="grid"></div></div>
+<div id="bar"></div>
+<div class="ctybar seg" id="cty"></div>
+<div class="langbar seg" id="lang"></div>
+<div class="pdfbar">
+  <button id="pdfbtn" title="Export every slide as a PDF in the language and market currently selected">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+    <span id="pdfbtn-label">PDF</span>
+  </button>
+</div>
+<div class="presentbar">
+  <button id="presentbtn" title="Present full screen. Arrow keys or tap to move, Esc to exit">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3m13 5h3a2 2 0 0 0 2-2v-3"/></svg>
+    <span id="presentbtn-label">Present</span>
+  </button>
+</div>
+<div class="deck" id="deck"></div>
+<div class="brandmark"><b>koocester</b> · media kit</div>
+<div class="nav"><button class="arrow" id="prev">‹</button><span class="count" id="count">1 / 19</span><button class="arrow" id="next">›</button></div>
+<script>
+var K=function(n){n=Number(n);var a=Math.abs(n);if(a>=1e6)return (n/1e6).toFixed(a>=1e7?0:1)+'M';if(a>=1e3)return Math.round(n/1e3)+'K';return ''+Math.round(n);};
+var C=function(n){return Number(n).toLocaleString('en-US');};
+var LANG='EN';
+var L=function(en,zh,id,ms){return LANG==='MS'?(ms||id):(LANG==='ID'?id:(LANG==='ZH'?zh:en));};
+var CLIENTS=[['Tesla','clientlogos/tesla.svg'],['Netflix','clientlogos/netflix.svg'],['Sony','clientlogos/sony.svg'],['Red Bull','clientlogos/redbull.svg'],['Toyota','clientlogos/toyota.svg'],['Volkswagen','clientlogos/volkswagen.svg'],['Ferrari','clientlogos/ferrari.svg'],['BYD','clientlogos/byd.svg'],['Geely','clientlogos/geely.svg'],['Eurokars','clientlogos/eurokars.svg'],['Don Don Donki','clientlogos/donki.png'],['Swissôtel','clientlogos/swissotel.svg'],['ERA','clientlogos/era.svg'],['PropNex','clientlogos/propnex.png'],['mm2',null],['Scuderia FSG',null],['Eco Majestic',null]];
+var BRANDS=[['brand-koocester.png','Flagship'],['brand-koocester-homes.png','Homes'],['brand-koocester-business.png','Business'],['brand-koocester-autos.png','Autos'],['brand-koocester-wealth.png','Wealth'],['brand-koocester-foodie.png','Foodie']];
+var DATA={
+ SG:{name:'Singapore',follTot:1275826,reach:96958382,eng:3.8,engc:4.3e6,follGrow:11,
+   trend:{foll:[1151389,1175581,1200014,1230857,1253085,1275826],reach:[15230506,24870201,15162651,22330521,14576881],lab:['Jan','Feb','Mar','Apr','May','Jul'],rlab:['Jan','Feb','Mar','Apr','May']},
+   plat:[['Instagram',408451,36093728,4.24,60257],['TikTok',668471,38003105,3.44,67262],['Facebook',198904,22861549,1.3,42652]],
+   verts:[['Koocester Flagship',44448252,3.1],['Homes',26937464,2.6],['Business',9908652,2.1],['Autos',8625187,2.7],['Foodie',5214060,3.4],['Wealth',1824767,1.3]],
+   top:[['Hanif Zaki and the S$300k Volvo ES90.','TikTok',1870901,7.6,'https://www.tiktok.com/@koocester/video/7603319452834303243'],['A 3-Room and 2-Room inside one 5-Room HDB.','TikTok',1647084,6.5,'https://www.tiktok.com/@koocesterhomes/video/7607772346237193484'],['Rock music, fashion and a founder story.','TikTok',1311396,9.3,'https://www.tiktok.com/@koocester/video/7632960974819036423'],['Inside a tattoo artist designer HDB home.','TikTok',1330635,6.2,'https://www.tiktok.com/@koocesterhomes/video/7607772346237193484']]},
+ MY:{name:'Malaysia',follTot:249376,reach:59266218,eng:4.6,engc:3.2e6,follGrow:302,
+   trend:{foll:[62013,176952,126395,195506,222952,249376],reach:[10234067,8086064,17099090,22851444,3704378],lab:['Jan','Feb','Mar','Apr','May','Jul'],rlab:['Jan','Feb','Mar','Apr','May']},
+   plat:[['TikTok',110286,27928109,4.16,78011],['Instagram',73224,17691976,4.97,57256],['Facebook',65866,13646133,1.3,46102]],
+   verts:[['Homes',33384853,2.9],['Autos',12780623,3.8],['Business',7993971,3.1],['Wealth',3150534,2.0],['Foodie',1956237,4.0]],
+   top:[['“Rumah Pengamal Ilmu Hitam” tapi cantik giler.','TikTok',4578136,7.6,'https://www.tiktok.com/@koocesterhomes.my/video/7617830387829722388'],['More than a home. A space for connection.','TikTok',2787676,6.5,'https://www.tiktok.com/@koocesterhomes.my/video/7624495093201767696'],['More than a home. A space for connection.','Instagram',2564690,12.1,'https://www.instagram.com/reel/DWqwUo5IDPz/'],['Wait, this house has a rooftop MINI GOLF? ⛳','TikTok',1791416,6.4,'https://www.tiktok.com/@koocesterhomes.my/video/7624509536170298642']]},
+ ID:{name:'Indonesia',follTot:154918,reach:98230776,eng:4.8,engc:9.1e6,follGrow:547,
+   trend:{foll:[23928,38649,70232,98287,113254,154918],reach:[5279879,18004346,20208956,18141896,31464983],lab:['Jan','Feb','Mar','Apr','May','Jul'],rlab:['Jan','Feb','Mar','Apr','May']},
+   plat:[['Instagram',87670,57007260,5.82,164761],['TikTok',47770,36670509,3.85,121025],['Facebook',19478,4553007,1.3,21681]],
+   verts:[['Autos',47295155,4.3],['Business',26052145,4.4],['Homes',20310318,4.1],['Wealth',3926385,2.7],['Foodie',646773,2.8]],
+   top:[['Gang ini bantu cegah krisis planet? Emang iya?','Instagram',15793480,13.6,'https://www.instagram.com/reel/DYhCcPXCXR4/'],['Liat si Om sama Mobilnya, berasa Monaco vibes 🇲🇨','Instagram',5249480,14.6,'https://www.instagram.com/reel/DXQxIg8EqS3/'],['Gang ini bantu cegah krisis planet? (cross-post)','TikTok',5730029,8.7,'https://www.tiktok.com/@koocesterbusiness.id/video/7641541704918568199'],['Saking langkanya, sampe bisa kehitung jari.','Instagram',3226567,9.6,'https://www.instagram.com/reel/DUpsbhqlcMk/']]}
+};
+var CTRY='SG',IDX=0;
+function line(vals,labs){
+ var W=680,H=200,pL=8,pR=52,pT=16,pB=24,N=vals.length;
+ var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);if(mn===mx)mx=mn+1;var pad=(mx-mn)*.16;mx+=pad;mn-=pad;if(mn<0)mn=0;
+ var X=function(i){return pL+i*(W-pL-pR)/(N-1);},Y=function(v){return pT+(mx-v)/(mx-mn)*(H-pT-pB);};
+ var pts=vals.map(function(v,i){return [X(i),Y(v),v,labs[i]];});
+ var d=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' ');
+ var end=pts[N-1];
+ var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="display:block"><defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#C02025" stop-opacity=".16"/><stop offset="1" stop-color="#C02025" stop-opacity="0"/></linearGradient></defs>';
+ s+='<g class="pushline"><path d="'+d+'L'+X(N-1).toFixed(1)+' '+Y(mn).toFixed(1)+' L'+pL+' '+Y(mn).toFixed(1)+' Z" fill="url(#g)"/><path class="ln2" d="'+d+'" fill="none" stroke="#C02025" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:1400"/>';
+ pts.forEach(function(p){s+='<circle class="pt" data-v="'+K(p[2])+'" data-l="'+p[3]+'" data-px="'+p[0].toFixed(1)+'" data-py="'+p[1].toFixed(1)+'" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="11" fill="transparent"/><circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.5" fill="#C02025"/>';});
+ s+='<circle class="gdot" cx="'+end[0].toFixed(1)+'" cy="'+end[1].toFixed(1)+'" r="5" fill="#C02025"/></g>';
+ for(var q=0;q<N;q++){s+='<text x="'+X(q).toFixed(1)+'" y="'+(H-6)+'" font-size="10" fill="#767676" font-family="var(--mono)" text-anchor="middle">'+labs[q]+'</text>';}
+ return '<div class="chartwrap">'+s+'</svg><div class="tip"></div></div>';
+}
+/* FREEZE is raised before any print. Both counter loops below check it every
+   frame, so a running animation can never overwrite a finalised figure. */
+var FREEZE=false;
+function fmtCount(v){return v>=1e6?(v/1e6).toFixed(v>=1e7?0:1)+'M':v>=1e3?Math.round(v/1e3)+'K':Math.round(v);}
+function cnt(el){var target=Number(el.getAttribute('data-c'));if(FREEZE){el.textContent=fmtCount(target);return;}var t0=Date.now(),dur=900;(function st(){if(FREEZE){el.textContent=fmtCount(target);return;}var p=Math.min(1,(Date.now()-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=(target>=1e6?(target*e/1e6).toFixed(target>=1e7?0:1)+'M':target>=1e3?Math.round(target*e/1e3)+'K':Math.round(target*e));if(p<1)requestAnimationFrame(st);})();}
+function slides(d){
+ var vv=d.verts.filter(function(v){return v[1]>0;});
+ var maxV=Math.max.apply(null,vv.map(function(v){return v[1];})),maxR=Math.max.apply(null,d.trend.reach);
+ return [
+ {c:'title',h:'<div class="inner"><img class="logo" src="koocester-logo.png" alt="Koocester"><div class="eyebrow">Media Kit · '+d.name+' · 2026</div><h1><span class="lnwrap"><span class="ln">'+L('Your brand,','您的品牌，','Brand Anda,','Jenama anda,')+'</span></span><span class="lnwrap"><span class="ln">'+L('in front of <em>millions.</em>','触达<em>百万人。</em>','di depan <em>jutaan mata.</em>','di hadapan <em>jutaan mata.</em>')+'</span></span></h1><div class="lead">'+L('Southeast Asia\'s growth media ecosystem. Empowering Growth. Built on Trust.','东南亚增长媒体生态系统。Empowering Growth. Built on Trust.','Ekosistem media pertumbuhan Asia Tenggara. Empowering Growth. Built on Trust.','Ekosistem media pertumbuhan Asia Tenggara. Empowering Growth. Built on Trust.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The opportunity','机遇','Peluangnya','Peluangnya')+'</div><h2>'+L('The right eyes, not another ad','对的观众，而非又一则广告','Mata yang tepat, bukan sekadar iklan','Mata yang tepat, bukan sekadar iklan')+'</h2><div class="tri"><div class="ti"><b>'+L('Chosen','被选择','Dipilih','Dipilih')+'</b><span>'+L('Millions choose to watch. Nobody skips a story they want to see.','百万人主动观看，没人会跳过想看的故事。','Jutaan orang memilih menonton. Tak ada yang melewati cerita yang mereka mau.','Jutaan memilih untuk menonton. Tiada siapa melangkau cerita yang mereka mahu.')+'</span></div><div class="ti"><b>'+L('Trusted','被信任','Dipercaya','Dipercayai')+'</b><span>'+L('You appear inside a media brand your audience already believes.','您出现在观众早已信任的媒体品牌中。','Brand Anda tampil di media yang sudah dipercaya audiens.','Jenama anda muncul dalam media yang sudah dipercayai audiens anda.')+'</span></div><div class="ti"><b>'+L('Growth','增长','Pertumbuhan','Pertumbuhan')+'</b><span>'+L('Attention that turns into leads, not spend that disappears.','化为潜在客户的注意力，而非消失的花费。','Perhatian yang jadi leads, bukan biaya yang hilang.','Perhatian yang menjadi prospek, bukan belanja yang lenyap.')+'</span></div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Purpose','使命','Tujuan','Tujuan')+'</div><h2>'+L('A growth ecosystem built on <em>three ideas.</em>','建立在<em>三个理念</em>之上的增长生态。','Ekosistem pertumbuhan atas <em>tiga gagasan.</em>','Ekosistem pertumbuhan atas <em>tiga idea.</em>')+'</h2><div class="pcards"><div class="pucard"><div class="pw">'+L('Symbol of Inspiration','灵感的象征','Simbol Inspirasi','Simbol Inspirasi')+'</div><p>'+L('A brand people look up to, and one that shows what growth built on trust can look like.','一个令人仰望的品牌，展现以信任为本的增长模样。','Brand yang dikagumi, yang menunjukkan seperti apa pertumbuhan yang dibangun atas kepercayaan.','Jenama yang dikagumi, yang menunjukkan rupa pertumbuhan yang dibina atas kepercayaan.')+'</p></div><div class="pucard"><div class="pw">'+L('Empowering Growth','赋能增长','Memberdayakan Pertumbuhan','Memperkasa Pertumbuhan')+'</div><p>'+L('We exist to deliver outcomes that matter, real buyers and real revenue, not vanity metrics.','我们只为创造重要的成果，真实的客户与营收，而非虚荣数据。','Kami ada untuk hasil yang penting, pembeli dan pendapatan nyata, bukan metrik semu.','Kami wujud untuk hasil yang penting, pembeli dan pendapatan sebenar, bukan metrik kosong.')+'</p></div><div class="pucard"><div class="pw">'+L('Powered by People','由人驱动','Digerakkan oleh Manusia','Digerakkan oleh Manusia')+'</div><p>'+L('Communities, clients and a team who compound one another. People are the engine.','社群、客户与团队彼此成就。人，就是引擎。','Komunitas, klien dan tim yang saling menguatkan. Manusia adalah mesinnya.','Komuniti, pelanggan dan pasukan yang saling menguatkan. Manusia ialah enjinnya.')+'</p></div></div></div>'},
+ {c:'vision',h:'<div class="inner"><div class="eyebrow">'+L('Vision','愿景','Visi','Visi')+'</div><div class="vyear">2035</div><h2>'+L('The world\'s most trusted and influential <em>growth ecosystem.</em>','全球最受信任、最具影响力的<em>增长生态系统。</em>','<em>Ekosistem pertumbuhan</em> paling terpercaya dan berpengaruh di dunia.','<em>Ekosistem pertumbuhan</em> paling dipercayai dan berpengaruh di dunia.')+'</h2><div class="vlead">'+L('To be the world\'s most trusted and influential growth ecosystem, inspiring over <span class="vbillion">1 billion people a year</span> through influential media, impactful education and data intelligence.','成为全球最受信任、最具影响力的增长生态系统，每年通过影响力媒体、有价值的教育与数据智能启发<span class="vbillion">超过10亿人</span>。','Menjadi ekosistem pertumbuhan paling terpercaya dan berpengaruh di dunia, menginspirasi <span class="vbillion">lebih dari 1 miliar orang setahun</span> lewat media berpengaruh, edukasi bermakna dan intelijen data.','Menjadi ekosistem pertumbuhan paling dipercayai dan berpengaruh di dunia, memberi inspirasi kepada <span class="vbillion">lebih 1 bilion orang setahun</span> melalui media berpengaruh, pendidikan bermakna dan perisikan data.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Values','价值观','Nilai','Nilai')+'</div><h2>'+L('Five values. They spell <em>GUIDE.</em>','五大价值观，即 <em>GUIDE。</em>','Lima nilai. Namanya <em>GUIDE.</em>','Lima nilai. Ejaannya <em>GUIDE.</em>')+'</h2><div class="vgrid"><div class="vcell2"><div class="letter">G</div><h3>Growth and Curiosity</h3><p>'+L('We keep learning, and we keep raising the bar.','我们持续学习，不断提升标准。','Kami terus belajar dan terus meninggikan standar.','Kami terus belajar dan sentiasa meningkatkan standard.')+'</p></div><div class="vcell2"><div class="letter">U</div><h3>Uniting through trust and relationships</h3><p>'+L('Trust is the asset. Relationships compound it.','信任是资产，关系让它复利增长。','Kepercayaan adalah aset. Relasi melipatgandakannya.','Kepercayaan ialah aset. Hubungan menggandakannya.')+'</p></div><div class="vcell2"><div class="letter">I</div><h3>Impact through inspiration</h3><p>'+L('We move people to act by showing what is possible.','我们以展现可能，激励人们行动。','Kami menggerakkan orang bertindak dengan menunjukkan yang mungkin.','Kami menggerakkan orang bertindak dengan menunjukkan apa yang mungkin.')+'</p></div><div class="vcell2"><div class="letter">D</div><h3>Dare to be bold and innovate</h3><p>'+L('We back new ideas and ship them fast.','我们支持新想法，并快速落地。','Kami mendukung ide baru dan mewujudkannya dengan cepat.','Kami menyokong idea baharu dan melaksanakannya dengan pantas.')+'</p></div><div class="vcell2"><div class="letter">E</div><h3>Empathy and Giving</h3><p>'+L('We lead with generosity, for our people and our partners.','我们以慷慨待人，无论团队或伙伴。','Kami memimpin dengan kemurahan hati, bagi tim dan mitra kami.','Kami memimpin dengan kemurahan hati, untuk pasukan dan rakan kami.')+'</p></div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The reach, in one line','一句话看触达','Jangkauan, satu baris','Jangkauan, satu baris')+' · '+d.name+'</div><h2>'+L('One market.','一个市场。','Satu pasar.','Satu pasaran.')+' <em>'+K(d.reach)+'</em> '+L('in reach.','触达。','jangkauan.','jangkauan.')+'</h2><div class="bigs"><div class="bstat"><div class="n" data-c="'+d.follTot+'">'+fmtCount(d.follTot)+'</div><div class="l">'+L('Total followers','总粉丝','Total pengikut','Jumlah pengikut')+'</div></div><div class="bstat"><div class="n" data-c="'+d.reach+'" style="color:var(--maroon)">'+fmtCount(d.reach)+'</div><div class="l">'+L('Reach, 6 months','触达，6个月','Jangkauan, 6 bln','Jangkauan, 6 bulan')+'</div></div><div class="bstat"><div class="n pct" data-c="'+d.eng+'">'+Number(d.eng).toFixed(1)+'%</div><div class="l">'+L('Avg engagement','平均互动率','Rata-rata engagement','Purata penglibatan')+'</div></div><div class="bstat"><div class="n" data-c="'+d.engc+'">'+fmtCount(d.engc)+'</div><div class="l">'+L('Engagements','互动量','Interaksi','Penglibatan')+'</div></div></div><div class="netnote">'+L(d.name+'\'s own audience, part of a <b>1.68M Southeast Asia network</b>.',''+d.name+' 的自有受众，属于 <b>168万人的东南亚网络</b>。','Audiens '+d.name+', bagian dari <b>jaringan 1,68 juta se-Asia Tenggara</b>.','Audiens '+d.name+' sendiri, sebahagian daripada <b>rangkaian 1.68 juta Asia Tenggara</b>.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Momentum','增长势头','Momentum','Momentum')+' · '+d.name+'</div><h2>'+L('Growing, every month','每月增长','Bertumbuh, setiap bulan','Berkembang, setiap bulan')+'</h2><div class="lead">'+L('Followers up <em>+'+d.follGrow+'%</em> since January. Compounding attention, not rented.','粉丝自1月增长 <em>+'+d.follGrow+'%</em>，是复利式的关注，而非租来的流量。','Pengikut naik <em>+'+d.follGrow+'%</em> sejak Januari. Perhatian berlipat, bukan sewaan.','Pengikut naik <em>+'+d.follGrow+'%</em> sejak Januari. Perhatian berganda, bukan sewaan.')+'</div><div class="cbfull"><div class="ct"><span>'+L('Follower growth','粉丝增长','Pertumbuhan pengikut','Pertumbuhan pengikut')+'</span><span class="gr"><span class="up"></span>+'+d.follGrow+'%</span></div>'+line(d.trend.foll,d.trend.lab)+'</div><div class="rlow"><span class="rt">'+L('Monthly reach','每月触达','Jangkauan bulanan','Jangkauan bulanan')+'</span><div class="rbars">'+d.trend.reach.map(function(r,i){return '<div class="rb"><b>'+K(r)+'</b><i data-h="'+Math.max(6,Math.round(r/maxR*100))+'"></i><small>'+d.trend.rlab[i]+'</small></div>';}).join('')+'</div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The numbers','数据','Angka','Angka')+' · '+d.name+'</div><h2>'+L('Platform performance','平台表现','Performa platform','Prestasi platform')+'</h2><div class="cards3">'+d.plat.map(function(p){return '<div class="pcard"><div class="ph">'+p[0]+'</div><div class="foll">'+C(p[1])+' '+L('followers','粉丝','pengikut','pengikut')+'</div><div class="kv"><span class="k">'+L('Reach, 6 months','触达，6个月','Jangkauan','Jangkauan')+'</span><span class="v">'+K(p[2])+'</span></div><div class="kv"><span class="k">'+L('Engagement','互动率','Engagement','Penglibatan')+'</span><span class="v">'+p[3]+'%</span></div><div class="kv"><span class="k">'+L('Avg reach / post','单帖平均触达','Jangkauan / post','Jangkauan / pos')+'</span><span class="v">'+K(p[4])+'</span></div></div>';}).join('')+'</div><div class="note">'+L('Engagement '+d.eng+'% versus the 1 to 3% category norm. Organic, not paid.','互动率 '+d.eng+'%，行业平均为 1 至 3%。纯自然流量，非付费。','Engagement '+d.eng+'% versus norma 1 sampai 3%. Organik, bukan berbayar.','Penglibatan '+d.eng+'% berbanding norma 1 hingga 3%. Organik, bukan berbayar.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Our verticals','我们的垂类','Vertikal kami','Vertikal kami')+' · '+d.name+'</div><h2>'+L('Reach by vertical','各垂类触达','Jangkauan per vertikal','Jangkauan mengikut vertikal')+'</h2><div class="lead">'+L('Each vertical is its own audience. We place your brand in the right one.','每个垂类都是独立的受众。我们把您的品牌放到最合适的位置。','Setiap vertikal punya audiensnya. Kami tempatkan brand Anda di tempat yang tepat.','Setiap vertikal ada audiensnya. Kami letakkan jenama anda di tempat yang betul.')+'</div><div class="vb">'+vv.map(function(v){return '<div class="vrow"><span class="vn">'+v[0]+'</span><div class="vt"><i data-w="'+Math.max(4,Math.round(v[1]/maxV*100))+'" style="width:'+Math.max(4,Math.round(v[1]/maxV*100))+'%"></i></div><span class="vv">'+K(v[1])+'<small>'+v[2]+'% eng</small></span></div>';}).join('')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Proof','实证','Bukti','Bukti')+' · '+d.name+'</div><h2>'+L('Content that travels','会传播的内容','Konten yang menyebar','Kandungan yang tersebar')+'</h2><div class="cg">'+d.top.map(function(t){return '<a class="tc" href="'+t[4]+'" target="_blank" rel="noopener"><div class="th"><span class="play"></span><span class="vov">'+K(t[2])+'</span><span class="pf">'+t[1]+'</span></div><div class="b"><div class="er">'+t[3]+'% ER</div><span class="t">'+t[0]+'</span></div></a>';}).join('')+'</div><div class="cite">'+L('Top posts by views, last 6 months. Tap to watch. Source: Metricool.','按观看量排名的热门帖子，近6个月。点击观看。来源：Metricool。','Post teratas 6 bulan terakhir. Ketuk untuk menonton. Sumber: Metricool.','Pos teratas mengikut tontonan, 6 bulan lepas. Ketik untuk menonton. Sumber: Metricool.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Our brands','我们的品牌','Brand kami','Jenama kami')+'</div><h2>'+L('Five verticals, one ecosystem','五大垂类，一个生态','Lima vertikal, satu ekosistem','Lima vertikal, satu ekosistem')+'</h2><div class="brands">'+BRANDS.map(function(b){return '<div class="brc"><img src="'+b[0]+'" alt="'+b[1]+'"><span>Koocester '+b[1]+'</span></div>';}).join('')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Trusted by','合作品牌','Dipercaya oleh','Dipercayai oleh')+'</div><h2>'+L('Brands featured across our ecosystem','曾在我们生态中亮相的品牌','Brand yang tampil di ekosistem kami','Jenama yang dipaparkan dalam ekosistem kami')+'</h2><div class="logos">'+CLIENTS.map(function(b){return '<div class="lgo">'+(b[1]?'<img src="'+b[1]+'" alt="'+b[0]+'">':b[0])+'</div>';}).join('')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('In their words','客户之声','Kata mereka','Kata mereka')+'</div><h2>'+L('What partners say','合作伙伴的评价','Kata para mitra','Kata rakan kongsi')+'</h2><div class="tst"><div class="tstc ph"><div class="q">'+L('Add a real client quote here.','在此加入真实客户评价。','Tambahkan kutipan klien asli.','Tambah petikan pelanggan sebenar di sini.')+'</div><div class="who"><b>'+L('Client name','客户姓名','Nama klien','Nama pelanggan')+'</b>, '+L('title, company','职位，公司','jabatan, perusahaan','jawatan, syarikat')+'</div></div><div class="tstc ph"><div class="q">'+L('Add a second client quote here.','在此加入第二条客户评价。','Tambahkan kutipan kedua.','Tambah petikan kedua di sini.')+'</div><div class="who"><b>'+L('Client name','客户姓名','Nama klien','Nama pelanggan')+'</b>, '+L('title, company','职位，公司','jabatan, perusahaan','jawatan, syarikat')+'</div></div></div><div class="cite">'+L('Full case studies live in the Koocester client portal.','完整案例研究在 Koocester 客户门户中。','Studi kasus lengkap ada di portal klien Koocester.','Kajian kes penuh ada di portal pelanggan Koocester.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Who this is for','适合谁','Untuk siapa','Untuk siapa')+'</div><h2>'+L('We partner with a few. Not everyone.','我们只与少数品牌合作，并非所有。','Kami bermitra dengan sedikit brand.','Kami bekerjasama dengan segelintir. Bukan semua.')+'</h2><div class="forwho"><div class="fw yes"><div class="h">'+L('This is for you if','如果符合，就适合您','Cocok jika','Sesuai jika')+'</div><ul><li>'+L('You have a real story worth telling','您有值得讲述的真实故事','Anda punya cerita nyata','Anda ada kisah benar yang berbaloi diceritakan')+'</li><li>'+L('You sell to an aspirational, high-value audience','您面向高端、有追求的受众','Audiens Anda premium dan aspiratif','Anda menjual kepada audiens premium dan beraspirasi')+'</li><li>'+L('You value long-term brand trust','您重视长期的品牌信任','Anda menghargai kepercayaan jangka panjang','Anda menghargai kepercayaan jenama jangka panjang')+'</li><li>'+L('You are founder-led or a credible brand','您是创始人主导或值得信赖的品牌','Anda brand kredibel atau dipimpin founder','Anda jenama yang kredibel atau dipimpin pengasas')+'</li></ul></div><div class="fw no"><div class="h">'+L('Not the fit if','不适合，如果','Tidak cocok jika','Tidak sesuai jika')+'</div><ul><li>'+L('You want mass, hard-sell ads','您想要大众硬广','Anda mau iklan massal hard-sell','Anda mahu iklan pukal, jualan keras')+'</li><li>'+L('Volume matters more than trust','量比信任更重要','Volume lebih penting dari kepercayaan','Kuantiti lebih penting daripada kepercayaan')+'</li></ul></div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('One partner, or three','一个伙伴，抵三个','Satu mitra, atau tiga','Satu rakan, atau tiga')+'</div><h2>'+L('What takes three partners, we do as one','别人需三家，我们一家搞定','Yang butuh tiga mitra, kami lakukan sendiri','Apa yang perlu tiga rakan, kami buat sendiri')+'</h2><table class="cmp"><thead><tr><th>'+L('Capability','能力','Kemampuan','Keupayaan')+'</th><th class="us">Koocester</th><th>Influencer</th><th>Perf. agency</th><th>Brand agency</th></tr></thead><tbody><tr><td>'+L('Organic reach and virality','自然触达与传播','Jangkauan organik','Jangkauan organik dan viral')+'</td><td class="us">'+K(d.reach)+'</td><td class="part">◐</td><td class="none">—</td><td class="none">—</td></tr><tr><td>'+L('Engagement vs 1 to 3% norm','互动率 vs 行业1-3%','Engagement vs 1-3%','Penglibatan vs norma 1-3%')+'</td><td class="us">'+d.eng+'%</td><td class="part">◐</td><td class="none">—</td><td class="part">◐</td></tr><tr><td>'+L('Credibility (public-listed CEOs)','公信力（上市公司CEO）','Kredibilitas (CEO publik)','Kredibiliti (CEO tersenarai awam)')+'</td><td class="us full">✓</td><td class="part">◐</td><td class="none">—</td><td class="part">◐</td></tr><tr><td>'+L('5 verticals across 3 markets','5垂类，3市场','5 vertikal, 3 pasar','5 vertikal, 3 pasaran')+'</td><td class="us full">✓</td><td class="none">—</td><td class="none">—</td><td class="none">—</td></tr><tr><td>'+L('Leads into your CRM','潜客直入您的CRM','Leads ke CRM Anda','Prospek ke CRM anda')+'</td><td class="us full">✓</td><td class="none">—</td><td class="full">✓</td><td class="none">—</td></tr><tr><td>'+L('First-party data shared back','第一方数据回传','Data pihak pertama','Data pihak pertama dikongsi semula')+'</td><td class="us full">✓</td><td class="none">—</td><td class="part">◐</td><td class="none">—</td></tr></tbody></table><div class="legend"><span><b class="full">✓</b> '+L('Full','完整','Penuh','Penuh')+'</span><span><b class="part">◐</b> '+L('Partial','部分','Sebagian','Separa')+'</span><span><b class="none">—</b> '+L('None','无','Tidak ada','Tiada')+'</span></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The value','价值','Nilainya','Nilainya')+'</div><h2>'+L('What you actually get','您实际获得什么','Yang Anda dapatkan','Apa yang anda dapat')+'</h2><div class="stack"><div class="srow"><span class="sl">'+L('Signature <b>organic video</b> in our trusted format','以我们信赖的形式制作的<b>原创视频</b>','<b>Video organik</b> khas kami','<b>Video organik</b> tandatangan dalam format kami')+'</span><span class="sv">'+L('high production','高品质制作','produksi tinggi','produksi tinggi')+'</span></div><div class="srow"><span class="sl">'+L('Distribution to our <b>'+K(d.follTot)+' audience</b> ('+K(d.reach)+' views / 6 months)','触达我们<b>'+K(d.follTot)+' 受众</b>（6个月 '+K(d.reach)+' 观看）','Distribusi ke <b>audiens '+K(d.follTot)+'</b>','Pengedaran ke <b>audiens '+K(d.follTot)+'</b> ('+K(d.reach)+' tontonan / 6 bulan)')+'</span><span class="sv">'+L('paid equivalent','等值付费','setara berbayar','setara berbayar')+'</span></div><div class="srow"><span class="sl">'+L('<b>Lead capture</b> straight into your CRM','<b>潜客</b>直接进入您的CRM','<b>Tangkap leads</b> ke CRM','<b>Tangkap prospek</b> terus ke CRM anda')+'</span><span class="sv">'+L('performance','实效','performa','prestasi')+'</span></div><div class="srow"><span class="sl">'+L('<b>Credibility</b> beside public-listed CEOs','与上市公司CEO并列的<b>公信力</b>','<b>Kredibilitas</b> di samping CEO publik','<b>Kredibiliti</b> di sisi CEO tersenarai awam')+'</span><span class="sv">'+L('priceless','无价','tak ternilai','tak ternilai')+'</span></div><div class="srow"><span class="sl">'+L('A <b>performance report</b> you keep','您可保留的<b>成效报告</b>','<b>Laporan performa</b> untuk Anda','<b>Laporan prestasi</b> untuk anda simpan')+'</span><span class="sv">'+L('transparency','透明','transparansi','ketelusan')+'</span></div><div class="srow total"><span class="sl">'+L('Total value','总价值','Total nilai','Jumlah nilai')+'</span><span class="sv">'+L('far beyond the investment','远超投资','jauh di atas investasi','jauh melebihi pelaburan')+'</span></div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Choose your partnership','选择合作方案','Pilih kemitraan','Pilih kerjasama anda')+'</div><h2>'+L('Simple, like buying software','像购买软件一样简单','Sesederhana membeli software','Mudah, seperti membeli perisian')+'</h2><div class="pk"><div class="pkc"><div class="tier">Entry</div><h4>Feature</h4><div class="price">'+L('One story, one launch.','一个故事，一次发布。','Satu cerita, satu peluncuran.','Satu kisah, satu pelancaran.')+'</div><ul><li>'+L('1 signature organic video','1条原创视频','1 video organik','1 video organik tandatangan')+'</li><li>'+L('Posted on the relevant vertical','发布于相关垂类','Diposting di vertikal terkait','Disiar pada vertikal berkaitan')+'</li><li>'+L('Cross-posted IG, TikTok, FB','同步 IG、TikTok、FB','IG, TikTok, FB','Silang siar IG, TikTok, FB')+'</li><li>'+L('Performance snapshot','成效快照','Ringkasan performa','Ringkasan prestasi')+'</li></ul><div class="cta">'+L('Start here','从这里开始','Mulai','Mula di sini')+'</div></div><div class="pkc pop2"><div class="badge">'+L('Most popular','最受欢迎','Terpopuler','Paling popular')+'</div><div class="tier">Growth</div><h4>Campaign</h4><div class="price">'+L('A series that builds leads.','带来潜客的系列内容。','Rangkaian yang membangun leads.','Siri yang membina prospek.')+'</div><ul><li>'+L('3 to 5 videos across a vertical','单垂类 3 至 5 条视频','3-5 video','3 hingga 5 video dalam satu vertikal')+'</li><li>'+L('Carousels plus paid amplification','多图帖加付费投放','Carousel plus amplifikasi','Karusel serta amplifikasi berbayar')+'</li><li>'+L('Lead capture into your CRM','潜客进入CRM','Leads ke CRM','Tangkap prospek ke CRM')+'</li><li>'+L('Full performance report','完整成效报告','Laporan lengkap','Laporan prestasi penuh')+'</li></ul><div class="cta">'+L('Grow with us','与我们同增长','Bertumbuh bersama','Berkembang bersama kami')+'</div></div><div class="pkc"><div class="tier">Always-on</div><h4>Ecosystem</h4><div class="price">'+L('Monthly, first access.','按月，优先合作。','Bulanan, akses pertama.','Bulanan, akses utama.')+'</div><ul><li>'+L('Content across all verticals','全垂类内容','Konten semua vertikal','Kandungan merentas semua vertikal')+'</li><li>'+L('Events and community','活动与社群','Event dan komunitas','Acara dan komuniti')+'</li><li>'+L('Dedicated strategist','专属策略师','Strategist khusus','Ahli strategi khusus')+'</li><li>'+L('Quarterly reporting','季度报告','Laporan kuartalan','Laporan suku tahunan')+'</li></ul><div class="cta">'+L('Go all-in','全面投入','Ambil semua','Sertai sepenuhnya')+'</div></div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The plan','合作流程','Rencananya','Rancangannya')+'</div><h2>'+L('Three steps to being in front of millions','触达百万，只需三步','Tiga langkah tampil di depan jutaan','Tiga langkah untuk tampil di depan jutaan')+'</h2><div class="plan"><div class="pl"><div class="num">1</div><b>'+L('Book a call','预约通话','Jadwalkan panggilan','Tempah panggilan')+'</b><span>'+L('Fifteen minutes. We learn your story and your goal.','十五分钟，了解您的故事与目标。','Lima belas menit. Kami pahami cerita Anda.','Lima belas minit. Kami fahami kisah dan matlamat anda.')+'</span></div><div class="pl"><div class="num">2</div><b>'+L('We craft your story','我们打造您的故事','Kami buat cerita Anda','Kami olah kisah anda')+'</b><span>'+L('Built in the format our audience already loves.','以我们受众喜爱的形式制作。','Dalam format yang disukai audiens kami.','Dibina dalam format yang audiens kami sudah minati.')+'</span></div><div class="pl"><div class="num">3</div><b>'+L('You go live','您正式上线','Anda tayang','Anda disiarkan')+'</b><span>'+L('Across the ecosystem, and the leads land in your CRM.','覆盖整个生态，潜客进入您的CRM。','Di seluruh ekosistem, leads masuk CRM.','Merentas ekosistem, dan prospek masuk ke CRM anda.')+'</span></div></div><div class="urg"><span class="pulse"></span>'+L('We take a limited number of brand partners each quarter.','我们每季度只接受有限数量的品牌伙伴。','Kami menerima jumlah mitra terbatas tiap kuartal.','Kami menerima bilangan rakan jenama yang terhad setiap suku tahun.')+'</div></div>'},
+ {c:'close',h:'<div class="inner"><div class="eyebrow" style="justify-content:center">'+L('Let\'s work together','携手合作','Mari bekerja sama','Mari bekerjasama')+'</div><h1>'+L('Feature your brand<br>where <em>growth lives.</em>','让您的品牌<br>在<em>增长发生的地方</em>亮相。','Tampilkan brand Anda<br>tempat <em>pertumbuhan hidup.</em>','Paparkan jenama anda<br>di tempat <em>pertumbuhan hidup.</em>')+'</h1><div class="lead" style="margin-top:22px">connect@koocester.com &nbsp;·&nbsp; +65 8040 3558 &nbsp;·&nbsp; koocester.com</div><div class="cite">EMPOWERING GROWTH. BUILT ON TRUST.</div></div>'}
+ ];
+}
+function bindTip(a){
+ var wrap=a.querySelector('.chartwrap');if(!wrap)return;var tip=wrap.querySelector('.tip'),svg=wrap.querySelector('svg');
+ wrap.querySelectorAll('.pt').forEach(function(c){
+  c.addEventListener('mouseenter',function(){var r=svg.getBoundingClientRect(),wr=wrap.getBoundingClientRect();var px=Number(c.getAttribute('data-px'))/680*r.width+(r.left-wr.left);var py=Number(c.getAttribute('data-py'))/200*r.height+(r.top-wr.top);tip.textContent=c.getAttribute('data-l')+' · '+c.getAttribute('data-v');tip.style.left=px+'px';tip.style.top=py+'px';tip.style.opacity='1';});
+  c.addEventListener('mouseleave',function(){tip.style.opacity='0';});
+ });
+}
+function render(){
+ var S=slides(DATA[CTRY]),deck=document.getElementById('deck');
+ deck.innerHTML=S.map(function(s,i){return '<section class="slide '+s.c+(i===IDX?' active':(i<IDX?' prev':''))+'">'+s.h+'</section>';}).join('');
+ document.getElementById('count').textContent=(IDX+1)+' / '+S.length;
+ document.getElementById('bar').style.width=((IDX+1)/S.length*100)+'%';
+ document.getElementById('prev').disabled=IDX===0;document.getElementById('next').disabled=IDX===S.length-1;
+ document.querySelectorAll('#cty button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-c')===CTRY);});
+ document.querySelectorAll('#lang button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lg')===LANG);});
+ var a=deck.querySelector('.slide.active');if(a){setTimeout(function(){
+   a.querySelectorAll('.vt i').forEach(function(i){i.style.width=i.getAttribute('data-w')+'%';});
+   a.querySelectorAll('.rbars i').forEach(function(i){i.style.height=i.getAttribute('data-h')+'%';});
+   a.querySelectorAll('.bstat .n[data-c]').forEach(function(el){if(el.classList.contains('pct')){var v=Number(el.getAttribute('data-c'));if(FREEZE){el.textContent=v.toFixed(1)+'%';return;}var t0=Date.now();(function st(){if(FREEZE){el.textContent=v.toFixed(1)+'%';return;}var p=Math.min(1,(Date.now()-t0)/900),e=1-Math.pow(1-p,3);el.textContent=(v*e).toFixed(1)+'%';if(p<1)requestAnimationFrame(st);})();}else cnt(el);});
+   bindTip(a);
+ },90);}
+}
+function go(n){var S=slides(DATA[CTRY]);IDX=Math.max(0,Math.min(S.length-1,IDX+n));render();}
+document.getElementById('cty').innerHTML=['SG','MY','ID'].map(function(c){return '<button data-c="'+c+'">'+c+'</button>';}).join('');
+document.getElementById('lang').innerHTML=[['EN','EN'],['ZH','中文'],['ID','ID'],['MS','BM']].map(function(x){return '<button data-lg="'+x[0]+'">'+x[1]+'</button>';}).join('');
+
+/* Export as PDF. The browser's own print-to-PDF is used deliberately: it needs no
+   library, works offline, and keeps the deck's real fonts and colours. The title is
+   swapped first because browsers use it as the default filename. */
+(function(){
+  var btn=document.getElementById('pdfbtn'), label=document.getElementById('pdfbtn-label');
+  if(!btn) return;
+  var realTitle=document.title;
+  function fileName(){
+    var cty=(typeof CTRY!=='undefined'&&CTRY)?CTRY:'SG';
+    return 'Koocester Media Kit '+cty+' '+LANG;
+  }
+  /* Numbers count up from zero, and only on the slide currently on screen, so any
+     slide never viewed still holds "0". Exporting that would publish false figures.
+     This runs on beforeprint, which fires for EVERY print path: this button, Cmd+P,
+     the File menu, and the print preview. FREEZE stops the running animation loops
+     from overwriting the values afterwards. Buttons also carry data-c (the market
+     switcher), so they are excluded. */
+  function finalizeNumbers(){
+    FREEZE = true;
+    document.querySelectorAll('[data-c]:not(button)').forEach(function(el){
+      var v=Number(el.getAttribute('data-c'));
+      if(!isFinite(v)) return;
+      if(el.classList.contains('pct')){ el.textContent=v.toFixed(1)+'%'; return; }
+      el.textContent = v>=1e6 ? (v/1e6).toFixed(v>=1e7?0:1)+'M'
+                     : v>=1e3 ? Math.round(v/1e3)+'K'
+                     : Math.round(v);
+    });
+    // resolve any entrance animation still mid-flight so nothing exports half faded
+    document.querySelectorAll('.slide .inner>*').forEach(function(el){ el.style.opacity='1'; });
+  }
+  // the guarantee: no print can start before the figures are settled
+  window.addEventListener('beforeprint', finalizeNumbers);
+  window.addEventListener('afterprint', function(){
+    FREEZE=false; document.title=realTitle; label.textContent='PDF';
+  });
+  btn.addEventListener('click',function(){
+    finalizeNumbers();                       // settle first, so the values are painted
+    document.title=fileName();
+    label.textContent='Preparing…';
+    setTimeout(function(){ try{ window.print(); }catch(e){} },350);
+  });
+
+  /* Present mode. Real fullscreen on desktop and Android. iOS Safari has no
+     Fullscreen API, so there we fall back to scrolling the browser chrome away
+     and hiding the controls, which is as close as the platform allows. */
+  var pbtn=document.getElementById('presentbtn'), plabel=document.getElementById('presentbtn-label');
+  var el=document.documentElement;
+  function isFs(){ return document.fullscreenElement||document.webkitFullscreenElement; }
+  function enter(){
+    var fn=el.requestFullscreen||el.webkitRequestFullscreen;
+    if(fn){ try{ fn.call(el); }catch(e){} }
+    else { document.body.classList.add('presenting'); window.scrollTo(0,1); }  // iOS fallback
+  }
+  function exit(){
+    var fn=document.exitFullscreen||document.webkitExitFullscreen;
+    if(isFs()&&fn){ try{ fn.call(document); }catch(e){} }
+    document.body.classList.remove('presenting');
+  }
+  if(pbtn){
+    pbtn.addEventListener('click',function(){ isFs()||document.body.classList.contains('presenting') ? exit() : enter(); });
+    document.addEventListener('fullscreenchange',function(){ plabel.textContent=isFs()?'Exit':'Present'; });
+    document.addEventListener('webkitfullscreenchange',function(){ plabel.textContent=isFs()?'Exit':'Present'; });
+  }
+})();
+document.querySelectorAll('#cty button').forEach(function(b){b.onclick=function(){CTRY=this.getAttribute('data-c');IDX=0;render();};});
+document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){LANG=this.getAttribute('data-lg');render();};});
+document.getElementById('next').onclick=function(){go(1);};
+document.getElementById('prev').onclick=function(){go(-1);};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);});
+var qc=(location.search.match(/[?&]c=(SG|MY|ID)/i)||[])[1];if(qc)CTRY=qc.toUpperCase();
+var ql=(location.search.match(/[?&]lang=(EN|ZH|ID|MS)/i)||[])[1];if(ql)LANG=ql.toUpperCase();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../koo-manager-guard.js?v=2026072005"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester · Weekly Management Report</title>
+<style>
+:root{
+  --maroon:#C02025; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#EEE; --bg:#fff;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(26px);transition:opacity .25s ease,transform .25s ease}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1040px;padding:0 clamp(28px,7vw,110px);margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:16px}
+h1{font-size:clamp(2.6rem,6.5vw,3.8rem);line-height:1.06;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0}
+h2{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.12;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0 0 20px}
+.lead{font-size:clamp(1.05rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:800px;margin:0}
+.logo{height:44px;width:auto;display:block;margin-bottom:32px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:26px 0 0}
+.bignum{font-size:clamp(5rem,17vw,13rem);line-height:.82;font-weight:800;letter-spacing:-.04em;color:var(--maroon);margin:0}
+.bigrow{display:flex;align-items:center;gap:clamp(24px,5vw,60px);flex-wrap:wrap}
+.bigrow .txt{max-width:470px}
+.bigrow .txt .big{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700;color:var(--ink);line-height:1.12;margin:0 0 12px}
+.bigrow .txt p{font-size:clamp(1rem,2vw,1.2rem);color:var(--body);margin:.4em 0}
+.up{color:var(--maroon);font-weight:700}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
+.statgrid.two{grid-template-columns:repeat(2,1fr)}
+.statgrid.four{grid-template-columns:repeat(4,1fr)}
+.stat{border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.stat .num{font-size:clamp(1.5rem,3.4vw,2.3rem);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.stat .num.warn{color:var(--maroon)}
+.stat .lbl{font-size:.9rem;font-weight:700;color:var(--body);margin-top:9px}
+.stat .sub{font-size:.8rem;color:var(--muted);margin-top:4px}
+.note{font-size:.86rem;color:var(--muted);font-style:italic;margin-top:20px;max-width:840px;line-height:1.5}
+.note b{color:var(--maroon);font-style:normal}
+.todo{font-size:.78rem;color:#B98900;font-style:italic;margin-top:14px}
+/* attention list */
+.flags{margin-top:6px;max-width:880px}
+.flag{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line2)}
+.flag:first-child{border-top:0}
+.flag .dot{flex:none;width:12px;height:12px;border-radius:50%;background:var(--maroon);margin-top:7px}
+.flag .tx{font-size:clamp(1.02rem,1.9vw,1.24rem);color:var(--ink);font-weight:600;line-height:1.35}
+.flag .tx span{display:block;font-size:.86rem;color:var(--muted);font-weight:400;margin-top:3px}
+/* question list */
+.qlist{margin-top:4px;max-width:860px}
+.qrow{display:flex;gap:16px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--line2)}
+.qrow:first-child{border-top:0}
+.qrow .q{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--maroon);color:var(--maroon);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.qrow .t{font-size:clamp(1rem,1.85vw,1.18rem);color:var(--ink);font-weight:600;line-height:1.3}
+.qrow .t span{display:block;font-size:.84rem;color:var(--muted);font-weight:400;margin-top:3px}
+/* funnel */
+.funnel{margin-top:8px;max-width:860px}
+.frow{display:flex;align-items:center;gap:16px;margin:12px 0}
+.frow .fl{flex:none;width:150px;font-size:clamp(.9rem,1.7vw,1.1rem);color:var(--body);text-align:right;font-weight:600}
+.fbar{position:relative;height:38px;width:var(--w);min-width:56px;background:#EFEFEF;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding:0 14px}
+.fbar b{color:var(--ink);font-size:1.05rem}
+.fbar.hot{background:var(--maroon)}.fbar.hot b{color:#fff}
+.fbar.done{background:var(--ink)}.fbar.done b{color:#fff}
+/* team table */
+.teamt{width:100%;border-collapse:collapse;font-size:clamp(.9rem,1.7vw,1.05rem);margin-top:2px}
+.teamt th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;padding:9px 12px;border-bottom:1px solid var(--line)}
+.teamt td{padding:12px 12px;border-bottom:1px solid var(--line2);color:var(--body)}
+.teamt td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
+.teamt td .m{color:var(--maroon);font-weight:700}
+/* moves */
+.move{display:flex;gap:20px;align-items:flex-start;margin:18px 0}
+.move .n{flex:none;width:44px;height:44px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:700;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+.move h3{margin:5px 0 4px;font-size:clamp(1.1rem,2.1vw,1.4rem);color:var(--ink)}
+.move p{margin:0;font-size:clamp(.96rem,1.7vw,1.12rem);color:var(--body);line-height:1.45}
+/* dark slides */
+.slide.dark{background:var(--ink)}
+.slide.dark h1,.slide.dark h2{color:#fff}
+.slide.dark .lead{color:#c7c7c7}
+.slide.dark .rule{background:var(--maroon)}
+.slide.dark .move h3{color:#fff}
+.slide.dark .move p{color:#cfcfcf}
+.slide.dark .eyebrow{color:#ff5a5e}
+.mark{font-weight:800;letter-spacing:-.02em;font-size:clamp(1.4rem,3vw,2rem);color:#fff}
+.mark .d{color:var(--maroon)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .25s ease;z-index:10}
+.nav{position:fixed;bottom:22px;right:26px;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:44px;height:44px;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon)}
+.arrow:disabled{opacity:.3;cursor:default}
+.brandmark{position:fixed;bottom:24px;left:26px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+@media (max-width:680px){.statgrid,.statgrid.two,.statgrid.four{grid-template-columns:1fr 1fr}.brandmark{display:none}.frow .fl{width:104px}}
+@media (prefers-reduced-motion:reduce){.slide{transition:opacity .01s}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide">
+    <div class="inner">
+      <img class="logo" src="../../koocester.png" alt="koocester">
+      <div class="eyebrow">Weekly Management Report</div>
+      <h1>The week in numbers</h1>
+      <p class="lead" style="margin-top:20px">Attention first. Then Marketing, Sales, Fulfillment, Finance, People, Tech, Events. Week of 7 July 2026.</p>
+      <hr class="rule">
+    </div>
+  </section>
+
+  <!-- 2 · NEEDS ATTENTION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow" style="color:var(--maroon)">🚩 Needs attention this week</div>
+      <h2>Where to look first</h2>
+      <div class="flags">
+        <div class="flag"><span class="dot"></span><div class="tx">S$149.8k overdue across 41 invoices<span>Oldest: Moda Interior Design, 69 days. Largest: Lifesize Plans S$12.8k. Mosque Madrasah S$23.8k due 15 Jul.</span></div></div>
+        <div class="flag"><span class="dot"></span><div class="tx">83 of 97 videos in QC are past their 16h SLA<span>The bottleneck is now overdue, not just full. Two strategists hold the gate.</span></div></div>
+        <div class="flag"><span class="dot"></span><div class="tx">128 New client accounts sitting un-activated<span>Full pipeline, idle. No New to Active conversion target set.</span></div></div>
+        <div class="flag"><span class="dot"></span><div class="tx">12 events run, 0 with outcome data<span>Attendance, spend and revenue blank, so no ROI and no leads fed back to sales.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · TOPLINE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">At a glance</div>
+      <h2>Six numbers, six functions</h2>
+      <div class="statgrid four">
+        <div class="stat"><div class="num">128</div><div class="lbl">Videos posted</div><div class="sub">Marketing</div></div>
+        <div class="stat"><div class="num warn">97</div><div class="lbl">Stuck in QC</div><div class="sub">83 overdue</div></div>
+        <div class="stat"><div class="num">S$55.6k</div><div class="lbl">Sales MTD</div><div class="sub">Sales</div></div>
+        <div class="stat"><div class="num warn">S$149.8k</div><div class="lbl">Overdue</div><div class="sub">Finance</div></div>
+        <div class="stat"><div class="num">128</div><div class="lbl">New accounts</div><div class="sub">Pipeline</div></div>
+        <div class="stat"><div class="num">352</div><div class="lbl">Client projects</div><div class="sub">Fulfillment</div></div>
+      </div>
+      <p class="note">Then we go deep on Marketing where we spend the meeting, and close on the three moves.</p>
+    </div>
+  </section>
+
+  <!-- 4 · MARKETING (team) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">1 · Marketing &nbsp;·&nbsp; the main course</div>
+      <h2>The content engine, by team</h2>
+      <table class="teamt">
+        <thead><tr><th>Team</th><th>Read this week</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td>Social media</td><td>Full monthly output posted live; <span class="m">87</span> queued ready-to-upload</td><td>Steady</td></tr>
+          <tr><td>Content strategist</td><td>Wendi &amp; Audrey plan + QC; <span class="m">97</span> stuck in QC, 83 overdue</td><td>Bottleneck</td></tr>
+          <tr><td>Video editor</td><td><span class="m">3</span> in editing now; Riza / Stanley / Maulana led output</td><td>Clear</td></tr>
+          <tr><td>Copywriter</td><td><span class="m">196</span> carousels in the system, the second lead surface</td><td>Building</td></tr>
+        </tbody>
+      </table>
+      <p class="note">888 videos in the system, <b>342 built for lead generation</b>. This is a content engine, not a calendar.</p>
+    </div>
+  </section>
+
+  <!-- 5 · MARKETING (funnel) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">1 · Marketing &nbsp;·&nbsp; where every video sits</div>
+      <h2>The line moves at the speed of QC</h2>
+      <div class="funnel">
+        <div class="frow"><span class="fl">Not started</span><span class="fbar" style="--w:92%"><b>286</b></span></div>
+        <div class="frow"><span class="fl">Editing</span><span class="fbar" style="--w:5%"><b>3</b></span></div>
+        <div class="frow"><span class="fl">Strategist QC</span><span class="fbar hot" style="--w:32%"><b>97</b></span></div>
+        <div class="frow"><span class="fl">Ready to upload</span><span class="fbar" style="--w:29%"><b>87</b></span></div>
+        <div class="frow"><span class="fl">Posted</span><span class="fbar done" style="--w:42%"><b>128</b></span></div>
+      </div>
+      <p class="note">The queue bulges at QC and <b>83 of the 97 are already overdue</b>. Clear that one gate and everything downstream moves.</p>
+    </div>
+  </section>
+
+  <!-- 6 · SALES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">2 · Sales</div>
+      <h2>Cash coming in</h2>
+      <div class="bigrow">
+        <p class="bignum">S$56k</p>
+        <div class="txt">
+          <p class="big">sales, month to date</p>
+          <p>Up from S$17.1k in all of June &nbsp;<span class="up">3x</span></p>
+          <p>Strong start. The job now is turning it into cash collected, not just invoiced.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · SALES PIPELINE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">2 · Sales &nbsp;·&nbsp; pipeline</div>
+      <h2>Where the accounts sit</h2>
+      <div class="funnel">
+        <div class="frow"><span class="fl">New</span><span class="fbar hot" style="--w:92%"><b>128</b></span></div>
+        <div class="frow"><span class="fl">Active · in delivery</span><span class="fbar" style="--w:44%"><b>59</b></span></div>
+        <div class="frow"><span class="fl">Completed</span><span class="fbar done" style="--w:46%"><b>62</b></span></div>
+      </div>
+      <p class="note">252 accounts total. <b>128 New and not yet activated</b>. The weekly question: how fast are we moving New to Active?</p>
+    </div>
+  </section>
+
+  <!-- 8 · CLIENT FULFILLMENT (Admin) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">3 · Client Fulfillment &nbsp;·&nbsp; Admin reports</div>
+      <h2>Delivering what was sold</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="num">352</div><div class="lbl">Client projects</div><div class="sub">of 400 total</div></div>
+        <div class="stat"><div class="num">218</div><div class="lbl">Marked complete</div><div class="sub">rest active or not started</div></div>
+        <div class="stat"><div class="num warn">49</div><div class="lbl">Open client invoices</div><div class="sub">S$150k of it overdue</div></div>
+      </div>
+      <p class="note">Many project records are still placeholder scopes (0 videos set), so the tracker needs one clean-up pass before completion figures fully hold.</p>
+    </div>
+  </section>
+
+  <!-- 9 · FINANCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">4 · Finance</div>
+      <h2>Cash, profit, and what we are owed</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="num">S$76.2k</div><div class="lbl">Cash on hand</div><div class="sub">across bank accounts</div></div>
+        <div class="stat"><div class="num">S$39.4k</div><div class="lbl">Net profit MTD</div><div class="sub">income S$55.6k, costs S$16.3k</div></div>
+        <div class="stat"><div class="num warn">S$209.3k</div><div class="lbl">Owed to us</div><div class="sub">49 invoices, S$149.8k overdue</div></div>
+      </div>
+      <p class="note"><b>Overdue receivables are nearly 2x the cash in the bank.</b> Collections is the highest-leverage finance move this week. Aspire float S$22.5k, synced today, all settled, clean.</p>
+    </div>
+  </section>
+
+  <!-- 10 · FINANCE · ASPIRE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">4 · Finance &nbsp;·&nbsp; Aspire card float</div>
+      <h2>Who is spending, and on what</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="num">S$22.5k</div><div class="lbl">Float available</div><div class="sub">synced today, all settled</div></div>
+        <div class="stat"><div class="num">S$8.1k</div><div class="lbl">Spend to date</div><div class="sub">107 transactions</div></div>
+        <div class="stat"><div class="num warn">S$6.6k</div><div class="lbl">Reimbursements</div><div class="sub">81% of spend, paid to people</div></div>
+      </div>
+      <table class="teamt" style="margin-top:16px">
+        <thead><tr><th>Top 5 spenders</th><th>Spend</th><th>On</th></tr></thead>
+        <tbody>
+          <tr><td>Hakim (you)</td><td><span class="m">S$4,892</span></td><td>card + transfers, 60% of all spend</td></tr>
+          <tr><td>Sujinraj</td><td>S$1,330</td><td>Grab / Gojek, marketing</td></tr>
+          <tr><td>Aji Satria</td><td>S$1,254</td><td>employee benefit, utilities</td></tr>
+          <tr><td>Amrel Norman</td><td>S$266</td><td>48 small F&amp;B / travel items</td></tr>
+          <tr><td>Thaddeus</td><td>S$93</td><td>food &amp; beverages</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Reconciliation is clean: nothing unsettled, one S$5 item to categorise. Watch the concentration, <b>you personally are 60% of card-float spend</b>, and Amrel is logging 48 tiny reimbursements worth batching.</p>
+    </div>
+  </section>
+
+  <!-- 11 · PEOPLE / HR (questions) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">5 · People &nbsp;·&nbsp; HR to answer live</div>
+      <h2>Questions HR owns this week</h2>
+      <div class="qlist">
+        <div class="qrow"><span class="q">?</span><div class="t">What is the hiring pipeline right now?<span>Open roles, candidates in play, offers out, expected start dates.</span></div></div>
+        <div class="qrow"><span class="q">?</span><div class="t">Any updates on the people?<span>New joiners, movers, leavers, anyone at risk or needing a conversation.</span></div></div>
+        <div class="qrow"><span class="q">?</span><div class="t">Where is onboarding?<span>% onboarded in Koocester Academy, who is behind, who is ready to step up.</span></div></div>
+        <div class="qrow"><span class="q">?</span><div class="t">Is capacity the QC bottleneck?<span>Two strategists gate 97 videos. Do we hire, cross-train, or reassign?</span></div></div>
+      </div>
+      <p class="todo">Point me at where HR data lives and these turn from questions into live numbers each week.</p>
+    </div>
+  </section>
+
+  <!-- 11 · TECH (questions) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">6 · Tech &nbsp;·&nbsp; to answer live</div>
+      <h2>Questions Tech owns this week</h2>
+      <div class="qlist">
+        <div class="qrow"><span class="q">?</span><div class="t">Are the automations healthy?<span>Fan-outs, SLA alerts, briefs, invoicing. Anything failing or firing wrong?</span></div></div>
+        <div class="qrow"><span class="q">?</span><div class="t">What shipped this week?<span>New automations or fixes delivered, and what they unlocked.</span></div></div>
+        <div class="qrow"><span class="q">?</span><div class="t">What is blocked or at risk?<span>AnyCross, n8n, integrations. Where is tech waiting on a decision or access?</span></div></div>
+        <div class="qrow"><span class="q">?</span><div class="t">Data integrity check<span>Are the bases clean enough to trust the numbers in this report?</span></div></div>
+      </div>
+      <p class="todo">Same offer: give me a tech status source and this becomes live each week.</p>
+    </div>
+  </section>
+
+  <!-- 12 · EVENTS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">7 · Events</div>
+      <h2>The community programme</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="num">12</div><div class="lbl">Events run</div><div class="sub">networking &amp; community heavy</div></div>
+        <div class="stat"><div class="num warn">0</div><div class="lbl">With outcome data</div><div class="sub">attendance · leads · revenue blank</div></div>
+        <div class="stat"><div class="num">0</div><div class="lbl">Upcoming in tracker</div><div class="sub">nothing scheduled ahead</div></div>
+      </div>
+      <p class="note">12 events logged (Golf, Pickleball, Car Meet, Home Fair), but <b>attendance, spend and revenue are not filled</b>. Capturing those three per event is the unlock for ROI and lead feedback.</p>
+    </div>
+  </section>
+
+  <!-- 13 · CLOSE -->
+  <section class="slide dark">
+    <div class="inner">
+      <div class="eyebrow">The week, in three moves</div>
+      <div class="move"><div class="n">1</div><div><h3>Chase the S$150k</h3><p>Collections sprint on the 41 overdue invoices, oldest and largest first. Turn paper revenue into cash.</p></div></div>
+      <div class="move"><div class="n">2</div><div><h3>Clear the QC wall</h3><p>83 of 97 already overdue on two strategists. Add a reviewer or a daily QC block so nothing waits more than a day.</p></div></div>
+      <div class="move"><div class="n">3</div><div><h3>Activate the 128 New accounts</h3><p>Full pipeline, idle. Set a weekly New to Active conversion target and work it.</p></div></div>
+      <hr class="rule" style="margin:28px 0 0">
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> · weekly management report</div>
+<div class="nav">
+  <span class="count" id="count">1 / 14</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>

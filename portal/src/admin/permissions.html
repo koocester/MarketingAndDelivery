@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../koo-nav.js?v=2026072106"></script>
+<script src="koo-admin-guard.js?v=2026072005"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Permissions · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --maroon-deep:#8f1418; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b; --amb:#B8860B;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,5vw,56px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:20px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:5px;padding:4px 9px;background:var(--maroon-tint);font-family:var(--mono)}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(28px,5vw,48px) clamp(20px,5vw,56px) 90px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:12px}
+h1{font-size:clamp(1.9rem,4.4vw,2.8rem);line-height:1.04;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 8px;font-size:1rem;max-width:70ch}
+.note{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:13px 17px;border-radius:0 10px 10px 0;font-size:.94rem;margin:18px 0 26px;max-width:80ch}
+.note b{color:var(--maroon)}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.bar input{flex:1;min-width:220px;font-family:var(--base);font-size:14px;border:1.5px solid var(--line);border-radius:10px;padding:10px 13px;color:var(--ink)}
+.bar input:focus{outline:none;border-color:var(--maroon)}
+.count{font-family:var(--mono);font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+thead th{text-align:left;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:800;padding:0 10px 10px;border-bottom:1.5px solid var(--line)}
+tbody td{padding:12px 10px;border-bottom:1px solid var(--line2);vertical-align:middle}
+tbody tr.mgr{background:#fcf8f8}
+tbody tr:hover{background:#fafafa}
+.who b{display:block;color:var(--ink);font-weight:800}
+.who span{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.rolechip{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:3px 9px;white-space:nowrap}
+select{font-family:var(--base);font-size:13px;border:1.5px solid var(--line);border-radius:9px;padding:7px 9px;color:var(--ink);background:#fff;min-width:110px}
+select:focus{outline:none;border-color:var(--maroon)}
+select:disabled{opacity:.45}
+.sw{position:relative;display:inline-block;width:44px;height:24px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sl{position:absolute;cursor:pointer;inset:0;background:#d6d6d6;transition:.18s;border-radius:24px}
+.sl:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.18s;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw input:checked + .sl{background:var(--maroon)}
+.sw input:checked + .sl:before{transform:translateX(20px)}
+.sw input:disabled + .sl{opacity:.4;cursor:not-allowed}
+.save{appearance:none;border:1.5px solid var(--maroon);background:var(--maroon);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:8px 14px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap}
+.save:disabled{opacity:.3;cursor:default;border-color:var(--line);background:#fff;color:var(--muted)}
+.save.dirty{box-shadow:0 0 0 4px rgba(192,32,37,.13)}
+.state{font-family:var(--mono);font-size:11px;margin-left:8px}
+.state.ok{color:var(--ok)} .state.err{color:var(--maroon)}
+.msg{padding:40px 0;text-align:center;color:var(--muted)}
+.msg.err{color:var(--maroon)}
+@media(max-width:820px){
+  thead{display:none}
+  tbody td{display:block;border:0;padding:5px 0}
+  tbody tr{display:block;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+  td[data-l]:before{content:attr(data-l);display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:4px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="../koocester.png" alt="Koocester"><span class="tag">Permissions</span></div>
+  <a class="back" href="../portal.html">← Portal</a>
+</header>
+<main class="wrap">
+  <div class="eyebrow">Admin · Founder only</div>
+  <h1>Permissions</h1>
+  <p class="lead">Who sees what. This is the single place access is decided — it writes straight to the staff record every gate reads, so a change takes effect on their next page load. No deploy.</p>
+  <div class="note">
+    <b>Management access</b> opens the Operate section: the weekly report and the command dashboard.
+    <b>Dashboard</b> is the one department feed they may see, and nothing else.
+    <b>Reassign</b> opens the Academy role-reassignment tools.
+    Someone with no portal account yet will not appear here until they sign in once.
+  </div>
+  <div class="bar">
+    <input id="q" type="search" placeholder="Search a name or email…" autocomplete="off">
+    <span class="count" id="count"></span>
+  </div>
+  <div id="out"><div class="msg">Loading the staff list…</div></div>
+</main>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_URL='https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY='<SUPABASE_ANON_KEY>';
+const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+const FEEDS=['','command','growth','sales','finance','hr','tech'];
+const out=document.getElementById('out'), q=document.getElementById('q'), countEl=document.getElementById('count');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let ROWS=[];
+
+/* Everything here goes through list_permissions() / set_permissions(), which are
+   SECURITY DEFINER and check is_founder() server-side. The page is a convenience;
+   the database is the boundary. A non-founder who opens this file gets an empty
+   list and every write is refused, even with the console open. */
+async function load(){
+  const { data, error } = await supabase.rpc('list_permissions');
+  if(error){ out.innerHTML='<div class="msg err">Could not load the staff list. '+esc(error.message||'')+'</div>'; return; }
+  ROWS = data || [];
+  if(!ROWS.length){ out.innerHTML='<div class="msg">Nothing to show. This page is founder only.</div>'; return; }
+  render();
+}
+
+function render(){
+  const term=(q.value||'').toLowerCase().trim();
+  const rows=ROWS.filter(r=>!term || (r.email+' '+(r.full_name||'')+' '+(r.role||'')).toLowerCase().includes(term));
+  countEl.textContent = rows.length+' of '+ROWS.length+' · '+ROWS.filter(r=>r.is_manager).length+' with management access';
+  if(!rows.length){ out.innerHTML='<div class="msg">Nobody matches that.</div>'; return; }
+  out.innerHTML='<table><thead><tr><th>Person</th><th>Management access</th><th>Dashboard</th><th>Reassign</th><th></th></tr></thead><tbody>'
+    + rows.map(rowHTML).join('') + '</tbody></table>';
+  out.querySelectorAll('tr[data-e]').forEach(tr=>{
+    const mark=()=>{ const b=tr.querySelector('.save'); b.disabled=false; b.classList.add('dirty');
+                     tr.querySelector('.state').textContent=''; tr.querySelector('.state').className='state';
+                     tr.querySelector('select').disabled = !tr.querySelector('.mgrsw').checked; };
+    tr.querySelectorAll('input,select').forEach(el=>el.addEventListener('change',mark));
+    tr.querySelector('.save').addEventListener('click',()=>save(tr));
+  });
+}
+
+function rowHTML(r){
+  const e=esc(r.email);
+  const seen = r.last_sign_in ? new Date(r.last_sign_in).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : 'never signed in';
+  return '<tr data-e="'+e+'" class="'+(r.is_manager?'mgr':'')+'">'
+    + '<td data-l="Person" class="who"><b>'+esc(r.full_name||r.email.split('@')[0])+'</b><span>'+e+'</span>'
+      + (r.role?' <span class="rolechip">'+esc(r.role)+'</span>':'')+' <span class="rolechip">'+esc(seen)+'</span></td>'
+    + '<td data-l="Management access"><label class="sw"><input type="checkbox" class="mgrsw"'+(r.is_manager?' checked':'')+'><span class="sl"></span></label></td>'
+    + '<td data-l="Dashboard"><select class="dash"'+(r.is_manager?'':' disabled')+'>'
+      + FEEDS.map(f=>'<option value="'+f+'"'+(String(r.dashboard||'')===f?' selected':'')+'>'+(f||'— none —')+'</option>').join('')
+      + '</select></td>'
+    + '<td data-l="Reassign"><label class="sw"><input type="checkbox" class="rasw"'+(r.can_reassign?' checked':'')+'><span class="sl"></span></label></td>'
+    + '<td><button class="save" disabled>Save</button><span class="state"></span></td>'
+    + '</tr>';
+}
+
+async function save(tr){
+  const email=tr.getAttribute('data-e');
+  const isMgr=tr.querySelector('.mgrsw').checked;
+  const dash=isMgr ? tr.querySelector('.dash').value : '';
+  const canRe=tr.querySelector('.rasw').checked;
+  const btn=tr.querySelector('.save'), st=tr.querySelector('.state');
+  btn.disabled=true; st.className='state'; st.textContent='saving…';
+  const { data, error } = await supabase.rpc('set_permissions',
+    { target_email: email, p_is_manager: isMgr, p_dashboard: dash, p_can_reassign: canRe });
+  if(error || data===false){
+    st.className='state err'; st.textContent = error ? (error.message||'failed') : 'no such account';
+    btn.disabled=false; return;
+  }
+  st.className='state ok'; st.textContent='saved';
+  btn.classList.remove('dirty');
+  const r=ROWS.find(x=>x.email===email);
+  if(r){ r.is_manager=isMgr; r.dashboard=dash; r.can_reassign=canRe; }
+  tr.className = isMgr ? 'mgr' : '';
+  countEl.textContent = ROWS.length+' of '+ROWS.length+' · '+ROWS.filter(x=>x.is_manager).length+' with management access';
+  setTimeout(()=>{ if(st.textContent==='saved') st.textContent=''; },2500);
+}
+
+q.addEventListener('input',render);
+load();
+</script>
+</body>
+</html>

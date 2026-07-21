@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../koo-nav.js?v=2026072106"></script>
+<script src="koo-admin-guard.js?v=2026072005"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations Runbook · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --maroon-deep:#8f1418; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.62}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,5vw,56px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:20px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#fff;font-weight:800;background:var(--maroon);border-radius:5px;padding:5px 10px;font-family:var(--mono)}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.wrap{max-width:820px;margin:0 auto;padding:clamp(30px,5vw,54px) clamp(20px,5vw,56px) 100px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:12px}
+h1{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.03;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 12px}
+.founly{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--maroon);padding:5px 11px;border-radius:14px;margin-bottom:30px}
+h2{font-size:1.32rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin:40px 0 4px;padding-top:20px;border-top:1px solid var(--line2)}
+h2 .n{color:var(--maroon);font-family:var(--mono);font-size:.9rem;margin-right:8px}
+p{margin:10px 0}
+ul{margin:10px 0;padding-left:22px}
+li{margin:6px 0}
+b{color:var(--ink)}
+code{font-family:var(--mono);font-size:.86em;background:var(--maroon-tint);color:var(--maroon-deep);padding:2px 6px;border-radius:5px}
+pre{background:#0a0a0a;color:#f2f2f2;font-family:var(--mono);font-size:.82rem;line-height:1.55;padding:16px 18px;border-radius:12px;overflow-x:auto;margin:14px 0}
+pre code{background:none;color:inherit;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.tbl-wrap{overflow-x:auto}
+.callout{border:1px solid rgba(192,32,37,.3);background:var(--maroon-tint);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:.92rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="../koocester.png" alt="Koocester"><span class="tag">Admin</span></div>
+  <a class="back" href="../portal.html">← Portal</a>
+</header>
+<main class="wrap">
+  <div class="eyebrow">Founder reference</div>
+  <h1>Portal Operations Runbook</h1>
+  <p class="sub">How to run and maintain the staff portal without needing Claude. Any developer or future AI can pick it up from this page.</p>
+  <span class="founly">🛡️ Founder only</span>
+
+  <h2><span class="n">1</span>What it is</h2>
+  <p>The portal is a set of <b>plain HTML files</b> (no framework, no build step) hosted on <b>Cloudflare Pages</b>. Staff sign in with their <code>@koocester.com</code> email (a 6-digit code, no password), and land on a tile hub. Some tiles show only to managers, and the Admin section only to you.</p>
+
+  <h2><span class="n">2</span>Where everything lives</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Thing</th><th>Where</th></tr>
+    <tr><td>All portal files</td><td><code>04. Resources/Training/</code> in the vault (and Git)</td></tr>
+    <tr><td>Hosting</td><td>Cloudflare Pages, project <b>koocester-academy</b></td></tr>
+    <tr><td>Live URLs</td><td>koocester-academy.pages.dev · staffacademy.koocester.com · (planned) staff.koocester.com</td></tr>
+    <tr><td>Shared site password</td><td><code>functions/_middleware.js</code> (koocester / onboarding)</td></tr>
+    <tr><td>Login + roster</td><td>Supabase project <code>lfppmsppvqtjyusfrlkf</code></td></tr>
+    <tr><td>Login emails</td><td>Resend (account ceo@koocester.com)</td></tr>
+    <tr><td>DNS</td><td>Squarespace</td></tr>
+  </table></div>
+  <p>Nothing here is proprietary: HTML/CSS/JavaScript, standard Postgres, standard email. No lock-in.</p>
+
+  <h2><span class="n">3</span>Redeploy after an edit</h2>
+  <p>From a terminal inside the <code>Training</code> folder:</p>
+  <pre><code>npx wrangler pages deploy . --project-name koocester-academy --branch main --commit-dirty=true</code></pre>
+  <p>No terminal? Cloudflare dashboard → Workers &amp; Pages → koocester-academy → Create deployment → drag the folder in. Always open the portal afterwards and refresh once to confirm.</p>
+
+  <h2><span class="n">4</span>Add or remove a staff member</h2>
+  <p>Staff are a roster in Supabase; new people auto-create on first sign-in. Supabase → SQL Editor:</p>
+  <pre><code>insert into public.roster (email, full_name, department, role, is_admin) values
+  ('newperson@koocester.com','Full Name','Department','Role',false)
+on conflict (email) do update set
+  full_name=excluded.full_name, department=excluded.department,
+  role=excluded.role, is_admin=excluded.is_admin;</code></pre>
+  <p>To remove access, delete them in Supabase → Authentication → Users.</p>
+
+  <h2><span class="n">5</span>Make someone a manager</h2>
+  <p>Either set <code>is_admin=true</code> on their roster row, or add their role to <code>MANAGER_ROLES</code> at the top of <code>portal.html</code> (also update <code>manager/koo-manager-guard.js</code>). Redeploy.</p>
+  <div class="callout"><b>The gate is soft.</b> It hides tiles and bounces the normal flow, but a management file is still fetchable by URL past the shared password. For hard per-user security, turn on <b>Cloudflare Access</b> (Zero Trust → Access → email policy). Keep raw financials and individual pay out of tiles until then.</div>
+
+  <h2><span class="n">6</span>Add or edit a tile</h2>
+  <p>Open <code>portal.html</code>, find the <code>SECTIONS</code> array. Each tile is one line: <code>icon</code>, <code>title</code>, <code>desc</code>, <code>href</code>, <code>status</code> (<code>'live'</code> or <code>'soon'</code>), <code>access</code> (<code>'all'</code>/<code>'manager'</code>/<code>'admin'</code>), optional <code>external:true</code>. To turn a "Coming soon" tile live, set its real <code>href</code> and change <code>status</code> to <code>'live'</code>. Redeploy.</p>
+
+  <h2><span class="n">7</span>Post a "What's New" update</h2>
+  <p>Sign in as yourself, open the bell, click <b>＋ Post</b>. Pick a kind (Update / Announcement / Training). For a training rollout set the link to the Academy deck, so staff jump straight in to complete it. The unread badge clears per person as they open each item. (One-time setup: run <code>announcements-schema.sql</code> in Supabase.)</p>
+
+  <h2><span class="n">8</span>Rotate the shared password</h2>
+  <p>Edit <code>functions/_middleware.js</code> (<code>USER</code> / <code>PASS</code>), redeploy, tell the team.</p>
+
+  <h2><span class="n">9</span>How the login works</h2>
+  <p>Person enters email → Supabase emails a 6-digit code → they type it → in. The code works on whatever device typed it (that is why we use a code, not a link). For the code to appear in the email, the Supabase <b>Magic Link template</b> must contain <code>{{ .Token }}</code>. Emails go through Resend; if they stop arriving, check the Resend dashboard first.</p>
+
+  <h2><span class="n">10</span>If AI is gone tomorrow</h2>
+  <ul>
+    <li>The site is plain files in Git. Any web developer edits them.</li>
+    <li>Cloudflare and Squarespace are point-and-click; this page covers the actions.</li>
+    <li>Supabase is standard PostgreSQL. Export via Database → Backups any time.</li>
+    <li>Resend is standard email; swappable in the Supabase SMTP settings.</li>
+    <li>Accounts to keep: Cloudflare, Supabase, Resend, Squarespace.</li>
+  </ul>
+  <p>Hand this page (or the full <code>PORTAL-OPERATIONS-RUNBOOK.md</code> in the Website-Revamp project) to any developer and they can run the whole system.</p>
+</main>
+</body>
+</html>

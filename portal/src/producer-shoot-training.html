@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · How to shoot</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#777; --line:#D9D9D9; --line2:#EFEFEF; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,7vw,110px);margin:0 auto}
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:20px}
+h1{font-size:clamp(2.4rem,6vw,3.4rem);line-height:1.08;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0}
+h2{font-size:clamp(1.9rem,4.4vw,2.6rem);line-height:1.12;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0 0 18px}
+.lead{font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.55;color:var(--body);max-width:800px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.8rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2rem,5vw,3rem);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.1;margin:0 0 16px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:820px}
+ul.pts li{margin:.45em 0;font-size:clamp(1rem,2vw,1.18rem);line-height:1.45}
+ol.pts{margin:8px 0 0;padding-left:22px;max-width:820px}
+ol.pts li{margin:.45em 0;font-size:clamp(1rem,2vw,1.18rem);line-height:1.45}
+/* capture-order flow */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 12px}
+.step{padding:9px 15px;border:1px solid var(--line);border-radius:6px;font-size:15px;color:var(--body);background:#fff;font-weight:600}
+.step.you{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.arw{color:var(--maroon);font-size:18px;font-weight:700}
+/* three big rules */
+.rules3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.r3{border:2px solid var(--maroon);border-radius:12px;padding:18px 18px;background:var(--maroon-tint)}
+.r3 .k{color:var(--maroon);font-weight:800;font-size:1.05rem;margin-bottom:6px}
+.r3 .v{font-size:13px;color:var(--body);line-height:1.4}
+/* checklist look */
+.clist{margin-top:12px;max-width:820px}
+.ci{display:flex;align-items:flex-start;gap:11px;padding:7px 0;border-bottom:1px solid var(--line2);font-size:14.5px;color:var(--body);line-height:1.4}
+.ci .bx{width:18px;height:18px;border:2px solid var(--maroon);border-radius:4px;flex:none;margin-top:2px}
+.ci b{color:var(--ink)}
+/* always / never */
+.an{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.an .col{border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.an .col.ok{border-color:var(--ok)}
+.an .col.no{border-color:var(--maroon)}
+.an .col h3{margin:0 0 8px;font-size:.95rem;letter-spacing:.04em;text-transform:uppercase}
+.an .col.ok h3{color:var(--ok)}
+.an .col.no h3{color:var(--maroon)}
+.an .col ul{margin:0;padding-left:18px}
+.an .col li{margin:.3em 0;font-size:.92rem;line-height:1.4}
+/* settings grid */
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.gc{border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.gc .k{font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.gc .v{font-size:15px;color:var(--maroon);font-weight:800;margin-top:5px}
+/* mono block */
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#f7f7f7;border:1px solid var(--line);border-radius:8px;padding:14px 16px;color:var(--ink);white-space:pre;overflow:auto;margin-top:14px;line-height:1.5}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag2{padding:7px 13px;border:1px solid var(--maroon);border-radius:20px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag2{text-decoration:none;display:inline-block;transition:.15s}
+a.tag2:hover{background:var(--maroon);color:#fff}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
+.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb b{font-weight:800}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .25s ease;z-index:10}
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:44px;height:44px;border:1px solid var(--line);background:#fff;border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon)}
+.arrow:disabled{opacity:.3;cursor:default;border-color:var(--line);color:var(--ink)}
+.brandmark{position:fixed;bottom:24px;left:26px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:20px;left:26px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:6px 10px;background:#fff;transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:640px){.rules3,.an,.grid3{grid-template-columns:1fr}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · Producer</div>
+      <h1><span class="lnwrap"><span class="ln">How to</span></span><span class="lnwrap"><span class="ln">shoot</span></span></h1>
+      <p class="lead" style="margin-top:20px">Shoot day, start to finish. Clean footage for every HEART row, backed up before you leave. 1.5 to 4 hours on location.</p>
+    </div>
+  </section>
+
+  <!-- 2 · HOW TO WIN -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How to win</div>
+      <h2>Every HEART row has footage, audio is clean, everything is backed up.</h2>
+      <p class="lead">Shoot day is done when every row in the brief has A-roll and B-roll, the audio is clean, and it is all uploaded, before you leave the location. Not after. Before.</p>
+    </div>
+  </section>
+
+  <!-- 2b · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>You're on location 30 minutes early</b><span>the guest never arrives before you do</span></div>
+        <div class="win"><b>The hook shot is captured first</b><span>the most important shot in the video, not an afterthought</span></div>
+        <div class="win"><b>Audio plays back clean</b><span>no hum, no traffic, no wind — checked on headphones</span></div>
+        <div class="win"><b>Footage is backed up by HEART folder</b><span>before you leave the location, not after</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHY IT MATTERS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why it matters</div>
+      <div class="big">Three things kill shoots. None can be fixed in editing.</div>
+      <ul class="pts">
+        <li><b>Bad audio</b> — you cannot clean voice that was recorded dirty.</li>
+        <li><b>Missing supporting shots</b> — no B-roll means the editor has nothing to cut to.</li>
+        <li><b>Wrong framing</b> — a badly framed shot is a lost shot.</li>
+      </ul>
+      <p class="lead" style="margin-top:12px">This SOP makes all three rare.</p>
+    </div>
+  </section>
+
+  <!-- 4 · THREE RULES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Three rules that never bend</div>
+      <div class="rules3">
+        <div class="r3"><div class="k">Reach early</div><div class="v">30 minutes minimum before the guest. This is non-negotiable, the 30 minutes decides the whole day.</div></div>
+        <div class="r3"><div class="k">The start is everything</div><div class="v">The hook visual is the most important shot in the video. If the first frame does not stop the scroll, nothing else matters.</div></div>
+        <div class="r3"><div class="k">Producer energy</div><div class="v">The guest matches your tone. Lazy producer, lazy answers. High energy producer, high energy video.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · TERMS + ORDER -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Two terms, one order</div>
+      <p class="lead" style="margin-bottom:8px"><b>A-roll</b> = the interview footage, what the guest says. <b>B-roll</b> = every supporting shot, close-ups, wides, action.</p>
+      <div class="flow">
+        <span class="step">B-roll first</span><span class="arw">→</span>
+        <span class="step">A-roll</span><span class="arw">→</span>
+        <span class="step you">Final B-roll fill</span>
+      </div>
+      <div class="callout"><b>Why B-roll first?</b> You scout the location while shooting, the guest gets comfortable seeing the camera before they are on it, and rapport builds so the interview happens with a relaxed guest. Relaxed guest, better answers, better video.</div>
+    </div>
+  </section>
+
+  <!-- 6 · DIVIDER PREP -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>Before you leave the office</h2>
+      <p class="lead" style="color:#bbb">Gear, settings, buffer.</p>
+    </div>
+  </section>
+
+  <!-- 7 · GEAR CHECK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Always check before leaving</div>
+      <div class="clist">
+        <div class="ci"><span class="bx"></span><span><b>iPhone battery</b> 100% · storage <b>128GB+</b> free · battery health <b>80%+</b></span></div>
+        <div class="ci"><span class="bx"></span><span><b>Mic</b> charged 100%, paired and tested at home before leaving</span></div>
+        <div class="ci"><span class="bx"></span><span><b>Power banks</b> charged 100% (extra for hot or outdoor shoots, the iPhone overheats)</span></div>
+        <div class="ci"><span class="bx"></span><span><b>Lens cloth</b> in the kit, fingerprints kill image quality</span></div>
+        <div class="ci"><span class="bx"></span><span><b>Brief</b> re-read and saved offline, angle, HEART outline, questions, offer</span></div>
+        <div class="ci"><span class="bx"></span><span>Leave <b>30 minutes earlier</b> than you think</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · IPHONE SETTINGS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">iPhone settings · verify every shoot</div>
+      <div class="grid3">
+        <div class="gc"><div class="k">Resolution</div><div class="v">4K · 30FPS</div></div>
+        <div class="gc"><div class="k">HDR</div><div class="v">OFF</div></div>
+        <div class="gc"><div class="k">Default lens</div><div class="v">0.5x ultrawide</div></div>
+        <div class="gc"><div class="k">Clip cap</div><div class="v">10 min max</div></div>
+        <div class="gc"><div class="k">Total raw</div><div class="v">20–30 min</div></div>
+        <div class="gc"><div class="k">Camera</div><div class="v">iPhone only</div></div>
+      </div>
+      <div class="callout"><b>Why HDR off?</b> HDR makes shots look different across lighting changes. Off keeps every clip consistent, which makes editing faster and the final video cleaner.</div>
+    </div>
+  </section>
+
+  <!-- 9 · DIVIDER ONSITE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>On site · the first 30 minutes</h2>
+      <p class="lead" style="color:#bbb">Reach early. Set up before the guest.</p>
+    </div>
+  </section>
+
+  <!-- 10 · SITE ASSESSMENT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Arrival &amp; site assessment</div>
+      <ul class="pts">
+        <li><b>A-roll spot</b> — quiet (no traffic, aircon hum, fridge buzz), background contrasts with the guest's wardrobe, soft natural light (window light is best).</li>
+        <li><b>B-roll spots</b> — list them by the HEART row they serve. <b>Hook visual first, it is shot #1.</b></li>
+        <li><b>Test audio</b> in the A-roll spot on headphones, listen for traffic, aircon, fridge, echo, wind. Bad noise, move the spot.</li>
+        <li><b>Lock exposure &amp; white balance</b> — tap and hold on the guest's face for AE/AF lock, slide to adjust brightness.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 11 · GUEST ARRIVAL -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Guest arrival · five minutes</div>
+      <ol class="pts">
+        <li>Welcome warmly, offer water.</li>
+        <li>Clip the mic on, inside the collar, pointing toward the mouth.</li>
+        <li>Recap the rules in 60 seconds: faceless format so the voice carries everything, answer in <b>complete sentences</b> starting with the topic not "yeah", 30–60 seconds per answer, pause and restart anytime.</li>
+        <li>Walk the guest to the A-roll spot, show the framing.</li>
+        <li>Mic test, guest counts "one, two, three, four, five", listen on headphones.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 12 · DIVIDER CAPTURE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Capture</h2>
+      <p class="lead" style="color:#bbb">B-roll, then A-roll.</p>
+    </div>
+  </section>
+
+  <!-- 13 · B-ROLL RULES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">B-roll capture · hook visual first</div>
+      <div class="an">
+        <div class="col ok"><h3>Always</h3><ul>
+          <li>Roll 1–2 seconds BEFORE the action</li>
+          <li>Each clip 3 seconds minimum, 5 is better</li>
+          <li>Subject moving OR camera moving, never both static</li>
+          <li>Multiple angles of every important thing</li>
+          <li>Wipe the lens, move with your legs for stability</li>
+        </ul></div>
+        <div class="col no"><h3>Never</h3><ul>
+          <li>Static camera + static subject (unusable)</li>
+          <li>Clips under 3 seconds (editor can't use them)</li>
+          <li>Trust the screen, tap to check focus</li>
+        </ul></div>
+      </div>
+      <div class="callout"><b>Coverage rule:</b> every HEART row needs at least one B-roll clip, roughly one clip per 5 seconds of scene. 2 strong clips beat 5 weak ones.</div>
+    </div>
+  </section>
+
+  <!-- 14 · COMPOSITION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Composition · easy to remember</div>
+      <ul class="pts">
+        <li><b>Rule of thirds</b> — place the subject on a grid line, not always centred.</li>
+        <li><b>Don't cut at joints</b> — the frame edge should not end at neck, wrist, knee or ankle. Cut mid-chest or hip.</li>
+        <li><b>Layer depth</b> — something close, the subject in the middle, something blurry behind. Three layers looks rich.</li>
+        <li><b>Lead room</b> — leave space on the side the subject is looking toward.</li>
+      </ul>
+      <div class="callout"><b>The 3-second rule:</b> every clip at least 3 seconds. Editors trim down, they cannot make a clip longer. Storage is cheap, regret is expensive.</div>
+    </div>
+  </section>
+
+  <!-- 15 · A-ROLL RULES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">A-roll capture · the interview</div>
+      <div class="an">
+        <div class="col ok"><h3>Always</h3><ul>
+          <li>Roll BEFORE you ask the question</li>
+          <li>Say the take first: "Question 1, take 1"</li>
+          <li>2–3 takes per question, even if the first sounds great</li>
+          <li>Record in 10-minute intervals</li>
+          <li>Listen back after EVERY question, no exceptions</li>
+        </ul></div>
+        <div class="col no"><h3>Never</h3><ul>
+          <li>Say "uh-huh" or "right" while the guest talks (kills the audio)</li>
+          <li>Interrupt to correct, let them finish then redo</li>
+          <li>Trust the meter, listen on headphones</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 · COACHING -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Coaching the guest · voice carries the video</div>
+      <h2>If an answer is monotone or rushed, redo it.</h2>
+      <ul class="pts">
+        <li>"That was good, let's do one more with more energy."</li>
+        <li>"Slow down on the punchline, let the number land."</li>
+        <li>"Smile when you say that, it comes through in the voice."</li>
+        <li>"Talk like you're explaining to a friend, not pitching to a crowd."</li>
+        <li>"Pause for a second before the surprising number, it gives it weight."</li>
+      </ul>
+      <div class="callout"><b>Movement:</b> mix smooth and raw. Slow + smooth for calm sections, raw + handheld for the high-energy parts.</div>
+    </div>
+  </section>
+
+  <!-- 16b · QUESTION DESIGN -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question design SOP · yours to own</div>
+      <h2>Five rules for questions that cut clean.</h2>
+      <ol class="pts">
+        <li><b>One ask per question</b> — combining two asks gets a tangled answer.</li>
+        <li><b>Maximum ten words</b> — cut filler like "walk me through the…"</li>
+        <li><b>Specific over abstract</b> — "This Ferrari" beats "your car."</li>
+        <li><b>Force topic-first answers</b> — phrase it so the guest starts with the topic, not a connective. This is the highest-leverage editing win.</li>
+        <li><b>Short, confident, concise</b> — say it once, cleanly.</li>
+      </ol>
+      <div class="callout"><b>This is yours.</b> Producers ask the questions on the shoot, own the design, not just the delivery.</div>
+    </div>
+  </section>
+
+  <!-- 16c · COACH THE TONE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Coach the guest's tone · before each question</div>
+      <h2>The faceless format means the guest's voice carries everything.</h2>
+      <ul class="pts">
+        <li><b>Vary the pace</b> — slow on the punchline, fast on the setup.</li>
+        <li><b>Land the number</b> — pause before and after key figures.</li>
+        <li><b>Vocal smile</b> — smiles register even without a face on camera.</li>
+        <li><b>Avoid monotone</b> — if it sounds flat, redo with more energy.</li>
+        <li><b>Conversational, not presentational</b> — talk like explaining to a friend.</li>
+      </ul>
+      <div class="callout"><b>Frame it this way:</b> you're directing a performance, not just recording answers.</div>
+    </div>
+  </section>
+
+  <!-- 16d · PRODUCER'S MINDSET -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The producer's mindset · on the shoot</div>
+      <h2>Genuine reactions. Improv-ready follow-ups.</h2>
+      <ul class="pts">
+        <li><b>Genuine enthusiasm, only in the right moments</b> — a real "wow" lands only when earned.</li>
+        <li><b>Improv-ready with burning follow-ups</b> — when the guest drops a valuable answer, go off-script.</li>
+        <li><b>The right follow-up</b> is the question the viewer would shout at the screen, or a thought-provoking, out-of-the-box question that makes both guest and viewer think.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 17 · DIVIDER WRAP -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Wrap &amp; handoff</h2>
+      <p class="lead" style="color:#bbb">Fill the gaps, back up, notify.</p>
+    </div>
+  </section>
+
+  <!-- 18 · FINAL FILL + WRAP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Final B-roll fill &amp; wrap</div>
+      <div class="clist">
+        <div class="ci"><span class="bx"></span><span>Every HEART row has B-roll? If not, capture it now</span></div>
+        <div class="ci"><span class="bx"></span><span>Did the guest mention something we have no visual for? Shoot it</span></div>
+        <div class="ci"><span class="bx"></span><span>Final shot-list check, walk the brief row by row</span></div>
+        <div class="ci"><span class="bx"></span><span>Audio playback, one take on headphones, clean voice no hum</span></div>
+        <div class="ci"><span class="bx"></span><span>Pack the kit, count items (never lose the mic)</span></div>
+        <div class="ci"><span class="bx"></span><span>Thank the guest, confirm the rough-cut delivery date, photograph any logos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · BACKUP + UPLOAD -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Back up before you leave · upload same day</div>
+      <div class="big" style="font-size:clamp(1.6rem,4vw,2.2rem)">The editor cannot start without files in the right folders.</div>
+      <p class="lead" style="margin-bottom:6px">Back up on location (iCloud sync on, or manual to Google Drive). Drop every clip into the HEART row it was shot for:</p>
+      <div class="mono">[Shoot date]_[Guest name]/
+   ├── A-roll/   → H · E · A1 · A2 · A3 · R · T
+   ├── B-roll/   → H · E · A1 · A2 · A3 · R · T
+   └── Reference/ (brief, HEART outline, questions)</div>
+      <p class="small" style="margin-top:10px">If a take serves two HEART rows, copy it into both. Update the Tracker, notify the editor.</p>
+    </div>
+  </section>
+
+  <!-- 20 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part five</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#bbb">Three calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 21 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · the first rule</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Reach early is one of the three rules that never bend — 30 minutes minimum before the guest, non-negotiable. Those 30 minutes decide the whole day: site assessment, A-roll spot, audio test, exposure lock."
+        data-no="<b>Not enough.</b> The rule is 30 minutes minimum before the guest, non-negotiable. Those 30 minutes decide the whole day, arriving with the guest or right before leaves no time to assess the site or test audio.">
+        <div class="scenario">The guest is scheduled to arrive at 2:00pm. You're deciding what time to be on site.</div>
+        <div class="q">What time should you arrive, and why?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>1:45pm, right before the guest — that's close enough</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>1:30pm, 30 minutes early minimum — the rule never bends</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>2:00pm, same time as the guest, to save time</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · capture order</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> B-roll first, then A-roll, then a final B-roll fill. Shooting B-roll first lets you scout the location, gets the guest used to seeing the camera before they're on it, and builds rapport, so the interview happens with a relaxed guest. The hook visual is shot #1 of that B-roll pass, it's the most important shot in the video."
+        data-no="<b>Wrong order.</b> Capture is B-roll first, then A-roll, then a final B-roll fill. B-roll first scouts the location and warms the guest up to the camera before the interview, and the hook visual, the most important shot in the video, gets captured in that first pass.">
+        <div class="scenario">You've just arrived and finished the site assessment. The guest hasn't arrived yet.</div>
+        <div class="q">What's the correct capture order, and what should the very first shot be?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>B-roll first, hook visual as shot #1, then A-roll, then a final B-roll fill</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>A-roll first, so the interview is fresh before you tire yourself out shooting B-roll</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Whichever is faster to set up, the order doesn't change the footage</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · wrap &amp; backup</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> Back up on location before you leave, sorting every clip, A-roll and B-roll, into the HEART row folder it was shot for. The editor cannot start without files in the right folders, and it all uploads the same day."
+        data-no="<b>Not quite.</b> Backup happens on location, before you leave, and every clip, A-roll and B-roll both, gets sorted into its HEART row folder. Waiting until later or skipping half the footage means the editor has nothing to start from.">
+        <div class="scenario">It's the end of the shoot. Every HEART row has B-roll, and the audio played back clean on headphones.</div>
+        <div class="q">What's left before you can leave the location?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Nothing — the footage can be uploaded anytime later that week</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Just back up the A-roll now; B-roll can wait until you're back at the office</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Back up on location now, sorting every clip into its HEART row folder</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23b · MCQ 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · designing a clean question</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> One ask, topic named specifically, and phrased so the answer starts with the topic. That's the highest-leverage editing win, the guest doesn't open with a connective like &quot;so&quot; or &quot;yeah&quot;."
+        data-no="<b>Not clean enough.</b> A good question is one ask (not two stacked together), names the specific thing (&quot;this Ferrari,&quot; not &quot;your car&quot;), and is phrased so the guest's answer starts with the topic, not a connective.">
+        <div class="scenario">You want to ask about the Ferrari's horsepower and how much it cost.</div>
+        <div class="q">Which question is designed correctly?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>"So, tell me about the horsepower and how much it costs?"</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>"This Ferrari, what's the horsepower?"</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>"Yeah, what do you think about its power?"</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all six?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Do you reach the location at least 30 minutes before the guest?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you shoot B-roll first, with the hook visual as shot #1?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Is every HEART row covered with usable B-roll before you leave?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you listen back on headphones after every interview question?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Is the audio clean — no hum, traffic or wind — checked before you leave?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Is everything backed up on location, sorted by HEART folder, same day?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 21 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Reach early. Hook first. Bring the energy.</h2>
+      <p class="lead">Every shoot done to this bar gives the editor everything they need, and gives the video its best shot at going viral.</p>
+      <div class="tags" style="margin-top:22px">
+        <a class="tag2" href="academy.html">Back to Academy →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · how to shoot</div>
+<div class="nav">
+  <span class="count" id="count">1 / 30</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-shoot-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

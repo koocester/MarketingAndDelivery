@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Staff Portal</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --maroon-deep:#8f1418; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b; --lock:#b3b3b3;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+
+/* ---- header ---- */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px clamp(20px,5vw,64px);background:rgba(255,255,255,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line2)}
+.brand{display:flex;align-items:center;gap:13px;min-width:0}
+.brand .logo{height:21px;width:auto;display:block}
+.brand .status{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#127a44;font-weight:800;font-family:var(--mono);border:1px solid rgba(27,127,75,.28);background:rgba(27,127,75,.08);border-radius:20px;padding:5px 11px 5px 9px;white-space:nowrap}
+.brand .status .dot{width:7px;height:7px;border-radius:50%;background:#22b463;flex:none;box-shadow:0 0 0 0 rgba(34,180,99,.55);animation:livePulse 2.2s infinite}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(34,180,99,.5)}70%{box-shadow:0 0 0 7px rgba(34,180,99,0)}100%{box-shadow:0 0 0 0 rgba(34,180,99,0)}}
+.who{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);flex:none}
+.who .me{text-align:right;line-height:1.25;max-width:210px;overflow:hidden}
+.who .me b{display:block;color:var(--ink);font-weight:800;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who .me span{font-size:11px;letter-spacing:.02em}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(155deg,var(--maroon),var(--maroon-deep));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none;box-shadow:0 6px 16px rgba(192,32,37,.28)}
+.signout{appearance:none;border:1px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;cursor:pointer;transition:.15s;flex:none}
+.signout:hover{border-color:var(--maroon);color:var(--maroon)}
+
+/* ---- notification bell ---- */
+.bell{position:relative;appearance:none;border:1px solid var(--line);background:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:.15s;flex:none}
+.bell:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.bell .count{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--maroon);color:#fff;font-family:var(--mono);font-size:10.5px;font-weight:700;display:none;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,32,37,.5);border:2px solid #fff}
+.bell.has .count{display:flex;animation:pin .4s var(--pop)}
+@keyframes pin{0%{transform:scale(.2)}100%{transform:scale(1)}}
+.panel{position:absolute;top:60px;right:clamp(12px,4vw,56px);z-index:40;width:min(380px,calc(100vw - 24px));background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.18);overflow:hidden;display:none;animation:drop .22s var(--pop)}
+.panel.on{display:block}
+@keyframes drop{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:none}}
+.phead{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line2)}
+.phead b{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.phead .padd{appearance:none;border:1px solid var(--line);background:#fff;color:var(--maroon);font-family:var(--mono);font-size:11px;font-weight:700;padding:5px 10px;border-radius:16px;cursor:pointer}
+.plist{max-height:min(440px,60vh);overflow-y:auto}
+.pitem{display:block;text-decoration:none;color:inherit;padding:14px 18px;border-bottom:1px solid var(--line2);cursor:pointer;transition:background .12s;position:relative}
+.pitem:hover{background:#fafafa}
+.pitem.unread{background:var(--maroon-tint)}
+.pitem.unread:hover{background:#f6e9ea}
+.pitem .dot{position:absolute;left:7px;top:20px;width:6px;height:6px;border-radius:50%;background:var(--maroon);display:none}
+.pitem.unread .dot{display:block}
+.pkind{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:12px;margin-bottom:7px}
+.pkind.update{color:var(--muted);background:#f2f2f2}
+.pkind.announcement{color:var(--maroon);background:var(--maroon-tint)}
+.pkind.training{color:#fff;background:var(--maroon)}
+.pitem h4{margin:0 0 3px;font-size:13.5px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.pitem p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+.pitem .cta{display:inline-block;margin-top:8px;font-size:11.5px;font-weight:800;color:var(--maroon)}
+.pitem .when{font-size:10.5px;color:var(--lock);font-family:var(--mono);margin-top:6px}
+.pempty{padding:30px 18px;text-align:center;color:var(--muted);font-size:13px}
+.pform{padding:14px 18px;border-top:1px solid var(--line2);display:none;background:#fbfbfb}
+.pform.on{display:block}
+.pform input,.pform textarea,.pform select{width:100%;font-family:var(--base);font-size:13px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:8px;color:var(--ink)}
+.pform textarea{resize:vertical;min-height:52px}
+.pform .prow{display:flex;gap:8px}
+.pform .prow>*{flex:1}
+.pform button{width:100%;appearance:none;border:1px solid var(--maroon);background:var(--maroon);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:11px;border-radius:9px;cursor:pointer}
+
+/* ---- preview banner ---- */
+.preview{display:none;background:#fff8e6;border-bottom:1px solid #f0dfa8;color:#7a5b00;font-size:12.5px;font-weight:700;text-align:center;padding:9px 16px;letter-spacing:.01em}
+.preview.on{display:block}
+
+/* ---- hero greeting ---- */
+.hero{padding:clamp(38px,6.5vw,66px) clamp(20px,5vw,64px) 6px;max-width:1200px;margin:0 auto;width:100%}
+.hero .date{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:14px}
+.hero h1{font-size:clamp(2.1rem,5.2vw,3.4rem);line-height:1.02;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+.hero h1 span{color:var(--maroon)}
+.hero p{margin:15px 0 0;color:var(--muted);font-size:clamp(1rem,1.7vw,1.14rem);max-width:640px}
+.tstat{display:none;align-items:center;gap:8px;margin-top:16px;padding:9px 15px;border-radius:22px;background:var(--maroon-tint,#faf3f3);border:1px solid rgba(192,32,37,.22);color:var(--maroon);font-weight:800;font-size:.82rem;letter-spacing:.02em;text-decoration:none;width:fit-content;transition:transform .16s cubic-bezier(.22,1.12,.4,1)}
+.tstat:hover{transform:translateY(-2px)}
+.tstat.on{display:inline-flex}
+.tstat.alldone{background:rgba(27,127,75,.09);border-color:rgba(27,127,75,.28);color:var(--ok)}
+.tstat .n{font-family:var(--mono);background:var(--maroon);color:#fff;border-radius:11px;padding:1px 8px;font-size:.8rem}
+.tstat .rt{font-weight:700;opacity:.72;letter-spacing:0}
+
+/* ---- What's New: on-entry highlight (the first thing they see) ---- */
+.flash{display:none;max-width:1200px;margin:22px auto 0;padding:0 clamp(20px,5vw,64px);width:100%}
+.flash.on{display:block}
+.flash-card{position:relative;overflow:hidden;border:1px solid rgba(192,32,37,.3);border-left:4px solid var(--maroon);background:linear-gradient(135deg,var(--maroon-tint) 0%,#fff 46%,var(--maroon-tint) 100%);border-radius:14px;padding:18px 46px 20px 20px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 16px 40px -18px rgba(192,32,37,.35)}
+/* a light that keeps travelling across the card — it should feel alive, not static */
+.flash-card::before{content:"";position:absolute;top:0;left:-60%;width:42%;height:100%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(192,32,37,.09) 44%,rgba(255,255,255,.6) 50%,rgba(192,32,37,.09) 56%,transparent);
+  transform:skewX(-18deg);animation:flashSheen 5.6s var(--ease) infinite}
+@keyframes flashSheen{0%,60%{left:-60%}100%{left:135%}}
+/* the track: a maroon pulse running the width, like a live feed */
+.flash-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;pointer-events:none;
+  background-image:linear-gradient(90deg,transparent,var(--maroon),transparent);background-size:36% 100%;background-repeat:no-repeat;
+  animation:flashTrack 3s linear infinite}
+@keyframes flashTrack{0%{background-position:-40% 0}100%{background-position:140% 0}}
+@media(prefers-reduced-motion:reduce){
+  .flash-card::before,.flash-card::after,.flash-tag .pip{animation:none}
+  .flash-card::before{display:none}
+}
+.flash-tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:7px}
+.flash-tag .pip{width:7px;height:7px;border-radius:50%;background:var(--maroon);animation:flashpip 2s var(--ease) infinite}
+@keyframes flashpip{0%,100%{opacity:1}50%{opacity:.35}}
+.flash-card h3{margin:0 0 5px;font-size:1.06rem;letter-spacing:-.015em;color:var(--ink);font-weight:800}
+.flash-card p{margin:0;color:var(--body);font-size:.94rem;line-height:1.5}
+.flash-more{display:inline-block;margin-top:11px;font-size:.84rem;font-weight:700;color:var(--maroon);text-decoration:none}
+.flash-more:hover{text-decoration:underline}
+.flash-x{position:absolute;top:12px;right:12px;width:26px;height:26px;border:0;border-radius:50%;background:rgba(192,32,37,.09);color:var(--maroon);cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;transition:.15s}
+.flash-x:hover{background:rgba(192,32,37,.2)}
+.flash-count{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-left:6px}
+
+/* ---- Value of the week (spaced repetition, where the eye already lands) ---- */
+.vow{display:flex;align-items:flex-start;gap:13px;margin-top:20px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#fff;max-width:640px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.vow-letter{flex:none;width:38px;height:38px;border-radius:10px;background:var(--maroon);color:#fff;font-weight:800;font-size:1.24rem;display:flex;align-items:center;justify-content:center;letter-spacing:-.02em}
+.vow-txt{min-width:0}
+.vow-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.vow-name{font-weight:800;color:var(--ink);font-size:.98rem;letter-spacing:-.01em;margin-top:2px}
+.vow-line{color:var(--muted);font-size:.88rem;margin-top:2px;line-height:1.45}
+
+/* ---- Persistent purpose / vision / values strip (every page bottom) ---- */
+.vpv{border-top:1px solid var(--line2);background:var(--maroon-tint);padding:30px clamp(20px,5vw,64px) 26px}
+.vpv-in{max-width:1200px;margin:0 auto}
+.vpv-say{font-size:clamp(1.05rem,2vw,1.3rem);font-weight:800;color:var(--ink);letter-spacing:-.02em;margin:0 0 4px}
+.vpv-say b{color:var(--maroon)}
+.vpv-vision{color:var(--body);font-size:.9rem;max-width:760px;margin:0 0 18px;line-height:1.5}
+.vpv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.vpv-v{background:#fff;border:1px solid rgba(192,32,37,.16);border-radius:10px;padding:11px 12px}
+.vpv-v .l{font-weight:800;color:var(--maroon);font-size:1rem;line-height:1}
+.vpv-v .n{font-weight:700;color:var(--ink);font-size:.78rem;margin-top:5px;line-height:1.25;letter-spacing:-.01em}
+@media(max-width:820px){.vpv-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.vpv-grid{grid-template-columns:1fr}}
+.tstat.alldone .n{background:var(--ok)}
+
+/* ---- marketing F1 podium ---- */
+.mpod{max-width:1200px;margin:0 auto;padding:clamp(22px,3.5vw,34px) clamp(20px,5vw,64px) 4px;width:100%}
+.mpod-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.mpod-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:800;display:inline-flex;align-items:center;gap:8px}
+.mpod-all{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--muted);text-decoration:none;white-space:nowrap}
+.mpod-all:hover{color:var(--maroon)}
+.mpod-stage{display:flex;align-items:flex-end;justify-content:center;gap:clamp(8px,2.5vw,26px)}
+.mpod-spot{display:flex;flex-direction:column;align-items:center;width:clamp(96px,21vw,190px)}
+.mpod-spot.s2{order:1}.mpod-spot.s1{order:2}.mpod-spot.s3{order:3}
+.mpod-crown{font-size:24px;margin-bottom:2px;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.mpod-av{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:21px;color:#fff;background:linear-gradient(155deg,var(--maroon),var(--maroon-deep));box-shadow:0 8px 22px rgba(192,32,37,.3);border:3px solid #fff}
+.mpod-spot.s1 .mpod-av{width:76px;height:76px;font-size:26px;background:linear-gradient(155deg,#e8b53a,#c8901f);box-shadow:0 10px 30px rgba(200,144,31,.5)}
+.mpod-name{margin-top:9px;font-size:clamp(.85rem,1.6vw,1rem);font-weight:800;color:var(--ink);text-align:center;letter-spacing:-.01em;line-height:1.15}
+.mpod-role{font-size:10.5px;color:var(--muted);text-align:center;margin-top:1px}
+.mpod-score{margin-top:5px;font-family:var(--mono);font-size:12.5px;font-weight:800;color:var(--maroon)}
+.mpod-step{margin-top:12px;width:100%;border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:11px;color:#fff;position:relative;overflow:hidden}
+.mpod-spot.s1 .mpod-step{height:clamp(72px,11vw,106px);background:linear-gradient(180deg,#eab93f,#c8901f)}
+.mpod-spot.s2 .mpod-step{height:clamp(54px,8vw,80px);background:linear-gradient(180deg,#cbced4,#a7abb3)}
+.mpod-spot.s3 .mpod-step{height:clamp(40px,6vw,60px);background:linear-gradient(180deg,#dcab7b,#bd8253)}
+.mpod-rank{font-family:var(--mono);font-weight:800;font-size:clamp(1.4rem,3vw,2rem);opacity:.95;text-shadow:0 2px 6px rgba(0,0,0,.2)}
+.mpod-shine{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:mpsheen 4.2s ease-in-out infinite}
+@keyframes mpsheen{0%,60%{left:-60%}85%,100%{left:130%}}
+@media (prefers-reduced-motion:reduce){.mpod-crown,.mpod-shine{animation:none}}
+
+/* ---- sections ---- */
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,64px) 70px;width:100%}
+.section{margin-top:clamp(30px,4.5vw,46px)}
+.slabel{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);font-weight:800;margin:0 0 16px}
+.slabel.adm{color:var(--maroon)}
+.slabel::after{content:"";flex:1;height:1px;background:var(--line2)}
+.slabel .scount{color:var(--muted);font-weight:700;letter-spacing:.04em;font-family:var(--mono);font-size:11px}
+
+/* ---- tiles ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:16px}
+.tile{position:relative;display:flex;flex-direction:column;text-align:left;text-decoration:none;
+  border:1.5px solid var(--line);background:#fff;border-radius:18px;padding:22px 20px 20px;cursor:pointer;
+  font-family:var(--base);color:inherit;transition:transform .17s var(--pop),border-color .16s,box-shadow .16s;overflow:hidden;opacity:0}
+.tile.in{animation:pop .5s var(--pop) both}
+@keyframes pop{0%{opacity:0;transform:translateY(16px) scale(.975)}100%{opacity:1;transform:none}}
+.tile:hover{transform:translateY(-5px);border-color:var(--maroon);box-shadow:var(--shadow)}
+.tile.soon{cursor:default}
+.tile.soon:hover{transform:none;border-color:var(--line);box-shadow:none}
+.tile.adm{border-color:rgba(192,32,37,.3);background:linear-gradient(180deg,#fff,var(--maroon-tint))}
+.ticon{width:48px;height:48px;border-radius:13px;background:var(--maroon-tint);border:1px solid rgba(192,32,37,.16);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:15px}
+.tile h3{margin:0 0 5px;font-size:1.24rem;color:var(--ink);font-weight:800;letter-spacing:-.015em}
+.tile:hover:not(.soon) h3{color:var(--maroon)}
+.tile p{margin:0;font-size:.88rem;color:var(--muted);line-height:1.5;flex:1}
+.tmeta{display:flex;align-items:center;gap:7px;margin-top:16px;flex-wrap:wrap}
+.chip{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:20px;font-family:var(--mono)}
+.chip.live{color:var(--ok);background:rgba(27,127,75,.09);border:1px solid rgba(27,127,75,.22)}
+.chip.soon{color:var(--muted);background:#f5f5f5;border:1px solid var(--line)}
+.chip.mgr{color:var(--maroon);background:var(--maroon-tint);border:1px solid rgba(192,32,37,.28)}
+.chip.adm{color:#fff;background:var(--maroon);border:1px solid var(--maroon)}
+.tgo{position:absolute;top:22px;right:20px;color:var(--line);font-size:19px;transition:.16s}
+.tile:hover:not(.soon) .tgo{color:var(--maroon);transform:translateX(3px)}
+.tile.soon .tgo{display:none}
+.tile .ext{position:absolute;top:22px;right:20px;color:var(--muted);font-size:13px}
+
+/* ---- footer ---- */
+.foot{border-top:1px solid var(--line2);padding:26px clamp(20px,5vw,64px);text-align:center;color:var(--muted);font-size:11px;letter-spacing:.08em;font-family:var(--mono);text-transform:uppercase}
+.foot b{color:var(--maroon);font-weight:800}
+
+/* ---- loading veil ---- */
+#veil{position:fixed;inset:0;z-index:60;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .35s var(--ease)}
+#veil.off{opacity:0;pointer-events:none}
+.spin{width:26px;height:26px;border:2.5px solid var(--line);border-top-color:var(--maroon);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+@media (max-width:820px){
+  /* the status pill cannot shrink (nowrap), so on a handset it collided with the
+     bell and avatar. It is decorative here, the page already says Staff Portal. */
+  .brand .status{display:none}
+}
+@media (max-width:560px){
+  .who .me{display:none}
+  .who{gap:9px}
+  .grid{grid-template-columns:1fr}
+  header.site{padding-left:16px;padding-right:16px}
+  .signout{padding:8px 12px;font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="veil"><div class="spin"></div></div>
+
+<header class="top">
+  <div class="brand">
+    <img class="logo" src="koocester-logo.png" alt="Koocester">
+    <span class="status"><span class="dot"></span>Staff Portal</span>
+  </div>
+  <div class="who">
+    <button class="bell" id="bell" title="What's new" aria-label="What's new">🔔<span class="count" id="bell-count">0</span></button>
+    <div class="me"><b id="me-name">&nbsp;</b><span id="me-role">&nbsp;</span></div>
+    <div class="avatar" id="me-avatar">K</div>
+    <button class="signout" id="signout">Sign out</button>
+  </div>
+</header>
+
+<!-- notification panel -->
+<div class="panel" id="panel">
+  <div class="phead">
+    <b>What's New</b>
+    <button class="padd" id="padd" style="display:none">＋ Post</button>
+  </div>
+  <form class="pform" id="pform" autocomplete="off">
+    <input id="pf-title" placeholder="Title" maxlength="90">
+    <textarea id="pf-body" placeholder="What should the team know?" maxlength="400"></textarea>
+    <div class="prow">
+      <select id="pf-kind"><option value="update">Update</option><option value="announcement">Announcement</option><option value="training">Training</option></select>
+      <input id="pf-href" placeholder="Link (optional, e.g. academy.html)">
+    </div>
+    <button type="submit">Post to the team</button>
+  </form>
+  <div class="plist" id="plist"></div>
+</div>
+
+<div class="preview" id="preview">Preview mode · not signed in. Live, the greeting shows the signed-in person's name, the bell shows their unread count, and management and admin tiles appear only for the right people.</div>
+
+<section class="hero">
+  <div class="date" id="hero-date">&nbsp;</div>
+  <h1 id="hero-greeting">Welcome back.</h1>
+  <p id="hero-sub">Everything Koocester, in one place. Pick a workspace to get started.</p>
+  <a id="train-status" class="tstat" href="academy.html" title="Open the Academy"></a>
+  <!-- value of the week: rotates so the values stay in front of people, not on a wall -->
+  <div class="vow" id="vow" style="display:none">
+    <div class="vow-letter" id="vow-letter">G</div>
+    <div class="vow-txt">
+      <div class="vow-eyebrow">This week we lead with</div>
+      <div class="vow-name" id="vow-name"></div>
+      <div class="vow-line" id="vow-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- What's New: the newest unread update, surfaced on entry (not hidden behind the bell) -->
+<div class="flash" id="flash">
+  <div class="flash-card">
+    <button class="flash-x" id="flash-x" title="Mark as read" aria-label="Mark as read">×</button>
+    <div class="flash-tag"><span class="pip"></span><span id="flash-kind">Update</span><span class="flash-count" id="flash-count"></span></div>
+    <h3 id="flash-title"></h3>
+    <p id="flash-body"></p>
+    <a class="flash-more" id="flash-more" href="#" style="display:none">Open →</a>
+  </div>
+</div>
+
+<section class="mpod">
+  <div class="mpod-head">
+    <span class="mpod-eyebrow">🏆 Marketing leaderboard · last 30 days</span>
+    <a class="mpod-all" href="leaderboard.html">Full leaderboard →</a>
+  </div>
+  <div class="mpod-stage">
+    <div class="mpod-spot s2">
+      <div class="mpod-av">T</div>
+      <div class="mpod-name">Talulla</div>
+      <div class="mpod-role">Social Media</div>
+      <div class="mpod-score">66 pts</div>
+      <div class="mpod-step"><span class="mpod-shine"></span><span class="mpod-rank">2</span></div>
+    </div>
+    <div class="mpod-spot s1">
+      <div class="mpod-crown">👑</div>
+      <div class="mpod-av">M</div>
+      <div class="mpod-name">Maulana</div>
+      <div class="mpod-role">Video Editor</div>
+      <div class="mpod-score">67 pts</div>
+      <div class="mpod-step"><span class="mpod-shine"></span><span class="mpod-rank">1</span></div>
+    </div>
+    <div class="mpod-spot s3">
+      <div class="mpod-av">WA</div>
+      <div class="mpod-name">Wendi Amalia</div>
+      <div class="mpod-role">Content Strategist</div>
+      <div class="mpod-score">58 pts</div>
+      <div class="mpod-step"><span class="mpod-shine"></span><span class="mpod-rank">3</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap" id="sections"></main>
+
+<!-- Purpose · Vision · Values — permanent, on every visit -->
+<section class="vpv">
+  <div class="vpv-in">
+    <p class="vpv-say">Empowering Growth. <b>Built on Trust.</b></p>
+    <p class="vpv-vision"><b>Our purpose:</b> a Symbol of Inspiration, Empowering Growth, Powered by People. &nbsp;<b>Vision 2035:</b> to be the world's most trusted and influential growth ecosystem, inspiring over 1 billion people a year through influential media, impactful education and data intelligence.</p>
+    <div class="vpv-grid">
+      <div class="vpv-v"><div class="l">G</div><div class="n">Growth and Curiosity</div></div>
+      <div class="vpv-v"><div class="l">U</div><div class="n">Uniting through trust and relationships</div></div>
+      <div class="vpv-v"><div class="l">I</div><div class="n">Impact through inspiration</div></div>
+      <div class="vpv-v"><div class="l">D</div><div class="n">Dare to be bold and innovate</div></div>
+      <div class="vpv-v"><div class="l">E</div><div class="n">Empathy and Giving</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">Koocester staff only · <b>one login</b> across the portal · passwordless email sign-in</footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+
+// ── who counts as management (sees the Operate section) ──
+// KEEP IN STEP WITH: feedFor() in functions/dash.js and isManager() in
+// functions/mgmt-deck.js. Those are the HARD server-side gates. Anyone added
+// here must also resolve there, or they get a tile that opens onto a 403.
+// Titles that are management by definition. Deliberately short.
+// Do NOT add bare function titles like 'Sales', 'Finance' or 'HR' here: those
+// titles are shared with whole teams, so 'Sales' alone would admit every sales
+// rep. Management is named person by person below instead.
+const MANAGER_ROLES = ['Founder', 'Head of Growth', 'Head Editor'];
+// MANAGEMENT = the members of the "Manager Updates" Lark group, plus Cheryl for
+// Sales. Read from that group on 2026-07-20; emails are the Work Email field on
+// the HR base (the portal sign-in join key), not guessed from first names —
+// three of them do not follow the firstname@ pattern.
+// When someone joins or leaves Manager Updates, update this list to match.
+const MANAGER_EMAILS = [
+  'koocester@gmail.com',        // Hakim, founder (legacy address)
+  'ceo@koocester.com',          // Hakim, founder — the address he signs in with
+  'mike@koocester.com',         // Mike, Head of Growth
+  'thaddeus@koocester.com',     // Thaddeus, Producer lead
+  'ratnasari@koocester.com',    // Ratnasari, Copywriter lead
+  'imanarifin@koocester.com',   // Iman, Head Editor
+  'tpradian@koocester.com',     // Talulla, Social Media lead
+  'shahrukh@koocester.com',     // Shahrukh, Strategy
+  'rina@koocester.com',         // Rina, Customer Success
+  'finance@koocester.com',      // Mishkat, Finance — the address her PORTAL account uses
+  'taninmishkat@koocester.com', // Mishkat, personal address (no portal account yet)
+  'faiz@koocester.com',         // Faiz, Tech
+  'bhavani@koocester.com',      // Bhavani, HR
+  'cheryl@koocester.com',       // Cheryl, Sales — the ONLY sales access
+  'zainab@koocester.com',       // Zainab, Events lead
+];
+
+// ── SECTIONS + TILES ─────────────────────────────────────────────────────────
+// access: 'all' | 'manager' | 'admin' (admin = is_admin only). status: 'live' | 'soon'.
+// external:true opens a new tab. Add a tile by dropping a line in the right section.
+const SECTIONS = [
+  { id:'everyday', label:'Everyday', tiles:[
+    { icon:'🎓', title:'Academy',       desc:'Onboarding, SOPs and playbooks, how we use AI, the team directory. Your learning hub.', href:'academy.html',          status:'live', access:'all' },
+    { icon:'📄', title:'Media Kits',    desc:'Client-facing media-kit slides for Singapore, Malaysia and Indonesia.',                 href:'media-kit-slides.html', status:'live', access:'all' },
+    { icon:'💼', title:'Sales Kits',    desc:'Pitch kits by vertical. Company, Foodie, Homes and more, ready to send.',                href:'sales-kits.html',       status:'live', access:'all' },
+    { icon:'🎨', title:'Brand Assets',  desc:'Logos, colours, fonts and the guideline. Download what you need, stay on-brand.',        href:'brand-assets.html',     status:'live', access:'all' },
+    { icon:'🔐', title:'Password Vault',desc:'Shared logins, managed. Request access from Tech.',                                     href:'#',                     status:'soon', access:'all', external:true },
+    { icon:'🏆', title:'Leaderboard',   desc:'Performance ranking, tiered and live. See where you and every account stand.',          href:'leaderboard.html',      status:'live', access:'all' },
+    { icon:'🏛️', title:'Town Hall',     desc:'All-hands recaps, month by month. The wins, the numbers, and where we are headed.',     href:'manager/townhall/index.html', status:'live', access:'all' },
+    { icon:'📕', title:'Policies',      desc:'How we work and what we stand by. Conduct, compliance, HR and the declarations you owe.', href:'policies.html',        status:'live', access:'all' },
+    { icon:'🌏', title:'Growth Academy',desc:'The classes we teach externally. One curriculum for Singapore, Malaysia and Indonesia.',  href:'growth-academy.html',  status:'live', access:'all' },
+    { icon:'👥', title:'People',        desc:'Who is who and who to ask. The directory, by department, across all three markets.',      href:'people.html',          status:'live', access:'all' },
+  ]},
+  { id:'operate', label:'Operate', access:'manager', tiles:[
+    { icon:'📊', title:'Weekly Reports',   desc:'The management weekly. This week’s live, plus every past week.',          href:'manager/weekly/index.html',   status:'live', access:'manager' },
+    { icon:'📈', title:'Command Dashboard',desc:'The always-on cockpit. Live role dashboards for the whole operation.',     href:'command.html', status:'live', access:'manager' },
+    { icon:'✅', title:'Accountability',   desc:'Every red flag, its owner, and whether the loop got closed.',             href:'accountability.html',         status:'live', access:'manager' },
+  ]},
+  { id:'admin', label:'Admin', access:'admin', tiles:[
+    { icon:'🔑', title:'Permissions',       desc:'Who sees what. Management access, dashboards and reassign rights, in one place.', href:'admin/permissions.html',      status:'live', access:'admin' },
+    { icon:'🛡️', title:'Operations Runbook', desc:'How to run and maintain the portal. Founder only.',                     href:'admin/runbook.html',          status:'live', access:'admin' },
+    { icon:'🎓', title:'Training Completions', desc:'Who has completed what, by department. Live from the Academy.',        href:'completions.html',            status:'live', access:'admin' },
+  ]},
+];
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ── training pill: shows what is OUTSTANDING, not what is done ──
+// Completed counts flatter people and hide the work. This shows what is left
+// against their assigned curriculum, and a module returns to outstanding when
+// its version is bumped, which is how retraining is triggered.
+//
+// The pill stays hidden unless we can state something true. A zero here would
+// read as "all done" when it might mean "we could not load it" or "you have no
+// curriculum yet", so those cases get their own words instead of a number.
+(async () => {
+  try{
+    const el = document.getElementById('train-status'); if(!el) return;
+    const { data:{ session } } = await supabase.auth.getSession(); if(!session) return;
+
+    const [meRes, outRes] = await Promise.all([
+      supabase.from('academy_me').select('role_slug,role_label').maybeSingle(),
+      supabase.from('academy_my_outstanding').select('deck,why')
+    ]);
+
+    // Could not read. Say nothing rather than imply a state we do not know.
+    if(meRes.error || outRes.error) return;
+
+    // Signed in but nobody has assigned a curriculum. Zero outstanding here
+    // means "not set up", never "finished".
+    if(!meRes.data || !meRes.data.role_slug){
+      el.innerHTML = '🎓 Your Academy role is not assigned yet';
+      el.classList.add('on');
+      return;
+    }
+
+    const rows = outRes.data || [];
+    const n = rows.length;
+    const retrain = rows.filter(r => r.why === 'retrain').length;
+
+    if(n === 0){
+      el.innerHTML = '🎓 Academy training, all caught up';
+      el.classList.add('alldone');
+    } else {
+      el.innerHTML = '🎓 Academy training <span class="n">'+n+'</span> module'
+        + (n===1?'':'s') + ' outstanding'
+        + (retrain>0 ? ' <span class="rt">('+retrain+' to retrain)</span>' : '');
+    }
+    el.classList.add('on');
+  }catch(e){}
+})();
+const $ = (id) => document.getElementById(id);
+const isPreviewHost = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const PREVIEW_NAME = 'Hakim';
+
+let CTX = { profile:null, preview:false, session:null, manager:false, admin:false };
+
+function timeGreeting(){ const h=new Date().getHours(); return h<12?'Good morning':h<18?'Good afternoon':h<22?'Good evening':'Good night'; }
+function pickGreeting(name){
+  const opts = [ timeGreeting()+', '+name+'.', 'Welcome back, '+name+'.', name+' returns!', 'Good to see you, '+name+'.', name+' is back!' ];
+  return opts[Math.floor(Math.random()*opts.length)];
+}
+function longDate(){ try{ return new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}); }catch(e){ return ''; } }
+function initials(name, email){ const s=(name||'').trim(); if(s){ const p=s.split(/\s+/); return ((p[0]||'')[0]||'')+(p.length>1?(p[p.length-1][0]||''):''); } return ((email||'K')[0]||'K').toUpperCase(); }
+// SOURCE OF TRUTH = profiles.is_manager. The lists above are only a fallback for
+// the window before that column exists, so this ships safely either way.
+function isManager(p){ if(!p) return false; if(p.is_admin===true) return true;
+  if(typeof p.is_manager==='boolean') return p.is_manager;            // DB decides
+  if(MANAGER_EMAILS.map(e=>e.toLowerCase()).includes(String(p.email||'').toLowerCase())) return true;
+  return MANAGER_ROLES.map(r=>r.toLowerCase()).includes(String(p.role||'').toLowerCase()); }
+function isHR(p){ if(!p) return false; if(p.is_admin===true) return true; return ['hr','people','talent'].some(k=>String(p.role||'').toLowerCase().includes(k)); }
+function timeAgo(iso){ try{ const d=(Date.now()-new Date(iso).getTime())/1000; if(d<60)return'just now'; if(d<3600)return Math.floor(d/60)+'m ago'; if(d<86400)return Math.floor(d/3600)+'h ago'; return Math.floor(d/86400)+'d ago'; }catch(e){ return ''; } }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ---------- tiles ---------- */
+function renderTiles(){
+  const root=$('sections'); root.innerHTML=''; let delay=0;
+  SECTIONS.forEach(sec=>{
+    if(sec.access==='manager' && !CTX.manager) return;
+    if(sec.access==='admin' && !CTX.admin) return;
+    const tiles=sec.tiles.filter(t=> t.access==='all' || (t.access==='manager'&&CTX.manager) || (t.access==='admin'&&CTX.admin) || (t.access==='hr'&&isHR(CTX.profile)));
+    if(!tiles.length) return;
+    const wrap=document.createElement('section'); wrap.className='section';
+    const live=tiles.filter(t=>t.status==='live').length;
+    wrap.innerHTML='<h2 class="slabel'+(sec.access==='admin'?' adm':'')+'">'+esc(sec.label)+'<span class="scount">'+live+' live · '+tiles.length+' total</span></h2>';
+    const grid=document.createElement('div'); grid.className='grid';
+    tiles.forEach(t=>{
+      const soon=t.status==='soon';
+      const el=document.createElement(soon?'div':'a');
+      el.className='tile'+(soon?' soon':'')+(t.access==='admin'?' adm':'');
+      if(!soon){ el.href=t.href; if(t.external){ el.target='_blank'; el.rel='noopener'; } }
+      el.style.animationDelay=(delay+=45)+'ms';
+      const chips=[ soon?'<span class="chip soon">Coming soon</span>':'<span class="chip live">Live</span>' ];
+      if(t.access==='manager') chips.push('<span class="chip mgr">Management</span>');
+      if(t.access==='admin') chips.push('<span class="chip adm">Founder only</span>');
+      if(t.access==='hr') chips.push('<span class="chip adm">Founder + HR</span>');
+      const corner=soon?'':(t.external?'<span class="ext">↗</span>':'<span class="tgo">→</span>');
+      el.innerHTML=corner+'<div class="ticon">'+t.icon+'</div><h3>'+esc(t.title)+'</h3><p>'+esc(t.desc)+'</p><div class="tmeta">'+chips.join('')+'</div>';
+      grid.appendChild(el);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
+    });
+    wrap.appendChild(grid); root.appendChild(wrap);
+  });
+}
+
+/* ---------- notifications ---------- */
+let ANN=[];  // {id,title,body,kind,href,created_at,read}
+function renderBell(){
+  const unread=ANN.filter(a=>!a.read).length;
+  $('bell-count').textContent=unread>9?'9+':String(unread);
+  $('bell').classList.toggle('has',unread>0);
+  renderFlash();
+}
+
+/* ---------- What's New: surface the newest unread on entry ----------
+   Reads the same ANN list + announcement_reads as the bell, so dismissing
+   here marks it read everywhere. Dismiss reveals the next unread, if any. */
+function renderFlash(){
+  const box=$('flash'); if(!box) return;
+  const unread=ANN.filter(a=>!a.read);
+  if(!unread.length){ box.classList.remove('on'); return; }
+  const a=unread[0];                                  // ANN is ordered newest first
+  const tag = a.kind==='training'?'Training':a.kind==='announcement'?'Announcement':'Update';
+  $('flash-kind').textContent=tag;
+  $('flash-count').textContent = unread.length>1 ? ('+'+(unread.length-1)+' more') : '';
+  $('flash-title').textContent=a.title||'';
+  $('flash-body').textContent=a.body||'';
+  const more=$('flash-more');
+  if(a.href){ more.href=a.href; more.style.display='inline-block'; more.textContent = a.kind==='training'?'Go to the Academy →':'Open →'; }
+  else { more.style.display='none'; }
+  box.classList.add('on');
+  box.dataset.id=a.id;
+}
+
+/* ---------- Value of the week ----------
+   Rotates through GUIDE by ISO week so the values keep showing up in a place
+   people already look, instead of living on a page nobody reopens. */
+const GUIDE=[
+  {l:'G',n:'Growth and Curiosity',              s:'We keep learning, and we keep raising the bar.'},
+  {l:'U',n:'Uniting through trust and relationships', s:'Trust is the asset. Relationships compound it.'},
+  {l:'I',n:'Impact through inspiration',        s:'We move people to act by showing what is possible.'},
+  {l:'D',n:'Dare to be bold and innovate',      s:'We back new ideas and ship them fast.'},
+  {l:'E',n:'Empathy and Giving',                s:'We lead with generosity, for our people and our partners.'},
+];
+function isoWeek(d){
+  const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  t.setUTCDate(t.getUTCDate()+4-(t.getUTCDay()||7));
+  const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));
+  return Math.ceil(((t-y)/86400000+1)/7);
+}
+function paintValueOfWeek(){
+  const v=GUIDE[isoWeek(new Date())%GUIDE.length];
+  const el=$('vow'); if(!el) return;
+  $('vow-letter').textContent=v.l; $('vow-name').textContent=v.n; $('vow-line').textContent=v.s;
+  el.style.display='flex';
+}
+function renderPanel(){
+  const list=$('plist');
+  if(!ANN.length){ list.innerHTML='<div class="pempty">Nothing new right now. Anything the team needs to know will land here.</div>'; return; }
+  list.innerHTML=ANN.map(a=>{
+    const cta = a.kind==='training' ? '<span class="cta">Go to the Academy →</span>' : (a.href?'<span class="cta">Open →</span>':'');
+    const tag = a.kind==='training'?'Training':a.kind==='announcement'?'Announcement':'Update';
+    const el = a.href ? 'a' : 'div';
+    const attr = a.href ? (' href="'+esc(a.href)+'"') : '';
+    return '<'+el+attr+' class="pitem'+(a.read?'':' unread')+'" data-id="'+a.id+'">'+
+      '<span class="dot"></span>'+
+      '<span class="pkind '+a.kind+'">'+tag+'</span>'+
+      '<h4>'+esc(a.title)+'</h4>'+(a.body?'<p>'+esc(a.body)+'</p>':'')+cta+
+      '<div class="when">'+timeAgo(a.created_at)+'</div></'+el+'>';
+  }).join('');
+  list.querySelectorAll('.pitem').forEach(node=>{
+    node.addEventListener('click',()=>{ const id=node.getAttribute('data-id'); markRead(id); });
+  });
+}
+async function markRead(id){
+  const a=ANN.find(x=>String(x.id)===String(id)); if(!a||a.read) { return; }
+  a.read=true; renderBell(); node_unread();
+  if(CTX.preview) return;
+  try{ await supabase.from('announcement_reads').insert({ user_id:CTX.session.user.id, announcement_id:a.id }); }catch(e){}
+}
+function node_unread(){ document.querySelectorAll('.pitem').forEach(n=>{ const a=ANN.find(x=>String(x.id)===n.getAttribute('data-id')); if(a&&a.read) n.classList.remove('unread'); }); }
+
+async function loadAnnouncements(){
+  if(CTX.preview){
+    ANN=[
+      {id:'m1',title:'New training: Offer Creation',body:'A new module is live. Complete it in the Academy this week.',kind:'training',href:'academy.html',created_at:new Date(Date.now()-3600e3).toISOString(),read:false},
+      {id:'m2',title:'Welcome to the new Staff Portal',body:'One login, one home for everything Koocester.',kind:'announcement',href:null,created_at:new Date(Date.now()-26*3600e3).toISOString(),read:false},
+      {id:'m3',title:'Posting times updated',body:'Evening lanes only. Check the Academy for the new schedule.',kind:'update',href:null,created_at:new Date(Date.now()-72*3600e3).toISOString(),read:true},
+    ];
+    renderBell(); renderPanel(); return;
+  }
+  try{
+    const [{data:anns},{data:reads}] = await Promise.all([
+      supabase.from('announcements').select('id,title,body,kind,href,created_at').eq('active',true).order('created_at',{ascending:false}),
+      supabase.from('announcement_reads').select('announcement_id'),
+    ]);
+    const readSet=new Set((reads||[]).map(r=>r.announcement_id));
+    ANN=(anns||[]).map(a=>({ ...a, read:readSet.has(a.id) }));
+  }catch(e){ ANN=[]; }
+  renderBell(); renderPanel();
+}
+
+function wireBell(){
+  $('bell').addEventListener('click',(e)=>{ e.stopPropagation(); $('panel').classList.toggle('on'); });
+  document.addEventListener('click',(e)=>{ if(!$('panel').contains(e.target) && e.target!==$('bell')) $('panel').classList.remove('on'); });
+  // admin post form
+  $('padd').addEventListener('click',()=>$('pform').classList.toggle('on'));
+  $('pform').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const rec={ title:$('pf-title').value.trim(), body:$('pf-body').value.trim()||null, kind:$('pf-kind').value, href:$('pf-href').value.trim()||null };
+    if(!rec.title) return;
+    if(CTX.preview){ ANN.unshift({ id:'new'+Date.now(), ...rec, created_at:new Date().toISOString(), read:false }); }
+    else { try{ const {data}=await supabase.from('announcements').insert(rec).select().single(); if(data) ANN.unshift({ ...data, read:false }); }catch(err){ alert('Could not post: '+(err.message||err)); return; } }
+    $('pform').reset(); $('pform').classList.remove('on'); renderBell(); renderPanel();
+  });
+}
+
+/* ---------- marketing podium (live top 3, window 30; hardcoded markup is the fallback) ---------- */
+const MKT_ROLES_P = new Set(['Producer','Strategist','Editor','Social Media','Copywriter']);
+const ROLE_DISP_P = {Producer:'Producer',Strategist:'Content Strategist',Editor:'Video Editor','Social Media':'Social Media',Copywriter:'Copywriter'};
+async function paintPodium(){
+  if(CTX.preview) return;               // keep the demo podium in preview
+  let rows=[];
+  try{ const {data}=await supabase.from('lb_people_active').select('person,role,composite').eq('window_days',30); rows=data||[]; }catch(e){ return; }
+  rows=rows.filter(r=>MKT_ROLES_P.has(r.role)&&r.composite!=null).sort((a,b)=>b.composite-a.composite).slice(0,3);
+  if(rows.length<3) return;             // not enough live data -> leave the fallback markup untouched
+  const stage=document.querySelector('.mpod-stage'); if(!stage) return;
+  const spot=(p,cls,rank,crown)=>'<div class="mpod-spot '+cls+'">'+(crown?'<div class="mpod-crown">👑</div>':'')+
+    '<div class="mpod-av">'+esc(initials(p.person))+'</div>'+
+    '<div class="mpod-name">'+esc(p.person)+'</div>'+
+    '<div class="mpod-role">'+esc(ROLE_DISP_P[p.role]||p.role)+'</div>'+
+    '<div class="mpod-score">'+p.composite+' pts</div>'+
+    '<div class="mpod-step"><span class="mpod-shine"></span><span class="mpod-rank">'+rank+'</span></div></div>';
+  stage.innerHTML=spot(rows[1],'s2',2,false)+spot(rows[0],'s1',1,true)+spot(rows[2],'s3',3,false);
+}
+
+/* ---------- boot ---------- */
+function paintUser(){
+  if(CTX.preview){
+    $('preview').classList.add('on');
+    $('me-name').textContent='Preview'; $('me-role').textContent='not signed in'; $('me-avatar').textContent='K'; $('signout').textContent='Exit preview';
+    if(CTX.admin) $('padd').style.display='';
+  } else {
+    const p=CTX.profile;
+    $('me-name').textContent=p?.full_name||p?.email||'Signed in';
+    $('me-role').textContent=[p?.role,p?.department].filter(Boolean).join(' · ')||'Staff';
+    $('me-avatar').textContent=initials(p?.full_name,p?.email);
+    if(CTX.admin) $('padd').style.display='';
+  }
+  const name = CTX.preview ? PREVIEW_NAME : (String(CTX.profile?.full_name||'').trim().split(/\s+/)[0] || (CTX.profile?.email||'there').split('@')[0]);
+  $('hero-date').textContent=longDate();
+  if(CTX.firstDay){
+    // warm first-day welcome for someone signing in for the very first time
+    $('hero-greeting').innerHTML='Welcome aboard, <span>'+esc(name)+'</span>.';
+    $('hero-sub').textContent='This is your home base. Everything Koocester lives here: the training, the tools, the wins. Start with the Academy to find your feet.';
+  } else {
+    $('hero-greeting').innerHTML=pickGreeting('<span>'+esc(name)+'</span>');
+  }
+}
+
+async function loadProfile(userId){
+  // Try WITH is_manager (the source of truth). If that column does not exist yet
+  // the select errors, so fall back to the original shape and let isManager()
+  // use the frozen list. Safe before and after the migration.
+  try{ const {data,error}=await supabase.from('profiles').select('full_name, email, department, role, is_admin, is_manager').eq('id',userId).single();
+       if(!error && data) return data; }catch(e){}
+  try{ const {data}=await supabase.from('profiles').select('full_name, email, department, role, is_admin').eq('id',userId).single(); return data||null; }catch(e){ return null; } }
+
+$('signout').addEventListener('click', async ()=>{ if(isPreviewHost) return; try{ await supabase.auth.signOut(); }catch(e){} location.replace('login.html'); });
+
+(async ()=>{
+  wireBell();
+  let session=null;
+  try{ const {data}=await supabase.auth.getSession(); session=data?.session||null; }catch(e){}
+  // ?welcome=1 forces the first-day greeting (for previewing it)
+  const forceWelcome = new URLSearchParams(location.search).get('welcome')==='1';
+  if(!session){
+    if(isPreviewHost){ CTX={ preview:true, manager:true, admin:true, profile:null, session:null, firstDay:forceWelcome }; }
+    else { location.replace('login.html'); return; }
+  } else {
+    const profile=await loadProfile(session.user.id) || { email:session.user.email };
+    // first login: the auth account was created at (about) the same moment as this sign-in
+    let firstDay=forceWelcome;
+    try{
+      const u=session.user;
+      if(u && u.created_at && u.last_sign_in_at){
+        firstDay = firstDay || (Math.abs(new Date(u.last_sign_in_at)-new Date(u.created_at)) < 10*60*1000);
+      }
+    }catch(e){}
+    CTX={ preview:false, session, profile, manager:isManager(profile), admin:profile.is_admin===true, firstDay };
+  }
+  paintUser(); renderTiles(); paintPodium(); paintValueOfWeek();
+  // dismissing the on-entry highlight marks it read (same record the bell uses)
+  $('flash-x').addEventListener('click',()=>{ const id=$('flash').dataset.id; if(id) markRead(id); });
+  supabase.auth.onAuthStateChange(()=>paintPodium()); await loadAnnouncements();
+  $('veil').classList.add('off');
+})();
+</script>
+</body>
+</html>

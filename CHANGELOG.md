@@ -4,6 +4,13 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 
 ## [Unreleased]
 
+### Added — Portal source + Academy auth deep-dive (2026-07-21)
+- `portal/src/` — the **actual portal source** committed as a sanitized snapshot (103 HTML pages, 10 JS, `deploy.sh`, curriculum map + rollback runbook). Two secret classes replaced with placeholders exactly like the n8n exports: `<SUPABASE_ANON_KEY>` (26 files) and `<REDACTED_N8N_BASIC_AUTH>` (3 Functions). Binary assets (~22M of portraits/brand/logos) intentionally excluded; restored on deploy from the vault. The vault source is untouched.
+- `portal/04-academy-auth.md` — the identity subsystem in full: passwordless email-OTP sign-in, the `koo_session` cookie (shape, why not HttpOnly, 400-day + token-rotation mirroring), `safeNext()` redirect safety, the four-layer gate stack, roles/permissions with the exact column/RPC per field, and the `is_founder()` open verification (with the SQL to close it).
+- `portal/05-change-process.md` — the repo's 8-phase SDLC applied to portal changes, the Agile-vs-Waterfall cut, the two portal invariants (hard=fail-closed/soft=fail-open; the three mirrored access lists), and a portal PR checklist.
+- Interlinked from `portal/README.md`, `docs/19`, and the README architecture table.
+- Corrected loose wording on the Supabase anon key in `docs/19` and `portal/02` — it embeds no further secret but is itself a ~10-year anon-role bearer credential bounded only by RLS.
+
 ### Added — Staff Portal documentation (2026-07-21)
 The portal (`staffacademy.koocester.com`) post-dates the 2026-07-10 reconstruction and was the largest undocumented gap. Documented from the live runtime source, not memory.
 - `docs/19-staff-portal.md` — narrative: what it is, the soft-vs-hard gate model, the edge front door, how it links into Lark (HR roster sync + Academy Role), how live numbers reach the dashboards, `deploy.sh`, security posture.

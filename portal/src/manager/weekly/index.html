@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../../koo-nav.js?v=2026072106"></script>
+<script src="../koo-manager-guard.js?v=2026072005"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Reports · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --maroon-deep:#8f1418; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,5vw,56px);border-bottom:1px solid var(--line2)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:20px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:5px;padding:4px 9px;background:var(--maroon-tint);font-family:var(--mono)}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.wrap{max-width:840px;margin:0 auto;padding:clamp(32px,6vw,60px) clamp(20px,5vw,56px) 80px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:12px}
+h1{font-size:clamp(1.9rem,4.4vw,2.8rem);line-height:1.04;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 30px;font-size:1rem}
+.row{display:flex;align-items:center;gap:16px;text-decoration:none;color:inherit;border:1.5px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:12px;transition:transform .15s var(--pop),border-color .15s,box-shadow .15s;opacity:0;animation:pop .5s var(--pop) both}
+@keyframes pop{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
+.row:hover{transform:translateY(-3px);border-color:var(--maroon);box-shadow:0 12px 30px rgba(0,0,0,.07)}
+.rdate{flex:none;width:64px;text-align:center;border-right:1px solid var(--line2);padding-right:16px}
+.rdate b{display:block;font-size:1.5rem;font-weight:800;color:var(--maroon);line-height:1;letter-spacing:-.02em}
+/* The newest week is highlighted in maroon. */
+.row.live{border-color:var(--maroon);background:var(--maroon-tint)}
+.row.live .rdate{border-right-color:rgba(192,32,37,.22)}
+.row.live .rdate b{font-size:1.9rem}
+.rdate span{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.rmain{flex:1;min-width:0}
+.rmain h3{margin:0 0 3px;font-size:1.1rem;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.rmain p{margin:0;font-size:.85rem;color:var(--muted)}
+.rlatest{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);background:rgba(27,127,75,.09);border:1px solid rgba(27,127,75,.22);padding:4px 8px;border-radius:12px}
+.rgo{flex:none;color:var(--line);font-size:20px}
+.row:hover .rgo{color:var(--maroon)}
+.empty{color:var(--muted);text-align:center;padding:50px 0}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="../../koocester.png" alt="Koocester"><span class="tag">Weekly Reports</span></div>
+  <a class="back" href="../../portal.html">← Portal</a>
+</header>
+<main class="wrap">
+  <div class="eyebrow">Management · Archive</div>
+  <h1>Weekly Reports</h1>
+  <p class="lead">Every week's company performance report, newest first. Click any week to open it.</p>
+  <div id="list"></div>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase = createClient('https://lfppmsppvqtjyusfrlkf.supabase.co','<SUPABASE_ANON_KEY>');
+// Fallback (used only if the reports table has no weekly rows yet). Links to the committed file.
+// Straight dated archive, newest first. The newest row carries the LATEST badge.
+// (A pinned "This week" live row was tried on 2026-07-20 and removed the same day:
+// the newest dated report IS this week, so it was showing the same deck twice.
+// The live deck is still there at ../../weekly-deck.html if it is ever wanted back.)
+const FALLBACK = [
+  { dated:'2026-07-14', title:'Week of 14 July 2026', href:'2026-07-14-weekly-report.html' },
+];
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const list=document.getElementById('list');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(items){
+  // Newest first; the first row is by definition the latest week.
+  if(!items.length){ list.innerHTML='<div class="empty">No reports yet. This week\'s will appear here.</div>'; return; }
+  list.innerHTML=items.map((o,i)=>{
+    const d=new Date(o.dated+'T00:00:00'); const day=d.getDate(); const mon=months[d.getMonth()];
+    const latest=i===0?'<span class="rlatest">Latest</span>':'';
+    return '<a class="row'+(i===0?' live':'')+'" href="'+o.href+'" style="animation-delay:'+(i*50)+'ms">'+
+      '<div class="rdate"><b>'+day+'</b><span>'+mon+'</span></div>'+
+      '<div class="rmain"><h3>'+esc(o.title)+'</h3><p>Company performance report</p></div>'+
+      latest+'<span class="rgo">→</span></a>';
+  }).join('');
+}
+(async ()=>{
+  try{
+    const { data } = await supabase.from('reports').select('id,title,dated').eq('kind','weekly').order('dated',{ascending:false});
+    if(data && data.length){ render(data.map(r=>({ dated:r.dated, title:r.title, href:'../report-view.html?id='+r.id }))); return; }
+  }catch(e){}
+  render(FALLBACK); // fall back to the committed file
+})();
+</script>
+</body>
+</html>

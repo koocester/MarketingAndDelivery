@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Management Weekly · Koocester</title>
+<style>
+  :root{ --maroon:#C02025; --ink:#0a0a0a; --muted:#767676; --line:#E4E4E4; --bg:#fff;
+    --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);font-family:var(--base);color:var(--ink)}
+  #frame{position:fixed;inset:0;width:100%;height:100%;border:0;display:none;background:var(--bg)}
+  #load{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;background:var(--bg)}
+  #load .spin{width:34px;height:34px;border:3px solid #eee;border-top-color:var(--maroon);border-radius:50%;animation:sp 1s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  #load h1{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0}
+  #load p{font-size:13px;color:var(--muted);margin:0;max-width:36ch;line-height:1.5}
+  #load .back{margin-top:6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:8px 14px;transition:.15s}
+  #load .back:hover{border-color:var(--maroon);color:var(--maroon)}
+  #load a.link{color:var(--maroon);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div id="load">
+  <div class="spin" id="spin"></div>
+  <h1 id="ttl">Building this week's deck…</h1>
+  <p id="msg">Every figure is computed live from source, so this takes a moment.</p>
+  <a class="back" href="portal.html">&larr; Back to portal</a>
+</div>
+<iframe id="frame" title="Koocester Management Weekly" referrerpolicy="no-referrer"></iframe>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
+  const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+
+  const spin = document.getElementById('spin');
+  const ttl = document.getElementById('ttl');
+  const msg = document.getElementById('msg');
+  function fail(title, html){ spin.style.display='none'; ttl.textContent=title; msg.innerHTML=html; }
+
+  (async () => {
+    // file:// preview: no auth, just show a note
+    if (location.protocol === 'file:') { fail('Preview', 'Sign-in and the live deck only work on the hosted portal.'); return; }
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let session = null;
+    try { session = (await supabase.auth.getSession()).data.session; } catch (e) {}
+    if (!session) { location.replace('/login.html?next=weekly-deck.html'); return; }
+
+    // Access is decided server-side by /mgmt-deck — management only, everyone
+    // else is refused (403, handled below). No client-side role gate needed.
+    try {
+      const r = await fetch('/mgmt-deck', { headers: { Authorization: 'Bearer ' + session.access_token }, cache: 'no-store' });
+      if (!r.ok) {
+        if (r.status === 401) { location.replace('/login.html?next=weekly-deck.html'); return; }
+        if (r.status === 403) { fail('No access', 'The management deck is for management only. <a class="link" href="portal.html">Back to portal</a>'); return; }
+        fail('Could not load', 'The deck did not respond (' + r.status + '). <a class="link" href="weekly-deck.html">Retry</a>'); return;
+      }
+      const html = await r.text();
+      const f = document.getElementById('frame');
+      f.onload = () => { document.getElementById('load').style.display = 'none'; f.style.display = 'block'; };
+      f.srcdoc = html;
+    } catch (e) {
+      fail('Could not reach the deck', 'Check your connection and <a class="link" href="weekly-deck.html">try again</a>.');
+    }
+  })();
+</script>
+</body>
+</html>

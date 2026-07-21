@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in · Koocester Staff Portal</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-core:#A81B20; --maroon-glow:rgba(192,32,37,.55); --ink:#05060a;
+  --panel:rgba(9,11,17,.62); --line:rgba(255,255,255,.09); --txt:#eef0f5; --muted:#8a90a2; --ok:#38e08a;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;color:var(--txt);font-family:var(--base);font-weight:400;-webkit-font-smoothing:antialiased;line-height:1.55;
+  display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;
+  background:var(--ink);
+}
+
+/* ---- warp-speed cockpit backdrop ---- */
+#warp{position:fixed;inset:0;z-index:0;display:block}
+/* depth vignette so the card sits inside the tunnel */
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at 50% 46%,transparent 0%,transparent 30%,rgba(5,6,10,.55) 72%,rgba(5,6,10,.92) 100%)}
+
+/* ---- glass card ---- */
+.card{
+  position:relative;z-index:2;width:100%;max-width:416px;
+  background:var(--panel);backdrop-filter:blur(22px) saturate(1.25);-webkit-backdrop-filter:blur(22px) saturate(1.25);
+  border:1px solid var(--line);border-radius:22px;padding:40px 36px 30px;
+  box-shadow:0 0 0 1px rgba(192,32,37,.08),0 50px 110px rgba(0,0,0,.66),0 0 80px rgba(192,32,37,.10);
+  animation:rise .7s var(--pop);overflow:hidden;
+}
+.card::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(140deg,rgba(192,32,37,.55),transparent 42%,transparent 58%,rgba(192,32,37,.32));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.75}
+@keyframes rise{0%{opacity:0;transform:translateY(20px) scale(.98)}100%{opacity:1;transform:none}}
+
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:2px}
+.logo{height:23px;width:auto;display:block;filter:brightness(0) invert(1)}
+.badge{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--maroon);font-weight:400;
+  border:1px solid rgba(192,32,37,.45);border-radius:5px;padding:4px 10px;background:rgba(192,32,37,.08);font-family:var(--mono)}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);font-weight:400;margin:24px 0 6px}
+h1{font-size:1.62rem;line-height:1.12;letter-spacing:-.025em;color:#fff;font-weight:700;margin:0 0 10px}
+.lead{margin:0 0 26px;color:var(--muted);font-size:.92rem;font-weight:400}
+label{display:block;font-size:10.5px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 9px;font-family:var(--mono)}
+input{
+  width:100%;font-family:var(--base);font-weight:400;font-size:1rem;color:#fff;background:rgba(255,255,255,.035);
+  border:1px solid var(--line);border-radius:12px;padding:15px 16px;transition:border-color .15s var(--ease),box-shadow .2s,background .2s;
+}
+input::placeholder{color:#5b6172}
+input:focus{outline:none;border-color:var(--maroon);background:rgba(192,32,37,.05);box-shadow:0 0 0 4px rgba(192,32,37,.12),0 0 26px rgba(192,32,37,.22)}
+input:disabled{opacity:.5}
+.btn{
+  width:100%;margin-top:18px;appearance:none;border:1px solid var(--maroon);color:#fff;cursor:pointer;
+  background:linear-gradient(180deg,var(--maroon),var(--maroon-core));
+  font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  padding:16px 20px;border-radius:12px;transition:transform .15s var(--ease),box-shadow .2s,filter .2s;
+  box-shadow:0 12px 34px rgba(192,32,37,.32);
+}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 18px 46px rgba(192,32,37,.46),0 0 30px rgba(192,32,37,.34);filter:brightness(1.07)}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.65;cursor:default}
+.link{margin-top:18px;text-align:center}
+.link button{appearance:none;border:none;background:none;color:var(--maroon);font-family:var(--mono);font-size:.78rem;font-weight:400;letter-spacing:.08em;cursor:pointer;padding:4px}
+.link button:hover{text-shadow:0 0 12px var(--maroon-glow)}
+.msg{margin-top:18px;font-size:.88rem;font-weight:400;border-radius:12px;padding:12px 14px;display:none;animation:rise .3s var(--pop)}
+.msg.show{display:block}
+.msg.info{background:rgba(192,32,37,.09);color:#f3dedf;border:1px solid rgba(192,32,37,.28)}
+.msg.error{background:rgba(192,32,37,.11);color:#f0cdce;border:1px solid rgba(192,32,37,.42)}
+.tick{width:44px;height:44px;border-radius:13px;background:linear-gradient(155deg,#C02025,#8f1418);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 0 16px;box-shadow:0 10px 26px rgba(192,32,37,.34)}
+.resend{appearance:none;border:none;background:none;color:var(--maroon);font-family:var(--mono);font-size:.78rem;font-weight:400;letter-spacing:.06em;cursor:pointer;padding:4px}
+.resend:disabled{color:var(--muted);cursor:default}
+.resend:not(:disabled):hover{text-shadow:0 0 12px var(--maroon-glow)}
+.foot{margin-top:24px;text-align:center;font-size:10px;color:var(--muted);letter-spacing:.1em;font-weight:400;font-family:var(--mono)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;vertical-align:-2px;margin-right:8px;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none}
+
+/* ---- futuristic success overlay (warp burst) ---- */
+#success{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;flex-direction:column;
+  background:radial-gradient(760px 540px at 50% 45%,rgba(192,32,37,.16),rgba(5,6,10,.94));backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+#success.on{display:flex;animation:rise .4s var(--pop)}
+.ring{width:120px;height:120px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.ring svg{width:120px;height:120px;transform:rotate(-90deg);position:absolute;inset:0}
+.ring circle{fill:none;stroke:var(--maroon);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:352;stroke-dashoffset:352;filter:drop-shadow(0 0 8px var(--maroon-glow));animation:draw 1s var(--ease) .1s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ring .chk{font-size:50px;font-weight:300;color:#fff;opacity:0;transform:scale(.4);animation:pin .5s var(--pop) .55s forwards;text-shadow:0 0 22px var(--maroon-glow)}
+@keyframes pin{to{opacity:1;transform:scale(1)}}
+.granted{margin-top:28px;font-family:var(--mono);letter-spacing:.4em;text-transform:uppercase;color:#fff;font-weight:400;font-size:14px;opacity:0;animation:fadeup .5s var(--ease) .8s forwards}
+.granted small{display:block;letter-spacing:.2em;font-size:10px;color:var(--muted);margin-top:12px;font-weight:400}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="warp"></canvas>
+<div class="vignette"></div>
+
+<div class="card">
+  <div class="brand">
+    <img class="logo" src="koocester-logo.png" alt="Koocester">
+    <span class="badge">Staff Portal</span>
+  </div>
+
+  <!-- STEP 1: email -->
+  <div id="step-email">
+    <div class="kicker">Secure access</div>
+    <h1>Sign in to Koocester</h1>
+    <p class="lead">Enter your Koocester email and we'll send you a secure sign-in link. No password to remember.</p>
+    <label for="email">Work email</label>
+    <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@koocester.com" autofocus>
+    <button id="send-btn" class="btn">Email me a sign-in code</button>
+  </div>
+
+  <!-- STEP 2: code -->
+  <div id="step-sent" class="hidden">
+    <div class="tick">&#9993;</div>
+    <h1>Enter your sign-in code</h1>
+    <p class="lead">We emailed <b id="sent-to" style="color:#fff;font-weight:500"></b> a sign-in code. Type it in to sign in on <b style="color:#fff;font-weight:500">this device</b>. It expires shortly and works once. Check spam if you do not see it.</p>
+    <label for="code">Sign-in code</label>
+    <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="XXX-XXX" style="letter-spacing:.35em;font-family:var(--mono);text-align:center;font-size:1.55rem">
+    <button id="verify-btn" class="btn">Verify &amp; sign in</button>
+    <div class="link"><button id="resend-btn" class="resend" type="button" disabled>Resend code</button> &nbsp;·&nbsp; <button id="back-btn" type="button">&larr; Different email</button></div>
+  </div>
+
+  <div id="msg" class="msg"></div>
+  <div class="foot">Koocester staff only &middot; passwordless email sign-in</div>
+</div>
+
+<!-- futuristic success -->
+<div id="success">
+  <div class="ring"><svg viewBox="0 0 118 118"><circle cx="59" cy="59" r="56"></circle></svg><span class="chk">&#10003;</span></div>
+  <div class="granted">Access granted<small>Entering Koocester&hellip;</small></div>
+</div>
+
+<!-- warp-speed backdrop: maroon starfield streaming outward toward the viewer -->
+<script>
+(function(){
+  var c = document.getElementById('warp');
+  if(!c || !c.getContext) return;
+  var ctx = c.getContext('2d');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w, h, cx, cy, FL;
+  function resize(){
+    w = c.width  = Math.floor(window.innerWidth  * dpr);
+    h = c.height = Math.floor(window.innerHeight * dpr);
+    c.style.width = window.innerWidth + 'px';
+    c.style.height = window.innerHeight + 'px';
+    cx = w/2; cy = h/2; FL = Math.max(w,h) * 0.62;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var N = Math.round(Math.min(520, Math.max(240, (window.innerWidth*window.innerHeight)/3200)));
+  var stars = [];
+  function rnd(){ return Math.random()*2 - 1; }
+  function make(spawnFar){
+    return { x:rnd(), y:rnd(), z: spawnFar ? 1 : Math.random(), white: Math.random() < 0.22 };
+  }
+  for(var i=0;i<N;i++) stars.push(make(false));
+
+  var speed = 0.010, target = 0.010;
+
+  function project(s, z){
+    return [ cx + (s.x / z) * FL, cy + (s.y / z) * FL ];
+  }
+
+  function drawStatic(){
+    ctx.fillStyle = '#05060a';
+    ctx.fillRect(0,0,w,h);
+    for(var i=0;i<stars.length;i++){
+      var s = stars[i];
+      var p = project(s, s.z);
+      var d = 1 - s.z;
+      var a = Math.max(0.08, Math.min(0.7, d));
+      ctx.beginPath();
+      ctx.fillStyle = s.white ? 'rgba(255,255,255,'+a+')' : 'rgba(192,32,37,'+a+')';
+      ctx.arc(p[0], p[1], Math.max(0.6, d*1.8)*dpr, 0, 6.2832);
+      ctx.fill();
+    }
+  }
+
+  function frame(){
+    // trailing fade → motion streaks
+    ctx.fillStyle = 'rgba(5,6,10,0.34)';
+    ctx.fillRect(0,0,w,h);
+    speed += (target - speed) * 0.05;
+    for(var i=0;i<stars.length;i++){
+      var s = stars[i];
+      var pz = s.z;
+      s.z -= speed;
+      if(s.z <= 0.02){ stars[i] = make(true); continue; }
+      var now = project(s, s.z);
+      var prev = project(s, pz);
+      var d = 1 - s.z;                       // 0 (far) → ~1 (near)
+      var a = Math.max(0.10, Math.min(0.92, d*1.05));
+      ctx.beginPath();
+      ctx.strokeStyle = s.white
+        ? 'rgba(255,255,255,'+a+')'
+        : 'rgba(192,32,37,'+a+')';
+      ctx.lineWidth = Math.max(0.6, d*2.4) * dpr;
+      ctx.lineCap = 'round';
+      ctx.moveTo(prev[0], prev[1]);
+      ctx.lineTo(now[0], now[1]);
+      ctx.stroke();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  if(reduce){
+    drawStatic();
+  } else {
+    ctx.fillStyle = '#05060a'; ctx.fillRect(0,0,w,h);
+    requestAnimationFrame(frame);
+    // accelerate the warp when access is granted, then keep pushing
+    var success = document.getElementById('success');
+    if(success && window.MutationObserver){
+      new MutationObserver(function(){
+        if(success.classList.contains('on')) target = 0.075;
+      }).observe(success, { attributes:true, attributeFilter:['class'] });
+    }
+  }
+})();
+</script>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = (id) => document.getElementById(id);
+const stepEmail = $('step-email'), stepSent = $('step-sent');
+const emailIn = $('email'), sendBtn = $('send-btn'), backBtn = $('back-btn'), msgBox = $('msg');
+const codeIn = $('code'), verifyBtn = $('verify-btn');
+
+const REDIRECT_TO = window.location.origin + window.location.pathname;
+
+function isAllowed(email){
+  const e = String(email || '').trim().toLowerCase();
+  return e.endsWith('@koocester.com') || e === 'ceo@koocester.com';
+}
+function showMsg(kind, html){ msgBox.className = 'msg show ' + kind; msgBox.innerHTML = html; }
+function clearMsg(){ msgBox.className = 'msg'; msgBox.innerHTML = ''; }
+function busy(btn, on, label){
+  btn.disabled = on;
+  if(on){ btn.dataset.label = btn.innerHTML; btn.innerHTML = '<span class="spin"></span>' + label; }
+  else if(btn.dataset.label){ btn.innerHTML = btn.dataset.label; }
+}
+/* Mirror the Supabase session into a cookie.
+   Supabase keeps the session in localStorage, which Cloudflare's edge middleware
+   cannot read — cookies are the only thing it sees. Without this line the
+   server-side gate in functions/_middleware.js has nothing to check and every
+   signed-in person gets bounced back here forever.
+   Not HttpOnly on purpose: the browser has to write and refresh it, and the same
+   token is already sitting in localStorage, so HttpOnly would buy nothing. */
+function writeSessionCookie(session){
+  if(!session || !session.access_token) return;
+  // 400 days — the longest Chrome will honour. Sign in once, stay signed in.
+  // A short cookie would expire while the Supabase session is still perfectly
+  // good, bouncing people through the login screen for no reason. Length costs
+  // nothing here: the cookie is not the security boundary, the middleware
+  // revalidates the token with Supabase on every request, so a stale or revoked
+  // token in a long-lived cookie is still refused.
+  document.cookie = 'koo_session=' + session.access_token +
+    '; Path=/; Max-Age=' + (60*60*24*400) + '; SameSite=Lax; Secure';
+}
+
+let entering = false;
+function safeNext(){
+  // Honour ?next= from the auth guards, but only same-site relative *.html paths.
+  // Rejects absolute (/foo), protocol-relative (//host) and traversal (..).
+  try{
+    const p = new URLSearchParams(window.location.search).get('next') || '';
+    if(p && p.charAt(0) !== '/' && p.indexOf('..') === -1 && /^[A-Za-z0-9 _\-\/]+\.html$/.test(p)) return p;
+  }catch(e){}
+  return 'portal.html';
+}
+function enterPortal(){
+  if(entering) return; entering = true;
+  $('success').classList.add('on');
+  const dest = safeNext();
+  setTimeout(() => window.location.replace(dest), 1650);
+}
+
+// already signed in, or returning from the magic link
+supabase.auth.onAuthStateChange((event, session) => { if(session){ writeSessionCookie(session); enterPortal(); } });
+(async () => {
+  try{ const { data } = await supabase.auth.getSession(); if(data && data.session){ writeSessionCookie(data.session); enterPortal(); } }
+  catch(e){ /* fail open to the login form */ }
+})();
+
+async function sendLink(){
+  const email = emailIn.value.trim();
+  if(!email){ showMsg('error', 'Enter your email to continue.'); emailIn.focus(); return; }
+  if(!isAllowed(email)){ showMsg('error', 'This login is for <b>Koocester staff only</b>. Use your @koocester.com email.'); emailIn.focus(); return; }
+  clearMsg(); busy(sendBtn, true, 'Sending…');
+  try{
+    const { error } = await supabase.auth.signInWithOtp({ email, options:{ shouldCreateUser:true, emailRedirectTo: REDIRECT_TO } });
+    if(error) throw error;
+    stepEmail.classList.add('hidden'); stepSent.classList.remove('hidden'); $('sent-to').textContent = email;
+    if(codeIn){ codeIn.value=''; codeIn.focus(); }
+    startResendCountdown(50);
+  }catch(err){
+    const m = (err && err.message) ? err.message : '';
+    const rateLimited = (err && err.status === 429) || /after \d|second|rate|only request/i.test(m);
+    if(rateLimited){
+      // a code was already emailed recently: let them enter it now instead of being blocked
+      stepEmail.classList.add('hidden'); stepSent.classList.remove('hidden'); $('sent-to').textContent = email;
+      showMsg('info', 'A sign-in code was emailed to you very recently. Enter it below (check spam too). You can request a fresh one when the timer ends.');
+      if(codeIn){ codeIn.value=''; codeIn.focus(); }
+      const secs = (m.match(/after (\d+)/)||[])[1]; startResendCountdown(secs? parseInt(secs,10) : 50);
+    } else {
+      showMsg('error', m || 'Could not send the code. Try again.'); busy(sendBtn, false);
+    }
+  }
+}
+async function verifyCode(){
+  const email = emailIn.value.trim();
+  const token = (codeIn.value || '').replace(/\D/g,'').trim();
+  if(!/^\d{6}$/.test(token)){ showMsg('error', 'Enter the 6-digit code from your email.'); codeIn.focus(); return; }
+  clearMsg(); busy(verifyBtn, true, 'Verifying…');
+  try{
+    const { error } = await supabase.auth.verifyOtp({ email, token, type:'email' });
+    if(error) throw error;
+    enterPortal();   // session is live; onAuthStateChange also fires, enterPortal is idempotent
+  }catch(err){ showMsg('error', (err && err.message) ? err.message : 'That code did not work. Check it and try again.'); busy(verifyBtn, false); }
+}
+function goEmailStep(){ stepSent.classList.add('hidden'); stepEmail.classList.remove('hidden'); clearMsg(); busy(sendBtn, false); busy(verifyBtn, false); stopCountdown(); emailIn.focus(); }
+
+// ---- resend countdown (Supabase blocks a new code for ~50s) ----
+const resendBtn = $('resend-btn');
+let cdTimer = null;
+function stopCountdown(){ if(cdTimer){ clearInterval(cdTimer); cdTimer=null; } }
+function startResendCountdown(secs){
+  stopCountdown();
+  let left = secs || 50;
+  resendBtn.disabled = true;
+  resendBtn.textContent = 'Resend in ' + left + 's';
+  cdTimer = setInterval(() => {
+    left -= 1;
+    if(left <= 0){ stopCountdown(); resendBtn.disabled = false; resendBtn.textContent = 'Resend code'; }
+    else { resendBtn.textContent = 'Resend in ' + left + 's'; }
+  }, 1000);
+}
+async function resend(){
+  if(resendBtn.disabled) return;
+  clearMsg();
+  await sendLink();          // re-requests a fresh code; sendLink restarts the countdown
+}
+
+sendBtn.addEventListener('click', sendLink);
+verifyBtn.addEventListener('click', verifyCode);
+backBtn.addEventListener('click', goEmailStep);
+resendBtn.addEventListener('click', resend);
+emailIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter') sendLink(); });
+codeIn.addEventListener('keydown', (e)=>{ if(e.key==='Enter') verifyCode(); });
+codeIn.addEventListener('input', ()=>{ var v=codeIn.value.replace(/\D/g,'').slice(0,6); codeIn.value = v.length>3 ? v.slice(0,3)+'-'+v.slice(3) : v; });
+</script>
+</body>
+</html>

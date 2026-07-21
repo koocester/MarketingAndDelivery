@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Editing fundamentals</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* two-up / three-up cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* keep / cut */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* spec rows */
+.vrows{margin-top:12px;max-width:900px}
+.vrow{display:grid;grid-template-columns:210px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+/* matrix table */
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr 1.6fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fafafa;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* the 3-second hook meter */
+.hook{display:flex;align-items:stretch;gap:6px;margin:8px 0 4px;max-width:760px}
+.hsec{flex:1;border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:center;box-shadow:var(--shadow)}
+.hsec.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.hsec .ht{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.hsec.hot .ht{color:var(--maroon)}
+.hsec .hn{font-size:clamp(1.1rem,3vw,1.5rem);font-weight:800;color:var(--ink);margin-top:4px;letter-spacing:-.02em}
+.hsec.hot .hn{color:var(--maroon)}
+/* beat / rhythm strip — the cut cadence */
+.beats{display:flex;align-items:flex-end;gap:5px;margin:14px 0 2px;height:96px;max-width:820px}
+.beat{flex:1;background:var(--maroon-tint);border:1px solid var(--maroon);border-radius:6px 6px 0 0;position:relative}
+.beat.cut{background:var(--maroon)}
+.beats.slow .beat{opacity:.5}
+.beatlbl{display:flex;justify-content:space-between;max-width:820px;margin-top:8px}
+.beatlbl span{font-size:11.5px;color:var(--muted);font-weight:700}
+.beatlbl span b{color:var(--maroon)}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
+.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:16px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide,.wins{grid-template-columns:1fr}.vrow{grid-template-columns:1fr}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · craft certification</div>
+      <h1><span class="lnwrap"><span class="ln">Editing</span></span><span class="lnwrap"><span class="ln">fundamentals —</span></span><span class="lnwrap"><span class="ln">pacing &amp; rhythm</span></span></h1>
+      <p class="lead" style="margin-top:20px">Not the brand look — the <b>craft of the cut</b>. How you hook, hold and move a viewer through time so they feel something and never swipe.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Your edits hook in 3 seconds</b><span>the strongest moment opens, no slow intro</span></div>
+        <div class="win"><b>They hold to the end</b><span>nothing sags, every second earns the next</span></div>
+        <div class="win"><b>You cut with rhythm</b><span>the pace moves with the energy and the track</span></div>
+        <div class="win"><b>They make people feel something</b><span>the edit lands emotionally, not just cleanly</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT EDITING REALLY IS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The real job</div>
+      <div class="big">Editing is <em>controlling attention</em> through time.</div>
+      <p class="lead">You are not trimming clips. You decide what the viewer sees, when they see it, and how they feel about it — second by second. Every cut is a choice about their attention and their emotion. That is the whole craft.</p>
+    </div>
+  </section>
+
+  <!-- 4 · DIVIDER · THE HOOK -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>The hook</h2>
+      <p class="lead" style="color:#bbb">The first 3 seconds decide everything.</p>
+    </div>
+  </section>
+
+  <!-- 5 · THE HOOK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The first 3 seconds decide if they stay</div>
+      <h2 style="margin-bottom:8px">Open on the strongest moment. Always.</h2>
+      <div class="hook">
+        <div class="hsec hot"><div class="ht">0–3 sec</div><div class="hn">Stay or swipe</div></div>
+        <div class="hsec"><div class="ht">3–10 sec</div><div class="hn">Trust</div></div>
+        <div class="hsec"><div class="ht">10 sec →</div><div class="hn">Payoff</div></div>
+      </div>
+      <p class="lead" style="margin-top:14px">A viewer decides in three seconds. So never open with a slow intro, a logo, or "hi guys". Start on the <b>best</b> moment you have — the punchline, the reveal, the reaction — then earn the rest.</p>
+      <div class="callout"><b>The test:</b> if the first frame doesn't stop a thumb, nothing after it matters. Front-load your strongest second.</div>
+    </div>
+  </section>
+
+  <!-- 6 · DIVIDER · PACING -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Pacing</h2>
+      <p class="lead" style="color:#bbb">Cut with the energy. Fast where it's hot, slow where it's deep.</p>
+    </div>
+  </section>
+
+  <!-- 7 · PACING -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Pacing · match the cut to the energy</div>
+      <h2 style="margin-bottom:6px">Fast when it's hot. Breathe when it's deep.</h2>
+      <div class="beats" id="beats"></div>
+      <div class="beatlbl"><span><b>High energy</b> · fast cuts, tight</span><span><b>Emotional beat</b> · let it breathe</span></div>
+      <p class="lead" style="margin-top:14px">Speed up through high-energy moments — quick cuts drive momentum. Then <b>slow down and hold</b> on the emotional beats: a pause, a look, a line landing. Pacing is contrast. All-fast is exhausting; all-slow is dead.</p>
+    </div>
+  </section>
+
+  <!-- 8 · WHEN TO CUT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">When to cut · every cut earns its place</div>
+      <div class="decide">
+        <div class="dbox ok"><h3>Cut here →</h3><ul>
+          <li><b>On the action</b> — cut on a movement, it hides the join</li>
+          <li>The moment a beat is finished — don't linger</li>
+          <li>When a new cut adds information or energy</li>
+          <li>To jump the viewer forward, past the boring bit</li>
+        </ul></div>
+        <div class="dbox no"><h3>Cut it out ✕</h3><ul>
+          <li><b>Dead air</b> — silence, "umms", the wind-up before the point</li>
+          <li>Repeats — the same idea said twice</li>
+          <li>Anything that doesn't move the story or the feeling</li>
+          <li>A cut just to cut — every cut must earn its place</li>
+        </ul></div>
+      </div>
+      <div class="callout"><b>The rule:</b> if a second isn't earning its place, it's costing you the viewer. When in doubt, cut it.</div>
+    </div>
+  </section>
+
+  <!-- 9 · RHYTHM & MUSIC -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Rhythm &amp; music · cut to the track</div>
+      <div class="big">The track sets the <em>cadence</em>.</div>
+      <p class="lead">Cut on the beat. Line your edits up to the rhythm of the music — the drop, the downbeat, the change — and the video feels intentional instead of random. Use sound to drive energy: a rising track lifts a montage, a beat under a reveal makes it hit harder.</p>
+      <div class="callout"><b>Feel the beats per minute (BPM).</b> A fast track wants fast cuts; a slow one wants space. Fighting the music is the fastest way to make an edit feel off.</div>
+    </div>
+  </section>
+
+  <!-- 10 · DIVIDER · RETENTION -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Holding them</h2>
+      <p class="lead" style="color:#bbb">Retention, variety, and the feeling that makes it land.</p>
+    </div>
+  </section>
+
+  <!-- 11 · RETENTION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Retention · tighten relentlessly</div>
+      <div class="big">Remove anything that makes them <em>swipe</em>.</div>
+      <p class="lead">Every video has swipe points — the moment attention dips and a thumb moves. Your job is to find and kill them: the slow bit, the repeat, the pause with nothing in it. Watch your own edit as a stranger would and cut ruthlessly until nothing sags.</p>
+      <div class="callout"><b>Tighten twice.</b> Your first cut is always too long. Pass through again and pull out another 10% — it almost always plays better.</div>
+    </div>
+  </section>
+
+  <!-- 12 · B-ROLL & VARIETY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">B-roll &amp; variety · show, don't tell</div>
+      <h2 style="margin-bottom:8px">Cover the words with the thing.</h2>
+      <div class="vrows">
+        <div class="vrow"><span class="vn">Cover cuts</span><span class="vt"><b>B-roll hides joins and jumps.</b> Lay supporting footage over an edit and a hard cut disappears — you can tighten aggressively without the seam showing.</span></div>
+        <div class="vrow"><span class="vn">Show, don't tell</span><span class="vt"><b>When they say it, show it.</b> Someone mentions the car, the dish, the view — cut to it. Visuals land faster and deeper than words alone.</span></div>
+        <div class="vrow"><span class="vn">Variety holds attention</span><span class="vt"><b>Change the shot.</b> A new angle, a wide, a detail, a graphic — variety keeps the eye fresh. Same frame too long is a swipe point.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · EMOTION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Emotion · the edit should make people feel</div>
+      <div class="big">A clean cut is nothing if it doesn't <em>feel</em>.</div>
+      <p class="lead">This is the Koocester difference. The edit is not there to be tidy — it's there to make someone feel something: awe, curiosity, warmth, the ka-ching of a win. Hold the reaction shot a beat longer. Let the music swell. Build the moment, then land it.</p>
+      <div class="callout"><b>Ties to storytelling.</b> Pacing, music and the held beat are your tools for emotion. The story is the <i>what</i>; your cut is the <i>how it feels</i>.</div>
+    </div>
+  </section>
+
+  <!-- 14 · THE CTA LANDING -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The ending · land the call to action</div>
+      <h2 style="margin-bottom:8px">Carry the energy into the ask.</h2>
+      <p class="lead">Don't let the video die before the call to action (CTA). Hold the momentum right to the end, then land the ask cleanly — the comment keyword, the follow, the offer — while the viewer is still feeling it. A strong edit that fumbles the last three seconds leaks the lead you just earned.</p>
+      <div class="callout"><b>End on a high, not a fade.</b> The CTA lands best on the emotional peak, not after the energy has already drained away.</div>
+    </div>
+  </section>
+
+  <!-- 15 · CORRECT vs HOLDS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The difference that matters</div>
+      <h2 style="margin-bottom:6px">Technically correct is not the same as holding.</h2>
+      <div class="diag">
+        <div class="drow dhead"><span>&nbsp;</span><span>Technically correct</span><span>Holds attention</span></div>
+        <div class="drow"><span class="sym">Opening</span><span>Starts at the beginning, tidy intro</span><span class="stg">Opens on the strongest moment</span></div>
+        <div class="drow"><span class="sym">Pacing</span><span>Even, steady, "correct"</span><span class="stg">Fast where hot, breathes where deep</span></div>
+        <div class="drow"><span class="sym">Cuts</span><span>Clean joins, all on time</span><span class="stg">Every cut earns its place, dead air gone</span></div>
+        <div class="drow"><span class="sym">Feel</span><span>Nothing wrong with it</span><span class="stg">Makes the viewer feel something</span></div>
+      </div>
+      <div class="callout"><b>Anyone can make a correct edit.</b> Your job is the one that <i>holds</i> — hooks in 3 seconds, moves with rhythm, and lands with emotion.</div>
+    </div>
+  </section>
+
+  <!-- 16 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#bbb">Four calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 17 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · the first 3 seconds</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Open on the strongest moment. The first 3 seconds decide if they stay, so front-load your best second — the reveal, the reaction, the punchline — never a slow intro."
+        data-no="<b>Not that.</b> The first 3 seconds decide if they stay. Open on the strongest moment you have, not a logo, a greeting, or a slow build. Front-load your best second.">
+        <div class="scenario">You've got great footage but your edit opens with a 4-second logo and a slow establishing shot.</div>
+        <div class="q">What do you do with the first 3 seconds?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Keep the intro — viewers need context first</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Open on the strongest moment, cut the slow intro</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Add music over the logo so it feels faster</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · dead air</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> Cut it. A dead pause with nothing in it is a swipe point — silence, an 'umm', a wind-up before the point all bleed retention. Tighten relentlessly."
+        data-no="<b>No.</b> A dead pause is a swipe point — cut it out. Dead air, repeats and wind-ups all cost you the viewer. Every second must earn its place.">
+        <div class="scenario">Mid-video, the guest pauses for two seconds — no words, no reaction, nothing happening.</div>
+        <div class="q">What do you do with the dead pause?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Leave it — real pauses feel authentic</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Slow it down so it feels intentional</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Cut it — dead air makes viewers swipe</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · an emotional beat</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> Let it breathe. On an emotional beat you slow down and hold — the pause, the look, the line landing. Pacing is contrast: fast where it's hot, space where it's deep."
+        data-no="<b>Not quite.</b> An emotional beat wants space, not speed. Slow down and hold it — let the moment land. Fast cuts are for high-energy moments, not the deep ones.">
+        <div class="scenario">The guest says something moving and the room goes quiet — it's the emotional peak of the video.</div>
+        <div class="q">How do you cut this moment?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Let it breathe — hold the shot, slow the pace</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Cut fast through it to keep the energy up</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Skip it — emotional bits slow the video down</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · MCQ 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · rhythm &amp; music</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Cut on the beat. Lining edits up to the track's rhythm — the drop, the downbeat, the change — makes the video feel intentional and drives its energy."
+        data-no="<b>No.</b> Cut to the track's rhythm. Editing on the beat makes the video feel deliberate and lifts its energy; ignoring the music makes even clean cuts feel off.">
+        <div class="scenario">You're cutting a fast montage over an upbeat track with a clear beat.</div>
+        <div class="q">How should your cuts relate to the music?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Ignore the music — cut whenever the footage changes</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Cut on the beat, in rhythm with the track</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Cut at random so it feels natural</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 · CERTIFICATION GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you cut for attention, rhythm and emotion?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Do you open every edit on the strongest moment, in the first 3 seconds?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you pace with the energy — fast where it's hot, breathing where it's deep?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Does every cut earn its place, and is all dead air gone?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you cut to the track's rhythm and use sound to drive energy?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you tighten relentlessly so nothing makes a viewer swipe?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Does the edit make people feel something, and land the CTA on a high?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 22 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Hook. Hold. Make them feel.</h2>
+      <p class="lead">The cut is where a good story becomes an unmissable one. Open on the strongest moment, move with rhythm, kill every swipe point, and land it with emotion. That's the difference between correct and unforgettable.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="video-editor-training.html">The brand SOP →</a>
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · editing fundamentals</div>
+<div class="nav">
+  <span class="count" id="count">1 / 22</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // build the pacing beat strip — dense fast cuts, then wide breathing bars
+  (function(){
+    var wrap=document.getElementById('beats'); if(!wrap) return;
+    var heights=[70,45,80,55,90,60,75,50, 100,100,100];
+    for(var b=0;b<heights.length;b++){
+      var el=document.createElement('div');
+      el.className='beat'+(b<8?' cut':'');
+      el.style.height=heights[b]+'%';
+      if(b>=8) el.style.flex='2';
+      wrap.appendChild(el);
+    }
+  })();
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-edit-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var nn=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<nn.length;i++){ var r=nn[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+
+<style>.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Department strategy</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* MC pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* diagnose · funnel + matrix */
+.funnel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.fstage{border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:24px;background:var(--maroon-tint)}
+.farr{color:var(--maroon);font-weight:800}
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fff;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr 1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* GUIDE guardrails */
+.guide{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px;max-width:940px}
+.gd{border:1px solid var(--line);border-top:5px solid var(--maroon);border-radius:10px;padding:14px 12px;box-shadow:var(--shadow);min-height:176px}
+.gd .letter{font-size:1.8rem;font-weight:800;color:var(--maroon);line-height:1}
+.gd .gl{font-weight:800;color:var(--ink);font-size:13px;line-height:1.2;margin-top:9px}
+.gd .gt{font-size:11.5px;color:var(--body);line-height:1.4;margin-top:7px}
+/* strategy visuals */
+.strategy-line{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;align-items:stretch;gap:6px;margin-top:22px}
+.strategy-tile{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;box-shadow:var(--shadow)}
+.strategy-tile.hot{border:3px solid var(--maroon);background:var(--maroon-tint)}
+.strategy-tile .k{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--maroon);font-weight:800}.strategy-tile b{display:block;color:var(--ink);font-size:1.05rem;margin:7px 0 5px}.strategy-tile p{margin:0;font-size:12.5px;line-height:1.4;color:var(--muted)}
+.strategy-op{display:flex;align-items:center;justify-content:center;color:var(--maroon);font-size:1.5rem;font-weight:800}
+.objective-path{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;gap:7px;align-items:stretch;margin-top:20px}
+.objective-step{border:1px solid var(--line);border-radius:14px;padding:18px 16px;background:#fff;box-shadow:var(--shadow)}.objective-step.hot{border:3px solid var(--maroon);background:var(--maroon-tint)}
+.objective-step .n{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--maroon);font-weight:800}.objective-step b{display:block;color:var(--ink);font-size:1rem;margin:7px 0 5px}.objective-step p{font-size:12px;line-height:1.4;color:var(--muted);margin:0}
+.book-lens{font-size:11px;color:var(--muted);margin-top:12px}.book-lens b{color:var(--maroon)}
+.metric-map{display:grid;grid-template-columns:1fr 38px 1.25fr 38px 1fr;gap:6px;align-items:stretch;margin-top:19px}
+.metric-node{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;box-shadow:var(--shadow)}.metric-node.hot{border:3px solid var(--maroon);background:var(--maroon-tint)}
+.metric-node .k{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--maroon);font-weight:800}.metric-node b{display:block;color:var(--ink);font-size:1.05rem;margin:7px 0 5px}.metric-node p{font-size:12px;line-height:1.4;margin:0;color:var(--muted)}
+.allocation-question{border:4px solid var(--maroon);border-radius:16px;padding:17px 20px;background:var(--maroon-tint);color:var(--ink);font-size:clamp(1.35rem,3vw,2rem);line-height:1.15;font-weight:800;letter-spacing:-.02em}
+.allocation-question em{color:var(--maroon);font-style:normal}
+.allocgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.alloctile{border:1px solid var(--line);border-radius:12px;padding:14px 15px;background:#fff;box-shadow:var(--shadow)}.alloctile .n{font-size:10px;color:var(--maroon);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.alloctile b{display:block;color:var(--ink);font-size:14px;margin:6px 0 4px}.alloctile p{font-size:12px;line-height:1.35;color:var(--muted);margin:0}
+.stressline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:15px}.stress{border:1px solid var(--line);border-radius:11px;padding:14px 12px;background:#fff;box-shadow:var(--shadow);min-height:150px}.stress .n{font-size:10px;color:var(--maroon);font-weight:800;letter-spacing:.06em;text-transform:uppercase}.stress b{display:block;color:var(--ink);font-size:13px;margin:7px 0 5px}.stress p{font-size:11.5px;line-height:1.38;color:var(--muted);margin:0}
+.cascade-line{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr 24px 1fr;gap:5px;align-items:stretch;margin-top:18px}.cascade-node{border:1px solid var(--line);border-radius:12px;padding:15px 12px;background:#fff;box-shadow:var(--shadow)}.cascade-node.hot{border:3px solid var(--maroon);background:var(--maroon-tint)}.cascade-node .n{font-size:10px;color:var(--maroon);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.cascade-node b{display:block;color:var(--ink);font-size:14px;margin:6px 0 4px}.cascade-node p{font-size:11.5px;line-height:1.35;color:var(--muted);margin:0}.cascade-arrow{display:flex;align-items:center;justify-content:center;color:var(--maroon);font-weight:800;font-size:18px}
+/* lead vs lag classify interactive */
+.classify{border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow);max-width:840px}
+.classify-key{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;max-width:840px}.classify-key div{border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--body)}.classify-key b{color:var(--ink)}
+.crow{display:grid;grid-template-columns:1fr auto 230px;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line2)}
+.crow:last-of-type{border-bottom:0}
+.cq{font-size:clamp(.98rem,1.9vw,1.1rem);color:var(--body);font-weight:600;line-height:1.35}
+.crow.done .cq{color:var(--ink)}
+.copt{display:flex;gap:8px;flex:none}
+.cbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 15px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.cbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.cbtn:disabled{cursor:default}
+.cbtn.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.cbtn.picked-wrong{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.cresult{font-size:11.5px;line-height:1.3;color:var(--muted);font-weight:700}.crow.right-answer .cresult{color:var(--ok)}.crow.wrong-answer .cresult{color:var(--maroon)}
+.cscore{margin-top:16px;font-size:14px;font-weight:700;color:var(--muted)}
+.cscore.all{color:var(--ok)}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#fff;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:rgba(26,127,55,.12)}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:rgba(26,127,55,.12);color:var(--ok);border:1px solid var(--ok)}
+.fb.no{background:var(--maroon-tint);color:var(--maroon);border:1px solid #E49D9F}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:rgba(26,127,55,.12);color:var(--ok)}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:var(--maroon)}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide,.guide,.wins,.allocgrid,.stressline,.classify-key{grid-template-columns:1fr}.strategy-line,.objective-path,.metric-map,.cascade-line{grid-template-columns:1fr}.strategy-op,.cascade-arrow{display:none}.vrow{grid-template-columns:1fr}.brandmark{display:none}.crow{grid-template-columns:1fr;align-items:flex-start;gap:10px}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · command tier</div>
+      <h1><span class="lnwrap"><span class="ln">Department</span></span><span class="lnwrap"><span class="ln">strategy</span></span></h1>
+      <p class="lead" style="margin-top:20px">You run a whole department. This is how you set its direction and own its numbers — a few clear bets, one metric, resources that follow the strategy.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT A STRATEGY IS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What a strategy actually is</div>
+      <div class="big">A strategy is a <em>few bets</em> — not a wish-list.</div>
+      <div class="strategy-line">
+        <div class="strategy-tile hot"><span class="k">Choose</span><b>Two or three bets</b><p>The few outcomes that make other work easier or unnecessary.</p></div>
+        <div class="strategy-op">+</div>
+        <div class="strategy-tile"><span class="k">Concentrate</span><b>People and budget</b><p>Named owners and real resources sit behind each bet.</p></div>
+        <div class="strategy-op">+</div>
+        <div class="strategy-tile"><span class="k">Protect</span><b>A defended “not now” list</b><p>Good ideas wait so the chosen bets can actually win.</p></div>
+      </div>
+      <div class="callout"><b>Twelve priorities means zero strategy.</b> Strategy is choice, concentration and subtraction.</div>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT SUCCESS LOOKS LIKE (front) -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're running it well when…</div>
+      <div class="wins">
+        <div class="win"><b>A small set of clear bets</b><span>two or three, written down, not twelve</span></div>
+        <div class="win"><b>Everyone knows the one metric</b><span>the whole department can name it without checking</span></div>
+        <div class="win"><b>Resources follow the strategy</b><span>your best people and budget sit on the bets</span></div>
+        <div class="win"><b>Dead bets get killed</b><span>you cut what isn't working before it drains the rest</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 4 · ONE OBJECTIVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The objective that matters this quarter</div>
+      <div class="big">Relieve the constraint. Make the rest easier.</div>
+      <div class="objective-path">
+        <div class="objective-step"><span class="n">01 · Find</span><b>Name the constraint</b><p>What single bottleneck limits the department’s result today?</p></div>
+        <div class="strategy-op">→</div>
+        <div class="objective-step"><span class="n">02 · Test</span><b>Which objective unlocks it?</b><p>Choose the move that changes the whole system, not one local number.</p></div>
+        <div class="strategy-op">→</div>
+        <div class="objective-step hot"><span class="n">03 · Commit</span><b>One primary objective</b><p>Everything else supports it or waits for a later quarter.</p></div>
+      </div>
+      <div class="book-lens"><b>Book lens:</b> The Goal and the Theory of Constraints — improve the system by focusing on its limiting point.</div>
+    </div>
+  </section>
+
+  <!-- 5 · OBJECTIVE vs WISH-LIST duo -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Two things that look alike · tell them apart</div>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3>A bet</h3>
+          <div class="sub">you commit resources to it</div>
+          <ul><li>You can name what it costs and what it returns</li><li>Your best people are actually assigned to it</li><li>You would defend it if budget got cut in half</li></ul>
+        </div>
+        <div class="obx aware">
+          <h3>A wish</h3>
+          <div class="sub">it sits on a list, unfunded</div>
+          <ul><li>It sounds good but nobody owns it</li><li>No people, no budget, no deadline behind it</li><li>It survives only because cutting it feels like loss</li></ul>
+        </div>
+      </div>
+      <p class="cite" style="margin-top:14px">A plan full of wishes feels productive and delivers nothing. Fund the bets. Retire the wishes honestly.</p>
+    </div>
+  </section>
+
+  <!-- 6 · DIVIDER · OWN THE NUMBERS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>Own the numbers</h2>
+      <p class="lead" style="color:#CCC">Lead versus lag, and the one metric that matters.</p>
+    </div>
+  </section>
+
+  <!-- 7 · LEAD vs LAG -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">How you read your department</div>
+      <h2>Lag tells you what happened. Lead tells you what's coming.</h2>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3>Lead indicators</h3>
+          <div class="sub">inputs you can act on today</div>
+          <ul><li>Calls booked, drafts shipped, shoots scheduled</li><li>You can change them this week</li><li>Manage these — they produce the outcome</li></ul>
+        </div>
+        <div class="obx aware">
+          <h3>Lag indicators</h3>
+          <div class="sub">outcomes you can only watch</div>
+          <ul><li>Revenue, qualified leads, retention</li><li>By the time they move, the month is set</li><li>Watch these — they validate the leads</li></ul>
+        </div>
+      </div>
+      <div class="callout"><b>You cannot push a lag number directly.</b> You push the lead measures that feed it, then watch the lag to confirm the leads were the right ones.</div>
+    </div>
+  </section>
+
+  <!-- 8 · OMTM -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The One Metric That Matters</div>
+      <div class="big">One outcome. Two controllable drivers.</div>
+      <div class="metric-map">
+        <div class="metric-node"><span class="k">Lead measure 1</span><b>Weekly action</b><p>The input the team can change now.</p></div>
+        <div class="strategy-op">+</div>
+        <div class="metric-node"><span class="k">Lead measure 2</span><b>Weekly quality</b><p>The standard that makes volume count.</p></div>
+        <div class="strategy-op">→</div>
+        <div class="metric-node hot"><span class="k">One Metric That Matters</span><b>Quarterly lag outcome</b><p>The single result that proves the strategy worked.</p></div>
+      </div>
+      <div class="callout"><b>Everyone must name all three without opening a dashboard.</b> Manage the two leads weekly; use the lag to validate direction.</div>
+    </div>
+  </section>
+
+  <!-- 9 · DIVIDER · ALLOCATE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Put resources on the bets</h2>
+      <p class="lead" style="color:#CCC">People and budget are scarce. Spend them like it.</p>
+    </div>
+  </section>
+
+  <!-- 10 · ALLOCATION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Every yes is a no to something else</div>
+      <div class="allocation-question">Do your <em>best people and budget</em> sit on the bets — with a defended <em>“not now” list</em>?</div>
+      <div class="allocgrid">
+        <div class="alloctile"><span class="n">People</span><b>Name the strongest owners</b><p>Do not split your best performers across five priorities.</p></div>
+        <div class="alloctile"><span class="n">Budget</span><b>Show the actual allocation</b><p>Every funded yes names what receives less money or attention.</p></div>
+        <div class="alloctile"><span class="n">Not now</span><b>Publish and defend the list</b><p>New requests wait unless leadership explicitly changes the strategy.</p></div>
+      </div>
+      <div class="callout"><b>If the answer is no, the strategy is theatre.</b> Keep a reserve, then concentrate everything else on the few bets.</div>
+    </div>
+  </section>
+
+  <!-- 11 · SAYING NO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The discipline that makes a strategy real</div>
+      <div class="big">A strategy is what you <em>don't</em> do.</div>
+      <p class="lead">Anyone can add. Strategy is subtraction — the good ideas you deliberately refuse so the great one gets everything it needs. Keep a "not now" list next to your bets and defend it. The department watches what you say no to far more closely than what you say yes to.</p>
+    </div>
+  </section>
+
+  <!-- 12 · STRESS-TEST -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Before you commit the department · stress-test the bet</div>
+      <h2>Five questions before people and budget move.</h2>
+      <div class="stressline">
+        <div class="stress"><span class="n">01 · Constraint</span><b>Does it unlock the system?</b><p>Attack the limiting point, not a local inconvenience.</p></div>
+        <div class="stress"><span class="n">02 · Failure</span><b>What guarantees it fails?</b><p>Name the conditions already working against the bet.</p></div>
+        <div class="stress"><span class="n">03 · Ripple</span><b>And then what?</b><p>Trace the second and third consequences.</p></div>
+        <div class="stress"><span class="n">04 · Base rate</span><b>What happened last time?</b><p>Use actual time, cost and conversion from a similar bet.</p></div>
+        <div class="stress"><span class="n">05 · Reversible</span><b>One-way or two-way door?</b><p>Move fast when cheap to reverse; slow down when costly.</p></div>
+      </div>
+      <div class="callout"><b>Commit only when the bet survives all five.</b> The filter protects the department from confident guesses.</div>
+    </div>
+  </section>
+
+  <!-- 13 · GUIDE GUARDRAILS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The guardrails on every bet · GUIDE</div>
+      <h2>Bets that cross a value aren't strategy — they're risk.</h2>
+      <div class="guide">
+        <div class="gd"><div class="letter">G</div><div class="gl">Growth &amp; Curiosity</div><div class="gt">Build capability that lasts beyond this quarter.</div></div>
+        <div class="gd"><div class="letter">U</div><div class="gl">Uniting through trust &amp; relationships</div><div class="gt">Defend the bet openly to the team and client.</div></div>
+        <div class="gd"><div class="letter">I</div><div class="gl">Impact through inspiration</div><div class="gt">Move people by being useful, not merely loud.</div></div>
+        <div class="gd"><div class="letter">D</div><div class="gl">Dare to be bold &amp; innovate</div><div class="gt">Choose the big swing after the evidence filter.</div></div>
+        <div class="gd"><div class="letter">E</div><div class="gl">Empathy &amp; Giving</div><div class="gt">Leave customers and people better off.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · DIVIDER · CASCADE & REVIEW -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Cascade it, then review it</h2>
+      <p class="lead" style="color:#CCC">A strategy in your head isn't a strategy.</p>
+    </div>
+  </section>
+
+  <!-- 15 · CASCADE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyone knows their part · clarity is kindness</div>
+      <h2>Push the strategy down until every person owns a piece.</h2>
+      <div class="cascade-line">
+        <div class="cascade-node hot"><span class="n">01 · Department</span><b>Two or three bets</b><p>The outcomes leadership owns.</p></div><div class="cascade-arrow">→</div>
+        <div class="cascade-node"><span class="n">02 · Bet</span><b>One metric</b><p>The result that proves the bet.</p></div><div class="cascade-arrow">→</div>
+        <div class="cascade-node"><span class="n">03 · Team</span><b>Weekly lead measures</b><p>The controllable drivers.</p></div><div class="cascade-arrow">→</div>
+        <div class="cascade-node"><span class="n">04 · Person</span><b>One owned input</b><p>The number they move.</p></div>
+      </div>
+      <div class="callout"><b>Test the cascade:</b> every person can name the bet, the metric and the one input they own.</div>
+    </div>
+  </section>
+
+  <!-- 16 · REVIEW & KILL -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Reviewing bets · when to double down, when to kill</div>
+      <h2>Run the direction test on every bet.</h2>
+      <div class="decide">
+        <div class="dbox ok"><h3>Double down →</h3><ul>
+          <li>The lead measures are being hit</li>
+          <li>The lag number is starting to follow</li>
+          <li>If it were running perfectly, the direction is still right</li>
+          <li>You'd start this bet again today knowing what you know</li>
+        </ul></div>
+        <div class="dbox no"><h3>Kill it ✕</h3><ul>
+          <li>Leads are hit but the outcome never moves</li>
+          <li>The direction is wrong, not just the execution</li>
+          <li>It survives only because stopping feels like failure</li>
+          <li>It's draining people the winning bets need</li>
+        </ul></div>
+      </div>
+      <p class="cite">Killing a wrong bet isn't a failure of commitment — staying in one is. Reallocate the freed people and budget to what's working. Do it early; a dead bet gets more expensive every week you keep it alive.</p>
+    </div>
+  </section>
+
+  <!-- 17 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#CCC">Sort the numbers, then make three calls.</p>
+    </div>
+  </section>
+
+  <!-- 18 · CLASSIFY INTERACTIVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Warm-up · lead or lag?</div>
+      <div class="big" style="font-size:clamp(1.7rem,4vw,2.4rem)">Choose, then see exactly why.</div>
+      <div class="classify-key"><div><b>Lead = manage now</b><br>Controllable input before the result.</div><div><b>Lag = verify later</b><br>Outcome after the work has happened.</div></div>
+      <div class="classify" id="classify">
+        <div class="crow" data-correct="lag" data-reason="Revenue confirms the result after sales activity and delivery have happened."><span class="cq">Quarterly revenue from the department</span><span class="copt"><button class="cbtn" data-k="lead">Lead</button><button class="cbtn" data-k="lag">Lag</button></span><span class="cresult">Choose one</span></div>
+        <div class="crow" data-correct="lead" data-reason="Calls booked are a controllable weekly input that can change future revenue."><span class="cq">Qualified sales calls booked this week</span><span class="copt"><button class="cbtn" data-k="lead">Lead</button><button class="cbtn" data-k="lag">Lag</button></span><span class="cresult">Choose one</span></div>
+        <div class="crow" data-correct="lag" data-reason="Retention records the outcome of the customer experience already delivered."><span class="cq">Client retention rate</span><span class="copt"><button class="cbtn" data-k="lead">Lead</button><button class="cbtn" data-k="lag">Lag</button></span><span class="cresult">Choose one</span></div>
+        <div class="crow" data-correct="lead" data-reason="On-time shipping is a controllable operating behaviour before audience and revenue results."><span class="cq">Content pieces shipped on schedule</span><span class="copt"><button class="cbtn" data-k="lead">Lead</button><button class="cbtn" data-k="lag">Lag</button></span><span class="cresult">Choose one</span></div>
+      </div>
+      <div class="cscore" id="cscore">Tag all four to continue.</div>
+    </div>
+  </section>
+
+  <!-- 19 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · what a strategy is</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A strategy is a small number of funded bets. Twelve equal priorities is a wish-list — nothing is concentrated behind anything, so nothing compounds. Name the two or three that make the rest easier, and fund those."
+        data-no="<b>Not that one.</b> Twelve equal priorities means no strategy — resources get sprinkled and nothing wins. A strategy is a few bets you concentrate people and budget behind, chosen because they make the rest easier or unnecessary.">
+        <div class="scenario">Your leadership team hands you a plan with <b>twelve priorities</b>, all marked high-importance, all unfunded beyond good intentions.</div>
+        <div class="q">What's the problem, and what do you do?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Nothing — twelve priorities shows the department is ambitious</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>It's a wish-list — cut to two or three bets and fund those</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Keep all twelve but rank them one to twelve</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · owning the numbers</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> You can't push a lag number directly — revenue is an outcome. You manage the lead measures that feed it (calls booked, proposals sent) and watch revenue to confirm the leads were right. Manage leads, watch lags."
+        data-no="<b>No.</b> Revenue is a lag — an outcome you can only watch. Staring at it or setting a bigger target doesn't move it. You steer by the lead measures that produce it, then watch revenue to validate them.">
+        <div class="scenario">Revenue is flat and you want it up next quarter. Your instinct is to set a bigger revenue target and watch the dashboard daily.</div>
+        <div class="q">What actually moves the number?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>A bigger revenue target — it raises the bar for everyone</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Watching the revenue dashboard more often</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Managing the lead measures that feed revenue, then watching it</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · reviewing a bet</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Run the direction test: if it were executed perfectly, would the direction still be right? Here the leads are hit but the outcome never moves — the direction is wrong. Kill it and move the people onto a working bet. Staying in isn't commitment."
+        data-no="<b>Reconsider.</b> The team is hitting every lead measure and the outcome still won't move — that's a signal the direction is wrong, not the effort. More time or people pours resource into a dead bet. Run the direction test and kill it.">
+        <div class="scenario">A bet is two months in. The team is hitting every lead measure you set — but the outcome it was meant to move hasn't budged. It's tying up two of your strongest people.</div>
+        <div class="q">What's the call?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Give it another quarter — commitment means seeing it through</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Kill it and reallocate the two people to a working bet</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Add two more people to force the outcome</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you set a department strategy and own its numbers?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Is your strategy a small set of funded bets, not a wish-list?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Have you named the one objective that makes the rest easier this quarter?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can the whole department name the one metric — and its lead measures?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do your best people and budget sit on the bets, with a "not now" list defended?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Did each bet survive the stress-test and stay inside the GUIDE values?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you review bets and kill the ones whose direction is wrong?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 23 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Few bets. One metric. Resources that follow.</h2>
+      <p class="lead">That's the whole job of a head of department: choose the bets, own the numbers, cascade it so everyone knows their part, and kill what isn't working before it drains what is.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · department strategy</div>
+<div class="nav">
+  <span class="count" id="count">1 / 23</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // lead vs lag classify interactive
+  var cbox=document.getElementById('classify');
+  if(cbox){
+    var crows=[].slice.call(cbox.querySelectorAll('.crow'));
+    var cscore=document.getElementById('cscore');
+    crows.forEach(function(row){
+      var correct=row.getAttribute('data-correct');
+      var reason=row.getAttribute('data-reason')||'';
+      [].forEach.call(row.querySelectorAll('.cbtn'),function(btn){
+        btn.addEventListener('click',function(){
+          if(row.classList.contains('done'))return;
+          var k=btn.getAttribute('data-k');
+          var result=row.querySelector('.cresult');
+          [].forEach.call(row.querySelectorAll('.cbtn'),function(b){
+            b.disabled=true;
+            if(b.getAttribute('data-k')===correct)b.classList.add('right');
+          });
+          if(k!==correct){btn.classList.add('picked-wrong');row.classList.add('wrong-answer');if(result)result.textContent='✕ '+correct.toUpperCase()+' · '+reason;}
+          else{row.classList.add('right-answer');if(result)result.textContent='✓ '+correct.toUpperCase()+' · '+reason;}
+          row.classList.add('done');
+          cupd();
+        });
+      });
+    });
+    function cupd(){
+      var done=crows.filter(function(r){return r.classList.contains('done')}).length;
+      var right=crows.filter(function(r){
+        var c=r.getAttribute('data-correct');
+        var b=r.querySelector('.cbtn.right');
+        return b&&!r.querySelector('.picked-wrong');
+      }).length;
+      if(done<crows.length){cscore.className='cscore';cscore.textContent='Tagged '+done+' of '+crows.length+' — keep going.';}
+      else if(right===crows.length){cscore.className='cscore all';cscore.textContent='✓ All four right. Revenue and retention are lags you watch; calls booked and pieces shipped are leads you manage.';}
+      else{cscore.className='cscore';cscore.textContent='Done — '+right+' of '+crows.length+' right. Remember: outcomes are lags you watch, weekly inputs are leads you manage.';}
+    }
+  }
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-deptstrat-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means fix that part of the strategy before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can set a department strategy and own its numbers.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#999;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#999;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-cmd-power -->
+<style>
+body{background:radial-gradient(900px 520px at 88% -8%,rgba(192,32,37,.06),transparent 58%),radial-gradient(700px 460px at 4% 106%,rgba(192,32,37,.045),transparent 60%),var(--bg,#fff)}
+.koo-cmd-band{position:fixed;left:0;right:0;height:4px;z-index:60;background:linear-gradient(90deg,#C02025,#D76C6F,#C02025);background-size:200% 100%;animation:kcBand 5s linear infinite;pointer-events:none}
+.koo-cmd-band.top{top:0}.koo-cmd-band.bot{bottom:0;animation-direction:reverse}
+@keyframes kcBand{0%{background-position:0 0}100%{background-position:-200% 0}}
+</style>
+<div class="koo-cmd-band bot"></div>
+<!-- /koo-cmd-power -->
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

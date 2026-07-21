@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accountability · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b; --warn:#b26a00;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --mono:'SF Mono',ui-monospace,'JetBrains Mono',Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.55}
+a{color:inherit;text-decoration:none}
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);z-index:50}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.03em;font-size:1.24rem;color:var(--ink)}
+.tagpill{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);border:1px solid rgba(192,32,37,.3);border-radius:20px;padding:5px 11px;font-weight:700}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.hero{padding:clamp(38px,6vw,62px) clamp(20px,5vw,64px) 8px;max-width:1100px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:13px}
+h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800}
+.lead{margin-top:15px;color:var(--muted);font-size:clamp(1rem,1.7vw,1.12rem);max-width:680px}
+.wrap{max-width:1100px;margin:0 auto;padding:32px clamp(20px,5vw,64px) 60px}
+.sec{margin-top:36px}
+.sec h2{font-size:1.16rem;letter-spacing:-.02em;color:var(--ink);font-weight:800;margin-bottom:4px}
+.sec .sub{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+/* the loop, as a track with something always moving through it */
+.loop{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:22px 20px 26px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,var(--maroon-tint) 0%,#fff 48%,var(--maroon-tint) 100%);overflow:hidden;box-shadow:var(--shadow)}
+.loop::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;pointer-events:none;
+  background-image:linear-gradient(90deg,transparent,var(--maroon),transparent);background-size:32% 100%;background-repeat:no-repeat;
+  animation:loopTrack 3.4s linear infinite}
+@keyframes loopTrack{0%{background-position:-36% 0}100%{background-position:140% 0}}
+.lstep{position:relative;background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+.lstep .n{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:6px}
+.lstep h4{font-size:.98rem;color:var(--ink);font-weight:800;margin-bottom:4px;letter-spacing:-.01em}
+.lstep p{font-size:.85rem;color:var(--muted);line-height:1.45}
+@media(max-width:820px){.loop{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.loop{grid-template-columns:1fr}}
+.rule{margin-top:16px;border-left:3px solid var(--maroon);background:var(--maroon-tint);border-radius:0 10px 10px 0;padding:15px 18px;font-size:.94rem;color:var(--ink)}
+.rule b{color:var(--maroon)}
+.state{border:1px dashed var(--line);border-radius:14px;padding:34px 22px;text-align:center;color:var(--muted);font-size:.94rem}
+.state b{color:var(--ink)}
+table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{background:#fafafa;text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:11px 14px;border-bottom:1px solid var(--line)}
+td{padding:12px 14px;border-bottom:1px solid var(--line2);font-size:.9rem;color:var(--body)}
+tr:last-child td{border-bottom:0}
+.who{font-weight:800;color:var(--ink)}
+.pill{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:4px 9px;border-radius:20px}
+.pill.open{background:rgba(192,32,37,.1);color:var(--maroon)}
+.pill.closed{background:rgba(27,127,75,.1);color:var(--ok)}
+.pill.late{background:rgba(178,106,0,.12);color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.st{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;box-shadow:var(--shadow)}
+.st .v{font-size:1.9rem;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1}
+.st .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:7px}
+.crit{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:3px 7px;border-radius:20px;background:var(--maroon);color:#fff;margin-right:6px;vertical-align:middle}
+.act{font-size:.83rem;color:var(--muted);margin-top:4px;line-height:1.4}
+@media(max-width:600px){.stats{grid-template-columns:1fr}}
+.vpv{border-top:1px solid var(--line2);background:var(--maroon-tint);padding:30px clamp(20px,5vw,64px) 26px}
+.vpv-in{max-width:1100px;margin:0 auto}
+.vpv-say{font-size:clamp(1.05rem,2vw,1.28rem);font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:4px}
+.vpv-say b{color:var(--maroon)}
+.vpv-vision{color:var(--body);font-size:.9rem;max-width:760px;margin-bottom:18px}
+.vpv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.vpv-v{background:#fff;border:1px solid rgba(192,32,37,.16);border-radius:10px;padding:11px 12px}
+.vpv-v .l{font-weight:800;color:var(--maroon);font-size:1rem;line-height:1}
+.vpv-v .n{font-weight:700;color:var(--ink);font-size:.78rem;margin-top:5px;line-height:1.25}
+@media(max-width:820px){.vpv-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.vpv-grid{grid-template-columns:1fr}}
+.foot{border-top:1px solid var(--line2);padding:24px clamp(20px,5vw,64px);text-align:center;color:var(--muted);font-size:11px;letter-spacing:.08em;font-family:var(--mono);text-transform:uppercase}
+@media(prefers-reduced-motion:reduce){.loop::after{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">koocester <span class="tagpill">Accountability</span></div>
+  <a class="back" href="portal.html">← Portal</a>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Management · Ownership</div>
+  <h1>Accountability</h1>
+  <p class="lead">The Command Dashboard tells you what is happening. This tells you who owns the problem and whether they closed it. A flag with no owner is a complaint. A flag with an owner and a date is a commitment.</p>
+</section>
+
+<div class="wrap">
+
+  <div class="sec">
+    <h2>The loop</h2>
+    <div class="sub">Nothing counts until it reaches step four.</div>
+    <div class="loop">
+      <div class="lstep"><div class="n">Step one</div><h4>Flagged</h4><p>Something is off. A missed lead time, a red metric, a broken promise to a client.</p></div>
+      <div class="lstep"><div class="n">Step two</div><h4>Owned</h4><p>One name, not a team. If nobody owns it, it does not exist.</p></div>
+      <div class="lstep"><div class="n">Step three</div><h4>Actioned</h4><p>A specific fix with a date on it, not an intention to look into it.</p></div>
+      <div class="lstep"><div class="n">Step four</div><h4>Closed</h4><p>Evidence it is done. The owner closes it, and it is visible that they did.</p></div>
+    </div>
+    <div class="rule">
+      <b>The metric is loops closed, not loops raised.</b> Raising flags is easy and makes a company look busy. Closing them is the only thing that changes a number. We measure closure rate and time to close, by owner.
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>Open loops</h2>
+    <div class="sub">Every flag currently carrying someone's name.</div>
+    <div id="loops">
+      <div class="state" id="state">
+        <b>Not wired to the live base yet.</b><br>
+        The Accountability base in Lark holds the flags and the daily nudges already run from it. This page becomes live the moment those rows sync into the portal database, the same way the leaderboard does.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>How escalation works</h2>
+    <div class="sub">So nobody is surprised by a consequence.</div>
+    <table>
+      <tr><th>When</th><th>What happens</th><th>Who acts</th></tr>
+      <tr><td>Flag raised</td><td>Owner is named and notified the same day</td><td>Whoever spotted it</td></tr>
+      <tr><td>Still open at the due date</td><td>It appears in the Monday digest against the owner's name</td><td>Owner</td></tr>
+      <tr><td>Open past two cycles</td><td>It goes to the owner's manager, not around them</td><td>Manager</td></tr>
+      <tr><td>Repeating pattern</td><td>It stops being a flag and becomes a performance conversation</td><td>Manager and HR</td></tr>
+    </table>
+    <div class="rule">
+      This is designed to be <b>boring and predictable</b>. Surprise consequences destroy trust. A visible ladder means people can fix things before anyone has to have a difficult conversation.
+    </div>
+  </div>
+
+</div>
+
+<section class="vpv">
+  <div class="vpv-in">
+    <p class="vpv-say">Empowering Growth. <b>Built on Trust.</b></p>
+    <p class="vpv-vision"><b>Our purpose:</b> a Symbol of Inspiration, Empowering Growth, Powered by People. &nbsp;<b>Vision 2035:</b> to be the world's most trusted and influential growth ecosystem, inspiring over 1 billion people a year through influential media, impactful education and data intelligence.</p>
+    <div class="vpv-grid">
+      <div class="vpv-v"><div class="l">G</div><div class="n">Growth and Curiosity</div></div>
+      <div class="vpv-v"><div class="l">U</div><div class="n">Uniting through trust and relationships</div></div>
+      <div class="vpv-v"><div class="l">I</div><div class="n">Impact through inspiration</div></div>
+      <div class="vpv-v"><div class="l">D</div><div class="n">Dare to be bold and innovate</div></div>
+      <div class="vpv-v"><div class="l">E</div><div class="n">Empathy and Giving</div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">Koocester management · a flag without an owner is a complaint</footer>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Reads content_perf style accountability rows once they are synced into the portal
+   database. Until that table exists this shows an honest state rather than fake flags. */
+(async ()=>{
+  try{ await supabase.auth.getSession(); }catch(e){}
+  let rows=null;
+  try{
+    const {data,error}=await supabase.from('accountability_open')
+      .select('issue,department,priority,owner,action,due,status,closed_on')
+      .order('due',{ascending:true});
+    if(error) throw error;
+    rows=data||[];
+  }catch(e){ return; }   // table not there yet: leave the honest message in place
+
+  const open=rows.filter(r=>r.status==='Open'||r.status==='In Progress');
+  if(!open.length){
+    $('state').innerHTML='<b>No open loops.</b><br>Everything raised has been closed. That is the target state, not an error.';
+    return;
+  }
+  const today=new Date().toISOString().slice(0,10);
+  const closedCount=rows.filter(r=>r.status==='Done').length;
+  const rate=rows.length?Math.round(closedCount/rows.length*100):0;
+
+  $('loops').innerHTML=
+    '<div class="stats"><div class="st"><div class="v">'+open.length+'</div><div class="k">Open now</div></div>'+
+    '<div class="st"><div class="v">'+closedCount+'</div><div class="k">Closed</div></div>'+
+    '<div class="st"><div class="v">'+rate+'%</div><div class="k">Closure rate</div></div></div>'+
+    '<table><tr><th>Issue</th><th>Owner</th><th>Department</th><th>Due</th><th>Status</th></tr>'+
+    open.map(r=>{
+      const due=(r.due||'').slice(0,10);
+      const late = due && due < today;
+      const cls = late?'late':'open';
+      const label = late?'Overdue':(r.status||'Open');
+      const crit = String(r.priority||'').indexOf('Critical')>-1;
+      return '<tr><td>'+(crit?'<span class="crit">Critical</span> ':'')+esc(r.issue)+
+        (r.action?'<div class="act">'+esc(r.action)+'</div>':'')+'</td>'+
+        '<td class="who">'+esc(r.owner||'Unassigned')+'</td>'+
+        '<td>'+esc(r.department||'')+'</td>'+
+        '<td>'+esc(due||'no date')+'</td>'+
+        '<td><span class="pill '+cls+'">'+esc(label)+'</span></td></tr>';
+    }).join('')+'</table>';
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrance animations · pick one</title>
+<style>
+:root{--maroon:#C02025;--ink:#0a0a0a;--body:#333;--muted:#767676;--line:#E4E4E4;--popp:cubic-bezier(.22,1.12,.4,1);--base:'Helvetica Neue',Helvetica,Inter,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:40px clamp(18px,4vw,48px) 80px}
+.top{text-align:center;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--maroon);font-weight:800}
+h1{font-size:clamp(2rem,5vw,3rem);letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:12px 0 8px}
+.lead{color:var(--muted);max-width:620px;margin:0 auto 8px}
+.hint{color:var(--maroon);font-weight:700;font-size:14px;margin-bottom:30px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.demo{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 30px rgba(0,0,0,.06)}
+.demohead{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.demohead b{font-size:1.05rem;color:var(--ink);font-weight:800}
+.demohead .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--maroon);color:#fff;font-size:12px;font-weight:800;margin-right:9px}
+.replay{appearance:none;border:1px solid var(--line);background:#fff;color:var(--body);font-family:var(--base);font-size:12px;font-weight:800;border-radius:20px;padding:7px 14px;cursor:pointer;transition:.14s}
+.replay:hover{border-color:var(--maroon);color:var(--maroon)}
+.stage{position:relative;height:270px;background:radial-gradient(600px 300px at 70% -20%,rgba(192,32,37,.06),transparent 60%),#fafafa;overflow:hidden;padding:20px 18px;display:flex;flex-direction:column;justify-content:center}
+.mh{font-size:1.2rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin:0 0 4px}
+.ms{font-size:12px;color:var(--muted);margin:0 0 16px}
+.cards{display:flex;gap:10px}
+.mc{flex:1;height:120px;border-radius:10px;background:linear-gradient(155deg,#1a1a1a,#0c0c0c);border:1px solid #262626;position:relative;overflow:hidden}
+.mc::after{content:"";position:absolute;left:12px;right:12px;bottom:12px;height:8px;border-radius:4px;background:rgba(224,119,122,.5)}
+.mc::before{content:"";position:absolute;left:50%;top:22px;width:38px;height:38px;border-radius:50%;transform:translateX(-50%);background:radial-gradient(circle,#3a1416,#120a0b);border:2px solid var(--maroon)}
+/* sweep bar reused by some */
+.sweep{position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 40%,rgba(192,32,37,.16) 50%,transparent 60%);transform:translateX(-120%)}
+.curtain{position:absolute;inset:0;background:var(--maroon);transform-origin:top}
+
+/* 1 · Page Reveal (Command-Track style) */
+.s1.play .inner{animation:pageIn .6s var(--popp)}
+.s1.play .sweep{animation:sweepX .9s ease}
+@keyframes pageIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+@keyframes sweepX{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+/* 2 · Rise & Stagger */
+.s2.play .mh,.s2.play .ms{animation:riseUp .5s var(--popp) both}
+.s2.play .ms{animation-delay:.08s}
+.s2.play .mc{animation:riseUp .55s var(--popp) both}
+.s2.play .mc:nth-child(1){animation-delay:.16s}.s2.play .mc:nth-child(2){animation-delay:.26s}.s2.play .mc:nth-child(3){animation-delay:.36s}
+@keyframes riseUp{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+/* 3 · Zoom In */
+.s3.play .inner{animation:zoomIn .55s var(--popp)}
+@keyframes zoomIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+/* 4 · Curtain Wipe */
+.s4.play .curtain{animation:curtainUp .8s var(--popp) forwards}
+.s4.play .inner{animation:fadeSoft .8s ease}
+@keyframes curtainUp{0%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+@keyframes fadeSoft{0%,40%{opacity:0}100%{opacity:1}}
+/* 5 · Deal In (playing cards) */
+.s5.play .mc{animation:dealIn .5s var(--popp) both}
+.s5.play .mc:nth-child(1){animation-delay:.05s}.s5.play .mc:nth-child(2){animation-delay:.18s}.s5.play .mc:nth-child(3){animation-delay:.31s}
+.s5.play .mh,.s5.play .ms{animation:fadeSoft .5s ease}
+@keyframes dealIn{from{opacity:0;transform:translate(-40px,50px) rotate(-14deg)}to{opacity:1;transform:none}}
+/* 6 · Flip In */
+.s6.play .mc{animation:flipIn .6s var(--popp) both;transform-origin:center}
+.s6.play .mc:nth-child(1){animation-delay:.05s}.s6.play .mc:nth-child(2){animation-delay:.17s}.s6.play .mc:nth-child(3){animation-delay:.29s}
+.s6.play .mh,.s6.play .ms{animation:fadeSoft .5s ease}
+@keyframes flipIn{from{opacity:0;transform:perspective(600px) rotateY(75deg)}to{opacity:1;transform:none}}
+.spot{position:absolute;top:0;bottom:0;left:0;width:35%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),rgba(224,119,122,.4),transparent);transform:translateX(-70%);opacity:0}
+/* 7 · Assemble (fly in from edges) */
+.s7.play .mc{animation:asmIn .55s var(--popp) both}
+.s7.play .mc:nth-child(1){animation-delay:.05s;--fx:-140px;--fy:20px}
+.s7.play .mc:nth-child(2){animation-delay:.15s;--fx:0;--fy:130px}
+.s7.play .mc:nth-child(3){animation-delay:.25s;--fx:140px;--fy:20px}
+.s7.play .mh,.s7.play .ms{animation:fadeSoft .5s ease}
+@keyframes asmIn{from{opacity:0;transform:translate(var(--fx,0),var(--fy,0)) scale(.8)}to{opacity:1;transform:none}}
+/* 8 · Spotlight Sweep */
+.s8.play .spot{animation:spotX 1.2s ease forwards}
+.s8.play .mc{animation:liftIn .5s var(--popp) both}
+.s8.play .mc:nth-child(1){animation-delay:.22s}.s8.play .mc:nth-child(2){animation-delay:.48s}.s8.play .mc:nth-child(3){animation-delay:.74s}
+.s8.play .mh,.s8.play .ms{animation:fadeSoft .5s ease}
+@keyframes spotX{0%{transform:translateX(-70%);opacity:0}18%{opacity:1}100%{transform:translateX(180%);opacity:0}}
+@keyframes liftIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+/* 9 · Slam In (fighting-game impact) */
+.s9.play .mc{animation:slamIn .5s cubic-bezier(.3,1.4,.5,1) both}
+.s9.play .mc:nth-child(1){animation-delay:.04s}.s9.play .mc:nth-child(2){animation-delay:.14s}.s9.play .mc:nth-child(3){animation-delay:.24s}
+.s9.play .inner{animation:shakeX .4s .26s ease}
+.s9.play .mh,.s9.play .ms{animation:fadeSoft .4s ease}
+@keyframes slamIn{0%{opacity:0;transform:translateY(-64px) scale(1.16)}70%{opacity:1;transform:translateY(4px) scale(.98)}100%{transform:none}}
+@keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+/* 10 · Unfold 3D */
+.s10 .cards{perspective:800px}
+.s10.play .mc{animation:unfold .6s var(--popp) both;transform-origin:top}
+.s10.play .mc:nth-child(1){animation-delay:.06s}.s10.play .mc:nth-child(2){animation-delay:.18s}.s10.play .mc:nth-child(3){animation-delay:.3s}
+.s10.play .mh,.s10.play .ms{animation:fadeSoft .5s ease}
+@keyframes unfold{from{opacity:0;transform:rotateX(-82deg)}to{opacity:1;transform:none}}
+/* 11 · Charge & Snap (energy power-up) */
+.s11.play .mc{animation:charge 1s var(--popp) both}
+.s11.play .mc:nth-child(1){animation-delay:.05s}.s11.play .mc:nth-child(2){animation-delay:.14s}.s11.play .mc:nth-child(3){animation-delay:.23s}
+.s11.play .mh,.s11.play .ms{animation:fadeSoft .5s ease}
+@keyframes charge{0%{opacity:0;transform:scale(.85);filter:blur(6px)}60%{opacity:1;filter:blur(2px);box-shadow:0 0 22px rgba(192,32,37,.6)}100%{transform:none;filter:blur(0);box-shadow:0 0 0 rgba(192,32,37,0)}}
+.rec{margin:34px auto 0;max-width:820px;border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:0 12px 12px 0;padding:16px 20px;background:#fbf7f7}
+.rec h3{margin:0 0 6px;color:var(--ink);font-size:1.05rem}
+.rec p{margin:0 0 8px;font-size:.92rem;color:var(--body)}
+.rec b{color:var(--maroon)}
+.pick{margin-top:24px;text-align:center;color:var(--muted);font-size:14px}
+.pick b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="eyebrow">Choose your operator · entrance</div>
+    <h1>Pick the entrance animation</h1>
+    <p class="lead">Six options for the moment the operator-select appears. Each plays on load — hit <b>↻ Replay</b> to see it again.</p>
+    <p class="hint">Tell me the number you like and I'll wire it into the Academy.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="rec">
+    <h3>What works best for a player-select screen</h3>
+    <p>The best character-select screens (Overwatch, Valorant, Fortnite, fighting games) almost always do three things: a <b>staggered reveal</b> (never all at once — it builds anticipation), a <b>directional entrance</b> where cards travel to their slots (it reads as "the roster assembling"), and a satisfying <b>lock-in</b> when you actually pick one.</p>
+    <p>From these, the strongest for player-select are <b>7 · Assemble</b> (roster flying into place — the genre standard), <b>9 · Slam In</b> (fighting-game impact, very premium), and <b>5 · Deal In</b> (card-game energy). <b>8 · Spotlight</b> is the most cinematic if you want it to feel like a reveal.</p>
+    <p><b>My recommendation:</b> <b>7 · Assemble</b> for the entrance — then I'd add a hover "focus" (card lifts + glows) and a "lock-in" flash on select, so the whole flow feels like picking a fighter.</p>
+  </div>
+  <p class="pick">Tell me the number(s) you want, and whether to add the hover-focus + lock-in. I'll wire it into the Academy.</p>
+</div>
+<script>
+var DEMOS=[
+  {n:1,name:'Page Reveal',s:'s1',note:'Command-Track style — fade + scale + maroon sweep'},
+  {n:2,name:'Rise & Stagger',s:'s2',note:'Heading and cards rise up in sequence'},
+  {n:3,name:'Zoom In',s:'s3',note:'The whole scene scales up into place'},
+  {n:4,name:'Curtain Wipe',s:'s4',note:'A maroon curtain lifts to reveal'},
+  {n:5,name:'Deal In',s:'s5',note:'Cards deal in like a hand of cards'},
+  {n:6,name:'Flip In',s:'s6',note:'Cards flip in 3D, one by one'},
+  {n:7,name:'Assemble',s:'s7',note:'Cards fly in from the edges to their slots — the roster assembling'},
+  {n:8,name:'Spotlight Sweep',s:'s8',note:'A light sweeps across; each card lights up as it hits'},
+  {n:9,name:'Slam In',s:'s9',note:'Fighting-game impact — cards slam down with a shake'},
+  {n:10,name:'Unfold 3D',s:'s10',note:'Cards unfold in on a hinge, one by one'},
+  {n:11,name:'Charge & Snap',s:'s11',note:'Energy charges, then cards snap to full — power-up'}
+];
+var grid=document.getElementById('grid');
+function sceneHTML(){
+  return '<div class="inner">'
+    +'<div class="curtain"></div><div class="sweep"></div><div class="spot"></div>'
+    +'<h3 class="mh">Choose your operator</h3><p class="ms">Pick your specialist</p>'
+    +'<div class="cards"><div class="mc"></div><div class="mc"></div><div class="mc"></div></div>'
+    +'</div>';
+}
+DEMOS.forEach(function(d){
+  var el=document.createElement('div'); el.className='demo';
+  el.innerHTML='<div class="demohead"><b><span class="num">'+d.n+'</span>'+d.name+'</b><button class="replay">↻ Replay</button></div>'
+    +'<div class="stage '+d.s+'" title="'+d.note+'">'+sceneHTML()+'</div>';
+  var stage=el.querySelector('.stage');
+  function play(){ stage.classList.remove('play'); void stage.offsetWidth; stage.classList.add('play'); }
+  el.querySelector('.replay').onclick=play;
+  grid.appendChild(el);
+  setTimeout(play, 200*d.n);
+});
+</script>
+</body>
+</html>

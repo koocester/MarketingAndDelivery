@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing & Delivery · End-to-end workflow</title>
+<style>
+:root{
+  --maroon:#C02025; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#EEE; --bg:#fff;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:700}
+h1{font-size:clamp(2.2rem,5vw,3rem);line-height:1.1;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:.2em 0}
+h2{font-size:1.6rem;letter-spacing:-.02em;color:var(--ink);font-weight:700;margin:0 0 6px}
+h3{font-size:1rem;color:var(--maroon);margin:0 0 6px;letter-spacing:.01em}
+p{margin:.5em 0}
+.logo{height:36px;margin-bottom:26px}
+.hero{padding:64px 0 34px;border-bottom:2px solid var(--ink)}
+.lead{font-size:1.2rem;color:var(--body);max-width:760px}
+nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 0}
+nav .wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav a{white-space:nowrap;font-size:13px;color:var(--muted);text-decoration:none;padding:6px 11px;border:1px solid var(--line);border-radius:4px}
+nav a:hover{border-color:var(--maroon);color:var(--maroon)}
+section{padding:46px 0;border-bottom:1px solid var(--line2)}
+.oneline{background:#fafafa;border-left:3px solid var(--maroon);padding:16px 20px;border-radius:0 6px 6px 0;margin:14px 0;font-size:1.05rem;color:var(--ink)}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+th{text-align:left;padding:10px 12px;border-bottom:2px solid var(--ink);color:var(--ink);font-size:11px;letter-spacing:.06em;text-transform:uppercase;vertical-align:bottom}
+td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line2);color:var(--body);vertical-align:top}
+td.stage{font-weight:700;color:var(--ink);white-space:nowrap}
+td.owner{color:var(--maroon);font-weight:700;white-space:nowrap}
+.pill{display:inline-block;background:#fff;border:1px solid var(--maroon);color:var(--maroon);border-radius:4px;padding:1px 7px;font-size:12px;font-weight:700;margin:1px 2px}
+.sla{font-weight:700;color:var(--ink)}
+.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:14px}
+.role{border:1px solid var(--line);border-radius:8px;padding:16px}
+.role b{color:var(--ink)}
+ul{margin:.4em 0;padding-left:20px}
+ul li{margin:.35em 0}
+.rules li{margin:.6em 0}
+.rules b{color:var(--ink)}
+.flag{background:#fff;border:1px solid var(--maroon);border-radius:8px;padding:14px 18px;margin:14px 0}
+.flag b{color:var(--maroon)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.duo .box{border:1px solid var(--line);border-radius:8px;padding:18px}
+footer{padding:40px 0 70px;color:var(--muted);font-size:14px}
+footer b{color:var(--ink)}
+@media(max-width:640px){.duo{grid-template-columns:1fr}table{font-size:13px}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <img class="logo" src="koocester-logo.png" alt="koocester">
+  <div class="eyebrow">Marketing &amp; Delivery · operating manual</div>
+  <h1>The whole workflow, first to last</h1>
+  <p class="lead">Every stage, who owns it, what they fill, the gate that lets it move on, and the clock that keeps it moving. This is the spine the role modules and the tech guide are built on.</p>
+</div></header>
+
+<nav><div class="wrap">
+  <a href="#model">The model</a>
+  <a href="#roles">Roles</a>
+  <a href="#video">Video pipeline</a>
+  <a href="#carousel">Carousel pipeline</a>
+  <a href="#autos">Automation layer</a>
+  <a href="#rules">Data rules</a>
+  <a href="#templates">Templates</a>
+</div></nav>
+
+<main class="wrap">
+
+  <section id="model">
+    <div class="eyebrow">Start here</div>
+    <h2>The model in one line</h2>
+    <div class="oneline">A <b>Project</b> is only a harness. The real work lives on <b>Videos</b> and <b>Carousels</b>, each tied to a <b>Page</b> (which carries the vertical and country). Records are <b>born blank at "Not Started"</b> and move stage by stage, each move opened by a button and watched by a clock.</div>
+    <p>Three things to hold in your head: <b>Pages</b> carry vertical + country (not Projects). <b>Lead magnets</b> are per video. <b>Growth is measured Page by month</b>, never by project.</p>
+  </section>
+
+  <section id="roles">
+    <div class="eyebrow">Who does what</div>
+    <h2>The roles</h2>
+    <div class="roles">
+      <div class="role"><h3>Marketing coordinator</h3>Plans the month, sets objective, page and offer. Fills the plan by the 15th.</div>
+      <div class="role"><h3>Producer</h3>Sources the guest, runs the shoot, uploads raw footage. Feeds the backlog.</div>
+      <div class="role"><h3>Content strategist</h3>Plans the storyboard, sets shoot date/venue, runs QC.</div>
+      <div class="role"><h3>Video editor</h3>Edits the cut, delivers the Frame.io link.</div>
+      <div class="role"><h3>Copywriter</h3>Writes the carousel: Canva design + caption.</div>
+      <div class="role"><h3>Social media manager</h3>Posts the finished piece, fills the post URLs and upload date.</div>
+      <div class="role"><h3>Head of growth (approver)</h3>The marketing gate: approves ideas/guests and final non-client sign-off.</div>
+      <div class="role"><h3>Head copywriter (approver)</h3>Final approval gate for carousels.</div>
+      <div class="role"><h3>Manager</h3>Watches the pipeline, clears bottlenecks, does not do stage work.</div>
+    </div>
+    <p class="eyebrow" style="margin-top:16px">Most assignees default automatically from the Page. Override only for a one-off.</p>
+  </section>
+
+  <section id="video">
+    <div class="eyebrow">The main flow</div>
+    <h2>Video pipeline, stage by stage</h2>
+    <table>
+      <tr><th>Stage</th><th>Owner</th><th>Fills in</th><th>Gate / button</th><th>Clock</th></tr>
+      <tr><td class="stage">Not Started</td><td class="owner">System</td><td>Born blank. Coordinator plans it into the month.</td><td><span class="pill">Sourcing needed?</span> or straight to Approval</td><td>,</td></tr>
+      <tr><td class="stage">Sourcing</td><td class="owner">Producer</td><td>Guest contact, name, IG/business handle, profession, number</td><td><span class="pill">Confirm submission</span></td><td>,</td></tr>
+      <tr><td class="stage">Approval</td><td class="owner">Head of growth</td><td>Reviews the idea and guest fit</td><td><span class="pill">Approve to plan</span> / <span class="pill">Reject to plan</span></td><td class="sla">12h (3h organic)</td></tr>
+      <tr><td class="stage">Planning</td><td class="owner">Strategist</td><td>Storyboard (workflow to be confirmed), offer or lead magnet, landing page, shoot date, venue, duration</td><td><span class="pill">Storyboard done</span> · <span class="pill">Add to calendar</span></td><td>,</td></tr>
+      <tr><td class="stage">Ready to shoot</td><td class="owner">Producer</td><td>The shoot happens</td><td><span class="pill">Shoot done</span></td><td class="sla">raw in 16 calendar hours</td></tr>
+      <tr><td class="stage">Ready to edit</td><td class="owner">Producer</td><td>Raw file link (Google Drive)</td><td><span class="pill">Start editing</span></td><td>,</td></tr>
+      <tr><td class="stage">Editing</td><td class="owner">Video editor</td><td>Frame.io link (the edited cut)</td><td><span class="pill">Submit video</span></td><td class="sla">4h or 8h by vertical</td></tr>
+      <tr><td class="stage">Strategist QC</td><td class="owner">Strategist</td><td>Checks hook, objective, brand, quality</td><td><span class="pill">Approve QC</span> / <span class="pill">Request amendment</span></td><td class="sla">16h</td></tr>
+      <tr><td class="stage">Amendments needed</td><td class="owner">Video editor</td><td>Fixes and re-delivers</td><td><span class="pill">Resubmit video</span></td><td class="sla">6h</td></tr>
+      <tr><td class="stage">Final approval</td><td class="owner">Head of growth / client</td><td>Last sign-off before posting</td><td><span class="pill">Approve to upload</span></td><td class="sla">48h client · 12h internal</td></tr>
+      <tr><td class="stage">Ready to upload</td><td class="owner">SMM</td><td>Instagram / TikTok / Facebook post URLs, actual upload date</td><td><span class="pill">Confirm all uploaded</span></td><td>,</td></tr>
+      <tr><td class="stage">Completed</td><td class="owner">,</td><td>Live. Performance flows back from Metricool.</td><td>,</td><td>,</td></tr>
+    </table>
+    <p class="eyebrow">Side states: On hold · To reupload · Rejected / do not post · Taken down · Rejected contact.</p>
+  </section>
+
+  <section id="carousel">
+    <div class="eyebrow">The parallel flow</div>
+    <h2>Carousel pipeline, stage by stage</h2>
+    <table>
+      <tr><th>Stage</th><th>Owner</th><th>Fills in</th><th>Gate / button</th><th>Clock</th></tr>
+      <tr><td class="stage">Not Started</td><td class="owner">System</td><td>Born blank, or spawned from a carousel-worthy video</td><td>Sent to copywriting</td><td>,</td></tr>
+      <tr><td class="stage">Pending copywriting</td><td class="owner">Copywriter</td><td>Waits until a copywriter picks it up</td><td><span class="pill">Start copywriting</span></td><td>starts the 3h clock only here</td></tr>
+      <tr><td class="stage">Copywriting</td><td class="owner">Copywriter</td><td>Canva link, caption</td><td><span class="pill">Submit carousel</span></td><td class="sla">3h</td></tr>
+      <tr><td class="stage">Amendments needed</td><td class="owner">Copywriter</td><td>Fixes and re-submits</td><td><span class="pill">Resubmit carousel</span></td><td class="sla">2h</td></tr>
+      <tr><td class="stage">Final approval</td><td class="owner">Head copywriter / client</td><td>Sign-off</td><td><span class="pill">Approve carousel</span></td><td class="sla">12h client · 4h internal</td></tr>
+      <tr><td class="stage">Ready to upload</td><td class="owner">SMM</td><td>Post URLs, actual upload date</td><td><span class="pill">All uploaded</span></td><td>,</td></tr>
+      <tr><td class="stage">Completed</td><td class="owner">,</td><td>Live.</td><td>,</td><td>,</td></tr>
+    </table>
+  </section>
+
+  <section id="autos">
+    <div class="eyebrow">What the base does on its own</div>
+    <h2>The automation layer</h2>
+    <ul>
+      <li><b>Fan-out.</b> A new Project spawns its video and carousel shells automatically (guarded so it doesn't duplicate).</li>
+      <li><b>Auto-assign.</b> New shells inherit Producer, Strategist, Editor, Copywriter and approvers from the linked Page's defaults.</li>
+      <li><b>SLA scans.</b> Scheduled scans flag OVERDUE on editing, QC, amendments, raw upload, ManyChat and final approval, then nudge the owner.</li>
+      <li><b>Notifications.</b> Role channels plus a direct message to the assignee when a record lands on them.</li>
+      <li><b>Calendar.</b> "Add to calendar" creates the Lark shoot event; videos and carousels sync into the Content Calendar.</li>
+      <li><b>Must-fill colouring.</b> An empty required cell turns bright yellow so nothing ships half-filled.</li>
+    </ul>
+  </section>
+
+  <section id="rules">
+    <div class="eyebrow">The non-negotiables</div>
+    <h2>Data-model rules</h2>
+    <ul class="rules">
+      <li><b>Born blank.</b> Every record starts at Not Started with no idea. The idea is added during planning, never injected at creation.</li>
+      <li><b>Pages carry the vertical and country</b>, not the Project. A Project is just a harness that groups work.</li>
+      <li><b>Lead magnets are per video.</b> A carousel inherits its offer from its source video.</li>
+      <li><b>Growth is measured Page by month</b>, not by project.</li>
+      <li><b>Assignees default from the Page.</b> Only override for a genuine one-off.</li>
+    </ul>
+    <div class="flag"><b>Live fix flagged:</b> the Wealth shells are arriving pre-filled with ideas (and duplicated). That breaks "born blank". Root cause to trace: the fan-out or project template is seeding ideas. To be stripped so producers originate Sensational ideas themselves.</div>
+  </section>
+
+  <section id="templates">
+    <div class="eyebrow">Why two flows feel different</div>
+    <h2>The two templates</h2>
+    <div class="duo">
+      <div class="box"><h3>Sensational</h3><p><b>Producer-originated.</b> The producer generates the idea from a template and self-sources what to shoot. Used by Wealth and similar. Shells must be <b>born blank</b>, the producer adds the idea.</p></div>
+      <div class="box"><h3>Stories &amp; Trust</h3><p><b>Guest / interview-led.</b> Marketing and the strategist drive the concept and the guest. The planning flow fills the idea before approval.</p></div>
+    </div>
+    <p class="eyebrow" style="margin-top:14px">This distinction is the reason the Wealth pre-seeding is wrong: Sensational content is the producer's to originate.</p>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p><b>This is v1, built to be corrected together.</b> Where a clock or a gate owner reads slightly off from how your team actually runs it, tell me and I'll fix it here. Once the map is right, the manager module and the tech maintainer guide are built straight off it.</p>
+  <p>Koocester · Marketing &amp; Delivery · workflow map v1</p>
+</footer>
+
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+</body>
+</html>

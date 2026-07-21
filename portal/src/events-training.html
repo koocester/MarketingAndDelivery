@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Events</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* MC pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* event content lanes */
+.content-lanes{display:grid;gap:10px;margin-top:12px}
+.clane{display:grid;grid-template-columns:84px 1fr;gap:10px;align-items:stretch}
+.clabel{border:2px solid var(--maroon);border-radius:12px;background:var(--maroon-tint);color:var(--maroon);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px}
+.cflow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.clane.carousel .cflow{grid-template-columns:repeat(5,minmax(0,1fr))}
+.cstep{border:1px solid var(--line);border-radius:11px;background:#fff;padding:10px 9px;box-shadow:var(--shadow);min-height:66px}
+.cstep.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.cstep .co{font-size:9.5px;letter-spacing:.035em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.cstep .cn{font-size:12.5px;color:var(--ink);font-weight:800;line-height:1.2;margin-top:4px}
+.cstep.hot .co,.cstep.hot .cn{color:var(--maroon)}
+/* event preparation */
+.prepgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;counter-reset:prep}
+.prepstep{counter-increment:prep;border:1px solid var(--line);border-radius:13px;padding:14px 14px 13px;box-shadow:var(--shadow);min-height:112px}
+.prepstep::before{content:counter(prep);display:flex;width:25px;height:25px;border-radius:50%;align-items:center;justify-content:center;background:var(--maroon);color:#fff;font-size:11px;font-weight:800;margin-bottom:9px}
+.prepstep b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+.prepstep span{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.workgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.work{border:1px solid var(--line);border-top:3px solid var(--maroon);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.work h3{font-size:15px;color:var(--ink);margin:0 0 8px}
+.work ul{margin:0;padding-left:17px}
+.work li{font-size:12.5px;line-height:1.35;margin:.35em 0}
+.rhythm{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+.beat{border:1px solid var(--line);border-radius:12px;padding:13px 14px;min-height:94px}
+.beat .when{color:var(--maroon);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.beat b{display:block;color:var(--ink);font-size:13.5px;margin:5px 0 3px}
+.beat span{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.criteriagrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.criterion{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:10px;padding:13px 14px;box-shadow:var(--shadow)}
+.criterion b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:4px}
+.criterion span{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.formatgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:14px}
+.format{border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:left;box-shadow:var(--shadow)}
+.format b{display:block;color:var(--ink);font-size:13.5px;line-height:1.2;margin-bottom:6px}
+.format span{display:block;color:var(--muted);font-size:11.5px;line-height:1.35}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.dolist{border:2px solid var(--line);border-radius:14px;padding:16px 18px}
+.dolist.do{border-color:var(--ok)}
+.dolist.dont{border-color:var(--maroon);background:var(--maroon-tint)}
+.dolist h3{margin:0 0 9px;font-size:16px;color:var(--ink)}
+.dolist.do h3{color:var(--ok)}
+.dolist.dont h3{color:var(--maroon)}
+.dolist ul{margin:0;padding-left:17px}
+.dolist li{font-size:12.5px;line-height:1.35;margin:.4em 0}
+/* attendance meter */
+.meter{margin-top:16px;max-width:640px;border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+.meter .mlbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.meter .mlbl .mt{font-weight:800;color:var(--ink);font-size:15px}
+.meter .mlbl .mv{font-weight:800;color:var(--maroon);font-size:1.6rem;letter-spacing:-.02em}
+.meter .mbar{height:16px;border-radius:10px;background:var(--line2);overflow:hidden}
+.meter .mfill{height:100%;width:75%;background:var(--maroon);border-radius:10px}
+.meter .mfoot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:9px}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:var(--maroon-tint);border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#fff}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#fff;color:var(--ok);border:1px solid var(--ok)}
+.fb.no{background:var(--maroon-tint);color:var(--body);border:1px solid var(--maroon)}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#fff;color:var(--ok)}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:var(--body)}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide,.dos{grid-template-columns:1fr}.vrow{grid-template-columns:1fr}.brandmark{display:none}.clane{grid-template-columns:1fr}.cflow,.clane.carousel .cflow{grid-template-columns:repeat(2,1fr)}.prepgrid,.rhythm{grid-template-columns:repeat(2,1fr)}.workgrid,.criteriagrid,.formatgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · role certification</div>
+      <h1><span class="lnwrap"><span class="ln">Events</span></span></h1>
+      <p class="lead" style="margin-top:20px">You own the events pillar. Run events that fill the room, turn attendance into leads, and feed every event into content.</p>
+    </div>
+  </section>
+
+  <!-- 2 · MISSION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your mission · one line</div>
+      <h2>Fill the room. Turn it into leads. Turn it into content.</h2>
+      <p class="lead">An event isn't done when the doors close. It's done when the room was full, the leads are captured and passed to Sales, and the whole thing has been handed to Marketing to become content.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>The room is full</b><span>attendance hits its target</span></div>
+        <div class="win"><b>Every event becomes content</b><span>you hand it over to Marketing</span></div>
+        <div class="win"><b>Attendance becomes leads</b><span>leads captured and passed to Sales</span></div>
+        <div class="win"><b>Footfall and revenue land</b><span>the two numbers that judge the event</span></div>
+        <div class="win"><b>It ran clean</b><span>venue, budget and sponsors handled</span></div>
+        <div class="win"><b>You feed next month</b><span>what worked flows into the next event</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 4 · DIVIDER · WHERE EVENTS LIVE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>Where events live</h2>
+      <p class="lead" style="color:#fff;opacity:.72">The data model — event, Page, Project.</p>
+    </div>
+  </section>
+
+  <!-- 5 · DATA MODEL -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Every event is a record</div>
+      <div class="dlv">
+        <div class="pbox">
+          <div class="plbl">Events table <span>inside the Marketing &amp; Delivery base</span></div>
+          <div class="drow">
+            <div class="dchip"><div class="dt">→ links to a Page</div><div class="ds">where content is born</div></div>
+            <div class="dchip"><div class="dt">→ sits under a Project</div><div class="ds">the campaign harness</div></div>
+          </div>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:16px">Projects, and their events, feed into <b>Pages</b>. The Page is the common denominator under every video and carousel — it's where content is born.</p>
+    </div>
+  </section>
+
+  <!-- 6 · PERMISSIONS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your base permissions · know your lane</div>
+      <div class="duo" style="grid-template-columns:repeat(3,1fr)">
+        <div class="obx lead-gen"><h3 style="font-size:1.2rem">Events</h3><div class="sub">you manage / own</div><ul><li>Create and run every event record</li><li>Set the metric, target and actual</li></ul></div>
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.2rem">Projects (Delivery)</h3><div class="sub">you edit</div><ul><li>Create the event / lead-gen projects</li><li>Link the Project to the event</li></ul></div>
+        <div class="obx"><h3 style="color:var(--ink);font-size:1.2rem">Videos &amp; Carousels</h3><div class="sub">you can see only</div><ul><li>Watch the content roll out</li><li>You don't create or edit them</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · DIVIDER · THE HANDOVER -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>The events handover</h2>
+      <p class="lead" style="color:#fff;opacity:.72">How an event becomes content.</p>
+    </div>
+  </section>
+
+  <!-- 8 · THE HANDOVER BUTTON -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The key move · one button</div>
+      <div class="big">An event becomes content when you <em>hand it over</em>.</div>
+      <p class="lead">On the event record, press <b>"Need Marketing?"</b>. It notifies the <b>Marketing Updates</b> group, the <b>Event Updates</b> group, and <b>Mike (Head of Growth)</b> with: <i>"This event needs marketing support. Please create a Project so the team can start promoting it, then link the Project on the event record."</i></p>
+    </div>
+  </section>
+
+  <!-- 9 · BUTTON NUANCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why it pings Mike, not the Page</div>
+      <h2>The button's whole job is to get a Project created.</h2>
+      <p class="lead">Most events have <b>no Page yet</b> when you click. So the button pings <b>Mike directly</b> — not via the Page — because there's nothing to route through yet. Getting a Project (and its Page) created in the first place is the point.</p>
+      <div class="callout"><b>No Page, no problem.</b> That's exactly why you press the button — to create the Project and Page that don't exist yet.</div>
+    </div>
+  </section>
+
+  <!-- 10 · SAME PIPELINE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">After the handover · two content lanes</div>
+      <h2 style="margin-bottom:5px">Events proposes the concept and best content match.</h2>
+      <p class="lead" style="font-size:1rem;margin:0 0 8px">You know the event best, so <b>source and suggest the angle, people and moments first</b>. Once the Project and Page exist, each deliverable enters its specialist lane.</p>
+      <div class="content-lanes">
+        <div class="clane">
+          <div class="clabel">Video</div>
+          <div class="cflow">
+            <div class="cstep hot"><div class="co">Events</div><div class="cn">Source + suggest</div></div>
+            <div class="cstep"><div class="co">Coordinator</div><div class="cn">Objective + brief</div></div>
+            <div class="cstep"><div class="co">Producer</div><div class="cn">Prepare + shoot</div></div>
+            <div class="cstep"><div class="co">Strategist</div><div class="cn">Plan + QC</div></div>
+            <div class="cstep"><div class="co">Editor</div><div class="cn">Edit</div></div>
+            <div class="cstep"><div class="co">Approval → Social</div><div class="cn">Approve + post</div></div>
+          </div>
+        </div>
+        <div class="clane carousel">
+          <div class="clabel">Carousel</div>
+          <div class="cflow">
+            <div class="cstep hot"><div class="co">Events</div><div class="cn">Suggest angle + assets</div></div>
+            <div class="cstep"><div class="co">Coordinator</div><div class="cn">Set offer + hand off</div></div>
+            <div class="cstep"><div class="co">Copywriter</div><div class="cn">Write</div></div>
+            <div class="cstep"><div class="co">Head Copywriter</div><div class="cn">Approve</div></div>
+            <div class="cstep"><div class="co">Social</div><div class="cn">Post</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:10px"><b>Events recommends; specialists execute.</b> Give the team the strongest starting point without taking over their production roles.</div>
+    </div>
+  </section>
+
+  <!-- 11 · DIVIDER · PREPARE THE EVENT -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Prepare the event</h2>
+      <p class="lead" style="color:#fff;opacity:.72">A controlled path from approved idea to event day.</p>
+    </div>
+  </section>
+
+  <!-- 12 · STREAMLINED PREPARATION FLOW -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Streamlined flow · step by step</div>
+      <h2 style="margin-bottom:4px">Eight locks before the doors open.</h2>
+      <div class="prepgrid">
+        <div class="prepstep"><b>Brief + outcome</b><span>Audience, purpose, metric, target and owner.</span></div>
+        <div class="prepstep"><b>Approval + budget</b><span>Scope, spend ceiling and decision maker confirmed.</span></div>
+        <div class="prepstep"><b>Date + venue</b><span>Capacity, access, permits, insurance and backup option.</span></div>
+        <div class="prepstep"><b>Partners + suppliers</b><span>Quotes, deliverables, sponsors, AV, catering and transport.</span></div>
+        <div class="prepstep"><b>Guests + registration</b><span>Form, CRM tracking, confirmations and reminder sequence.</span></div>
+        <div class="prepstep"><b>Programme + roles</b><span>Run-of-show, host, speakers, team rota and escalation owner.</span></div>
+        <div class="prepstep"><b>Marketing + capture</b><span>Promo plan, video/carousel angles, consent and lead capture.</span></div>
+        <div class="prepstep"><b>Final readiness</b><span>Walkthrough, call sheet, contingency check and go/no-go.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · LOGISTICS ARRANGEMENT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Logistics arrangement · three workstreams</div>
+      <h2 style="margin-bottom:4px">One owner. One live plan. No verbal-only tasks.</h2>
+      <div class="workgrid">
+        <div class="work"><h3>Venue + suppliers</h3><ul><li>Contract, access hours and capacity</li><li>AV, power, Wi-Fi, furniture and signage</li><li>Catering, transport and loading</li><li>Weather, safety and backup plan</li></ul></div>
+        <div class="work"><h3>Guests + front of house</h3><ul><li>Registration and attendee data</li><li>Confirmations, reminders and directions</li><li>Check-in, badges and guest flow</li><li>Accessibility, VIPs and consent</li></ul></div>
+        <div class="work"><h3>Programme + team</h3><ul><li>Run-of-show and call sheet</li><li>Hosts, speakers and cue owners</li><li>Content and lead-capture stations</li><li>Escalation path and close-down</li></ul></div>
+      </div>
+      <div class="callout"><b>Control rule:</b> every task has an owner, deadline, status and proof of confirmation on the event record or linked plan.</div>
+    </div>
+  </section>
+
+  <!-- 14 · COORDINATION RHYTHM -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Coordination rhythm · work backwards</div>
+      <h2 style="margin-bottom:4px">The event clock.</h2>
+      <div class="rhythm">
+        <div class="beat"><div class="when">T−6 weeks</div><b>Commit</b><span>Outcome, owner, target and budget.</span></div>
+        <div class="beat"><div class="when">T−4 weeks</div><b>Lock</b><span>Venue, suppliers, partners and sponsors.</span></div>
+        <div class="beat"><div class="when">T−2 weeks</div><b>Promote</b><span>Registration, reminders and content brief.</span></div>
+        <div class="beat"><div class="when">T−7 days</div><b>Rehearse</b><span>Run-of-show, roles, AV, stock and safety.</span></div>
+        <div class="beat"><div class="when">T−1 day</div><b>Confirm</b><span>Headcount, suppliers, weather and contingencies.</span></div>
+        <div class="beat"><div class="when">Event day</div><b>Command</b><span>Check-ins, cues, leads, consent and capture.</span></div>
+        <div class="beat"><div class="when">T+1 day</div><b>Hand off</b><span>Leads to Sales; files and angles to Marketing.</span></div>
+        <div class="beat"><div class="when">T+3 days</div><b>Learn</b><span>Actuals, CPL, debrief and next-event actions.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 · BRANDED EVENT CRITERIA -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Koocester Branded Events Checklist · criteria</div>
+      <h2 style="margin-bottom:4px">It is Koocester-branded only when all six pass.</h2>
+      <div class="criteriagrid">
+        <div class="criterion"><b>1 · Strategic fit</b><span>One defined audience, one useful promise and one measurable outcome.</span></div>
+        <div class="criterion"><b>2 · Brand fit</b><span>Premium, useful and welcoming; approved identity, signage and tone.</span></div>
+        <div class="criterion"><b>3 · Lead engine</b><span>Registration, consent, source tracking and Sales handoff are built in.</span></div>
+        <div class="criterion"><b>4 · Content engine</b><span>Video and carousel angles, talent match and capture plan are decided early.</span></div>
+        <div class="criterion"><b>5 · Experience</b><span>Programme, guest flow, hosts, accessibility and service feel intentional.</span></div>
+        <div class="criterion"><b>6 · Commercial control</b><span>Budget, sponsors, suppliers, safety and contingency are approved and logged.</span></div>
+      </div>
+      <div class="callout"><b>Go/no-go:</b> if any criterion is unresolved, fix it or move the date. Branding is the full experience, not just the logo.</div>
+    </div>
+  </section>
+
+  <!-- 16 · APPROVED FORMATS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Koocester Branded Events Checklist · formats</div>
+      <h2 style="margin-bottom:4px">Choose the format that serves the outcome.</h2>
+      <div class="formatgrid">
+        <div class="format"><b>Founder roundtable</b><span>Depth, credibility and high-quality relationships.</span></div>
+        <div class="format"><b>Networking event</b><span>Community growth, introductions and lead volume.</span></div>
+        <div class="format"><b>Showcase or fair</b><span>Consumer discovery, partners and on-site conversion.</span></div>
+        <div class="format"><b>Workshop or panel</b><span>Education, authority and a clear next action.</span></div>
+        <div class="format"><b>Community meetup</b><span>Affinity-led experiences such as runs or car meets.</span></div>
+      </div>
+      <div class="callout"><b>Format follows objective.</b> Do not choose a gala, panel or fair because it looks impressive; choose it because it best moves the audience to the target.</div>
+    </div>
+  </section>
+
+  <!-- 17 · DO AND DON'T -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Koocester Branded Events Checklist · do and don't</div>
+      <h2 style="margin-bottom:4px">Protect the brand in the decisions.</h2>
+      <div class="dos">
+        <div class="dolist do"><h3>Do</h3><ul><li>Set the objective, metric and target before spending.</li><li>Define the audience and one clear next action.</li><li>Suggest content angles, people and assets early.</li><li>Confirm every owner, supplier and contingency in writing.</li><li>Capture leads, consent, footage and actuals.</li><li>Debrief and carry the learning into the next event.</li></ul></div>
+        <div class="dolist dont"><h3>Don't</h3><ul><li>Run an event for attendance alone.</li><li>Mix audiences, promises or objectives.</li><li>Announce before venue, budget and owner are confirmed.</li><li>Improvise logos, signage or sponsor placement.</li><li>Depend on verbal coordination or an unowned task.</li><li>Close without Sales and Marketing handoffs.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 · DIVIDER · THE NUMBERS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>The numbers</h2>
+      <p class="lead" style="color:#fff;opacity:.72">Metric, target, actual — on the record.</p>
+    </div>
+  </section>
+
+  <!-- 12 · EVENT METRIC -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">On the event's Project record</div>
+      <h2 style="margin-bottom:6px">Pick the metric. Set the target. Log the actual.</h2>
+      <p class="lead" style="margin-bottom:4px"><b>Event Metric</b> is a single-select — choose the one that matters for this event:</p>
+      <div class="fillrest">
+        <span class="fr"><span class="fn">·</span> Attendance pax</span>
+        <span class="fr"><span class="fn">·</span> Sign-ups</span>
+        <span class="fr"><span class="fn">·</span> Leads Collected</span>
+        <span class="fr"><span class="fn">·</span> Revenue SGD</span>
+        <span class="fr"><span class="fn">·</span> Other</span>
+      </div>
+      <div class="callout"><b>Event Target</b> (number) and <b>Event Actual</b> (number) sit alongside it. <b>Outcome Progress</b> auto-calculates Actual ÷ Target.</div>
+    </div>
+  </section>
+
+  <!-- 13 · 150/200 EXAMPLE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Read the gap, then act on it</div>
+      <h2 style="margin-bottom:2px">Actual ÷ Target tells you the truth.</h2>
+      <div class="meter">
+        <div class="mlbl"><span class="mt">Attendance pax</span><span class="mv">75%</span></div>
+        <div class="mbar"><div class="mfill"></div></div>
+        <div class="mfoot"><span>Actual <b>150</b></span><span>Target <b>200</b></span></div>
+      </div>
+      <p class="lead" style="margin-top:16px">150 of 200 seats filled — a 25% gap. Outcome Progress makes it a fact, not a feeling. Read the gap and act on it: what filled the seats you got, and what would have filled the rest?</p>
+    </div>
+  </section>
+
+  <!-- 14 · ATTENDANCE ISN'T THE FINISH LINE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Attendance is not the finish line</div>
+      <div class="big">A full room is the <em>start</em>, not the win.</div>
+      <p class="lead">The seats are only worth what you do with them. <b>Capture the leads</b> in the room, log the actual, <b>hand the leads to Sales</b>, and follow up. An event with a full room and no captured leads didn't finish the job.</p>
+    </div>
+  </section>
+
+  <!-- 15 · BUDGET / VENUE / SPONSORS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Run it clean · one slide</div>
+      <h2>Venue, budget and sponsors — logged on the event.</h2>
+      <p class="lead">Every event carries its <b>budget, venue and sponsors</b> on the record, so the numbers are honest and the room is handled. Sponsorship money flows to <b>HubSpot / Xero</b> — you keep the event side clean.</p>
+    </div>
+  </section>
+
+  <!-- 16 · COST PER LEAD -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Cost per lead · the benchmark to beat</div>
+      <h2 style="margin-bottom:6px">No CPL of your own yet — so benchmark it two ways.</h2>
+      <p class="lead" style="margin:0 0 12px"><b>Cost per lead = event spend ÷ leads captured.</b> Until each event has its own history, judge it by <b>market</b> and by <b>page</b> — a lead is not one price.</p>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3 style="font-size:1.15rem">By market</h3>
+          <div class="sub">our blended cost per sign-up today</div>
+          <ul>
+            <li>Singapore — priciest, ~S$39</li>
+            <li>Malaysia — mid, ~S$16</li>
+            <li>Indonesia — cheapest, ~S$7</li>
+          </ul>
+        </div>
+        <div class="obx aware">
+          <h3 style="font-size:1.15rem">By page</h3>
+          <div class="sub">industry lead cost, high → low</div>
+          <ul>
+            <li>Wealth &amp; Homes — highest</li>
+            <li>Autos — mid</li>
+            <li>Food &amp; lifestyle — lowest</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout"><b>Your job:</b> log every event's spend and leads. Real per-event CPL replaces the benchmark fast — then you beat it.</div>
+    </div>
+  </section>
+
+  <!-- 17 · REAL EXAMPLES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The events we run · Home Fair · Founders · Networking</div>
+      <h2 style="margin-bottom:6px">Three events. Same playbook.</h2>
+      <ul class="pts">
+        <li><b>Home Fair</b> — the homes audience in one room: property, design and the luxury-living world.</li>
+        <li><b>Founders Event</b> — founders and operators together: business, credibility and real connections.</li>
+        <li><b>Networking Event</b> — the community face to face, turning the room into relationships and leads.</li>
+      </ul>
+      <div class="callout"><b>The through-line:</b> guests repeatedly praise the on-the-ground team culture. That's the pillar working — a full room, a good moment, and content to show for it.</div>
+    </div>
+  </section>
+
+  <!-- 25 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part five</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#fff;opacity:.72">Three calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 18 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · starting the promotion</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Press &quot;Need Marketing?&quot; — it notifies Mike and the Marketing/Event Updates groups to create a Project so the team can promote it, then you link the Project on the event. That's the events handover."
+        data-no="<b>Not that.</b> You don't make the videos yourself (you can only see Videos &amp; Carousels), and waiting until after loses the run-up. Press &quot;Need Marketing?&quot; so a Project gets created and linked.">
+        <div class="scenario">An event is confirmed and you want the team to start promoting it now.</div>
+        <div class="q">What's your first move?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Make the promo videos yourself so they're ready fast</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Press "Need Marketing?" so a Project gets created and linked</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Wait until after the event, then ask for content</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · the event just ran</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A full room is the start, not the win. Capture the leads, log the actual, hand the leads to Sales, and feed back what worked into the next event."
+        data-no="<b>No.</b> Attendance alone isn't the finish line. Capture the leads, log the actual, hand them to Sales, and feed back what worked — otherwise the seats were wasted.">
+        <div class="scenario">The event ran — 150 of 200 seats filled.</div>
+        <div class="q">Is your job done?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Yes — 75% is a good turnout, close it out</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>No — capture the leads, log the actual, hand to Sales, feed back what worked</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Yes — attendance was the target, so the event is complete</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · where the numbers live</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Target vs actual live on the event's Project — Event Metric, Event Target and Event Actual, with Outcome Progress calculating Actual ÷ Target."
+        data-no="<b>Not there.</b> The numbers live on the event's Project — Event Metric, Event Target, Event Actual — not on a reference table or a loose spreadsheet.">
+        <div class="scenario">You need to record and check target vs actual attendance for an event.</div>
+        <div class="q">Where do those numbers live?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>On the Events reference table</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>On the event's Project — Event Metric / Target / Actual</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>In a separate spreadsheet you keep on the side</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 29 · CERTIFICATION GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all eight?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Will you fill the room — drive attendance to hit its target?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you turn every event into content by handing it to Marketing?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you capture the leads and pass them to Sales?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you drive the footfall and revenue that judge the event?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you run it clean — venue, budget and sponsors handled?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will Events propose the concept and best content match before each handoff?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you lock logistics, roles, run-of-show and contingencies before event day?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you feed next month with what worked?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all eight to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 30 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Fill the room. Feed the pipeline. Count the leads.</h2>
+      <p class="lead">You own the events pillar end to end — a branded experience, controlled logistics, captured leads handed to Sales, and event-led ideas handed into the right video and carousel lanes. Run it clean, log the numbers, feed next month.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · company events</div>
+<div class="nav">
+  <button class="arrow play" id="play" aria-label="Read this slide aloud" title="Read aloud · auto-advances like a video">▶</button>
+  <span class="count" id="count">1 / 30</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){stopPlay();show(i+1)};prev.onclick=function(){stopPlay();show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();stopPlay();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();stopPlay();show(i-1)}
+  });
+  // ===== read-aloud "watch it" mode: reads the slide, then auto-advances like a video =====
+  var playBtn=document.getElementById('play'),playing=false,hasTTS=('speechSynthesis' in window);
+  var vVoice=null;
+  function pickVoice(){
+    var vs=window.speechSynthesis.getVoices(),want=['Ava (Premium)','Zoe (Premium)','Samantha (Enhanced)','Allison (Enhanced)','Nicky (Enhanced)','Serena (Premium)','Ava','Samantha','Allison','Serena','Karen','Google UK English Female','Microsoft Zira','Google US English'];
+    for(var w=0;w<want.length;w++){var m=vs.filter(function(x){return x.name===want[w];})[0];if(m){vVoice=m;return;}}
+    vVoice=vs.filter(function(x){return /^en/i.test(x.lang)&&/female|samantha|ava|zira|karen|serena|victoria/i.test(x.name);})[0]||vs.filter(function(x){return /^en/i.test(x.lang);})[0]||vs[0]||null;
+  }
+  if(hasTTS){ pickVoice(); window.speechSynthesis.onvoiceschanged=pickVoice; }
+  function slideText(){var el=slides[i].querySelector('.inner');return el?el.innerText.replace(/\s+/g,' ').trim():'';}
+  function speakNow(){
+    if(!hasTTS)return; window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(slideText()); if(vVoice)u.voice=vVoice; u.rate=.97; u.pitch=1.03;
+    u.onend=function(){ if(playing){ if(i<n-1){ show(i+1); setTimeout(speakNow,450); } else { stopPlay(); } } };
+    window.speechSynthesis.speak(u);
+  }
+  function startPlay(){ if(!hasTTS){alert('Read-aloud needs a modern browser (Chrome/Safari).');return;} playing=true; if(playBtn){playBtn.textContent='❚❚';playBtn.classList.add('on');} speakNow(); }
+  function stopPlay(){ playing=false; if(playBtn){playBtn.textContent='▶';playBtn.classList.remove('on');} if(hasTTS)window.speechSynthesis.cancel(); }
+  if(playBtn) playBtn.onclick=function(){ playing?stopPlay():startPlay(); };
+  window.addEventListener('beforeunload',stopPlay);
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-events-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#fff;opacity:.72;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#CCC;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

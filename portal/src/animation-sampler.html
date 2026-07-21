@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Animation sampler</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+.top{padding:26px clamp(24px,6vw,72px) 0}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:12px}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.05;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0}
+.sub{font-size:1rem;color:var(--muted);margin:10px 0 0;max-width:640px;line-height:1.5}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.chip{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14px;font-weight:600;padding:10px 17px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),border-color .15s,color .15s,background .15s}
+.chip:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-1px)}
+.chip.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.chip .n{opacity:.6;font-weight:800;margin-right:7px}
+.desc{font-size:13.5px;color:var(--muted);margin:6px 0 0;min-height:20px}
+.desc b{color:var(--maroon)}
+/* stage */
+.stage{flex:1;display:flex;align-items:center;padding:8px clamp(24px,6vw,72px) 20px;overflow:hidden}
+.demo{width:100%;max-width:860px;margin:0 auto}
+.demo>*{opacity:0}
+.demo .drule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 24px}
+.demo .deye{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:18px}
+.demo h2{font-size:clamp(2rem,5vw,3.2rem);line-height:1.04;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.demo .lead{font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.5;color:var(--body);max-width:680px;margin:0 0 22px}
+.demo .row{display:flex;gap:12px;flex-wrap:wrap}
+.demo .card{flex:1;min-width:170px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.demo .card b{display:block;color:var(--maroon);font-size:15px;margin-bottom:5px}
+.demo .card span{font-size:13px;color:var(--muted);line-height:1.4}
+
+/* ============ ENTRANCE STYLES — the only variable ============ */
+/* replaying: JS toggles .play off/on to retrigger */
+.demo.play>*{animation-duration:.55s;animation-fill-mode:both}
+.demo.play>*:nth-child(1){animation-delay:.02s}
+.demo.play>*:nth-child(2){animation-delay:.09s}
+.demo.play>*:nth-child(3){animation-delay:.16s}
+.demo.play>*:nth-child(4){animation-delay:.23s}
+.demo.play>*:nth-child(5){animation-delay:.30s}
+
+/* 1 · POP — spring overshoot from below (current standard) */
+.s-pop.play>*{animation-name:aPop;animation-timing-function:var(--pop)}
+@keyframes aPop{0%{opacity:0;transform:translateY(38px) scale(.86)}100%{opacity:1;transform:none}}
+
+/* 2 · RISE — smooth fade-up, editorial calm */
+.s-rise.play>*{animation-name:aRise;animation-timing-function:var(--ease);animation-duration:.7s}
+@keyframes aRise{0%{opacity:0;transform:translateY(26px)}100%{opacity:1;transform:none}}
+
+/* 3 · SLIDE — directional glide in from the right */
+.s-slide.play>*{animation-name:aSlide;animation-timing-function:var(--ease);animation-duration:.6s}
+@keyframes aSlide{0%{opacity:0;transform:translateX(60px)}100%{opacity:1;transform:none}}
+
+/* 4 · BLUR — cinematic focus-in */
+.s-blur.play>*{animation-name:aBlur;animation-timing-function:var(--ease);animation-duration:.75s}
+@keyframes aBlur{0%{opacity:0;filter:blur(14px);transform:scale(1.04)}100%{opacity:1;filter:blur(0);transform:none}}
+
+/* 5 · REVEAL — clip-path unmask from below, bold */
+.s-reveal.play>*{animation-name:aReveal;animation-timing-function:var(--ease);animation-duration:.66s}
+@keyframes aReveal{0%{opacity:0;clip-path:inset(100% 0 0 0);transform:translateY(14px)}100%{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+
+/* 6 · POP · PREMIUM — Pop's life, without the toy-bounce (RECOMMENDED) */
+.s-poppremium.play>*{animation-name:aPopP;animation-timing-function:cubic-bezier(.22,1.12,.4,1);animation-duration:.52s}
+@keyframes aPopP{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+
+/* 7 · MASK-UP — pure typographic unmask, no fade. The fashion-magazine move. */
+.s-maskup.play>*{animation-name:aMask;animation-timing-function:cubic-bezier(.16,.84,.44,1);animation-duration:.72s}
+@keyframes aMask{0%{opacity:1;clip-path:inset(100% 0 0 0);transform:translateY(18px)}100%{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+
+/* 8 · TRACK-IN — letters draw in from wide tracking. Elegant, expensive typography. */
+.s-trackin.play>*{animation-name:aTrack;animation-timing-function:var(--ease);animation-duration:.8s}
+@keyframes aTrack{0%{opacity:0;letter-spacing:.32em;transform:translateY(6px)}100%{opacity:1;letter-spacing:normal;transform:none}}
+
+/* 9 · FOCUS-RISE — rise with a clearing blur. Cinematic but lighter than full Blur. */
+.s-focusrise.play>*{animation-name:aFocus;animation-timing-function:var(--ease);animation-duration:.72s}
+@keyframes aFocus{0%{opacity:0;filter:blur(7px);transform:translateY(22px)}100%{opacity:1;filter:blur(0);transform:none}}
+
+/* 10 · ZOOM-SETTLE — settles down from a slight zoom. Filmic, calm, high-production. */
+.s-zoom.play>*{animation-name:aZoom;animation-timing-function:var(--ease);animation-duration:.75s}
+@keyframes aZoom{0%{opacity:0;transform:scale(1.05)}100%{opacity:1;transform:none}}
+
+/* footer bar */
+.bar{display:flex;align-items:center;gap:16px;padding:16px clamp(24px,6vw,72px);border-top:1px solid var(--line2)}
+.replay{appearance:none;border:1px solid var(--maroon);background:var(--maroon);color:#fff;font-family:var(--base);font-size:14px;font-weight:700;padding:11px 20px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .15s}
+.replay:hover{transform:translateY(-1px)}
+.replay:active{transform:scale(.96)}
+.hint{font-size:13px;color:var(--muted)}
+.hint b{color:var(--ink)}
+.brandmark{margin-left:auto;font-size:12px;color:var(--muted)}
+.brandmark b{color:var(--ink)}
+
+/* ============ FIRST IMPRESSION · title-slide treatments ============ */
+.fi-sep{height:10px;background:var(--maroon)}
+.fi-top{padding:30px clamp(24px,6vw,72px) 0}
+.herostage{min-height:80vh;display:flex;align-items:center;padding:8px clamp(24px,6vw,72px) 20px;overflow:hidden}
+.hero{position:relative;width:100%;max-width:900px;margin:0 auto;overflow:hidden}
+.hero .hlogo{height:40px;display:block;margin-bottom:30px}
+.hero .heye{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:20px}
+.hero .hrule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 24px;transform-origin:left}
+.hero .hl{font-size:clamp(2.6rem,6.5vw,4.4rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0 0 22px}
+.hero .lnwrap{display:block;overflow:hidden}
+.hero .ln{display:block}
+.hero .hlead{font-size:clamp(1.1rem,2.2vw,1.45rem);line-height:1.5;color:var(--body);max-width:680px;margin:0}
+.hero .curtain{position:absolute;inset:0;background:var(--maroon);transform:translateX(-101%);z-index:5;pointer-events:none}
+/* armed (hidden) base */
+.hero.play .hlogo,.hero.play .heye,.hero.play .hrule,.hero.play .hlead{opacity:0}
+.hero.play .ln{transform:translateY(110%)}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiRule{0%{opacity:0;transform:scaleX(0)}100%{opacity:1;transform:scaleX(1)}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+@keyframes fiCurtain{0%{transform:translateX(-101%)}42%{transform:translateX(0)}58%{transform:translateX(0)}100%{transform:translateX(101%)}}
+/* A · SIGNATURE — choreographed line-mask (RECOMMENDED opening) */
+.h-sig.play .hlogo{animation:fiFade .6s var(--ease) both}
+.h-sig.play .heye{animation:fiFade .6s var(--ease) .12s both}
+.h-sig.play .hrule{animation:fiRule .6s var(--ease) .22s both}
+.h-sig.play .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.h-sig.play .lnwrap:nth-child(1) .ln{animation-delay:.34s}
+.h-sig.play .lnwrap:nth-child(2) .ln{animation-delay:.46s}
+.h-sig.play .hlead{animation:fiRise .7s var(--ease) .66s both}
+/* B · CURTAIN — maroon panel wipes across to reveal (brand ident) */
+.h-curtain.play .curtain{animation:fiCurtain 1.15s cubic-bezier(.76,0,.24,1) both}
+.h-curtain.play .hlogo{animation:fiFade .5s var(--ease) .52s both}
+.h-curtain.play .heye{animation:fiFade .5s var(--ease) .6s both}
+.h-curtain.play .hrule{animation:fiRule .5s var(--ease) .66s both}
+.h-curtain.play .ln{animation:fiMask .72s var(--ease) both}
+.h-curtain.play .lnwrap:nth-child(1) .ln{animation-delay:.62s}
+.h-curtain.play .lnwrap:nth-child(2) .ln{animation-delay:.72s}
+.h-curtain.play .hlead{animation:fiRise .6s var(--ease) .84s both}
+
+@media (prefers-reduced-motion:reduce){.demo>*,.hero *{opacity:1!important;animation:none!important;filter:none!important;transform:none!important;clip-path:none!important;letter-spacing:normal!important}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="eyebrow">Koocester Academy · pick your entrance</div>
+  <h1>Animation sampler</h1>
+  <p class="sub">Same slide, five entrances. Click a style to feel it, hit Replay to watch again. Tell me which one becomes the Academy standard — I'll roll it across every deck in one change.</p>
+  <div class="chips" id="chips">
+    <button class="chip on" data-style="s-pop"    data-desc="Spring overshoot from below — energetic, playful. <b>The current standard.</b>"><span class="n">1</span>Pop</button>
+    <button class="chip"    data-style="s-rise"   data-desc="Smooth fade-up, no bounce — calm, editorial, keynote-grade."><span class="n">2</span>Rise</button>
+    <button class="chip"    data-style="s-slide"  data-desc="Directional glide in from the right — story-forward, momentum."><span class="n">3</span>Slide</button>
+    <button class="chip"    data-style="s-blur"   data-desc="Focus-in from soft blur — cinematic, premium, expensive-feeling."><span class="n">4</span>Blur</button>
+    <button class="chip"    data-style="s-reveal" data-desc="Clip-path unmask from below — bold, magazine-cover reveal."><span class="n">5</span>Reveal</button>
+    <button class="chip"    data-style="s-poppremium" data-desc="Pop's life with the toy-bounce dialed out — premium-energetic. <b>My pick for the deck body.</b>"><span class="n">6</span>Pop · premium ★</button>
+    <button class="chip"    data-style="s-maskup" data-desc="Text unmasks upward, no fade — the fashion-magazine reveal. <b>The most premium of all.</b>"><span class="n">7</span>Mask-up ★</button>
+    <button class="chip"    data-style="s-trackin" data-desc="Letters draw in from wide tracking — elegant, expensive typography. Best on titles."><span class="n">8</span>Track-in</button>
+    <button class="chip"    data-style="s-focusrise" data-desc="Rises with a clearing blur — cinematic, lighter than full Blur."><span class="n">9</span>Focus-rise</button>
+    <button class="chip"    data-style="s-zoom" data-desc="Settles down from a slight zoom — filmic, calm, high-production."><span class="n">0</span>Zoom-settle</button>
+  </div>
+  <p class="desc" id="desc">Spring overshoot from below — energetic, playful. <b>The current standard.</b></p>
+</div>
+
+<div class="stage">
+  <div class="demo s-pop play" id="demo">
+    <div class="deye">The one idea</div>
+    <hr class="drule">
+    <h2>The offer beats the production.</h2>
+    <p class="lead">A great offer with average content beats great content with a weak offer, every time. This is the same demo copy on every style — so the only thing changing is the motion.</p>
+    <div class="row">
+      <div class="card"><b>Dream outcome</b><span>Make the good stuff bigger.</span></div>
+      <div class="card"><b>Time &amp; effort</b><span>Make the bad stuff smaller.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button class="replay" id="replay">↻ Replay</button>
+  <span class="hint">Keys: <b>1–0</b> switch style · <b>Space</b> replay</span>
+  <span class="brandmark"><b>koocester</b> academy · deck body</span>
+</div>
+
+<div class="fi-sep"></div>
+<div class="fi-top">
+  <div class="eyebrow">Koocester · first impression</div>
+  <h1>The opening slide</h1>
+  <p class="sub">This is the one moment slower reads as <i>premium</i> — you watch it once. A signature open that becomes recognisable across every Koocester deck. Pick one, hit Replay.</p>
+  <div class="chips" id="hchips">
+    <button class="hchip on" data-style="h-sig" data-desc="Rule draws, wordmark settles, then the headline rises line by line from behind a mask. Editorial, choreographed. <b>My recommendation.</b>"><span class="n">A</span>Signature ★</button>
+    <button class="hchip" data-style="h-curtain" data-desc="A maroon panel wipes across and reveals the title behind it — a brand ident, like a film title card."><span class="n">B</span>Maroon curtain</button>
+  </div>
+  <p class="desc" id="hdesc">Rule draws, wordmark settles, then the headline rises line by line from behind a mask. Editorial, choreographed. <b>My recommendation.</b></p>
+</div>
+
+<div class="herostage">
+  <div class="hero h-sig play" id="hero">
+    <div class="curtain"></div>
+    <img class="hlogo" src="koocester-logo.png" alt="koocester">
+    <div class="heye">Koocester Academy · module</div>
+    <hr class="hrule">
+    <h1 class="hl"><span class="lnwrap"><span class="ln">The offer beats</span></span><span class="lnwrap"><span class="ln">the production.</span></span></h1>
+    <p class="hlead">A great offer with average content wins every time. The same title, two signature openings — feel which one <i>is</i> Koocester.</p>
+  </div>
+</div>
+
+<div class="bar">
+  <button class="replay" id="hreplay">↻ Replay</button>
+  <span class="hint">Keys: <b>A / B</b> switch · <b>Enter</b> replay opening</span>
+  <span class="brandmark"><b>koocester</b> academy · first impression</span>
+</div>
+
+<script>
+(function(){
+  var demo=document.getElementById('demo');
+  var chips=[].slice.call(document.querySelectorAll('#chips .chip'));
+  var desc=document.getElementById('desc');
+  var replay=document.getElementById('replay');
+  var current='s-pop';
+  function play(style){
+    current=style||current;
+    // reset to all style classes off + play off, force reflow, then on
+    demo.className='demo';
+    void demo.offsetWidth;               // reflow to restart animation
+    demo.classList.add(current,'play');
+  }
+  function select(style,descHtml){
+    chips.forEach(function(c){c.classList.toggle('on',c.getAttribute('data-style')===style);});
+    if(descHtml) desc.innerHTML=descHtml;
+    play(style);
+  }
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){select(c.getAttribute('data-style'),c.getAttribute('data-desc'));});
+  });
+  replay.addEventListener('click',function(){play();});
+  document.addEventListener('keydown',function(e){
+    if(e.key===' '){e.preventDefault();play();return;}
+    var idx={'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,'7':6,'8':7,'9':8,'0':9}[e.key];
+    if(idx!=null){var c=chips[idx];select(c.getAttribute('data-style'),c.getAttribute('data-desc'));}
+  });
+  // initial play
+  play('s-pop');
+
+  // ===== first-impression hero controller (independent) =====
+  var hero=document.getElementById('hero');
+  var hchips=[].slice.call(document.querySelectorAll('#hchips .hchip'));
+  var hdesc=document.getElementById('hdesc');
+  var hreplay=document.getElementById('hreplay');
+  var hcur='h-sig';
+  function hplay(style){
+    hcur=style||hcur;
+    hero.className='hero';
+    void hero.offsetWidth;
+    hero.classList.add(hcur,'play');
+  }
+  function hselect(style,descHtml){
+    hchips.forEach(function(c){c.classList.toggle('on',c.getAttribute('data-style')===style);});
+    if(descHtml) hdesc.innerHTML=descHtml;
+    hplay(style);
+  }
+  hchips.forEach(function(c){
+    c.addEventListener('click',function(){hselect(c.getAttribute('data-style'),c.getAttribute('data-desc'));});
+  });
+  hreplay.addEventListener('click',function(){hplay();});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();hplay();return;}
+    var k=e.key.toLowerCase();
+    var hmap={'a':'h-sig','b':'h-curtain'};
+    if(hmap[k]){var c=hchips[k==='a'?0:1];hselect(c.getAttribute('data-style'),c.getAttribute('data-desc'));}
+  });
+  hplay('h-sig');
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+</body>
+</html>

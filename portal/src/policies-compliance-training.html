@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Policies & compliance</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em,.lead em,h2 em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline / decision flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list / register rows */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* funnel + matrix */
+.funnel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.fstage{border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:24px;background:var(--maroon-tint)}
+.farr{color:var(--maroon);font-weight:800}
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fff;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr 1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#fff;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:rgba(26,127,55,.12)}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:rgba(26,127,55,.12);color:var(--ok);border:1px solid var(--ok)}
+.fb.no{background:var(--maroon-tint);color:var(--maroon);border:1px solid #E49D9F}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:rgba(26,127,55,.12);color:var(--ok)}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:var(--maroon)}
+
+/* leave management */
+.leaveflow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+.leave-step{position:relative;border:1px solid var(--line);border-radius:14px;padding:17px 16px;min-height:128px;background:#fff;box-shadow:var(--shadow)}
+.leave-step:not(:last-child)::after{content:'→';position:absolute;right:-17px;top:45px;z-index:2;color:var(--maroon);font-size:20px;font-weight:800}
+.leave-step .num{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:800}
+.leave-step b{display:block;color:var(--ink);font-size:1.02rem;margin:8px 0 5px}
+.leave-step span{font-size:12.5px;line-height:1.4;color:var(--muted)}
+.leavegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.leavecard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;box-shadow:var(--shadow)}
+.leavecard.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.leavecard .k{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--maroon);font-weight:800}
+.leavecard b{display:block;color:var(--ink);margin:6px 0 4px;font-size:1rem}
+.leavecard p{font-size:13px;line-height:1.42;margin:0;color:var(--body)}
+.leavecard.hot p,.leavecard.hot b{color:var(--maroon)}
+.approval-check{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:20px}
+.approval-check div{border-top:4px solid var(--maroon);background:#fff;border-radius:8px 8px 12px 12px;padding:14px 12px;box-shadow:var(--shadow);font-size:12.5px;line-height:1.4;color:var(--body)}
+.approval-check b{display:block;color:var(--ink);font-size:14px;margin-bottom:5px}
+@media(max-width:760px){.leaveflow{grid-template-columns:1fr 1fr}.leave-step:not(:last-child)::after{display:none}.leavegrid{grid-template-columns:1fr}.approval-check{grid-template-columns:1fr 1fr}}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+/* gift decision chip row */
+.gfrow{display:flex;align-items:center;gap:8px;margin:16px 0 4px;flex-wrap:wrap}
+.gfnode{border:1px solid var(--line);border-radius:12px;padding:13px 17px;box-shadow:var(--shadow);min-width:160px}
+.gfnode .q{font-weight:700;color:var(--ink);font-size:13.5px}
+.gfnode .a{font-size:12px;color:var(--maroon);font-weight:700;margin-top:4px}
+.gfnode.end{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.gfnode.end .q{color:var(--maroon)}
+.gfarr{color:var(--maroon);font-weight:800;font-size:18px}
+/* declaration form demo */
+.declform{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.declform .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.declform .fld{display:flex;flex-direction:column;gap:6px}
+.declform .fld.full{grid-column:1 / -1}
+.declform label{font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.declform input,.declform select{appearance:none;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-family:var(--base);font-size:14.5px;color:var(--ink);background:#fff;transition:border-color .15s}
+.declform input:focus,.declform select:focus{outline:0;border-color:var(--maroon)}
+.declbtn{appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:14.5px;font-weight:800;padding:12px 24px;border-radius:24px;cursor:pointer;margin-top:2px;transition:transform .14s var(--ease)}
+.declbtn:hover{transform:translateY(-2px)}
+.declbtn:active{transform:scale(.96)}
+.declresult{margin-top:2px;border-left:3px solid var(--maroon);background:var(--maroon-tint);border-radius:0 10px 10px 0;padding:0 16px;font-size:14.5px;color:var(--body);max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.declresult.show{max-height:200px;padding:14px 16px;margin-top:14px}
+.declresult b{color:var(--maroon)}
+.declerr{color:var(--maroon);font-size:12.5px;margin-top:-6px;margin-bottom:10px;display:none}
+.declerr.show{display:block}
+/* everyday compliance cards */
+.ccards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;max-width:900px}
+.ccard{border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:flex-start}
+.ccard .cicon{flex:none;width:38px;height:38px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+.ccard .ctxt b{display:block;color:var(--ink);font-size:1rem;margin-bottom:4px}
+.ccard .ctxt span{font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:660px){.duo,.decide{grid-template-columns:1fr}.vrow{grid-template-columns:1fr}.brandmark{display:none}.declform .frow{grid-template-columns:1fr}.ccards{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · Foundations · everyone does this module</div>
+      <h1><span class="lnwrap"><span class="ln">Policies &</span></span><span class="lnwrap"><span class="ln">compliance</span></span></h1>
+      <p class="lead" style="margin-top:20px">This is your foundation module — everyone takes it. One clear set of rules for how we work, protect our clients, and look after each other. Know these and you're always on solid ground.</p>
+    </div>
+  </section>
+
+  <!-- 2 · FRAMING — THE FINE LINE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Start here · the fine line, made clear</div>
+      <h2 style="margin-bottom:6px">Your contract is the source of truth. This module makes it real.</h2>
+      <p class="lead">When you joined, you signed a contract — the legal agreement that governs everything here. This module is the <em>plain-English</em> version: the same commitments, translated into how you actually live them day to day. We keep the legal text where it belongs and give you something you can use.</p>
+      <div class="ccards" style="margin-top:16px">
+        <div class="ccard"><span class="cicon">§</span><span class="ctxt"><b>Your signed contract leads</b><span>You agreed to it when you joined — it's the legal word on all of this.</span></span></div>
+        <div class="ccard"><span class="cicon">✓</span><span class="ctxt"><b>This is the working version</b><span>Written so you understand it and act on it with confidence.</span></span></div>
+      </div>
+      <div class="callout"><b>Know these well and you're always on solid ground.</b> When something isn't spelled out here, your contract and HR have the answer — and they're glad to walk you through it.</div>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>You guard client and company data</b><span>credentials in Bitwarden, shared on a need-to-know basis</span></div>
+        <div class="win"><b>You declare every gift and barter</b><span>even the ones you turn down</span></div>
+        <div class="win"><b>You represent us well, online and off</b><span>confidential stays confidential</span></div>
+        <div class="win"><b>When unsure, you check and ask</b><span>your contract and HR have the answer — asking is always right</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows shows you how to hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 4 · DIVIDER — EVERYDAY POLICIES -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one · everyday policies</div>
+      <hr class="rule">
+      <h2>The habits that keep us safe</h2>
+      <p class="lead" style="color:#CCC">Six everyday policies, one idea each. What they mean for you, day to day.</p>
+    </div>
+  </section>
+
+  <!-- 5 · DATA PROTECTION & SECURITY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyday policy · data protection &amp; security</div>
+      <h2 style="margin-bottom:6px">Guard client and company data like it's your own.</h2>
+      <p class="lead" style="margin-bottom:4px">Handling data responsibly keeps clients confident in us and keeps the company safe. A few habits carry most of the weight.</p>
+      <div class="ccards">
+        <div class="ccard"><span class="cicon">B</span><span class="ctxt"><b>Credentials live in Bitwarden</b><span>Every password in the vault — strong, and shared the right way.</span></span></div>
+        <div class="ccard"><span class="cicon">L</span><span class="ctxt"><b>Lock your devices</b><span>Screen locked when you step away; a strong passcode on everything.</span></span></div>
+        <div class="ccard"><span class="cicon">N</span><span class="ctxt"><b>Share on a need-to-know basis</b><span>Give data to the people doing the job, and only them.</span></span></div>
+        <div class="ccard"><span class="cicon">C</span><span class="ctxt"><b>Client data, treated as sacred</b><span>Collect what you need, store it securely, clear it when it's served its purpose.</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CODE OF CONDUCT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyday policy · code of conduct</div>
+      <h2 style="margin-bottom:6px">Respect is the standard — with each other and with clients.</h2>
+      <p class="lead" style="margin-bottom:4px">A workplace people trust is one where everyone feels safe and valued. That's on all of us.</p>
+      <div class="ccards">
+        <div class="ccard"><span class="cicon">R</span><span class="ctxt"><b>Respect, always</b><span>Treat every colleague and client the way you'd want to be treated.</span></span></div>
+        <div class="ccard"><span class="cicon">S</span><span class="ctxt"><b>A safe, harassment-free space</b><span>Everyone works free from harassment and discrimination. Full stop.</span></span></div>
+        <div class="ccard"><span class="cicon">P</span><span class="ctxt"><b>Professional with clients</b><span>You represent Koocester — carry the standard we're known for.</span></span></div>
+        <div class="ccard"><span class="cicon">V</span><span class="ctxt"><b>Speak up early</b><span>See something off? Raise it with your manager or HR — it's always welcome.</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · IT / ACCEPTABLE USE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyday policy · IT &amp; acceptable use</div>
+      <h2 style="margin-bottom:6px">Company systems power the work — keep them secure and clean.</h2>
+      <p class="lead" style="margin-bottom:4px">Our accounts and devices are here to do the job well. Treat them with the same care you'd want.</p>
+      <div class="ccards">
+        <div class="ccard"><span class="cicon">W</span><span class="ctxt"><b>Work systems, for work</b><span>Company accounts and devices stay focused on the job.</span></span></div>
+        <div class="ccard"><span class="cicon">S</span><span class="ctxt"><b>Keep it secure</b><span>Approved apps, updated software — the secure path is the fast one.</span></span></div>
+        <div class="ccard"><span class="cicon">T</span><span class="ctxt"><b>Keep it tidy</b><span>Files where they belong, inbox in order, accounts in good shape.</span></span></div>
+        <div class="ccard"><span class="cicon">H</span><span class="ctxt"><b>Hand over clean</b><span>When accounts change hands, pass them on complete and current.</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · SOCIAL-MEDIA CONDUCT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyday policy · social-media conduct</div>
+      <h2 style="margin-bottom:6px">Online, you're a face of Koocester — post like it.</h2>
+      <p class="lead" style="margin-bottom:4px">Your presence reflects on all of us. A little intention goes a long way.</p>
+      <div class="ccards">
+        <div class="ccard"><span class="cicon">R</span><span class="ctxt"><b>Represent us well</b><span>Carry the brand with pride whenever you're visible.</span></span></div>
+        <div class="ccard"><span class="cicon">C</span><span class="ctxt"><b>Confidential stays offline</b><span>Client and company confidential info stays out of your feed, always.</span></span></div>
+        <div class="ccard"><span class="cicon">V</span><span class="ctxt"><b>Clear on voice</b><span>Personal opinions are yours — make it clear they're personal, not Koocester's.</span></span></div>
+        <div class="ccard"><span class="cicon">L</span><span class="ctxt"><b>Lift the brand</b><span>Celebrate wins and share the good work once it's public.</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · EXPENSES & REIMBURSEMENT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyday policy · expenses &amp; reimbursement</div>
+      <h2 style="margin-bottom:6px">Spend on real business needs — and document everything.</h2>
+      <ol class="pts">
+        <li><b>Spend within policy</b> on genuine business needs.</li>
+        <li><b>Pay via Aspire</b> where you can — that's our company card.</li>
+        <li><b>Keep every receipt</b> — snap a photo on the spot so nothing goes missing.</li>
+        <li><b>Submit with your manager's approval</b> through the proper channel.</li>
+        <li><b>Get reimbursed cleanly</b> on the next cycle. Clear records make it fast.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 10 · LEAVE MANAGEMENT FLOW -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Everyday policy · leave management</div>
+      <h2>One request. One visible approval trail.</h2>
+      <p class="lead">Leave is not confirmed until the request is approved in Lark.</p>
+      <div class="leaveflow">
+        <div class="leave-step"><span class="num">01 · Employee</span><b>Inform early</b><span>Tell your manager, choose the correct leave type and prepare the handover.</span></div>
+        <div class="leave-step"><span class="num">02 · Lark</span><b>Submit request</b><span>Add the dates, reason and supporting documents where required.</span></div>
+        <div class="leave-step"><span class="num">03 · Manager</span><b>Check coverage</b><span>Review workload, deadlines, manpower and the handover.</span></div>
+        <div class="leave-step"><span class="num">04 · HR</span><b>Verify &amp; record</b><span>Confirm entitlement and documents, then keep the official record.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · ANNUAL LEAVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leave management · annual leave</div>
+      <h2>Plan it. Hand over. Wait for approval.</h2>
+      <div class="leavegrid">
+        <div class="leavecard hot"><span class="k">Notice</span><b>Submit at least 3 working days before</b><p>Emergencies are different: inform your manager immediately.</p></div>
+        <div class="leavecard"><span class="k">Duration</span><b>0.5 to 10 working days per request</b><p>More than 10 consecutive working days requires management approval.</p></div>
+        <div class="leavecard"><span class="k">Decision</span><b>Business coverage matters</b><p>Managers check workload, deadlines, manpower and operational needs.</p></div>
+        <div class="leavecard"><span class="k">Balance</span><b>New joiners are prorated</b><p>Unused leave expires after the annual cycle plus the 3-month grace period.</p></div>
+      </div>
+      <div class="callout"><b>Never assume.</b> Do not take annual leave before it is approved in Lark.</div>
+    </div>
+  </section>
+
+  <!-- 12 · OFF-IN-LIEU -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leave management · off-in-lieu</div>
+      <h2>Company-required extra work must be approved and proven.</h2>
+      <div class="leaveflow">
+        <div class="leave-step"><span class="num">Before</span><b>Get pre-approval</b><span>The work must be company-required and outside normal working days.</span></div>
+        <div class="leave-step"><span class="num">After</span><b>Keep proof</b><span>Show the approved work was completed and the duration is fair.</span></div>
+        <div class="leave-step"><span class="num">HR</span><b>Balance granted</b><span>HR records the approved OIL balance in Lark.</span></div>
+        <div class="leave-step"><span class="num">Use</span><b>Apply 3 days ahead</b><span>Use within 3 months unless management approves an extension.</span></div>
+      </div>
+      <div class="callout"><b>No approval + no proof = no OIL.</b></div>
+    </div>
+  </section>
+
+  <!-- 13 · SICK LEAVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leave management · sick leave</div>
+      <h2>Tell your manager early. Submit valid proof in Lark.</h2>
+      <div class="leavegrid">
+        <div class="leavecard hot"><span class="k">First action</span><b>Inform your manager as soon as possible</b><p>Give an urgent handover where you reasonably can.</p></div>
+        <div class="leavecard"><span class="k">Documentation</span><b>Attach a valid medical certificate</b><p>Hospitalisation leave also needs supporting proof.</p></div>
+        <div class="leavecard"><span class="k">Without an MC</span><b>HR decides the correct treatment</b><p>It may be rejected or treated as annual or unpaid leave unless HR approves an exception.</p></div>
+        <div class="leavecard"><span class="k">Privacy</span><b>Patterns are reviewed professionally</b><p>Medical matters are handled privately and only for legitimate operational review.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · COMPASSIONATE & PARENTAL LEAVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leave management · people first</div>
+      <h2>Urgent support now. Documents can follow.</h2>
+      <div class="duo">
+        <div class="obx lead-gen"><div class="sub">Compassionate leave</div><h3>Respond with empathy</h3><ul><li>Tell your manager or HR as soon as possible.</li><li>Submit the request in Lark.</li><li>Provide proof when it becomes available.</li><li>Managers prioritise urgency and team coverage.</li></ul></div>
+        <div class="obx aware"><div class="sub">Maternity &amp; paternity leave</div><h3>Plan the handover early</h3><ul><li>Notify your manager and HR early.</li><li>Submit the request and documents in Lark.</li><li>HR verifies eligibility under the applicable country law.</li><li>Complete a clear operational handover.</li></ul></div>
+      </div>
+      <div class="callout"><b>Entitlements differ by country.</b> HR and the signed employment terms remain the source of truth.</div>
+    </div>
+  </section>
+
+  <!-- 15 · MANAGER CHECKLIST -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leave management · manager decision</div>
+      <h2>Approve the request, not the assumption.</h2>
+      <p class="lead">Before choosing Approve, confirm five things.</p>
+      <div class="approval-check">
+        <div><b>1 · Correct type</b>The leave category matches the situation.</div>
+        <div><b>2 · Eligibility</b>Balance, entitlement and documents are verified.</div>
+        <div><b>3 · Notice</b>The request meets notice rules or is a genuine emergency.</div>
+        <div><b>4 · Coverage</b>Deadlines, manpower and business needs are protected.</div>
+        <div><b>5 · Handover</b>Owners and urgent actions are clear before absence.</div>
+      </div>
+      <div class="callout"><b>If anything is unclear:</b> pause the decision and check with HR.</div>
+    </div>
+  </section>
+
+  <!-- 11 · DIVIDER — GIFTS & BARTER -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two · gifts &amp; barter</div>
+      <hr class="rule">
+      <h2>The Gifts &amp; Barter rules</h2>
+      <p class="lead" style="color:#CCC">The everyday policy that lands in your inbox most. In two parts — what to declare, and how we operate. Know them cold.</p>
+    </div>
+  </section>
+
+  <!-- 12 · WHY GIFTS & BARTER MATTER -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why this matters</div>
+      <h2>Gifts and barter are constant. <em>You are personally accountable</em> for how they're handled.</h2>
+      <p class="lead">As a media company covering homes, food, autos and wealth, we're offered free products, meals, trips and barter deals constantly. Handled well, that's normal business. Handled wrong, it's a <b>reputational risk</b> (readers stop trusting our coverage), an <b>editorial-integrity risk</b> (coverage starts looking bought), and a <b>tax risk</b> (undeclared value is still value). <em>Declare everything</em> — that one habit is what <em>protects the brand</em>, and it's on every one of us, every time, no exceptions.</p>
+    </div>
+  </section>
+
+  <!-- 5 · THE RULES A — DECLARE & THRESHOLDS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The Gifts &amp; Barter rules · declare &amp; thresholds</div>
+      <ol class="pts">
+        <li><b>Declare everything.</b> Any gift, meal, trip, product, or barter offer through your Koocester work goes in the Register — even ones you decline.</li>
+        <li><b>Token (≤ S$50)</b> — e.g. a meal or sample. Log only, no approval needed.</li>
+        <li><b>Over S$50, or tied to coverage</b> — log it and get manager approval <i>before</i> you accept.</li>
+        <li><b>High value, or could look like influence</b> — decline and escalate. No exceptions.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 6 · THE RULES B — HOW WE OPERATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The Gifts &amp; Barter rules · how we operate</div>
+      <ol class="pts">
+        <li><b>Never solicit.</b> Never ask for gifts or discounts using Koocester's name.</li>
+        <li><b>Coverage is never for sale.</b> A gift never buys or changes what, whom, or how we feature or edit.</li>
+        <li><b>Barter is a documented deal, not a handshake.</b> Defined deliverables, approved by the Head of Growth and Finance, recorded like any client.</li>
+        <li><b>Disclose to the audience</b> where platforms require it — gifted or paid-partnership labels, used honestly.</li>
+        <li><b>Know who owns it.</b> High-value gifts are company property. Staff keep only token items.</li>
+      </ol>
+      <p class="cite" style="margin-top:16px"><b>When in doubt — declare and ask.</b> Asking first is always the right move. It is never a mistake.</p>
+    </div>
+  </section>
+
+  <!-- 7 · DECISION FLOW -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">One flow · run every gift or barter offer through it</div>
+      <h2 style="margin-bottom:6px">Received or offered something? Run this.</h2>
+      <div class="gfrow">
+        <div class="gfnode"><div class="q">Received or offered something?</div><div class="a">log it — always</div></div>
+        <div class="gfarr">→</div>
+        <div class="gfnode end"><div class="q">≤ S$50, a token?</div><div class="a">log only — you keep it</div></div>
+      </div>
+      <div class="gfrow">
+        <div class="gfnode"><div class="q">Over S$50, or tied to coverage?</div><div class="a">stop before accepting</div></div>
+        <div class="gfarr">→</div>
+        <div class="gfnode end"><div class="q">Get manager approval</div><div class="a">log + approve before you accept</div></div>
+      </div>
+      <div class="gfrow">
+        <div class="gfnode"><div class="q">Looks like it could buy influence?</div><div class="a">the highest tier</div></div>
+        <div class="gfarr">→</div>
+        <div class="gfnode end"><div class="q">Decline + escalate</div><div class="a">no exceptions</div></div>
+      </div>
+      <p class="cite" style="margin-top:14px">Three checkpoints, in order: <b>the S$50 line</b>, <b>manager approval</b>, <b>influence check</b>. If you're ever unsure which lane you're in, treat it as the higher one.</p>
+      <div class="callout"><b>Free food ≠ a free video.</b> A gift never obligates coverage. If the trade doesn't add up — a free meal for a free video — you can and should reject it.</div>
+    </div>
+  </section>
+
+  <!-- 8 · TRY IT — INTERACTIVE DECLARATION FORM -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Try it · the Gifts &amp; Barter Register</div>
+      <h2 style="margin-bottom:6px">Log a declaration</h2>
+      <p class="lead" style="margin-bottom:4px">A live demo of the register. Fill it in like you would for real — this exact habit is what keeps you covered.</p>
+      <div class="declform" id="declform">
+        <div class="frow">
+          <div class="fld"><label for="dfDate">Date</label><input type="date" id="dfDate"></div>
+          <div class="fld"><label for="dfFrom">From whom</label><input type="text" id="dfFrom" placeholder="e.g. Acme Furnishings"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label for="dfItem">Item / gift</label><input type="text" id="dfItem" placeholder="e.g. dining voucher"></div>
+          <div class="fld"><label for="dfValue">Estimated value (S$)</label><input type="number" id="dfValue" min="0" placeholder="e.g. 80"></div>
+        </div>
+        <div class="frow">
+          <div class="fld full"><label for="dfRelated">Related content or relationship</label><input type="text" id="dfRelated" placeholder="e.g. tied to Q3 homes feature — say so plainly"></div>
+        </div>
+        <div class="frow">
+          <div class="fld">
+            <label for="dfKeep">Keep or return</label>
+            <select id="dfKeep">
+              <option value="">Select…</option>
+              <option value="Keep — token item">Keep — token item</option>
+              <option value="Return — company property">Return — company property</option>
+              <option value="Pending approval">Pending approval</option>
+            </select>
+          </div>
+          <div class="fld" style="justify-content:flex-end"><button class="declbtn" id="dfSubmit" type="button">Log declaration</button></div>
+        </div>
+        <div class="declerr" id="dfErr">Fill in date, from whom, item, and value first.</div>
+        <div class="declresult" id="dfResult"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · THE REGISTER -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The Gifts &amp; Barter Register · keep it lightweight</div>
+      <h2 style="margin-bottom:6px">Six fields. Log it the day it happens.</h2>
+      <div class="vrows">
+        <div class="vrow"><span class="vn">Date</span><span class="vt">When it was received, offered, or declined.</span></div>
+        <div class="vrow"><span class="vn">From whom</span><span class="vt">The person or brand offering it.</span></div>
+        <div class="vrow"><span class="vn">Item</span><span class="vt">What it is — product, meal, trip, service, or barter offer.</span></div>
+        <div class="vrow"><span class="vn">Est. value</span><span class="vt">Your best honest estimate in S$.</span></div>
+        <div class="vrow"><span class="vn">Related content / relationship</span><span class="vt"><b>Is this tied to coverage or a client?</b> Say so plainly — this is the line the S$50 rule and the approval step both hinge on.</span></div>
+        <div class="vrow"><span class="vn">Keep or return</span><span class="vt">Token items → you keep. High value → company property, logged as such.</span></div>
+      </div>
+      <div class="callout"><b>The register is not a punishment.</b> It's proof you did the right thing. A logged token item is a non-event. An undeclared one is the risk.</div>
+    </div>
+  </section>
+
+  <!-- 18 · EDITORIAL INTEGRITY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Editorial integrity · brief, but non-negotiable</div>
+      <h2 style="margin-bottom:6px">Four that protect what we publish.</h2>
+      <div class="ccards">
+        <div class="ccard"><span class="cicon">C</span><span class="ctxt"><b>Verified claims only</b><span>Something like "best in Singapore" ships with proof behind it.</span></span></div>
+        <div class="ccard"><span class="cicon">I</span><span class="ctxt"><b>Confidential stays internal</b><span>Guides and internal docs stay inside the company.</span></span></div>
+        <div class="ccard"><span class="cicon">F</span><span class="ctxt"><b>Sensitive content gets flagged</b><span>Before it ships, so we catch it early.</span></span></div>
+        <div class="ccard"><span class="cicon">R</span><span class="ctxt"><b>Corrections, owned fast</b><span>Got something wrong? Fix it quickly and openly — trust is built there.</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · WHAT YOU SIGNED — CONTRACTUAL AWARENESS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What you signed · awareness, not fine print</div>
+      <h2 style="margin-bottom:6px">Three commitments already in your contract.</h2>
+      <p class="lead" style="margin-bottom:4px">You agreed to these when you joined. Here's what each means in plain terms.</p>
+      <div class="vrows">
+        <div class="vrow"><span class="vn">NDA / Confidentiality</span><span class="vt">What you see inside Koocester — client info, plans, data — stays inside. <b>You keep our secrets, and our clients', safe.</b></span></div>
+        <div class="vrow"><span class="vn">Non-compete</span><span class="vt">While you're with us, your working energy is Koocester's. <b>You focus it here.</b></span></div>
+        <div class="vrow"><span class="vn">Non-solicit</span><span class="vt">Our clients and team are relationships we've built together. <b>You leave them with the company.</b></span></div>
+      </div>
+      <div class="callout"><b>You agreed to these in your contract when you joined.</b> The full legal terms live in your signed contract and with HR — this slide is just so you know what you're living by. Questions? HR is glad to walk you through it.</div>
+    </div>
+  </section>
+
+  <!-- 11 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Your turn</div>
+      <hr class="rule">
+      <h2>Three calls</h2>
+      <p class="lead" style="color:#CCC">Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 12 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · the token gift</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> S$30 is under the S$50 line and it's a plain sample — no coverage attached. Log it in the register and keep it. No approval needed."
+        data-no="<b>Not quite.</b> S$30 is under the S$50 line and isn't tied to coverage — that's a token gift. Log only, you keep it. No approval step, and it's never a straight refuse.">
+        <div class="scenario">A brand sends you a S$30 product sample after a shoot. It has nothing to do with any coverage decision.</div>
+        <div class="q">What do you do?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Log it in the register — you keep it, no approval needed</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Get manager approval before accepting</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Decline it — any brand gift is off-limits</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · the high-value gift, tied to coverage</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> S$800 is well above the S$50 line, and it's from someone we're about to feature — log it and get manager approval before accepting. If approved, the gadget is company property, not yours to keep."
+        data-no="<b>No.</b> S$800 from someone we're about to feature is over the line and tied to coverage — log + manager approval before accepting, not a quiet keep. And if it's approved, it's company property, not yours.">
+        <div class="scenario">Someone you're about to feature sends you a S$800 gadget, unprompted, the week before the piece runs.</div>
+        <div class="q">What's the right move?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Log it and keep it quietly — it's not affecting the piece</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Log it, get manager approval before accepting — if kept, it's company property</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Accept it, disclose it publicly, no approval needed</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · the core principle</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> Coverage is never for sale. No gift, however generous, buys or changes what we feature or how we edit it — that line doesn't move regardless of value."
+        data-no="<b>No.</b> Coverage is never for sale, at any value. A great gift doesn't earn a feature — value and generosity don't move that line, ever.">
+        <div class="scenario">Someone offers a very generous gift, hoping it improves their odds of being featured.</div>
+        <div class="q">Can a great gift get someone featured?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Yes, if it's declared and logged first</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Yes, above a certain value, with manager approval</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>No — coverage is never for sale, regardless of value</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 4 · DATA SECURITY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · data security</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> Credentials live in Bitwarden, shared on a need-to-know basis. One teammate covering means one teammate gets access — clean and secure."
+        data-no="<b>Not quite.</b> Passwords belong in Bitwarden, shared only with the person who needs them. Chat and mass email spread a credential further than it should go — Bitwarden keeps it tight.">
+        <div class="scenario">A teammate is covering for you this week and needs a client's login to keep things moving.</div>
+        <div class="q">How do you hand it over?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Share it through Bitwarden to just that teammate</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Drop it in chat so it's quick to find</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Email it to the whole team so anyone can jump in</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 5 · SOCIAL & CONDUCT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 5 · social-media conduct</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> Client and company confidential work stays offline until it's public. Once the client releases it, celebrate away."
+        data-no="<b>No.</b> Confidential client work stays off your feed until the client makes it public. The instinct to share great work is right — the timing is what matters. Wait for the green light, then celebrate it.">
+        <div class="scenario">A client's unreleased campaign is exciting, and you'd love to post a sneak peek to your personal followers.</div>
+        <div class="q">What's the right call?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Keep it offline until the client makes it public, then celebrate it</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Post it now — it's great work and shows what we do</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Post it, and take it down fast if the client notices</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 6 · CONTRACT IS SOURCE OF TRUTH -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 6 · the source of truth</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> This module is the plain-English guide; your signed contract is the legal source of truth. When something isn't covered here, the contract and HR have the real answer."
+        data-no="<b>Not quite.</b> These slides make the rules easy to live — but your signed contract is the source of truth. When something's unclear, check the contract and ask HR; they're glad to help.">
+        <div class="scenario">You're unsure whether something you're about to do fits our policies. A colleague says, "the training slides skip it, so it's fine."</div>
+        <div class="q">Where's the real answer?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Your signed contract is the source of truth — check it and ask HR</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>If the slides skip it, there's no rule</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Whatever the group chat lands on</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27 · CHECKLIST / GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all seven?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Will you submit leave through Lark, complete the handover and wait for approval before taking it?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you declare every gift and barter offer you receive, including the ones you turn down?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you keep credentials in Bitwarden and share data on a need-to-know basis?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you help keep our workplace respectful and harassment-free?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you keep client and company confidential info offline until it's public?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you understand your signed contract — NDA, non-compete and non-solicit included — is the source of truth?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you check the contract and ask your manager or HR whenever you're unsure?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all seven to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 16 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Live it daily. Ask when unsure. Protect the brand.</h2>
+      <p class="lead">Guard our data, respect each other, declare every gift, and represent us well online. Your signed contract is the source of truth; this module is how you live it. When you're not sure, check the contract and ask — that's always the right call.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · policies &amp; compliance</div>
+<div class="nav">
+  <button class="arrow play" id="play" aria-label="Read this slide aloud" title="Read aloud · auto-advances like a video">▶</button>
+  <span class="count" id="count">1 / 33</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){stopPlay();show(i+1)};prev.onclick=function(){stopPlay();show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();stopPlay();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();stopPlay();show(i-1)}
+  });
+  // ===== read-aloud "watch it" mode: reads the slide, then auto-advances like a video =====
+  var playBtn=document.getElementById('play'),playing=false,hasTTS=('speechSynthesis' in window);
+  function slideText(){var el=slides[i].querySelector('.inner');return el?el.innerText.replace(/\s+/g,' ').trim():'';}
+  function speakNow(){
+    if(!hasTTS)return; window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(slideText()); u.rate=1; u.pitch=1;
+    u.onend=function(){ if(playing){ if(i<n-1){ show(i+1); setTimeout(speakNow,450); } else { stopPlay(); } } };
+    window.speechSynthesis.speak(u);
+  }
+  function startPlay(){ if(!hasTTS){alert('Read-aloud needs a modern browser (Chrome/Safari).');return;} playing=true; if(playBtn){playBtn.textContent='❚❚';playBtn.classList.add('on');} speakNow(); }
+  function stopPlay(){ playing=false; if(playBtn){playBtn.textContent='▶';playBtn.classList.remove('on');} if(hasTTS)window.speechSynthesis.cancel(); }
+  if(playBtn) playBtn.onclick=function(){ playing?stopPlay():startPlay(); };
+  window.addEventListener('beforeunload',stopPlay);
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // declaration form demo — pure front-end, validates then shows a confirmation summary
+  (function(){
+    var btn=document.getElementById('dfSubmit');
+    if(!btn)return;
+    btn.addEventListener('click',function(){
+      var date=document.getElementById('dfDate').value;
+      var from=document.getElementById('dfFrom').value.trim();
+      var item=document.getElementById('dfItem').value.trim();
+      var value=document.getElementById('dfValue').value;
+      var related=document.getElementById('dfRelated').value.trim();
+      var keep=document.getElementById('dfKeep').value;
+      var err=document.getElementById('dfErr'),res=document.getElementById('dfResult');
+      if(!date||!from||!item||!value){
+        err.classList.add('show'); res.classList.remove('show'); res.innerHTML=''; return;
+      }
+      err.classList.remove('show');
+      res.innerHTML='✓ <b>Declaration logged</b> — '+item+' from '+from+', est. S$'+value+(related?' · '+related:'')+(keep?' · '+keep:'')+'.';
+      res.classList.add('show');
+    });
+  })();
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-policies-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

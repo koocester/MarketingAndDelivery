@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Video editor</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* two-up / three-up cards */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views / spec rows */
+.vrows{margin-top:12px;max-width:900px}
+.vrow{display:grid;grid-template-columns:210px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+/* diagnose / spec matrix table */
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr .8fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fff;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* caption colour swatches (teaching content — the editor colour code) */
+.swatches{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;max-width:900px}
+.sw{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow)}
+.chip{width:34px;height:34px;border-radius:8px;flex:none;border:1px solid rgba(0,0,0,.12)}
+.sw b{display:block;color:var(--ink);font-size:1.02rem;line-height:1.2}
+.sw span{font-size:12.5px;color:var(--muted)}
+.hex{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--maroon);font-weight:700;margin-left:auto;flex:none}
+/* font stack rows */
+.fonts{margin-top:8px;max-width:900px}
+.frow{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line2)}
+.frow:last-child{border-bottom:0}
+.frow .fname{font-size:clamp(1.3rem,3vw,1.7rem);color:var(--ink);font-weight:800;letter-spacing:-.02em}
+.frow .fname.tnr{font-family:'Times New Roman',Georgia,serif;font-style:italic;font-weight:600}
+.frow .frole{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon);font-weight:700}
+.frow .fuse{font-size:14px;color:var(--body);line-height:1.4;margin-top:2px}
+/* spec card (title SOP per vertical) */
+.spec{border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.spec h3{margin:0 0 10px;font-size:1.05rem;color:var(--maroon);font-weight:800;letter-spacing:-.01em}
+.spec .field{padding:9px 0;border-bottom:1px solid var(--line2)}
+.spec .field:last-child{border-bottom:0}
+.spec .fl{font-weight:800;color:var(--ink);font-size:14px}
+.spec .fv{font-size:12.5px;color:var(--body);line-height:1.4;margin-top:2px}
+.spec .fv b{color:var(--maroon)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media (max-width:660px){.grid2,.swatches,.duo,.decide{grid-template-columns:1fr}.vrow,.frow{grid-template-columns:1fr}}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:var(--maroon-tint);border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#fff}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#fff;color:var(--ok);border:1px solid var(--ok)}
+.fb.no{background:var(--maroon-tint);color:var(--body);border:1px solid var(--maroon)}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#fff;color:var(--ok)}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:var(--body)}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · role certification</div>
+      <h1><span class="lnwrap"><span class="ln">Video editing —</span></span><span class="lnwrap"><span class="ln">the Koocester</span></span><span class="lnwrap"><span class="ln">way</span></span></h1>
+      <p class="lead" style="margin-top:20px">The Standard Operating Procedure (SOP) and brand guideline for every cut, caption and title you ship. On-brand, precise, emotionally engaging.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Every edit is on-brand</b><span>right fonts, right colours, right watermark — no exceptions</span></div>
+        <div class="win"><b>Subtitles &amp; titles follow the SOP exactly</b><span>size, spacing, shadow, position, glow — to the number</span></div>
+        <div class="win"><b>The story lands with emotion</b><span>strong hook, clean pace, the viewer feels it</span></div>
+        <div class="win"><b>It ships clean &amp; on time</b><span>quality-checked, correct export, no typos, no missed deadline</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · THE MISSION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The editing mission</div>
+      <div class="big">Every edit reflects our <em>values</em>.</div>
+      <p class="lead">At Koocester, every piece of content reflects our core values through <b>professional, inspiring and emotionally engaging</b> storytelling — building trust, connection and positive impact, with a bold and modern creative approach.</p>
+    </div>
+  </section>
+
+  <!-- 4 · DIVIDER · THE LOOK -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>The look</h2>
+      <p class="lead" style="color:#CCC">Fonts, the caption colour code, and subtitle specs.</p>
+    </div>
+  </section>
+
+  <!-- 5 · TYPOGRAPHY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Typography · three fonts, one system</div>
+      <h2 style="margin-bottom:8px">Know which font, and when.</h2>
+      <div class="fonts">
+        <div class="frow">
+          <span class="fname">Helvetica</span>
+          <span><span class="frole">Primary</span><span class="fuse">Default for everything — subtitles, names, company names, locations, most on-screen text.</span></span>
+        </div>
+        <div class="frow">
+          <span class="fname">Inter Black</span>
+          <span><span class="frole">Secondary</span><span class="fuse">Big, bold emphasis — prices, restaurant / car names, the punchy hero lines.</span></span>
+        </div>
+        <div class="frow">
+          <span class="fname tnr">Times New Roman</span>
+          <span><span class="frole">Secondary · italic</span><span class="fuse">Reserved for the role / title label under a person's name (interviewee's role). Always italic.</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CAPTION COLOUR CODE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The caption colour code · learn it cold</div>
+      <h2 style="margin-bottom:6px">Colour tells the viewer who's speaking.</h2>
+      <p class="cite" style="margin:0 0 6px">These are the subtitle colours you apply as content — not the deck's colours. Red Green Blue (RGB) hex values:</p>
+      <div class="swatches">
+        <div class="sw"><span class="chip" style="background:#ffffff"></span><span><b>Interviewer</b><span>the person asking / narrating</span></span><span class="hex">#ffffff</span></div>
+        <div class="sw"><span class="chip" style="background:#ffcb00"></span><span><b>Interviewee</b><span>the guest answering</span></span><span class="hex">#ffcb00</span></div>
+        <div class="sw"><span class="chip" style="background:#00ff18"></span><span><b>Additional / positive</b><span>the highlight, the good news</span></span><span class="hex">#00ff18</span></div>
+        <div class="sw"><span class="chip" style="background:#ec1d1d"></span><span><b>Negative statement</b><span>the setback, the tension</span></span><span class="hex">#ec1d1d</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · SUBTITLE DETAIL SPECS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Subtitle details · set them exactly</div>
+      <h2 style="margin-bottom:10px">Same numbers, every time.</h2>
+      <div class="diag">
+        <div class="drow dhead"><span>Setting</span><span>Value</span><span>Why</span></div>
+        <div class="drow"><span class="sym">Font size</span><span class="stg">7 base</span><span>Increase only when emphasis or readability needs it</span></div>
+        <div class="drow"><span class="sym">Character spacing</span><span class="stg">−1</span><span>Tighter, cleaner, more premium</span></div>
+        <div class="drow"><span class="sym">Shadow colour</span><span class="stg">Black</span><span>Lifts text off any background</span></div>
+        <div class="drow"><span class="sym">Shadow opacity</span><span class="stg">60%</span><span>Present but not heavy</span></div>
+        <div class="drow"><span class="sym">Shadow blur</span><span class="stg">10%</span><span>Soft edge, no hard line</span></div>
+        <div class="drow"><span class="sym">Shadow distance</span><span class="stg">8</span><span>Enough separation to read</span></div>
+        <div class="drow"><span class="sym">Shadow angle</span><span class="stg">−45°</span><span>Consistent light direction</span></div>
+      </div>
+      <div class="callout"><b>Subtitle checklist:</b> start at size 7, then scale up selectively for emphasis. Keep every line typo-free, synced, on-brand and inside the safe area.</div>
+    </div>
+  </section>
+
+  <!-- 8 · DIVIDER · TITLE SOPs -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Title SOPs, per vertical</h2>
+      <p class="lead" style="color:#CCC">The title changes with the page. Fields, fonts, colours, positions, glow.</p>
+    </div>
+  </section>
+
+  <!-- 9 · TITLE SOP · BUSINESS & WEALTH -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Title SOP · Business &amp; Wealth</div>
+      <div class="grid2">
+        <div class="spec">
+          <h3>Company name</h3>
+          <div class="field"><div class="fl">Font · Helvetica</div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 260 · y −225</div></div>
+          <div class="field"><div class="fl">Opacity 85% · Glow on</div></div>
+        </div>
+        <div class="spec">
+          <h3>Interviewee full name</h3>
+          <div class="field"><div class="fl">Font · Helvetica</div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 400 · y −55</div></div>
+          <div class="field"><div class="fl">Opacity 100%</div></div>
+        </div>
+        <div class="spec">
+          <h3>Role</h3>
+          <div class="field"><div class="fl">Font · Times New Roman <i>italic</i></div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 520 · y −135</div></div>
+          <div class="field"><div class="fl">Opacity 100%</div></div>
+        </div>
+        <div class="spec">
+          <h3>Ka-ching (revenue)</h3>
+          <div class="field"><div class="fl">Line 1 · Helvetica white</div></div>
+          <div class="field"><div class="fl">Line 2 · Inter Black green <b>#00ff18</b>, green glow</div></div>
+          <div class="field"><div class="fl">Slide up in · fade out · currency icon preset</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · TITLE SOP · HOMES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Title SOP · Homes</div>
+      <div class="grid2">
+        <div class="spec">
+          <h3>Price</h3>
+          <div class="field"><div class="fl">Font · Inter Black</div><div class="fv">Colour green <b>#00ff18</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 0 · y 985</div></div>
+          <div class="field"><div class="fl">Opacity 100% · Glow on</div></div>
+        </div>
+        <div class="spec">
+          <h3>Property type</h3>
+          <div class="field"><div class="fl">Font · Inter</div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 0 · y 1120</div></div>
+          <div class="field"><div class="fl">Opacity 100%</div></div>
+        </div>
+        <div class="spec">
+          <h3>Interviewee full name</h3>
+          <div class="field"><div class="fl">Font · Helvetica</div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 400 · y −55 · Opacity 100%</div></div>
+        </div>
+        <div class="spec">
+          <h3>Role</h3>
+          <div class="field"><div class="fl">Font · Times New Roman <i>italic</i></div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Position</div><div class="fv">x 520 · y −135 · Opacity 100%</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 · TITLE SOP · AUTOS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Title SOP · Autos</div>
+      <div class="grid2">
+        <div class="spec">
+          <h3>Car price</h3>
+          <div class="field"><div class="fl">Font · Inter</div><div class="fv">Colour green <b>#00ff18</b>, green glow</div></div>
+          <div class="field"><div class="fl">Slide up in · Fade out</div></div>
+          <div class="field"><div class="fl">Position adjustable · Opacity 100%</div></div>
+        </div>
+        <div class="spec">
+          <h3>Car name</h3>
+          <div class="field"><div class="fl">Font · Inter</div><div class="fv">Colour white <b>#ffffff</b></div></div>
+          <div class="field"><div class="fl">Slide up in · Fade out</div></div>
+          <div class="field"><div class="fl">Position adjustable · Opacity 100%</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · TITLE SOP · FOODIE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Title SOP · Foodie</div>
+      <div class="grid2">
+        <div class="spec">
+          <h3>Main title</h3>
+          <div class="field"><div class="fl">Restaurant name · Inter Black</div><div class="fv">Colour green <b>#00ff18</b>, glow</div></div>
+          <div class="field"><div class="fl">Slide up in · Fade out</div></div>
+          <div class="field"><div class="fl">Location · Helvetica white</div></div>
+        </div>
+        <div class="spec">
+          <h3>Small hook</h3>
+          <div class="field"><div class="fl">Font · Helvetica &amp; Inter Black</div><div class="fv">Colour white and yellow <b>#ffcb00</b></div></div>
+          <div class="field"><div class="fl">Slide up in · Fade out</div></div>
+          <div class="field"><div class="fl">Position adjustable · Opacity 100%</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · DIVIDER · MOTION & SOUND -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Motion &amp; sound</h2>
+      <p class="lead" style="color:#CCC">Text animation, audio, sound effects, assets.</p>
+    </div>
+  </section>
+
+  <!-- 14 · TEXT ANIMATION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Text animation · interviewer vs interviewee</div>
+      <h2 style="margin-bottom:10px">Move it right, cut it clean.</h2>
+      <div class="duo">
+        <div class="obx lead-gen">
+          <h3 style="font-size:1.25rem">Interviewer</h3>
+          <div class="sub">the question / narration</div>
+          <ul>
+            <li><b>Slide-up animation</b> in</li>
+            <li>Cut after every phrase</li>
+            <li>Size &amp; placement adjustable</li>
+            <li>Helvetica white — keep interviewer text white throughout</li>
+          </ul>
+        </div>
+        <div class="obx">
+          <h3 style="color:var(--ink);font-size:1.25rem">Interviewee</h3>
+          <div class="sub">the answer</div>
+          <ul>
+            <li>Cut after every phrase</li>
+            <li>Helvetica <b>yellow #ffcb00</b></li>
+            <li>Slide-up + Inter Black green line 2 <b>for key statements</b></li>
+            <li>Size &amp; placement adjustable</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout"><b>Ka-ching &amp; b-roll:</b> money reveals slide up then fade out (Line 1 Helvetica white, Line 2 Inter Black green + glow). Extra b-roll stays futuristic, simple Canva animation.</div>
+    </div>
+  </section>
+
+  <!-- 15 · AUDIO, SFX, MUSIC -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Sound · raw audio, effects, assets</div>
+      <div class="vrows">
+        <div class="vrow"><span class="vn">Raw footage audio</span><span class="vt"><b>Volume set to max.</b> Fade in and fade out both <b>0.0s</b>. Keep the guest's voice clean and present.</span></div>
+        <div class="vrow"><span class="vn">Sound effects</span><span class="vt"><b>Use the assets in the CapCut Space Library.</b> Match each effect to the video's tone — serious, professional or entertaining — then balance it so it supports the cut without overpowering it.</span></div>
+        <div class="vrow"><span class="vn">Additional b-roll</span><span class="vt"><b>Futuristic look</b>, simple animation built in Canva. Supports the story, never distracts.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 · CTA & WATERMARK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Endings &amp; brand marks</div>
+      <div class="decide">
+        <div class="dbox ok"><h3>Call to action (CTA)</h3><ul>
+          <li>Follow the <b>lead magnet set by the Content Strategist and Marketing Team</b></li>
+          <li>Show the automation trigger word, such as <b>RENOVATION</b> or <b>MODIF</b></li>
+          <li>Place it in the <b>middle or at the end</b>, wherever the story makes the action feel natural</li>
+        </ul></div>
+        <div class="dbox no"><h3>Watermark</h3><ul>
+          <li>Use the <b>fixed watermark</b> provided in the CapCut space</li>
+          <li>Apply from the <b>first second to the end</b></li>
+          <li>Fixed position — <b>strictly no adjustments</b></li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 · DIVIDER · WORKFLOW -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>The workflow</h2>
+      <p class="lead" style="color:#CCC">How the work moves, and the standard at each stage.</p>
+    </div>
+  </section>
+
+  <!-- 18 · YOUR EDIT KIT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your edit kit</div>
+      <h2 style="margin-bottom:6px">The gear you cut on.</h2>
+      <p class="lead" style="margin:0 0 14px">You edit anywhere, so your kit travels. It's the same standard the producers shoot on — so the footage lands clean and you cut without excuses.</p>
+      <div class="wins">
+        <div class="win"><b>Laptop</b><span>edit anywhere — CapCut, your projects, the full cut on the move</span></div>
+        <div class="win"><b>External SSD / storage</b><span>offload and back up every raw file — never work off a full drive</span></div>
+        <div class="win"><b>iPhone</b><span>the camera the footage is shot on — know the source you're cutting</span></div>
+        <div class="win"><b>External microphone</b><span>the clean audio captured on set — protect it, raw volume to max</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 · EDITING WORKFLOW STAGES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Editing workflow · the stage order</div>
+      <h2 style="margin-bottom:10px">Rough cut to render, in order.</h2>
+      <ol class="pts">
+        <li><b>Rough cut</b> — fast-paced, well-structured story, strong hook, easy to follow.</li>
+        <li><b>Subtitle</b> — no typos, clear colours, synced timing, inside the safe area.</li>
+        <li><b>Recheck 1</b> — typos, subtitle timing, audio, watermark, CTA, frames, motion, transitions, exports.</li>
+        <li><b>Motion</b> — smooth, on-brand, supports the story, never distracting.</li>
+        <li><b>SFX</b> — supports emotion, balanced, timed to the pacing.</li>
+        <li><b>Render draft 1</b> → <b>Quality Check</b> (AI Amender Bot) → <b>Render</b> final.</li>
+      </ol>
+      <div class="callout"><b>Quality Check:</b> upload to the AI Amender Bot, review the recommendations, apply only the relevant revisions — before it goes to Frame.io.</div>
+    </div>
+  </section>
+
+  <!-- 19 · RENDER / EXPORT SETTINGS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Render &amp; export · exact settings</div>
+      <h2 style="margin-bottom:10px">Export it right or don't export it.</h2>
+      <div class="diag">
+        <div class="drow dhead"><span>Setting</span><span>Value</span><span>Note</span></div>
+        <div class="drow"><span class="sym">Video name</span><span class="stg">Match Lark</span><span>Name must match the name in Lark exactly</span></div>
+        <div class="drow"><span class="sym">Resolution</span><span class="stg">1080P</span><span>Standard delivery</span></div>
+        <div class="drow"><span class="sym">Bitrate</span><span class="stg">Higher</span><span>Protect quality</span></div>
+        <div class="drow"><span class="sym">Codec</span><span class="stg">H.264</span><span>Standard</span></div>
+        <div class="drow"><span class="sym">Format</span><span class="stg">MP4</span><span>Standard</span></div>
+        <div class="drow"><span class="sym">Frame rate</span><span class="stg">30 FPS</span><span>Standard</span></div>
+        <div class="drow"><span class="sym">Subtitles</span><span class="stg">Export TXT</span><span>Subtitles → Export TXT, then upload it to Frame.io for the SMM</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · EDITING SLA -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Editing SLA · turnaround by Page</div>
+      <h2 style="margin-bottom:10px">The Page sets the clock.</h2>
+      <div class="diag" style="max-width:640px">
+        <div class="drow dhead" style="grid-template-columns:1.4fr 1fr"><span>Page</span><span>Working-hours SLA</span></div>
+        <div class="drow" style="grid-template-columns:1.4fr 1fr"><span class="sym">Koocester</span><span class="stg">8 hours</span></div>
+        <div class="drow" style="grid-template-columns:1.4fr 1fr"><span class="sym">Business</span><span class="stg">8 hours</span></div>
+        <div class="drow" style="grid-template-columns:1.4fr 1fr"><span class="sym">Homes</span><span class="stg">8 hours</span></div>
+        <div class="drow" style="grid-template-columns:1.4fr 1fr"><span class="sym">Autos</span><span class="stg">4 hours</span></div>
+        <div class="drow" style="grid-template-columns:1.4fr 1fr"><span class="sym">Foodie</span><span class="stg">4 hours</span></div>
+        <div class="drow" style="grid-template-columns:1.4fr 1fr"><span class="sym">Wealth</span><span class="stg">4 hours</span></div>
+      </div>
+      <div class="callout"><b>Working-hours basis:</b> use the Page on the project record to read the correct clock. Amendment time is separate from the initial editing SLA.</div>
+    </div>
+  </section>
+
+  <!-- 21 · UPLOAD & AMENDMENT PROCESS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Delivery · upload &amp; amendments</div>
+      <div class="decide">
+        <div class="dbox ok"><h3>Uploading</h3><ul>
+          <li>Upload final to Frame.io in the correct folder: <b>Country → Year → Pages → Month → Paid/Unpaid</b></li>
+          <li>Copy &amp; submit the Frame.io link into the Lark form</li>
+          <li>Inform the respective Producer for review</li>
+        </ul></div>
+        <div class="dbox no"><h3>Amendments</h3><ul>
+          <li>Check for incoming amendments <b>every morning</b>, prioritise them before new projects</li>
+          <li>Upload revisions to <b>"To Review"</b> named V1, V2, V3…</li>
+          <li>Move previous versions to <b>"Previous Draft"</b>, inform the Producer, repeat until finalised</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21b · SHARE LINK ETIQUETTE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Delivery · which link you send</div>
+      <h2 style="margin-bottom:6px">Reviewers get the Share link. Always.</h2>
+      <p class="lead" style="margin:0 0 14px">When you send a video to anyone for review or approval, always send the Frame.io <b>Share link</b>, never the normal project link. Same video, two very different doors.</p>
+      <div class="decide">
+        <div class="dbox no"><h3>Normal link · keep it internal</h3>
+          <div class="flnk-url flnk-off">app.frame.io/…</div>
+          <ul>
+            <li>The app URL copied from your project workspace</li>
+            <li>Often needs a Frame.io login or workspace access</li>
+            <li>Not built for outsiders, so a Producer, client or guest can hit a wall</li>
+          </ul>
+        </div>
+        <div class="dbox ok"><h3>Share link · send this one</h3>
+          <div class="flnk-url flnk-on">f.io/… · the "Share for review" URL</div>
+          <ul>
+            <li>Made for reviewers: opens the player with comments</li>
+            <li>No workspace access needed and no login barrier</li>
+            <li>You control the permissions on what they can see</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout"><b>The rule, one line:</b> reviewers get the Share link. Copy it from the <b>Share</b> button, never from the address bar.</div>
+    </div>
+    <style>
+      .flnk-url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;font-weight:700;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 11px;margin:0 0 11px;word-break:break-all}
+      .flnk-off{color:var(--muted)}
+      .flnk-on{color:var(--ok);border-color:var(--ok);background:#fff}
+    </style>
+  </section>
+
+  <!-- 22 · NOT ALLOWED -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Hard no · things editors are not allowed to do</div>
+      <h2>Do any of these and it's on you.</h2>
+      <ul class="pts">
+        <li>Missing deadlines without notice, or ignoring amendments and feedback</li>
+        <li>Uploading videos without a Quality Check, or leaving typo, audio or subtitle mistakes</li>
+        <li>Using incorrect export settings, or poor file organisation and naming</li>
+        <li>Ignoring or changing brand guidelines without approval</li>
+        <li>Sharing confidential files or footage — or a <b>face reveal</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 23 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part five</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#CCC">Four calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 24 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · the colour code</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> The interviewee — the guest answering — is subtitled in yellow #ffcb00. White is the interviewer, green is positive/additional, red is a negative statement."
+        data-no="<b>Not that one.</b> The interviewee's subtitle is yellow #ffcb00. White = interviewer, green #00ff18 = positive/additional, red #ec1d1d = negative statement.">
+        <div class="scenario">You're subtitling a guest answering a question in a Business video.</div>
+        <div class="q">What colour is the interviewee's subtitle?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>White #ffffff</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Yellow #ffcb00</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Green #00ff18</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 25 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · the role label</div>
+      <div class="quiz" data-answer="C"
+        data-ok="<b>Correct.</b> The role / title under a person's name uses Times New Roman, italic, white. Helvetica is primary text; Inter Black is for prices and hero names."
+        data-no="<b>No.</b> The role label is Times New Roman, italic, white — it's the one reserved use for that font. Helvetica is the primary font; Inter Black is for prices and big hero names.">
+        <div class="scenario">Under the interviewee's name you're adding their role, e.g. "founder of Tomaz Shoes".</div>
+        <div class="q">Which font do you use for a role label?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Helvetica</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Inter Black</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Times New Roman, italic</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 26 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · a price title</div>
+      <div class="quiz" data-answer="A"
+        data-ok="<b>Correct.</b> Prices are green #00ff18 in Inter Black (with glow). Green signals the money / positive highlight; Inter Black gives it the bold weight."
+        data-no="<b>Not quite.</b> A price uses green #00ff18 in Inter Black, with glow — green is the positive/money colour and Inter Black is the bold hero font.">
+        <div class="scenario">A Homes video reveals the property price on screen.</div>
+        <div class="q">A price title uses which colour and font?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Green #00ff18 · Inter Black</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>White #ffffff · Helvetica</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Yellow #ffcb00 · Times New Roman</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27 · MCQ 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · export &amp; delivery</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Export 1080P, H.264, MP4, 30 FPS, higher bitrate — and the video name must match the name in Lark. Then use Subtitles → Export TXT and upload the text file to Frame.io for the SMM."
+        data-no="<b>No.</b> The final export is 1080P, H.264, MP4, 30 FPS, and the file name must match the name in Lark exactly — plus use Subtitles → Export TXT for Frame.io.">
+        <div class="scenario">Your edit passed Quality Check and you're rendering the final file.</div>
+        <div class="q">Which is the correct export setup?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>720P, any name, MP4 — speed matters most</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>1080P, H.264, MP4, 30 FPS, name matches Lark, Subtitles → Export TXT</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>4K, H.265, MOV, 60 FPS</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 28 · CERTIFICATION GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you edit to the Koocester SOP?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Do you know the caption colour code — white, yellow, green, red — by heart?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Can you set subtitles to the exact size, spacing and shadow specs?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you know the title SOP for each vertical — fonts, colours, positions, glow?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you use the agreed lead magnet and trigger word, placing the CTA where the story supports it?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you Quality Check, then export with the correct settings and Lark-matched name?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Will you hit the SLA, and never do a hard-no (no face reveal, no skipped QC)?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 29 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">On-brand. Precise. Emotional.</h2>
+      <p class="lead">Every cut carries the Koocester name. Follow the SOP to the number, tell the story with feeling, ship it clean and on time.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · video editor</div>
+<div class="nav">
+  <span class="count" id="count">1 / 31</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){show(i+1)};prev.onclick=function(){show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1)}
+  });
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-ve-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#CCC;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#CCC;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#CCC;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var nn=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<nn.length;i++){ var r=nn[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+
+<style>.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

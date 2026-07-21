@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Customer success</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* deadline flow (reused as generic process flow) */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* two-up */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* handoff pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+.mcpipe.kickoff-flow{flex-wrap:nowrap;gap:5px}
+.kickoff-flow .pst{min-width:0;flex:1;padding:10px 11px}
+.kickoff-flow .pst.hot{flex:1.55}
+.kickoff-flow .pst.you2{flex:1.35}
+.kickoff-flow .pa{flex:none}
+/* approve / reject style boxes (reused for right/wrong response) */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#fff;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:rgba(26,127,55,.12)}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:rgba(26,127,55,.12);color:#1A7F37;border:1px solid #1A7F37}
+.fb.no{background:var(--maroon-tint);color:#C02025;border:1px solid #D76C6F}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fff;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:rgba(26,127,55,.12);color:#1A7F37}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#C02025}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide{grid-template-columns:1fr}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html" target="_blank" rel="noopener noreferrer">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · role certification</div>
+      <h1><span class="lnwrap"><span class="ln">Customer</span></span><span class="lnwrap"><span class="ln">success</span></span></h1>
+      <p class="lead" style="margin-top:20px">Sales closes the agreement. Customer Success (CX) takes ownership from the formal introduction, then makes sure the client wins, stays and tells others.</p>
+    </div>
+  </section>
+
+  <!-- 2 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Clients onboarded smoothly</b><span>complete Sales brief, internal alignment and CX as the single contact</span></div>
+        <div class="win"><b>Delivery on time and on-brief</b><span>what ships matches what was promised</span></div>
+        <div class="win"><b>Clients renew and refer</b><span>results speak — they stay and send others</span></div>
+        <div class="win"><b>Nothing promised is dropped</b><span>every commitment tracked through to done</span></div>
+        <div class="win"><b>The client feels looked after</b><span>proactive, responsive, never left guessing</span></div>
+        <div class="win"><b>Accounts grow on recurring engagements</b><span>value expands over time, not one-off projects</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 3 · THE ONE IDEA -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your mission</div>
+      <div class="big">You own the client's <em>outcome</em>.</div>
+      <p class="lead">Sales owns the signed promise and formal handoff. From the introduction onward, CX owns communication, onboarding and the client's outcome.</p>
+    </div>
+  </section>
+
+  <!-- 4 · DIVIDER PART ONE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>The client relationship</h2>
+      <p class="lead" style="color:#CCC">Onboard, deliver, keep them happy, grow it.</p>
+    </div>
+  </section>
+
+  <!-- 5 · OWNERSHIP TRANSFER -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">At signing · ownership transfer</div>
+      <h2>Sales hands over. CX owns from the introduction onward.</h2>
+      <div class="duo">
+        <div class="obx aware">
+          <h3>Sales · before and at signing</h3>
+          <ul><li>Documents the signed scope, exclusions and promises</li><li>Creates the client group and adds CX</li><li>Introduces CX as the single contact</li><li>Answers for commercial accuracy</li></ul>
+        </div>
+        <div class="obx lead-gen">
+          <h3>CX · from the introduction</h3>
+          <ul><li>Accepts the complete handoff</li><li>Owns client communication and onboarding</li><li>Schedules the internal pre-brief</li><li>Leads the client kickoff and ongoing cadence</li></ul>
+        </div>
+      </div>
+      <div class="callout"><b>The handoff is not complete</b> until the brief is documented, CX is introduced in the client group and the internal pre-brief is booked.</div>
+    </div>
+  </section>
+
+  <!-- 6 · INTERNAL PRE-BRIEF -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Before the client kickoff</div>
+      <h2>Brief internally before anyone briefs the client.</h2>
+      <div class="mcpipe kickoff-flow">
+        <div class="pst"><div class="po">Client</div><div class="pn">Briefs Sales</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst"><div class="po">Sales</div><div class="pn">Documents signed scope</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst hot"><div class="po">Internal pre-brief</div><div class="pn">CX + Content Strategist + Producer + Sales</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst you2"><div class="po">Client kickoff</div><div class="pn">CX leads; specialists join prepared</div></div>
+      </div>
+      <div class="callout"><b>Leave the pre-brief aligned on five things:</b> client objective, signed scope and exclusions, deliverables and timeline, risks and dependencies, and the questions to confirm with the client.</div>
+    </div>
+  </section>
+
+  <!-- 7 · ONBOARD THE CLIENT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">CX owns the communication</div>
+      <h2>Onboard the client and set them up to win.</h2>
+      <ol class="pts">
+        <li><b>Join through Sales' introduction</b> — the client knows CX is now the single contact</li>
+        <li><b>Confirm scope, exclusions and success</b> — remove ambiguity before work starts</li>
+        <li><b>Gather assets and access</b> — everything the internal team needs, upfront</li>
+        <li><b>Set the communication cadence</b> — channel, response expectation and update rhythm</li>
+        <li><b>Send the kickoff recap</b> — decisions, owners and next dates in writing</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 6 · OWN DELIVERY / FULFILMENT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Turn the goal into a brief</div>
+      <h2>Own delivery — even when others do the work.</h2>
+      <div class="dlflow">
+        <div class="dlnode"><div class="t">1 · Client's goal</div><div class="s">what they hired us to achieve</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">2 · Clear brief</div><div class="s">for the delivery machine (M&amp;D base)</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">3 · Tracked to done</div><div class="s">you follow it stage by stage</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">4 · Ships as promised</div><div class="s">what lands matches what was sold</div></div>
+      </div>
+      <div class="callout"><b>You're accountable even when others build it.</b> The team executes; you're the one who answers for whether it matched the promise.</div>
+    </div>
+  </section>
+
+  <!-- 7 · LANDING PAGES & OFFERS ACCOUNTABILITY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">One outcome · three clear owners</div>
+      <h2>Landing pages and offers: know who owns what.</h2>
+      <div class="mcpipe kickoff-flow">
+        <div class="pst you2"><div class="po">CX</div><div class="pn">Client inputs, approvals, communication and overall outcome</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst hot"><div class="po">Content Strategist</div><div class="pn">Offer strategy, page requirements and conversion diagnosis</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst"><div class="po">Marketing Coordinator</div><div class="pn">Landing-page build and approved amendments</div></div>
+      </div>
+      <div class="callout"><b>CX answers to the client.</b> Content Strategy diagnoses what must change. The Marketing Coordinator implements the approved fix.</div>
+      <div class="tags" style="margin-top:18px">
+        <a class="tag" href="offer-creation-training.html" target="_blank" rel="noopener noreferrer">Offer creation ↗</a>
+        <a class="tag" href="landing-page-training.html" target="_blank" rel="noopener noreferrer">Landing pages ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · KEEP THEM HAPPY & HANDLE FEEDBACK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Proactive, fast, human</div>
+      <h2>Keep them happy — and turn feedback into a fix.</h2>
+      <ul class="pts">
+        <li><b>Proactive updates</b> — don't make them ask</li>
+        <li><b>Respond fast</b> — speed reads as care</li>
+        <li><b>Turn a complaint into a fix + a stronger relationship</b> — not a defence</li>
+        <li><b>Never go silent</b> — silence is the one thing they won't forgive</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 9 · RETAIN & GROW -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Results earn the renewal</div>
+      <div class="big">Retention and referrals follow <em>delivered results</em>.</div>
+      <p class="lead">Renewals and referrals come from results, not charm. Spot the moment to deepen the relationship — upsell only where it genuinely helps them.</p>
+    </div>
+  </section>
+
+  <!-- 10 · THE HANDOFF BOTH WAYS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Nothing drops between seats</div>
+      <h2>You're the bridge — both directions.</h2>
+      <div class="mcpipe">
+        <div class="pst"><div class="po">Sales</div><div class="pn">Signed scope + formal introduction</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst you2"><div class="po">You · CX</div><div class="pn">Single contact + outcome owner</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst"><div class="po">Internal team</div><div class="pn">Pre-briefed before client discussion</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst"><div class="po">Client</div><div class="pn">Kickoff + updates led by CX</div></div>
+      </div>
+      <div class="callout"><b>Nothing drops between seats.</b> Sales transfers the promise; CX aligns the internal team before leading the client conversation.</div>
+    </div>
+  </section>
+
+  <!-- retention section — scoped bespoke styles (.csr-) -->
+  <style>
+  .csr-health{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0 4px}
+  .csr-h{border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+  .csr-h .csr-dot{width:14px;height:14px;border-radius:50%;margin-bottom:12px}
+  .csr-h b{display:block;font-size:1.15rem;color:var(--ink);margin-bottom:5px}
+  .csr-h span{font-size:13px;color:var(--muted);line-height:1.4}
+  .csr-h.ok{border-color:var(--ok)}.csr-h.ok .csr-dot{background:var(--ok)}.csr-h.ok b{color:var(--ok)}
+  .csr-h.watch{border-color:var(--line)}.csr-h.watch .csr-dot{background:var(--muted)}
+  .csr-h.risk{border-color:var(--maroon)}.csr-h.risk .csr-dot{background:var(--maroon)}.csr-h.risk b{color:var(--maroon)}
+  .csr-stat{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 4px;max-width:760px}
+  .csr-s{border:2px solid var(--line);border-radius:16px;padding:22px;text-align:center;box-shadow:var(--shadow)}
+  .csr-s.bad{border-color:var(--maroon);background:var(--maroon-tint)}
+  .csr-s.good{border-color:var(--ok);background:rgba(26,127,55,.12)}
+  .csr-s .csr-n{font-size:clamp(2.4rem,6vw,3.4rem);font-weight:800;letter-spacing:-.03em;line-height:1}
+  .csr-s.bad .csr-n{color:var(--maroon)}.csr-s.good .csr-n{color:var(--ok)}
+  .csr-s .csr-l{font-size:13px;color:var(--body);margin-top:8px;line-height:1.35}
+  @media (max-width:660px){.csr-health,.csr-stat{grid-template-columns:1fr}}
+  </style>
+
+  <!-- DIVIDER · PART TWO · KEEP THEM FOR LIFE -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Keep them for life</h2>
+      <p class="lead" style="color:#CCC">The retention and recurring-revenue playbook, drawn from the people who wrote the books.</p>
+    </div>
+  </section>
+
+  <!-- RETENTION · FARM DON'T HUNT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The mindset shift</div>
+      <div class="big">Farm the client. Don't <em>hunt</em> the next one.</div>
+      <div class="duo">
+        <div class="obx aware">
+          <h3>Hunting</h3>
+          <div class="sub">one-off, always chasing new</div>
+          <ul>
+            <li>Win the deal, then move on</li>
+            <li>Value ends at delivery</li>
+            <li>Revenue resets to zero every month</li>
+          </ul>
+        </div>
+        <div class="obx lead-gen">
+          <h3>Farming</h3>
+          <div class="sub">recurring, growing what you have</div>
+          <ul>
+            <li>Win the deal, then nurture it</li>
+            <li>Value compounds after delivery</li>
+            <li>Revenue recurs and expands</li>
+          </ul>
+        </div>
+      </div>
+      <p class="cite"><b>Guy Nirpaz, Farm Don't Hunt.</b> A client you keep and grow is worth far more than one you chase. At Koocester that means recurring engagements, not single projects.</p>
+    </div>
+  </section>
+
+  <!-- RETENTION · COLEMAN 8 PHASES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The first 100 days decide it</div>
+      <h2>Every new client walks eight emotional phases.</h2>
+      <div class="dlflow">
+        <div class="dlnode"><div class="t">1 · Assess</div><div class="s">weighing us up</div></div>
+        <div class="dlnode"><div class="t">2 · Admit</div><div class="s">they sign, day one</div></div>
+        <div class="dlnode hot"><div class="t">3 · Affirm</div><div class="s">buyer's remorse hits</div></div>
+        <div class="dlnode"><div class="t">4 · Activate</div><div class="s">first real use</div></div>
+        <div class="dlnode"><div class="t">5 · Acclimate</div><div class="s">learning the ropes</div></div>
+        <div class="dlnode"><div class="t">6 · Accomplish</div><div class="s">first result lands</div></div>
+        <div class="dlnode"><div class="t">7 · Adopt</div><div class="s">it becomes a habit</div></div>
+        <div class="dlnode"><div class="t">8 · Advocate</div><div class="s">they refer others</div></div>
+      </div>
+      <div class="callout"><b>Coleman's First 100 Days: up to 70% of new clients leave early because they feel neglected.</b> Phase 3, Affirm, is buyer's remorse in week one. Get there first with a proactive check-in and an early win, and you guide them all the way to Advocate.</div>
+    </div>
+  </section>
+
+  <!-- RETENTION · HEALTH SCORE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">See churn coming</div>
+      <h2>Score every client's health. Act before they slip.</h2>
+      <div class="csr-health">
+        <div class="csr-h ok"><div class="csr-dot"></div><b>Healthy</b><span>engaged, seeing results, on track to renew</span></div>
+        <div class="csr-h watch"><div class="csr-dot"></div><b>Watch</b><span>quiet, slipping engagement, check in now</span></div>
+        <div class="csr-h risk"><div class="csr-dot"></div><b>At risk</b><span>disengaged, no results felt, save now</span></div>
+      </div>
+      <div class="callout">Score on four signals: <b>Deployment, Engagement, Adoption, and Return on Investment</b> (Gainsight's health-score model). A health score makes you proactive, not reactive: you reach a slipping client before they reach for the exit.</div>
+    </div>
+  </section>
+
+  <!-- RETENTION · CHURN SIGNALS + SAVE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Catch the drift</div>
+      <h2>Learn the churn signals. Run the save.</h2>
+      <div class="decide">
+        <div class="dbox no">
+          <h3>Warning signs</h3>
+          <ul>
+            <li>Gone quiet, replies slow down</li>
+            <li>Engagement or usage drops off</li>
+            <li>Skipped the last review</li>
+            <li>A new decision-maker appears</li>
+            <li>Asking about price, not results</li>
+          </ul>
+        </div>
+        <div class="dbox ok">
+          <h3>The save play</h3>
+          <ul>
+            <li>Reach out fast, in person</li>
+            <li>Revisit the goal they hired us for</li>
+            <li>Show the progress made so far</li>
+            <li>Agree one clear next win</li>
+            <li>Re-book the next review before you leave</li>
+          </ul>
+        </div>
+      </div>
+      <p class="cite"><b>Nirpaz, farming discipline.</b> Maximise retention, minimise churn: a save costs a fraction of a new client.</p>
+    </div>
+  </section>
+
+  <!-- RETENTION · QBR CADENCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">A rhythm they can count on</div>
+      <h2>Run a Quarterly Business Review, every quarter.</h2>
+      <div class="dlflow">
+        <div class="dlnode"><div class="t">1 · Show results</div><div class="s">leads and cost per lead</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">2 · Tie to their goal</div><div class="s">their revenue, not our output</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">3 · Plan next quarter</div><div class="s">what we do next</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">4 · Renew or expand</div><div class="s">the natural ask</div></div>
+      </div>
+      <div class="callout">A <b>Quarterly Business Review</b> is a scheduled sit-down every three months. For Koocester: show the leads delivered and the cost per lead, connect them to the client's revenue goal, and agree the next quarter. Gainsight makes this cadence the backbone of retention.</div>
+    </div>
+  </section>
+
+  <!-- RETENTION · EFFORTLESS EXPERIENCE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Easy beats impressive</div>
+      <div class="big">Loyalty comes from <em>ease</em>, not from wow.</div>
+      <div class="csr-stat">
+        <div class="csr-s bad"><div class="csr-n">96%</div><div class="csr-l">of high-effort clients turn disloyal</div></div>
+        <div class="csr-s good"><div class="csr-n">9%</div><div class="csr-l">of low-effort clients turn disloyal</div></div>
+      </div>
+      <div class="callout"><b>Matthew Dixon, The Effortless Experience.</b> Across 97,000 customers, exceeding expectations barely moved loyalty, but every extra step, chase, or confusing reply cost the renewal. Measure it with a Customer Effort Score: "We made it easy." Remove friction before you add delight.</div>
+    </div>
+  </section>
+
+  <!-- RETENTION · LAND AND EXPAND / NRR -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Grow the account you already won</div>
+      <h2>Land, deliver, then expand.</h2>
+      <div class="dlflow">
+        <div class="dlnode"><div class="t">Land</div><div class="s">first engagement, one channel</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Deliver</div><div class="s">an early, visible win</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode hot"><div class="t">Expand</div><div class="s">more scope, more channels</div></div>
+        <div class="dlarr">→</div>
+        <div class="dlnode"><div class="t">Recur</div><div class="s">locked-in monthly value</div></div>
+      </div>
+      <div class="callout"><b>Net Revenue Retention</b> measures how much revenue you keep and grow from clients you already have. Above 100% means your book grows even with zero new clients. That is Tien Tzuo's "land and expand" (Subscribed) and John Warrillow's recurring-revenue model (The Automatic Customer), applied to Koocester engagements.</div>
+    </div>
+  </section>
+
+  <!-- 11 · DIVIDER · YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#CCC">Six calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- MCQ 1 · THE HANDOFF BEFORE KICKOFF -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · before the client kickoff</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Sales documents the signed scope, introduces CX in the client group and briefs CX, the Content Strategist and Producer internally. Only then does CX lead the client kickoff."
+        data-no="<b>Not yet.</b> The client meeting is not where the team should discover the scope. Complete the Sales handoff, introduce CX and align the internal team before CX leads the kickoff.">
+        <div class="scenario">A deal has just been signed. The Content Strategist and Producer have not seen the scope, but a client campaign discussion is booked for tomorrow.</div>
+        <div class="q">What must happen before that client discussion?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Join the call and let the internal team hear the scope from the client</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Sales introduces CX, then briefs CX, Content Strategist and Producer internally before CX leads the kickoff</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Let Sales continue as the only client contact until production begins</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 2 · OUTCOME OWNERSHIP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · who owns the outcome</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Sales closes the deal, other teams touch the build — but you own the client's outcome end to end. If it slips, it's yours to catch and answer for."
+        data-no="<b>Not quite.</b> Sales closing the deal doesn't make them accountable for the outcome, and 'whoever touched it last' isn't a real owner. You own the client's outcome, full stop.">
+        <div class="scenario">A client project is underway. Sales closed it, the marketing coordinator built the landing page, an editor produced the content.</div>
+        <div class="q">Who's accountable if the client's outcome slips?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Sales — they closed the deal</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>You — Customer Success owns the outcome, even when others do the work</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Whoever touched the record last</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 3 · LANDING PAGES AND OFFERS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · landing pages &amp; offers</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> CX owns the client communication and overall outcome. The Content Strategist diagnoses the offer or page problem, and the Marketing Coordinator implements the approved build amendment."
+        data-no="<b>Not quite.</b> One person should not guess and fix alone. CX coordinates the client outcome, Content Strategy diagnoses what must change and the Marketing Coordinator implements the approved amendment.">
+        <div class="scenario">The marketing coordinator built the client's landing page. Conversion is low.</div>
+        <div class="q">What is the correct response?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>The Marketing Coordinator rewrites the offer and page alone</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>CX coordinates; Content Strategy diagnoses; Marketing Coordinator implements the approved fix</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Wait for the client to identify exactly what needs changing</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 4 · HANDLING A COMPLAINT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · handling a complaint</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Respond fast, acknowledge it, and turn the complaint into a fix and a stronger relationship. Silence or a slow, defensive reply is what actually loses the client."
+        data-no="<b>Not quite.</b> Waiting for a perfect explanation or forwarding it away reads as silence to the client. Respond fast, acknowledge, and turn it into a fix — that's the job.">
+        <div class="scenario">A client emails, frustrated that a detail was missed on delivery.</div>
+        <div class="q">What's the right first move?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Wait until you have the full explanation before replying</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Respond fast, acknowledge it, and turn it into a fix</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Forward it to the delivery team to explain directly</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 5 · DELIVERY MATCHING THE PROMISE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 5 · delivery matching the promise</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> You're the final check. Catch the mismatch and get it fixed before it ever reaches the client — that's what 'own delivery' means."
+        data-no="<b>Not quite.</b> Shipping a mismatch or asking the client to accept it as-is breaks the promise. You catch it and get it fixed before it reaches the client.">
+        <div class="scenario">A deliverable shipped from the production team doesn't fully match what was scoped with the client.</div>
+        <div class="q">What do you do before it reaches the client?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Ship it anyway — the deadline matters more</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Catch the mismatch and get it fixed — you're the final check</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Ask the client to accept it as-is and fix it next round</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCQ 6 · RETENTION & RECURRING REVENUE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 6 · keep them and grow them</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A quiet, delivered client is your easiest growth. Farming beats hunting: show the results, run the review, and expand into a recurring engagement. That is how net revenue retention climbs."
+        data-no="<b>Not quite.</b> Waiting for them to return, or chasing a cold new logo, leaves your best revenue on the table. The delivered client, re-engaged and expanded, is worth more than a new one you still have to win.">
+        <div class="scenario">A client's project delivered well. They have gone quiet and their next engagement is unsigned.</div>
+        <div class="q">What is the highest-value move?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Wait for them to come back if they want more</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Reach out with results and a plan for next quarter, then expand the engagement</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Move on and chase a new client to hit your number</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 · CHECKLIST -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all six?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Before every kickoff, has Sales documented the scope, introduced CX and completed the internal pre-brief?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you own the outcome even when others build it?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">For every offer and page, are CX, Content Strategy and Marketing Coordinator ownership clear?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you handle feedback fast and turn it into a fix?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you drive renewals and referrals from delivered results?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you grow account value on recurring engagements, not one-offs?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all six to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 17 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Onboard them. Deliver the win. Keep them for life.</h2>
+      <p class="lead">Sales transfers the signed promise. CX aligns the internal team, leads the client relationship and makes sure the client wins, stays and brings the next one with them.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="offer-creation-training.html" target="_blank" rel="noopener noreferrer">Offer creation ↗</a>
+        <a class="tag" href="landing-page-training.html" target="_blank" rel="noopener noreferrer">Landing pages ↗</a>
+        <a class="tag" href="academy.html" target="_blank" rel="noopener noreferrer">Back to Academy ↗</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · customer success</div>
+<div class="nav">
+  <button class="arrow play" id="play" aria-label="Read this slide aloud" title="Read aloud · auto-advances like a video">▶</button>
+  <span class="count" id="count">1 / 26</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){stopPlay();show(i+1)};prev.onclick=function(){stopPlay();show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();stopPlay();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();stopPlay();show(i-1)}
+  });
+  // ===== read-aloud "watch it" mode: reads the slide, then auto-advances like a video =====
+  var playBtn=document.getElementById('play'),playing=false,hasTTS=('speechSynthesis' in window);
+  var vVoice=null;
+  function pickVoice(){
+    var vs=window.speechSynthesis.getVoices(),want=['Ava (Premium)','Zoe (Premium)','Samantha (Enhanced)','Allison (Enhanced)','Nicky (Enhanced)','Serena (Premium)','Ava','Samantha','Allison','Serena','Karen','Google UK English Female','Microsoft Zira','Google US English'];
+    for(var w=0;w<want.length;w++){var m=vs.filter(function(x){return x.name===want[w];})[0];if(m){vVoice=m;return;}}
+    vVoice=vs.filter(function(x){return /^en/i.test(x.lang)&&/female|samantha|ava|zira|karen|serena|victoria/i.test(x.name);})[0]||vs.filter(function(x){return /^en/i.test(x.lang);})[0]||vs[0]||null;
+  }
+  if(hasTTS){ pickVoice(); window.speechSynthesis.onvoiceschanged=pickVoice; }
+  function slideText(){var el=slides[i].querySelector('.inner');return el?el.innerText.replace(/\s+/g,' ').trim():'';}
+  function speakNow(){
+    if(!hasTTS)return; window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(slideText()); if(vVoice)u.voice=vVoice; u.rate=.97; u.pitch=1.03;
+    u.onend=function(){ if(playing){ if(i<n-1){ show(i+1); setTimeout(speakNow,450); } else { stopPlay(); } } };
+    window.speechSynthesis.speak(u);
+  }
+  function startPlay(){ if(!hasTTS){alert('Read-aloud needs a modern browser (Chrome/Safari).');return;} playing=true; if(playBtn){playBtn.textContent='❚❚';playBtn.classList.add('on');} speakNow(); }
+  function stopPlay(){ playing=false; if(playBtn){playBtn.textContent='▶';playBtn.classList.remove('on');} if(hasTTS)window.speechSynthesis.cancel(); }
+  if(playBtn) playBtn.onclick=function(){ playing?stopPlay():startPlay(); };
+  window.addEventListener('beforeunload',stopPlay);
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-cs-success-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#999;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#fff;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#999;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

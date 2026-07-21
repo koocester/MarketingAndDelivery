@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leaderboard · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --maroon-deep:#8f1418; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b; --gold:#C9A227;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,5vw,56px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:20px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:5px;padding:4px 9px;background:var(--maroon-tint);font-family:var(--mono)}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.wrap{max-width:1000px;margin:0 auto;padding:clamp(30px,5vw,52px) clamp(20px,5vw,56px) 90px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:12px}
+h1{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.03;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 4px;font-size:1rem}
+.livechip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#127a44;background:rgba(27,127,75,.08);border:1px solid rgba(27,127,75,.25);border-radius:20px;padding:5px 11px;margin-top:14px}
+.livechip .d{width:7px;height:7px;border-radius:50%;background:#22b463;animation:p 2.2s infinite}
+@keyframes p{0%{box-shadow:0 0 0 0 rgba(34,180,99,.5)}70%{box-shadow:0 0 0 6px rgba(34,180,99,0)}100%{box-shadow:0 0 0 0 rgba(34,180,99,0)}}
+
+/* window toggle */
+.winrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+.winlbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800;font-family:var(--mono)}
+.winseg{display:inline-flex;background:#f4f4f5;border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px}
+.winseg button{appearance:none;border:none;background:none;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--muted);padding:6px 11px;border-radius:8px;cursor:pointer;transition:.15s}
+.winseg button.on{background:var(--maroon);color:#fff;box-shadow:0 2px 8px rgba(192,32,37,.28)}
+.winseg button:not(.on):hover{color:var(--ink)}
+.pending{color:var(--muted);text-align:center;padding:44px 18px;font-size:.92rem}
+.pending b{color:var(--maroon)}
+
+/* tabs */
+.tabs{display:flex;gap:8px;margin:30px 0 22px;border-bottom:1px solid var(--line2)}
+.tab{appearance:none;border:none;background:none;font-family:var(--base);font-size:14px;font-weight:800;letter-spacing:-.01em;color:var(--muted);padding:10px 4px;margin-right:18px;cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.tab.on{color:var(--maroon);border-bottom-color:var(--maroon)}
+.pane{display:none}.pane.on{display:block;animation:fade .3s var(--pop)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* podium */
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.pod{border:1.5px solid var(--line);border-radius:16px;padding:20px 16px;text-align:center;position:relative;overflow:hidden}
+.pod.p1{border-color:var(--gold);background:linear-gradient(180deg,#fffdf5,#fff)}
+.pod.p2{border-color:#c9c9c9}
+.pod.p3{border-color:#e3b38a}
+.pod .medal{font-size:30px}
+.pod .rank{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em}
+.pod h3{margin:8px 0 2px;font-size:1.05rem;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.pod .sub{font-size:11.5px;color:var(--muted)}
+.pod .big{margin-top:10px;font-size:1.5rem;font-weight:800;color:var(--maroon);letter-spacing:-.02em}
+.pod .biglbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+/* table */
+.lb{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.row{display:grid;grid-template-columns:38px minmax(0,1fr) auto auto;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line2);transition:background .12s}
+.row:last-child{border-bottom:none}
+/* plain rows tint on hover; tier rows keep their finish and brighten instead */
+.row:not([class*="t-"]):hover,.mrow:not([class*="t-"]):hover{background:#fafafa}
+.t-diamond,.t-gold,.t-silver{transition:filter .18s var(--ease)}
+.t-diamond:hover,.t-gold:hover,.t-silver:hover{filter:brightness(1.05) saturate(1.15)}
+.t-diamond:hover::before{animation-duration:2.6s}
+.row.head{background:#fafafa;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800;padding:11px 18px}
+.rk{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--ink);text-align:center;overflow:hidden}
+.rk.rktop{color:var(--gold)}
+.acct{min-width:0}
+.acct b{display:block;font-size:14.5px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.acct span{font-size:11.5px;color:var(--muted)}
+.tier{font-size:11px;font-family:var(--mono);font-weight:700;padding:4px 9px;border-radius:12px;white-space:nowrap}
+.tier.diamond{color:#0a6ebd;background:#eaf4fb;border:1px solid #cfe6f6}
+.tier.gold{color:#8a6d12;background:#fbf4dd;border:1px solid #efe1b0}
+.tier.silver{color:#5f5f5f;background:#f1f1f1;border:1px solid #dcdcdc}
+.tier.bronze{color:#8a5a33;background:#f7ede4;border:1px solid #e7d3c1}
+
+/* ===== tier rows ===== */
+/* bronze = normal row (no special treatment). silver = static, no shine. gold = shiny. diamond = holographic + special outline. */
+.t-diamond,.t-gold,.t-silver{position:relative;overflow:hidden}
+.t-diamond>*,.t-gold>*,.t-silver>*{position:relative;z-index:2}
+.t-gold{border-width:1.5px;background:linear-gradient(100deg,#fdf3cf,#f1cf63 27%,#fff8e0 47%,#e0b03f 72%,#fdf3cf);border-color:#e4bb4c;box-shadow:inset 0 0 0 1px rgba(224,176,63,.35),0 6px 20px rgba(224,176,63,.3)}
+/* silver: subtle, static, ordinary silver (no shine sweep) */
+.t-silver{border-width:1.5px;background:linear-gradient(180deg,#f4f5f7,#e7e9ed);border-color:#d7dae0}
+/* diamond: holographic fill + a special holographic gradient OUTLINE */
+.t-diamond{border:2px solid transparent;border-radius:2px;
+  background:linear-gradient(100deg,#e9f6ff,#d6e2ff 17%,#efe2ff 35%,#ddf8f2 53%,#ffe4fb 71%,#e9f6ff) padding-box,
+             linear-gradient(115deg,#6ec4ff,#c79cff 28%,#6cf0d4 52%,#ffa8de 76%,#6ec4ff) border-box;
+  box-shadow:0 8px 30px rgba(140,180,255,.42),0 0 22px rgba(150,200,255,.25)}
+/* holographic shimmer on diamond */
+.t-diamond::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(115deg,rgba(255,110,180,.20) 0%,rgba(255,215,110,.20) 11%,rgba(110,255,190,.20) 22%,rgba(110,195,255,.20) 33%,rgba(200,130,255,.20) 44%,rgba(255,110,180,.20) 55%);
+  background-size:300% 300%;mix-blend-mode:screen;animation:holo 6.5s ease-in-out infinite}
+@keyframes holo{0%{background-position:0% 0}50%{background-position:150% 0}100%{background-position:300% 0}}
+/* light sweep on gold + diamond only */
+.t-diamond::after,.t-gold::after{content:"";position:absolute;top:0;left:-65%;width:40%;height:100%;pointer-events:none;z-index:1;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-18deg);animation:sweep 5s ease-in-out infinite}
+.t-diamond::after{animation-duration:3.4s;background:linear-gradient(100deg,transparent,rgba(255,255,255,.9),transparent)}
+@keyframes sweep{0%,58%{left:-65%}82%,100%{left:135%}}
+@media (prefers-reduced-motion:reduce){.row::before,.row::after{animation:none!important}}
+.metric{text-align:right;white-space:nowrap}
+.metric b{font-size:15px;font-weight:800;color:var(--ink)}
+.metric span{display:block;font-size:11px;color:var(--muted)}
+.rolehead{padding:13px 18px 9px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:800;background:#fafafa;border-bottom:1px solid var(--line2);border-top:1px solid var(--line2)}
+.rolehead:first-child{border-top:none}
+/* marketing composite rows */
+.mrow{display:grid;grid-template-columns:38px minmax(0,1.1fr) auto auto;gap:14px;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line2)}
+.mrow:last-child{border-bottom:none}
+.mstats{display:grid;grid-template-columns:repeat(5,minmax(0,58px));gap:6px}
+.mstat{text-align:center}
+.mstat b{display:block;font-size:14px;font-weight:800;color:var(--ink);line-height:1.1}
+.mstat.soon b{color:#c2c2c2;font-weight:700}
+.mstat span{font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.mcomp{text-align:right;white-space:nowrap;display:flex;align-items:center;gap:9px;justify-content:flex-end}
+.mcomp b{font-size:16px;font-weight:800;color:var(--maroon)}
+.mcomp .tier{display:inline-block}
+@media (max-width:640px){.mrow{grid-template-columns:30px 1fr;row-gap:10px}.mstats{grid-column:1/-1}.mcomp{grid-column:1/-1;text-align:left}}
+
+/* panels */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.card{border:1.5px solid var(--line);border-radius:16px;padding:20px}
+.card h4{margin:0 0 10px;font-size:14px;font-weight:800;color:var(--ink)}
+.card ul{margin:0;padding-left:18px}.card li{margin:7px 0;font-size:13.5px;color:var(--body)}
+.card li b{color:var(--maroon)}
+.note{margin-top:22px;padding:14px 16px;border:1px solid rgba(192,32,37,.25);background:var(--maroon-tint);border-radius:12px;font-size:.9rem;color:var(--body)}
+.note b{color:var(--maroon)}
+.samp{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;color:#8a5a00;background:#fff6df;border:1px solid #f0dca6;border-radius:10px;padding:3px 8px;margin-left:8px;letter-spacing:.04em;text-transform:uppercase}
+@media (max-width:640px){.podium{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.row{grid-template-columns:36px 1fr auto}.row .tier{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="koocester.png" alt="Koocester"><span class="tag">Leaderboard</span></div>
+  <a class="back" href="portal.html">← Portal</a>
+</header>
+<main class="wrap">
+  <div class="eyebrow">Management · Performance</div>
+  <h1>Leaderboard</h1>
+  <p class="lead">Who is setting the pace. Ranked, tiered, and refreshed from the numbers.</p>
+  <div class="livechip"><span class="d"></span><span id="livetxt">Live · content data · last 30 days</span></div>
+
+  <div class="winrow">
+    <span class="winlbl">Window</span>
+    <div class="winseg" id="winseg">
+      <button data-w="7">7D</button>
+      <button data-w="30" class="on">30D</button>
+      <button data-w="60">60D</button>
+      <button data-w="90">90D</button>
+      <button data-w="180">6M</button>
+      <button data-w="365">12M</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-pane="accounts">Accounts</button>
+    <button class="tab" data-pane="marketing">Marketing</button>
+    <button class="tab" data-pane="team">Team</button>
+    <button class="tab" data-pane="how">How it works</button>
+  </div>
+
+  <!-- ACCOUNTS (real data) -->
+  <div class="pane on" id="accounts">
+    <div class="podium" id="podium"></div>
+    <div class="lb" id="lb"></div>
+    <div class="note"><b>Real numbers.</b> Ranked by estimated 90-day reach (median views by posting day times posts) straight from <b>content_perf.reels</b>, the same table behind your Metabase Posting-Day Scorecard. Refreshes daily. Reach is an estimate for ranking, not an exact total.</div>
+  </div>
+
+  <!-- MARKETING (composite of 4 metrics) -->
+  <div class="pane" id="marketing">
+    <p class="lead" style="margin-bottom:16px">The marketing team, ranked by a weighted composite of five things: on-time delivery (35%), consistency (20%), output (15%), impact by leads (20%), impact by views (10%). Best across all five rises to the top.</p>
+    <div class="lb" id="mktlb"></div>
+    <div class="note"><b>Four of five metrics are live</b> from your data. <b>On-time</b>, <b>Consistency</b>, <b>Output</b> and <b>Impact by views</b> all read from real numbers now. <b>Impact by leads</b> activates automatically as ManyChat opt-ins flow in. Until then the score renormalises across the four live metrics, so nobody is penalised for a metric that has no data yet. Refreshes daily.</div>
+  </div>
+
+  <!-- TEAM (real, latest weekly snapshot from team_throughput) -->
+  <div class="pane" id="team">
+    <p class="lead" style="margin-bottom:16px">People ranked within their role, by output this week. Real numbers from your n8n team snapshot.</p>
+    <div class="lb" id="teamlb"></div>
+    <div class="note"><b>Real, from your data.</b> Marketing roles are the latest weekly snapshot in <b>team_throughput</b> (shoots, videos shipped, posts). Sales is <b>deals won in the last 90 days</b> from HubSpot. Ranked <b>within role</b> so a producer is not compared to a salesperson. To make it refresh here automatically, the n8n job writes a small leaderboard row into the portal database and this page reads it live (the wiring, not a webhook). Copywriters show no output when carousel upload dates are not filled, a known data-entry gap.</div>
+  </div>
+
+  <!-- HOW -->
+  <div class="pane" id="how">
+    <div class="grid2">
+      <div class="card">
+        <h4>How the score works</h4>
+        <ul>
+          <li><b>On-time delivery (35%)</b>: did your videos post by their intended date. The biggest factor, and fair to every role.</li>
+          <li><b>Consistency (20%)</b>: how many weeks you showed up, out of the weeks you could have. Steady beats spiky.</li>
+          <li><b>Output (15%)</b>: volume shipped, measured against your role.</li>
+          <li><b>Impact, leads (20%)</b>: qualified leads your videos captured, shared across the team who made them.</li>
+          <li><b>Impact, views (10%)</b>: reach, shared across the team who made the video.</li>
+        </ul>
+        <p style="font-size:12.5px;color:var(--muted);margin:12px 0 0">Each video's impact is split across its makers: Producer 30%, Strategist 28%, Editor 22%, Social Media 20%. A hit rewards the whole team, not just whoever posted it.</p>
+      </div>
+      <div class="card">
+        <h4>Tiers</h4>
+        <ul>
+          <li><b>💎 Diamond</b> · elite reach or top points band</li>
+          <li><b>🥇 Gold</b> · strong and steady</li>
+          <li><b>🥈 Silver</b> · solid, room to climb</li>
+          <li><b>🥉 Bronze</b> · building momentum</li>
+        </ul>
+        <p style="font-size:12.5px;color:var(--muted);margin:12px 0 0">Tiers reset each season so anyone can climb. The board rewards trajectory, not just history.</p>
+      </div>
+    </div>
+    <div class="note"><b>Fairness note.</b> Rank people against their own role and page size, not across roles, so a Wealth producer is not punished for a smaller audience than Homes. Compare like with like.</div>
+  </div>
+</main>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── helpers ──
+function fmt(n){ n=+n||0; if(n>=1e6) return (n/1e6).toFixed(1)+'M'; if(n>=1e3) return Math.round(n/1e3)+'K'; return String(n); }
+function tier(r){ if(r>=2e6) return ['diamond','💎 Diamond']; if(r>=1e6) return ['gold','🥇 Gold']; if(r>=3e5) return ['silver','🥈 Silver']; return ['bronze','🥉 Bronze']; }
+function mtier(c){ if(c>=65) return ['diamond','💎 Diamond']; if(c>=38) return ['gold','🥇 Gold']; if(c>=20) return ['silver','🥈 Silver']; return ['bronze','🥉 Bronze']; }
+function tclass(t){ return String(t||'').toLowerCase(); }
+function tlabel(t){ const m={diamond:'💎 Diamond',gold:'🥇 Gold',silver:'🥈 Silver',bronze:'🥉 Bronze'}; return m[tclass(t)]||'🥉 Bronze'; }
+const medals=['🥇','🥈','🥉'];
+const WINLABEL={7:'last 7 days',30:'last 30 days',60:'last 60 days',90:'last 90 days',180:'last 6 months',365:'last 12 months'};
+const WINDIV={7:1,30:4.3,60:8.6,90:13,180:26,365:52}; // weeks in window, for per-week posts
+
+// canonical role -> display + team metric label
+const ROLE_DISPLAY={Producer:'Producers',Strategist:'Content Strategists',Editor:'Video Editors','Social Media':'Social Media',Copywriter:'Copywriters',Sales:'Sales'};
+const ROLE_METRIC ={Producer:'shoots',Strategist:'shipped',Editor:'shipped','Social Media':'posts',Copywriter:'shipped',Sales:'deals won'};
+const TEAM_ORDER=['Sales','Social Media','Strategist','Editor','Producer','Copywriter'];
+const MKT_ROLES=new Set(['Producer','Strategist','Editor','Social Media','Copywriter']);
+function roleDisp(r){ return ROLE_DISPLAY[r]||r; }
+function roleMetric(r){ return ROLE_METRIC[r]||'output'; }
+
+// ── FALLBACK snapshots (90-day) — shown only when Supabase has no rows for the 90D window ──
+const OWNERS = {
+  'Singapore|Homes':'Jordan','Singapore|Business':'Jaydon','Singapore|Autos':'Jordan','Singapore|Wealth':'Jaydon','Singapore|Foodie':'Bestian',
+  'Malaysia|Homes':'Thaddeus','Malaysia|Business':'Amrel','Malaysia|Autos':'Thaddeus','Malaysia|Foodie':'Amrel',
+  'Indonesia|Homes':'Fajrin','Indonesia|Business':'Aji','Indonesia|Autos':'Fajrin','Indonesia|Foodie':'Aji',
+};
+const ACCOUNTS_FB = [
+  ['Koocester','Singapore',6808779,295],['Homes','Singapore',5688681,255],['Homes','Malaysia',2432737,87],
+  ['Autos','Indonesia',2298822,110],['Autos','Singapore',1411797,89],['Autos','Malaysia',1023549,98],
+  ['Business','Singapore',899438,93],['Foodie','Singapore',683781,60],['Homes','Indonesia',503844,90],
+  ['Business','Indonesia',496078,65],['Business','Malaysia',369275,125],['Foodie','Malaysia',264595,50],
+  ['Wealth','Malaysia',83385,66],['Wealth','Indonesia',59307,86],['Wealth','Singapore',48099,50],['Foodie','Indonesia',44903,88],
+].map((a,i)=>({ page:a[0], country:a[1], reach:a[2], posts:a[3], owner:OWNERS[a[1]+'|'+a[0]]||'', tier:tier(a[2])[0], rank:i+1 }));
+const MKT_FB_RAW = [
+  ['Talulla','Social Media',87,6608499],['Wendi Amalia','Strategist',69,2959207],['Audrey Brigitta','Strategist',39,4105553],
+  ['Mabdi Rizqi','Editor',36,231600],['Esther','Social Media',22,456261],['Stanley','Editor',20,1169549],
+  ['Maulana','Editor',17,2340179],['Ulysses Marvel','Editor',15,1417597],['Riza Ismail','Editor',15,508083],
+  ['Jordan','Producer',10,0],['Rafli Fahrizal','Editor',5,926942],['Fajrin Alfarel','Producer',3,1354103],
+  ['Aji Satria','Producer',0,2430765],['Amrel Norman','Producer',0,1027021],['Fadz','Producer',0,846933],['Thaddeus','Producer',0,581031],
+];
+const _mo=Math.max(...MKT_FB_RAW.map(r=>r[2]),1), _mv=Math.max(...MKT_FB_RAW.map(r=>r[3]),1);
+const TEAM_FB_EXTRA = [ // sales + names present on team board but not in the marketing views
+  ['Cheryl','Sales',28],['Sarah','Sales',16],['Okky','Sales',10],['Akiel','Sales',1],
+];
+function buildPeopleFB(){
+  const mkt=MKT_FB_RAW.map(r=>({ person:r[0], role:r[1], output:r[2], lead_time_pct:null, consistency:null, views:r[3], leads:null,
+    composite:Math.round(((r[2]/_mo*100)+(r[3]/_mv*100))/2) }));
+  const sales=TEAM_FB_EXTRA.map(r=>({ person:r[0], role:r[1], output:r[2], lead_time_pct:null, consistency:null, views:null, leads:null, composite:null }));
+  const all=mkt.concat(sales);
+  all.forEach(p=>p.tier=p.composite!=null?mtier(p.composite)[0]:'bronze');
+  // rank within role
+  const byRole={}; all.forEach(p=>{ (byRole[p.role]=byRole[p.role]||[]).push(p); });
+  Object.values(byRole).forEach(list=>{ list.sort((a,b)=>(b.output||0)-(a.output||0)); list.forEach((p,i)=>p.rank=i+1); });
+  return all;
+}
+
+// ── renderers (data-driven, same shape from Supabase or fallback) ──
+function renderAccounts(rows){
+  const podium=document.getElementById('podium'), lb=document.getElementById('lb');
+  if(!rows.length){ podium.innerHTML=''; lb.innerHTML='<div class="pending">No account data for this window yet. <b>The nightly job will fill it.</b></div>'; return; }
+  const sub=a=>a.country+(a.owner?' · '+a.owner:'');
+  podium.innerHTML=rows.slice(0,3).map((a,i)=>
+    '<div class="pod p'+(i+1)+'"><div class="medal">'+medals[i]+'</div><div class="rank">RANK '+(i+1)+'</div>'+
+    '<h3>'+a.page+'</h3><div class="sub">'+sub(a)+' · '+a.posts+' posts</div>'+
+    '<div class="big">'+fmt(a.reach)+'</div><div class="biglbl">'+WINLABEL[W].replace('last ','')+' reach</div></div>'
+  ).join('');
+  lb.innerHTML='<div class="row head"><div>#</div><div>Account</div><div style="text-align:right">Reach</div><div style="text-align:right">Posts</div></div>'+
+  rows.map((a,i)=>{ const tc=tclass(a.tier)||tier(a.reach)[0];
+    return '<div class="row t-'+tc+'"><div class="rk'+(i<3?' rktop':'')+'">'+(i+1)+'</div>'+
+      '<div class="acct"><b>'+a.page+'</b><span>'+sub(a)+'</span></div>'+
+      '<div class="metric"><b>'+fmt(a.reach)+'</b><span class="tier '+tc+'">'+tlabel(tc)+'</span></div>'+
+      '<div class="metric"><b>'+a.posts+'</b><span>'+(a.posts/WINDIV[W]).toFixed(1)+'/wk</span></div></div>';
+  }).join('');
+}
+function renderMarketing(people){
+  const el=document.getElementById('mktlb');
+  const rows=people.filter(p=>MKT_ROLES.has(p.role)).slice().sort((a,b)=>(b.composite||0)-(a.composite||0));
+  if(!rows.length){ el.innerHTML='<div class="pending">No marketing data for this window yet. <b>The nightly job will fill it.</b></div>'; return; }
+  el.innerHTML=rows.map((p,i)=>{ const tc=tclass(p.tier)||mtier(p.composite||0)[0];
+    const cell=(v,lbl)=> v==null||v===''? '<div class="mstat soon"><b>·</b><span>'+lbl+'</span></div>' : '<div class="mstat"><b>'+v+'</b><span>'+lbl+'</span></div>';
+    return '<div class="mrow t-'+tc+'"><div class="rk'+(i<3?' rktop':'')+'">'+(i+1)+'</div>'+
+      '<div class="acct"><b>'+p.person+'</b><span>'+roleDisp(p.role)+'</span></div>'+
+      '<div class="mstats">'+cell(p.lead_time_pct==null?null:p.lead_time_pct+'%','On-time')+cell(p.consistency==null?null:p.consistency+'%','Consistency')+cell(p.output,'Output')+cell(p.views==null?null:fmt(p.views),'Views')+cell(p.leads,'Leads')+'</div>'+
+      '<div class="mcomp"><b>'+(p.composite==null?'·':p.composite)+'</b><span class="tier '+tc+'">'+tlabel(tc)+'</span></div></div>';
+  }).join('');
+}
+function renderTeam(people){
+  const el=document.getElementById('teamlb');
+  if(!people.length){ el.innerHTML='<div class="pending">No team data for this window yet. <b>The nightly job will fill it.</b></div>'; return; }
+  const byRole={}; people.forEach(p=>{ (byRole[p.role]=byRole[p.role]||[]).push(p); });
+  const order=TEAM_ORDER.filter(r=>byRole[r]).concat(Object.keys(byRole).filter(r=>!TEAM_ORDER.includes(r)));
+  el.innerHTML=order.map(role=>{
+    const list=byRole[role].slice().sort((a,b)=>(a.rank||99)-(b.rank||99)||(b.output||0)-(a.output||0));
+    return '<div class="rolehead">'+roleDisp(role)+'</div>'+list.map((p,i)=>
+      '<div class="row"><div class="rk'+(i===0?' rktop':'')+'">'+(i===0?'🥇':(i+1))+'</div>'+
+      '<div class="acct"><b>'+p.person+'</b><span>'+roleDisp(role)+'</span></div>'+
+      '<div class="metric"><b>'+(p.output||0)+'</b><span>'+roleMetric(role)+'</span></div>'+
+      '<div class="metric"></div></div>'
+    ).join('');
+  }).join('');
+}
+
+// ── data load per window (Supabase, with fallback at 90D) ──
+let W=30;
+async function fetchWindow(w){
+  try{
+    const [{data:acc},{data:ppl}]=await Promise.all([
+      supabase.from('lb_accounts').select('window_days,page,country,reach,posts,owner,tier,rank').eq('window_days',w).order('rank',{ascending:true}),
+      supabase.from('lb_people_active').select('window_days,person,role,output,lead_time_pct,consistency,views,leads,composite,tier,rank').eq('window_days',w).order('rank',{ascending:true}),
+    ]);
+    return { acc:acc||[], ppl:ppl||[], live:(acc&&acc.length)||(ppl&&ppl.length) };
+  }catch(e){ return { acc:[], ppl:[], live:false }; }
+}
+async function load(){
+  document.getElementById('livetxt').textContent='Live · content data · '+WINLABEL[W];
+  let { acc, ppl, live }=await fetchWindow(W);
+  // graceful fallback ONLY for the 90-day default (the embedded snapshot is a 90d capture)
+  if(!live && W===90){ acc=ACCOUNTS_FB; ppl=buildPeopleFB(); document.getElementById('livetxt').textContent='Snapshot · content data · last 90 days'; }
+  renderAccounts(acc); renderMarketing(ppl); renderTeam(ppl);
+}
+
+// window toggle
+document.querySelectorAll('#winseg button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#winseg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); W=+b.dataset.w; load();
+}));
+// tabs
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on'); document.getElementById(t.dataset.pane).classList.add('on');
+}));
+// ── go live: wait for the login session to attach (so RLS-protected reads succeed),
+//    then load real data, re-load on auth changes, and auto-refresh so it stays current ──
+(async () => {
+  try { await supabase.auth.getSession(); } catch (e) {}
+  load();
+  supabase.auth.onAuthStateChange(() => load());
+  setInterval(load, 5 * 60 * 1000);                 // refresh every 5 minutes
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); }); // and when the tab is refocused
+})();
+</script>
+</body>
+</html>

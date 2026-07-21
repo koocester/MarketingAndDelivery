@@ -11,6 +11,9 @@ The company sign-in app: training + role tools + manager dashboards, behind one 
 | [01-access-and-gates.md](01-access-and-gates.md) | Sign-in, the soft-vs-hard gate model, the four identity questions and which Supabase column answers each, the traps |
 | [02-functions-and-numbers.md](02-functions-and-numbers.md) | The three hard-gated Pages Functions, the role→feed map, and how live numbers reach the dashboards |
 | [03-deploy-nav-ops.md](03-deploy-nav-ops.md) | `deploy.sh`'s four gates, `koo-nav.js`, cache-busting, Cloudflare propagation, day-to-day ops |
+| [04-academy-auth.md](04-academy-auth.md) | Sign-in internals, the session cookie, the four-layer gate stack, roles/permissions, `is_founder()`, the open verification |
+| [05-change-process.md](05-change-process.md) | The 8-phase SDLC applied to portal changes + the portal PR checklist |
+| [src/](src/README.md) | **The actual portal source**, committed and sanitized (mantras + anon key → placeholders) |
 
 ## The pieces (in the vault, `04. Resources/Training/`)
 

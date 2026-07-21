@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="../koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Town Hall · Koocester</title>
+<style>
+  :root{--maroon:#C02025;--ink:#0a0a0a;--muted:#767676;--line:#F0F0F0;--base:'Helvetica Neue',Helvetica,Arial,sans-serif}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#fff;font-family:var(--base)}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px clamp(14px,4vw,28px);border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
+  .bar .l{display:flex;align-items:center;gap:12px;min-width:0}
+  .bar img{height:18px}
+  .bar h1{font-size:13px;font-weight:800;color:var(--ink);letter-spacing:-.01em;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .back{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .back:hover{color:var(--maroon)}
+  #frame{width:100%;height:calc(100vh - 41px);border:0;display:block}
+  .msg{padding:60px 24px;text-align:center;color:var(--muted)}
+  .msg a{color:var(--maroon);font-weight:800;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="l"><img src="../koocester.png" alt="Koocester"><h1 id="ttl">Town Hall</h1></div>
+  <a class="back" href="#" onclick="history.length>1?history.back():location.href='../portal.html';return false">← Back</a>
+</div>
+<iframe id="frame" title="Town Hall"></iframe>
+<div class="msg" id="msg" style="display:none"></div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const id = new URLSearchParams(location.search).get('id');
+const frame = document.getElementById('frame'), msg = document.getElementById('msg');
+function fail(t){ frame.style.display='none'; msg.style.display='block'; msg.innerHTML=t+' <a href="../portal.html">Back to portal →</a>'; }
+(async ()=>{
+  if(!id){ fail('No town hall selected.'); return; }
+  try{
+    // town-hall-only viewer: weekly reports stay manager-gated in report-view.html
+    const { data, error } = await supabase.from('reports').select('title,html_content').eq('id', id).eq('kind','townhall').single();
+    if(error || !data || !data.html_content){ fail('That town hall could not be loaded.'); return; }
+    document.getElementById('ttl').textContent = data.title || 'Town Hall';
+    document.title = (data.title || 'Town Hall') + ' · Koocester';
+    frame.srcdoc = data.html_content;
+  }catch(e){ fail('That town hall could not be loaded.'); }
+})();
+</script>
+</body>
+</html>

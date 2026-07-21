@@ -51,7 +51,7 @@ Read the system as **six layers**. Each is a deployable container with one job, 
 | 3 | **Orchestration** | n8n Cloud | Scheduled briefs, metric syncs, dashboard/deck APIs, HR roster sync | n8n Cloud | Basic-Auth webhooks (managed creds) | [09](docs/09-n8n-setup.md) · [n8n/](n8n/README.md) |
 | 4 | **Warehouse** | Supabase (Postgres) | Analytics store + **portal identity** (`auth`, `profiles`) | Supabase Cloud | RLS + service/anon keys | [07](docs/07-supabase-setup.md) · [supabase/](supabase/README.md) |
 | 5 | **BI / read apps** | Metabase, Vercel carousel app | Leadership BI; live carousel view | Metabase / Vercel | Metabase login; server-side Lark token | [08](docs/08-metabase-setup.md) · [10](docs/10-dashboard-setup.md) |
-| 6 | **Staff front end** | **Staff Portal** | One sign-in over 1–5: training, role tools, manager dashboards | Cloudflare Pages | **Edge + hard-gated Functions** | [19](docs/19-staff-portal.md) · [portal/](portal/README.md) |
+| 6 | **Staff front end** | **Staff Portal** | One sign-in over 1–5: training, role tools, manager dashboards | Cloudflare Pages | **Edge + hard-gated Functions** | [19](docs/19-staff-portal.md) · [portal/](portal/README.md) · source: [portal/src/](portal/src/README.md) |
 
 **Two trust boundaries decide everything about safety:**
 - **Internet-facing vs internal.** The portal edge (`_middleware.js`) and the n8n webhooks are on the public internet; everything they front is not. The edge gate is what makes the difference between "signed-in staff only" and "anyone with `curl`."

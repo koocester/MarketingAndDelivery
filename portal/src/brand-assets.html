@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand Assets · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --maroon-deep:#C02025; --ink:#000000; --body:#333333; --muted:#666666;
+  --line:#CCCCCC; --line2:#F2CECF; --bg:#FFFFFF; --ok:#333333;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,5vw,56px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:20px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:5px;padding:4px 9px;background:var(--maroon-tint);font-family:var(--mono)}
+.back{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-radius:20px;text-decoration:none;transition:.15s;white-space:nowrap}
+.back:hover{border-color:var(--maroon);color:var(--maroon)}
+.wrap{max-width:1000px;margin:0 auto;padding:clamp(32px,6vw,60px) clamp(20px,5vw,56px) 90px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:12px}
+h1{font-size:clamp(1.9rem,4.4vw,2.8rem);line-height:1.04;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 34px;font-size:1rem;max-width:620px}
+h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);font-weight:800;margin:44px 0 16px;display:flex;align-items:center;gap:12px}
+h2::after{content:"";flex:1;height:1px;background:var(--line2)}
+.logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.logo-card{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.logo-card:hover{border-color:var(--maroon);box-shadow:0 10px 26px rgba(0,0,0,.06)}
+.logo-prev{height:118px;display:flex;align-items:center;justify-content:center;background:#FFFFFF;border-bottom:1px solid var(--line2);padding:20px}
+.logo-prev.dark{background:#000000}
+.logo-prev img{max-height:100%;max-width:100%;object-fit:contain}
+.logo-foot{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;gap:10px}
+.logo-foot b{font-size:13px;font-weight:800;color:var(--ink)}
+.dl{appearance:none;text-decoration:none;border:1px solid var(--maroon);background:var(--maroon);color:#fff;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:7px 11px;border-radius:16px;cursor:pointer;white-space:nowrap}
+.dl:hover{background:#000000;border-color:#000000}
+.wallpapers{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(220px,.8fr);gap:14px;align-items:stretch}
+.wallpaper-card{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .15s,box-shadow .15s;background:#FFFFFF}
+.wallpaper-card:hover{border-color:var(--maroon);box-shadow:0 10px 26px rgba(0,0,0,.06)}
+.wallpaper-prev{height:300px;display:flex;align-items:center;justify-content:center;padding:18px;background:#FFFFFF;border-bottom:1px solid var(--line2)}
+.wallpaper-prev img{display:block;max-width:100%;max-height:100%;object-fit:contain;border:1px solid var(--line)}
+.wallpaper-card.phone .wallpaper-prev img{height:100%;width:auto}
+.wallpaper-foot{display:flex;align-items:center;justify-content:space-between;padding:14px;gap:12px}
+.wallpaper-meta b{display:block;font-size:13px;font-weight:800;color:var(--ink)}
+.wallpaper-meta span{display:block;margin-top:2px;font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.sw:hover{border-color:var(--maroon)}
+.sw .chip{height:84px}
+.sw .meta{padding:11px 13px}
+.sw .meta b{display:block;font-size:13px;font-weight:800;color:var(--ink)}
+.sw .meta span{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.sw .copied{color:var(--ok);font-family:var(--mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{border:1.5px solid var(--line);border-radius:14px;padding:20px}
+.card b{display:block;font-size:14px;color:var(--ink);font-weight:800;margin-bottom:6px}
+.card p{margin:0;font-size:.88rem;color:var(--muted)}
+.card .font-demo{font-size:1.5rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:6px}
+.note{margin-top:34px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#FFFFFF;font-size:.9rem;color:var(--muted)}
+.note b{color:var(--ink)}
+@media(max-width:700px){.wallpapers{grid-template-columns:1fr}.wallpaper-prev{height:250px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><img src="koocester.png" alt="Koocester"><span class="tag">Brand Assets</span></div>
+  <a class="back" href="portal.html">← Portal</a>
+</header>
+<main class="wrap">
+  <div class="eyebrow">Stay on-brand</div>
+  <h1>Brand Assets</h1>
+  <p class="lead">Logos, wallpapers, colours and fonts for anything Koocester. Use the ready-made files below so every team touchpoint stays consistent.</p>
+
+  <h2>Logos</h2>
+  <div class="logos" id="logos"></div>
+
+  <h2>GUIDE wallpapers</h2>
+  <div class="wallpapers">
+    <article class="wallpaper-card">
+      <div class="wallpaper-prev"><img src="brand/Koocester-GUIDE-Desktop-3840x2400.png" alt="Koocester GUIDE desktop wallpaper preview" loading="lazy"></div>
+      <div class="wallpaper-foot">
+        <div class="wallpaper-meta"><b>Desktop wallpaper</b><span>PNG · 3840 × 2400 · 16:10</span></div>
+        <a class="dl" href="brand/Koocester-GUIDE-Desktop-3840x2400.png" download>Download</a>
+      </div>
+    </article>
+    <article class="wallpaper-card phone">
+      <div class="wallpaper-prev"><img src="brand/Koocester-GUIDE-iPhone-1290x2795.png" alt="Koocester GUIDE iPhone wallpaper preview" loading="lazy"></div>
+      <div class="wallpaper-foot">
+        <div class="wallpaper-meta"><b>iPhone wallpaper</b><span>PNG · 1290 × 2795 · 9:19.5</span></div>
+        <a class="dl" href="brand/Koocester-GUIDE-iPhone-1290x2795.png" download>Download</a>
+      </div>
+    </article>
+  </div>
+
+  <h2>Colours</h2>
+  <div class="swatches" id="swatches"></div>
+
+  <h2>Typography</h2>
+  <div class="cards">
+    <div class="card">
+      <div class="font-demo">Helvetica Neue</div>
+      <b>Primary typeface</b>
+      <p>Helvetica Neue, falling back to Helvetica and Arial. Headlines are heavy (800 weight) and tight. Body stays regular.</p>
+    </div>
+    <div class="card">
+      <b>How we set type</b>
+      <p>White-dominant layouts. Maroon for emphasis only. Big, confident headlines. Never crowd the page.</p>
+    </div>
+  </div>
+
+  <div class="note"><b>One rule above all:</b> maroon <b>#C02025</b> is the primary brand colour. Use the approved palette only and preserve generous white space.</div>
+</main>
+
+<script>
+const LOGOS = [
+  { name:'Koocester (black)',  file:'brand/koocester.png', dark:false },
+  { name:'Koocester (maroon)', file:'brand/koocester-maroon.png', dark:false },
+  { name:'Koocester Group',    file:'brand/koocester-group.png', dark:false },
+  { name:'Homes',              file:'brand/koocester-homes.png', dark:false },
+  { name:'Business',           file:'brand/koocester-business.png', dark:false },
+  { name:'Autos',              file:'brand/koocester-autos.png', dark:false },
+  { name:'Foodie',             file:'brand/koocester-foodie.png', dark:false },
+  { name:'Wealth',             file:'brand/koocester-wealth.png', dark:false },
+];
+const COLOURS = [
+  { name:'Maroon',      hex:'#C02025', fg:'#FFFFFF' },
+  { name:'Maroon 80%',  hex:'#C93B3F', fg:'#FFFFFF' },
+  { name:'Maroon 60%',  hex:'#D76C6F', fg:'#000000' },
+  { name:'Maroon 40%',  hex:'#E49D9F', fg:'#000000' },
+  { name:'Maroon 20%',  hex:'#F2CECF', fg:'#000000' },
+  { name:'Ink',         hex:'#000000', fg:'#FFFFFF' },
+  { name:'Body',        hex:'#333333', fg:'#fff' },
+  { name:'Muted',       hex:'#666666', fg:'#FFFFFF' },
+  { name:'Border',      hex:'#999999', fg:'#000000' },
+  { name:'Divider',     hex:'#CCCCCC', fg:'#000000' },
+  { name:'White',       hex:'#FFFFFF', fg:'#000000' },
+];
+document.getElementById('logos').innerHTML = LOGOS.map(l =>
+  '<div class="logo-card"><div class="logo-prev'+(l.dark?' dark':'')+'"><img src="'+l.file+'" alt="'+l.name+'"></div>'+
+  '<div class="logo-foot"><b>'+l.name+'</b><a class="dl" href="'+l.file+'" download>Download</a></div></div>'
+).join('');
+document.getElementById('swatches').innerHTML = COLOURS.map(c =>
+  '<div class="sw" data-hex="'+c.hex+'"><div class="chip" style="background:'+c.hex+(c.hex==='#FFFFFF'?';border-bottom:1px solid #CCCCCC':'')+'"></div>'+
+  '<div class="meta"><b>'+c.name+'</b><span class="hx">'+c.hex+'</span></div></div>'
+).join('');
+document.querySelectorAll('.sw').forEach(sw => sw.addEventListener('click', () => {
+  const hex = sw.getAttribute('data-hex');
+  const span = sw.querySelector('.hx');
+  const orig = hex;
+  navigator.clipboard && navigator.clipboard.writeText(hex);
+  span.innerHTML = '<span class="copied">Copied</span>';
+  setTimeout(()=>{ span.textContent = orig; }, 1100);
+}));
+</script>
+</body>
+</html>

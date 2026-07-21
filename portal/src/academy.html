@@ -1,0 +1,1785 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<script src="academy-access.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --maroon-deep:#8f1418; --ink:#0a0a0a; --body:#333; --muted:#767676;
+  --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b; --lock:#b3b3b3;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity;scrollbar-gutter:stable}
+.hero,.stage{scroll-snap-align:start}
+/* scroll-down cue on the start screen */
+.scrollcue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3;color:#e0777a;font-size:26px;font-weight:800;animation:cueBob 1.6s ease-in-out infinite;pointer-events:none}
+@keyframes cueBob{0%,100%{transform:translate(-50%,0);opacity:.5}50%{transform:translate(-50%,8px);opacity:1}}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+.opcard{will-change:transform}
+.opgrid{justify-content:center}
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,72px)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:800;margin-bottom:14px}
+h2{font-size:clamp(1.7rem,3.6vw,2.5rem);line-height:1.06;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
+.sub{margin:0 0 26px;color:var(--muted);font-size:1rem;max-width:640px}
+/* animated entrance */
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+.rise{opacity:0}
+.rise.in{animation:pop .55s var(--pop) both}
+
+/* ===== HERO · Black-Ops start screen ===== */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:#fff;color:var(--ink)}
+.hero .hbg{position:absolute;inset:0;z-index:0;background:
+  radial-gradient(1200px 700px at 76% -10%, rgba(192,32,37,.12), transparent 56%),
+  radial-gradient(900px 600px at 6% 112%, rgba(192,32,37,.06), transparent 60%),
+  #fff}
+.hero .hbg::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(10,10,10,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.035) 1px,transparent 1px);
+  background-size:48px 48px;-webkit-mask-image:radial-gradient(780px 580px at 76% 4%,#000,transparent 72%);
+  mask-image:radial-gradient(780px 580px at 76% 4%,#000,transparent 72%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  box-shadow:inset 0 0 200px 30px rgba(0,0,0,.03)}
+/* .htop is absolutely positioned at top:26px while .hero centres its content,
+   so on a short window (laptop + deep browser tab bar) the centred block rides
+   up and the "Onboarding protocol" badge lands on top of the koocester logo.
+   This padding reserves the top bar's height so they can never collide.
+   The mobile breakpoint below makes .htop static and overrides this. */
+.hero .wrap{position:relative;z-index:2;width:100%;padding-top:96px}
+.htop{display:flex;align-items:center;justify-content:space-between;position:absolute;top:26px;left:0;right:0;padding:0 clamp(20px,5vw,72px);z-index:2}
+.logo{height:22px;width:auto;display:block}
+.htag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+.hbrand{display:flex;align-items:center;gap:12px;min-width:0}
+.hportal{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:8px 15px;background:#fff;transition:border-color .15s,color .15s,transform .15s;white-space:nowrap;flex:none}
+.hportal:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-1px)}
+/* who the portal thinks you are — always visible, top right */
+.hwho{margin-left:auto;margin-right:12px;display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 14px 6px 7px;white-space:nowrap;flex:none}
+.hwho .wav{width:26px;height:26px;border-radius:50%;background:var(--maroon);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none;letter-spacing:.02em}
+.hwho .wtx{display:flex;flex-direction:column;line-height:1.2;text-align:left}
+.hwho .wnm{font-size:12px;font-weight:800;color:var(--ink)}
+.hwho .wrl{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--maroon)}
+.hwho .wrl.none{color:var(--muted)}
+.hwho .wflag{margin-left:2px;font-size:12px;line-height:1}
+@media (max-width:860px){.hwho .wtx .wnm{display:none}}
+/* ===== Command Track in the top bar: always visible, clearly earned ===== */
+.ctbar{position:relative;display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:7px 16px;border-radius:20px;border:1px solid var(--maroon);color:var(--maroon);background:#fff;font-size:11.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;text-decoration:none;white-space:nowrap;cursor:pointer;overflow:hidden;transition:transform .16s var(--pop),background .16s linear,color .16s linear}
+.ctbar:hover{transform:translateY(-2px)}
+.ctbar.open{background:var(--maroon);color:#fff}
+.ctbar.open:before{content:'';position:absolute;inset:0;background:linear-gradient(104deg,rgba(255,255,255,0) 40%,rgba(255,255,255,.4) 50%,rgba(255,255,255,0) 60%);background-size:260% 100%;background-position:180% 0;animation:rvShine 2.6s linear infinite}
+.ctbar.locked{border-color:var(--line);color:var(--muted);background:#fff}
+.ctbar.locked:hover{border-color:var(--maroon);color:var(--maroon)}
+.ctbar .ctlock{font-size:11px;line-height:1}
+/* the aspiration tooltip, not a rejection */
+.cttip{position:absolute;top:calc(100% + 12px);right:0;width:290px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow);text-align:left;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s var(--ease),transform .18s var(--pop),visibility .18s;z-index:60;pointer-events:none}
+.ctwrap:hover .cttip,.ctwrap:focus-within .cttip{opacity:1;visibility:visible;transform:translateY(0)}
+.cttip b{display:block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon);margin-bottom:7px}
+.cttip p{font-size:12.5px;line-height:1.55;color:var(--body);margin:0 0 9px;text-transform:none;letter-spacing:0;font-weight:400}
+.cttip .ctranks{display:flex;gap:6px;margin-top:10px}
+.cttip .ctranks span{flex:1;text-align:center;font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:6px 2px}
+.ctwrap{position:relative;display:inline-flex}
+.htop .hportal{margin-left:16px}
+@media (max-width:760px){.ctbar{padding:7px 12px;font-size:10.5px;letter-spacing:.06em}.cttip{width:250px;right:-8px}.htop .hportal{margin-left:0}}
+/* ===== Do next: three cards, not a wall of twenty-one ===== */
+.donext{margin-bottom:26px}
+.dnhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.dneye{font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon)}
+.dncount{font-size:12px;font-weight:700;color:var(--muted)}
+.dngrid{display:grid;grid-template-columns:1fr;gap:14px}
+.dncard{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 28px 24px;text-decoration:none;color:inherit;transition:transform .16s var(--pop),border-color .16s,box-shadow .16s;min-height:172px}
+.dncard:hover{transform:translateY(-3px);border-color:var(--maroon);box-shadow:var(--shadow)}
+.dncard .dnnum{position:absolute;top:16px;right:18px;font-family:var(--mono,monospace);font-size:11px;font-weight:800;color:var(--line);letter-spacing:.04em}
+.dncard.now{border-color:var(--maroon);border-width:2px;padding:19px 19px 17px}
+.dncard .dnnow{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--maroon);border-radius:20px;padding:4px 10px;margin-bottom:11px}
+.dncard .dnstep{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.dncard h4{font-size:22px;font-weight:800;letter-spacing:-.015em;color:var(--ink);margin:0 0 7px;line-height:1.22}
+.dncard p{font-size:14px;color:var(--body);line-height:1.55;margin:0;max-width:56ch}
+.dncard .dngo{margin-top:auto;padding-top:13px;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon)}
+.dncard .dnbar{margin-top:11px;height:3px;background:var(--line2);border-radius:2px;overflow:hidden}
+.dncard .dnbar i{display:block;height:100%;background:var(--maroon);border-radius:2px}
+.donext.alldone .dnclear{font-size:14px;color:var(--body);background:rgba(27,127,75,.07);border:1px solid rgba(27,127,75,.22);border-radius:14px;padding:18px 20px;margin:0;line-height:1.55}
+.allmods{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 20px;font-family:var(--base);font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--body);cursor:pointer;transition:border-color .16s,color .16s}
+.allmods:hover{border-color:var(--maroon);color:var(--maroon)}
+.allmods:after{content:' ▾';color:var(--maroon)}
+.allmods[aria-expanded="true"]:after{content:' ▴'}
+.allwrap{margin-top:22px}
+@media (max-width:860px){.dngrid{grid-template-columns:1fr}.dncard{min-height:0}}
+/* ===== role reveal: a rank being conferred, not a form being filled =====
+   Maroon only. The "shine" is a maroon highlight travelling through the
+   letterforms, never gold, never a gradient background. */
+.rvl{position:fixed;inset:0;z-index:400;background:#fff;display:none;align-items:center;justify-content:center;text-align:center;padding:28px;overflow:hidden}
+.rvl.on{display:flex}
+.rvl .rin{max-width:720px;position:relative;z-index:2}
+/* atmosphere: a maroon bloom that opens behind the name */
+.rvl .rglow{position:absolute;left:50%;top:50%;width:960px;height:960px;margin:-480px 0 0 -480px;border-radius:50%;background:radial-gradient(circle,rgba(192,32,37,.10) 0%,rgba(192,32,37,.045) 38%,rgba(192,32,37,0) 68%);opacity:0;transform:scale(.55);z-index:1;pointer-events:none}
+/* shockwave rings, the stamp of the rank landing */
+.rvl .rring{position:absolute;left:50%;top:50%;border:1px solid rgba(192,32,37,.34);border-radius:50%;width:220px;height:220px;margin:-110px 0 0 -110px;opacity:0;z-index:1;pointer-events:none}
+/* editorial frame: four hairlines that draw inward, the luxury cue */
+.rvl .rfr{position:absolute;background:var(--maroon);opacity:.28;z-index:1;pointer-events:none}
+.rvl .rfr.t,.rvl .rfr.b{height:1px;width:0;left:50%;transform:translateX(-50%)}
+.rvl .rfr.l,.rvl .rfr.r{width:1px;height:0;top:50%;transform:translateY(-50%)}
+.rvl .rfr.t{top:38px}.rvl .rfr.b{bottom:38px}.rvl .rfr.l{left:38px}.rvl .rfr.r{right:38px}
+/* the role initial, ghosted large behind the name */
+.rvl .rmark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1.3);font-size:clamp(16rem,34vw,28rem);font-weight:800;color:rgba(192,32,37,.035);line-height:1;z-index:0;opacity:0;pointer-events:none;user-select:none}
+/* slow motes, restraint over sparkle */
+.rvl .rmote{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--maroon);opacity:0;z-index:1;pointer-events:none}
+.rvl .reye{font-size:10.5px;font-weight:800;letter-spacing:.34em;text-transform:uppercase;color:var(--maroon);opacity:0;transform:translateY(10px)}
+.rvl .rname{font-size:13.5px;font-weight:700;letter-spacing:.02em;color:var(--muted);margin-top:16px;opacity:0;transform:translateY(10px)}
+.rvl .rrole{font-size:clamp(2.5rem,8vw,5.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.0;margin:8px 0 0;color:var(--ink);white-space:nowrap}
+.rvl .rrole .ch{display:inline-block;opacity:0;transform:translateY(38px) scale(.9);filter:blur(9px)}
+.rvl .rrole .sp{display:inline-block;width:.26em}
+/* the shine passes through the letters once they have landed */
+.rvl .rshine{position:absolute;left:0;top:0;pointer-events:none;font-size:clamp(2.5rem,8vw,5.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.0;margin:8px 0 0;white-space:nowrap;background:linear-gradient(104deg,rgba(255,255,255,0) 42%,rgba(192,32,37,.55) 50%,rgba(255,255,255,0) 58%);background-size:260% 100%;background-position:180% 0;-webkit-background-clip:text;background-clip:text;color:transparent;z-index:3}
+.rvl .rrolewrap{position:relative;display:inline-block}
+.rvl .rdept{font-size:12px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--maroon);margin-top:20px;opacity:0;display:flex;align-items:center;justify-content:center;gap:14px}
+.rvl .rdept i{display:block;height:1px;width:0;background:var(--maroon);opacity:.45}
+.rvl .rnote{font-size:14px;color:var(--body);margin-top:22px;opacity:0;transform:translateY(10px);line-height:1.6}
+.rvl .rnote b{color:var(--ink);font-weight:800}
+.rvl .rsub{font-size:12.5px;color:var(--muted);margin-top:8px;opacity:0;transform:translateY(10px)}
+/* the battle button: solid maroon, a shine that keeps sweeping, and a ring
+   that keeps pulsing so it never disappears into the white */
+.rvl .rgowrap{position:relative;display:inline-block;margin-top:30px;opacity:0;transform:translateY(10px)}
+.rvl .rgo{position:relative;z-index:2;display:block;background:var(--maroon);color:#fff;border:0;border-radius:34px;padding:18px 46px;font-family:var(--base);font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;overflow:hidden;box-shadow:0 10px 26px rgba(192,32,37,.30),0 2px 6px rgba(192,32,37,.20);transition:transform .16s var(--pop),box-shadow .16s var(--ease)}
+.rvl .rgo:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(192,32,37,.38),0 3px 8px rgba(192,32,37,.24)}
+.rvl .rgo:active{transform:translateY(-1px)}
+.rvl .rgo span{position:relative;z-index:2}
+.rvl .rgo:before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;background:linear-gradient(104deg,rgba(255,255,255,0) 40%,rgba(255,255,255,.42) 50%,rgba(255,255,255,0) 60%);background-size:260% 100%;background-position:180% 0}
+.rvl .rgopulse{position:absolute;left:50%;top:50%;width:100%;height:100%;transform:translate(-50%,-50%);border:2px solid var(--maroon);border-radius:34px;opacity:0;z-index:1;pointer-events:none}
+.rvl.go .rglow{animation:rvGlow 1.5s var(--ease) .02s forwards}
+.rvl.go .rring{animation:rvRing 1.5s var(--ease) .30s forwards}
+.rvl.go .rring.r2{animation-delay:.46s}
+.rvl.go .rfr.t,.rvl.go .rfr.b{animation:rvFrH 1.15s var(--ease) .10s forwards}
+.rvl.go .rfr.l,.rvl.go .rfr.r{animation:rvFrV 1.15s var(--ease) .10s forwards}
+.rvl.go .rmark{animation:rvMark 1.6s var(--ease) .30s forwards}
+.rvl.go .rmote{animation:rvMote 4.2s linear .8s infinite}
+.rvl.go .rrole{animation:rvTrack 1.1s var(--ease) .42s forwards}
+.rvl.go .reye{animation:rvUp .5s var(--pop) .20s forwards}
+.rvl.go .rname{animation:rvUp .5s var(--pop) .30s forwards}
+.rvl.go .rrole .ch{animation:rvChar .72s var(--pop) forwards}
+.rvl.go .rshine{animation:rvShine 1.4s linear .95s infinite}
+.rvl.go .rdept{animation:rvFade .5s var(--ease) .95s forwards}
+.rvl.go .rdept i{animation:rvRule .7s var(--pop) 1.02s forwards}
+.rvl.go .rnote{animation:rvUp .5s var(--pop) 1.18s forwards}
+.rvl.go .rsub{animation:rvUp .5s var(--pop) 1.30s forwards}
+.rvl.go .rgowrap{animation:rvUp .5s var(--pop) 1.42s forwards}
+.rvl.go .rgo:before{animation:rvShine 1.9s linear 1.9s infinite}
+.rvl.go .rgopulse{animation:rvPulse 2.1s var(--ease) 2.0s infinite}
+.rvl.out{animation:rvOut .38s var(--ease) forwards}
+@keyframes rvUp{to{opacity:1;transform:translateY(0)}}
+@keyframes rvFade{to{opacity:1}}
+@keyframes rvRule{to{width:56px}}
+@keyframes rvChar{to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes rvFrH{to{width:calc(100% - 76px)}}
+@keyframes rvFrV{to{height:calc(100% - 76px)}}
+@keyframes rvMark{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes rvMote{0%{opacity:0;transform:translateY(0)}18%{opacity:.5}82%{opacity:.5}to{opacity:0;transform:translateY(-90px)}}
+@keyframes rvTrack{from{letter-spacing:.1em}to{letter-spacing:-.04em}}
+@keyframes rvGlow{45%{opacity:1;transform:scale(1.04)}to{opacity:.85;transform:scale(1)}}
+@keyframes rvRing{0%{opacity:.85;transform:scale(.2)}70%{opacity:.18}to{opacity:0;transform:scale(3.4)}}
+@keyframes rvShine{0%{background-position:180% 0}to{background-position:-80% 0}}
+@keyframes rvPulse{0%{opacity:.55;transform:translate(-50%,-50%) scale(1)}70%{opacity:0}to{opacity:0;transform:translate(-50%,-50%) scale(1.32)}}
+@keyframes rvOut{to{opacity:0;transform:scale(1.06)}}
+@media (max-width:640px){.rvl .rrole{white-space:normal}}
+@media (prefers-reduced-motion:reduce){.rvl .rglow,.rvl .rring,.rvl .rfr,.rvl .rmark,.rvl .reye,.rvl .rname,.rvl .rrole,.rvl .rrole .ch,.rvl .rdept,.rvl .rnote,.rvl .rsub,.rvl .rgowrap,.rvl .rgo:before,.rvl .rgopulse,.rvl .rshine{animation:none!important;opacity:1;transform:none;filter:none}.rvl .rgopulse{opacity:0}.rvl .rgowrap{transform:none}.rvl .rrole{letter-spacing:-.04em}.rvl .rmark{opacity:1;transform:translate(-50%,-50%) scale(1)}.rvl .rdept i{width:56px}.rvl .rmote,.rvl .rshine{display:none}.rvl .rfr.t,.rvl .rfr.b{width:calc(100% - 76px)}.rvl .rfr.l,.rvl .rfr.r{height:calc(100% - 76px)}}
+@media (max-width:560px){.htop .htag{display:none}.hwho{padding:5px 11px 5px 6px;margin-right:8px}}
+.hbadge{display:inline-block;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:4px;padding:7px 16px;margin-bottom:26px;background:var(--maroon-tint)}
+.hero h1{font-size:clamp(3.2rem,10vw,7rem);line-height:.92;letter-spacing:-.05em;color:var(--ink);font-weight:800;margin:0}
+.hero h1 span{color:var(--maroon)}
+.hlead{font-size:clamp(1.1rem,2.2vw,1.5rem);line-height:1.5;color:var(--muted);max-width:620px;margin:24px 0 0}
+.start{margin-top:38px;appearance:none;border:1px solid var(--maroon);background:var(--maroon);color:#fff;font-family:var(--base);font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:16px 34px;border-radius:6px;cursor:pointer;box-shadow:0 10px 34px rgba(192,32,37,.32);animation:startPulse 2.4s ease-in-out infinite;transition:transform .16s var(--ease)}
+@keyframes startPulse{0%,100%{box-shadow:0 10px 28px rgba(192,32,37,.26)}50%{box-shadow:0 12px 42px rgba(192,32,37,.5)}}
+.start:hover{transform:translateY(-2px);background:#d5252b;animation:none;box-shadow:0 16px 46px rgba(192,32,37,.5)}
+.start:active{transform:scale(.97)}
+.startrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:38px}
+.startrow .start{margin-top:0}
+.ascendbtn{position:relative;display:inline-flex;align-items:center;gap:8px;font-family:var(--base);font-size:14px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--maroon);padding:16px 26px;border-radius:6px;border:1px solid var(--maroon);background:var(--maroon-tint);overflow:hidden;transition:transform .16s var(--ease),border-color .16s,box-shadow .16s}
+.ascendbtn::before{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(192,32,37,.22),transparent);transform:skewX(-18deg);animation:ascShine 3.4s ease-in-out infinite}
+@keyframes ascShine{0%,60%{left:-70%}80%,100%{left:130%}}
+.ascendbtn:hover{transform:translateY(-2px);border-color:var(--maroon);color:#fff;background:var(--maroon);box-shadow:0 12px 30px rgba(192,32,37,.34)}
+.hstats{display:flex;gap:36px;margin-top:44px;flex-wrap:wrap}
+.hstat b{display:block;font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.hstat span{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.hstat b em{color:var(--maroon);font-style:normal}
+
+/* ===== STAGE sections ===== */
+.stage{padding:72px 0}
+.stage.alt{background:#fafafa;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+
+/* ===== ROLE TILES (choose your character) ===== */
+.roletiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.rtile{position:relative;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:20px;cursor:pointer;font-family:var(--base);transition:transform .16s var(--pop),border-color .16s,box-shadow .16s;overflow:hidden}
+.rtile:hover{transform:translateY(-4px);border-color:var(--maroon);box-shadow:var(--shadow)}
+.rtile.on{border-color:var(--maroon);background:var(--maroon-tint)}
+.rtile .rnum{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rtile h3{margin:12px 0 5px;font-size:1.22rem;color:var(--ink);font-weight:800;letter-spacing:-.01em}
+.rtile.on h3{color:var(--maroon)}
+.rtile p{margin:0;font-size:.86rem;color:var(--muted);line-height:1.45;min-height:37px}
+.rtile .rmeta{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:11.5px;font-weight:700}
+.rtile .rbuilt{color:var(--maroon)}
+.rtile .rgap{color:var(--muted)}
+.rtile .rdot{width:5px;height:5px;border-radius:50%;background:var(--line)}
+.rtile .rgo{position:absolute;top:18px;right:18px;color:var(--line);font-size:18px;transition:.16s}
+.rtile:hover .rgo,.rtile.on .rgo{color:var(--maroon);transform:translateX(2px)}
+
+/* ===== SPECIALIST ROSTER (dark) ===== */
+#rolestage.stage{background:#fff;color:var(--body);border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+#rolestage .eyebrow{color:var(--maroon)}
+#rolestage h2{color:var(--ink)}
+#rolestage .sub{color:var(--muted)}
+#rolestage::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(120deg,transparent 40%,rgba(192,32,37,.10) 50%,transparent 60%);transform:translateX(-120%)}
+#rolestage.entered::before{animation:enSweep 1.35s ease}
+@keyframes enSweep{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+#rolestage .wrap{position:relative;z-index:1}
+#rolestage.entered .wrap{animation:enWrap .95s var(--popp)}
+@keyframes enWrap{from{opacity:.3;transform:scale(.975)}to{opacity:1;transform:none}}
+.roshead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.devtoggle{appearance:none;border:1px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:20px;cursor:pointer;transition:.15s;flex:none}
+.devtoggle:hover{border-color:var(--maroon);color:var(--maroon)}
+.rosublabel{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:28px 0 12px}
+.opgrid{display:grid;grid-template-columns:repeat(auto-fill,200px);gap:14px;justify-content:center}
+.opcard{position:relative;border:1px solid #262626;background:linear-gradient(155deg,#151515,#0c0c0c);border-radius:14px;padding:16px 12px 14px;cursor:pointer;text-align:center;font-family:var(--base);transition:transform .16s var(--pop),border-color .16s,box-shadow .16s;overflow:hidden}
+.opcard::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px);pointer-events:none}
+.opcard:hover{transform:translateY(-5px);border-color:var(--maroon);box-shadow:0 16px 44px rgba(192,32,37,.28)}
+.opcard.on{border-color:var(--maroon);background:linear-gradient(155deg,#1c0e0f,#120a0b)}
+/* ===== holographic foil (Pokémon-card style) on operator portraits ===== */
+.opportrait::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:repeating-linear-gradient(115deg,rgba(255,80,120,.26) 0%,rgba(255,210,90,.26) 8%,rgba(110,255,150,.26) 16%,rgba(80,195,255,.26) 24%,rgba(200,110,255,.26) 32%,rgba(255,80,120,.26) 40%);background-size:300% 300%;mix-blend-mode:screen;animation:opHolo 9s ease-in-out infinite}
+@keyframes opHolo{0%{background-position:0% 0;opacity:.9}32%{background-position:170% 0;opacity:.92}46%{opacity:.1}68%{opacity:.1}84%{background-position:285% 0;opacity:.9}100%{background-position:300% 0;opacity:.9}}
+.opcard:hover .opportrait::after{animation-duration:6s}
+.opgloss{position:absolute;top:0;left:-60%;width:45%;height:100%;z-index:4;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.30),transparent);transform:skewX(-18deg);opacity:0}
+.opcard:hover .opgloss{opacity:1;animation:opGloss .9s ease}
+@keyframes opGloss{0%{left:-60%}100%{left:130%}}
+/* ===== Catalyst = DIAMOND tier (Charizard-tera crystal) ===== */
+.opcard[data-r="mc"],.opcard[data-r="hr"]{border:2px solid transparent;background:linear-gradient(155deg,#1a140a,#0c0a06) padding-box,linear-gradient(135deg,#fff2c0,#e0a92e 22%,#fff7d8 48%,#c78f22 70%,#ffe08a) border-box;box-shadow:0 0 28px rgba(224,169,46,.45),0 16px 46px rgba(0,0,0,.2)}
+.opcard[data-r="mc"] .opportrait::after,.opcard[data-r="hr"] .opportrait::after{background:linear-gradient(125deg,rgba(255,240,175,.4),rgba(224,169,46,.26) 20%,rgba(255,255,255,.10) 36%,rgba(255,235,150,.42) 58%,rgba(224,169,46,.28) 78%,rgba(255,245,200,.20));background-size:250% 250%;mix-blend-mode:screen;animation:opHolo 9s ease-in-out infinite}
+.opcard[data-r="mc"]:hover,.opcard[data-r="hr"]:hover{box-shadow:0 0 40px rgba(224,169,46,.6),0 20px 54px rgba(0,0,0,.24)}
+.opcard[data-r="mc"] .opcall,.opcard[data-r="hr"] .opcall{color:#f0d488}
+.opcard[data-r="mc"]::before,.opcard[data-r="hr"]::before{content:"★ Gold";position:absolute;top:9px;left:9px;z-index:6;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3a2a06;background:linear-gradient(135deg,#fff2c0,#e0a92e);border-radius:10px;padding:3px 9px;box-shadow:0 2px 12px rgba(224,169,46,.5)}
+.opgate{margin-top:8px;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#c9cfda;border:1px solid #3a3f48;border-radius:20px;padding:3px 10px;display:inline-block}
+/* ===== Assemble entrance + hover focus + lock-in (player-select) ===== */
+.opcard.asm{animation:asmCard .8s var(--popp) both;animation-delay:var(--d,0s)}
+@keyframes asmCard{from{opacity:0;transform:translate(var(--fx,0),48px) scale(.82)}to{opacity:1;transform:none}}
+.opcard.lockin{animation:lockPop .45s var(--popp)}
+@keyframes lockPop{0%{transform:none}25%{transform:scale(1.07)}55%{transform:scale(.99)}100%{transform:none}}
+.opcard.lockin .opportrait{animation:lockFlash .45s ease}
+@keyframes lockFlash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 3px #fff,0 0 30px rgba(255,255,255,.65)}}
+.opsvg{width:90px;height:114px;display:block;margin:2px auto 8px;filter:drop-shadow(0 6px 14px rgba(192,32,37,.35))}
+.opcall{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#e0777a;font-weight:800}
+.opname{font-size:1rem;color:#fff;font-weight:800;margin:3px 0 8px;letter-spacing:-.01em}
+.opmeta{font-size:10.5px;color:#7c7c7c;font-weight:700}
+.opmeta .b{color:#e0777a}
+.opmeta .dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#333;margin:0 6px;vertical-align:middle}
+.opcard.prestige{border-color:#5a1216;background:linear-gradient(155deg,#1a1011,#0e0a0b)}
+.prestige-note{font-size:12px;color:#8a8a8a;margin-top:10px;max-width:600px}
+/* operator animation + game feel */
+.opsvg{animation:opFloat 4.6s ease-in-out infinite}
+.opgrid .opcard:nth-child(3n) .opsvg{animation-delay:-1.4s}
+.opgrid .opcard:nth-child(3n+1) .opsvg{animation-delay:-.7s}
+@keyframes opFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.opglow{animation:opPulse 2.9s ease-in-out infinite}
+@keyframes opPulse{0%,100%{opacity:0}50%{opacity:.42}}
+.opcard:hover .opsvg{animation-duration:2.1s}
+.opcard:hover .opglow{animation-duration:1.05s}
+.opcard.on .opglow{opacity:.55!important;animation:none}
+.opcard .scan{position:absolute;left:0;right:0;top:0;height:36%;background:linear-gradient(180deg,rgba(192,32,37,0),rgba(192,32,37,.14),rgba(192,32,37,0));opacity:0;pointer-events:none}
+.opcard:hover .scan{opacity:1;animation:opScan 1.3s linear infinite}
+@keyframes opScan{0%{transform:translateY(-40%)}100%{transform:translateY(320%)}}
+.rankchip{position:absolute;top:10px;left:10px;font-size:9px;font-weight:800;letter-spacing:.12em;color:#e0777a;border:1px solid #5a1216;border-radius:12px;padding:3px 8px;background:#160c0d}
+/* signature specialty in loadout */
+.lvl.spec .lcard{border-color:var(--maroon);box-shadow:0 0 0 1px var(--maroon),var(--shadow)}
+.lvl.spec .node{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.specbadge{align-self:flex-start;margin:0 0 7px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--maroon);border-radius:12px;padding:3px 11px}
+/* sharper operator hover */
+.opcard{transition:transform .12s cubic-bezier(.2,.9,.3,1.2),border-color .12s,box-shadow .12s}
+.opcard:hover{box-shadow:0 18px 48px rgba(192,32,37,.34),inset 0 0 0 1px var(--maroon)}
+.opcard:hover .scan{opacity:1;background:linear-gradient(180deg,transparent,rgba(230,90,95,.28),transparent);animation:opScan 1s linear infinite}
+.opcard:hover .opsvg{filter:drop-shadow(0 8px 18px rgba(192,32,37,.6))}
+/* signature specialty · lightning shine on hover */
+.lvl.spec .lcard{position:relative;overflow:hidden}
+.lvl.spec .lcard::before{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(192,32,37,.2),rgba(255,255,255,.55),rgba(192,32,37,.2),transparent);transform:skewX(-18deg);opacity:0;pointer-events:none}
+.lvl.spec:hover .lcard::before{opacity:1;animation:specShine .85s ease}
+@keyframes specShine{0%{left:-70%}100%{left:130%}}
+.lvl.spec:hover .lcard{border-color:var(--maroon);box-shadow:0 0 0 1px var(--maroon),0 0 30px rgba(192,32,37,.55)}
+.lvl.spec:hover .node{box-shadow:0 0 18px rgba(192,32,37,.85)}
+.lvl.spec:hover .specbadge{animation:specZap .5s ease}
+@keyframes specZap{0%,100%{transform:none;box-shadow:none}35%{transform:scale(1.1);box-shadow:0 0 18px rgba(192,32,37,.9)}}
+/* department labels */
+.deptlabel{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#d0d0d0;margin:28px 0 12px}
+.deptlabel .dbar{width:20px;height:3px;background:var(--maroon);border-radius:2px}
+.deptlabel .dcount{color:#6a6a6a;font-size:11px;border:1px solid #333;border-radius:10px;padding:1px 8px}
+/* signature specialty node — always special */
+.lvl.spec .node{background:var(--maroon)!important;border-color:var(--maroon)!important;color:#fff!important;font-size:19px;animation:specNode 1.9s ease-in-out infinite}
+@keyframes specNode{0%,100%{box-shadow:0 0 0 0 rgba(192,32,37,.5)}55%{box-shadow:0 0 0 8px rgba(192,32,37,0)}}
+/* per-role operator hover animations (role-specific emblem motion) */
+.opem{transform-box:fill-box;transform-origin:center}
+.opcard[data-r="producer"]:hover .opem,.opcard[data-r="admin"]:hover .opem{animation:opFlash .6s ease}
+@keyframes opFlash{0%,100%{opacity:1}30%{opacity:.15}62%{opacity:1;filter:drop-shadow(0 0 5px #fff)}}
+.opcard[data-r="tech"]:hover .opem,.opcard[data-r="mc"]:hover .opem{animation:opSpin .85s cubic-bezier(.5,0,.2,1)}
+@keyframes opSpin{to{transform:rotate(360deg)}}
+.opcard[data-r="copywriter"]:hover .opem,.opcard[data-r="cs"]:hover .opem{animation:opWig .55s ease}
+@keyframes opWig{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+.opcard[data-r="sales"]:hover .opem,.opcard[data-r="manager"]:hover .opem,.opcard[data-r="hod"]:hover .opem,.opcard[data-r="csuite"]:hover .opem{animation:opUp .55s ease}
+@keyframes opUp{0%{transform:translateY(5px)}55%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+.opcard[data-r="smm"]:hover .opem{animation:opPing .5s ease}
+@keyframes opPing{0%,100%{transform:scale(1)}42%{transform:scale(1.3)}}
+.opcard[data-r="finance"]:hover .opem{animation:opGrow .55s ease}
+@keyframes opGrow{0%{transform:scaleY(.5)}100%{transform:scaleY(1)}}
+.opcard[data-r="cssuccess"]:hover .opem,.opcard[data-r="hr"]:hover .opem{animation:opBeat .6s ease}
+@keyframes opBeat{0%,100%{transform:scale(1)}28%{transform:scale(1.32)}52%{transform:scale(1.06)}72%{transform:scale(1.22)}}
+/* ===== DEPARTMENT SELECTOR (pick a department first) ===== */
+.deptbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:8px 0 22px}
+@media(max-width:820px){.deptbar{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.deptbar{grid-template-columns:1fr}}
+.deptbtn{position:relative;display:flex;align-items:center;gap:11px;text-align:left;border:1.5px solid var(--line);background:linear-gradient(155deg,#fff,#fbf8f8);color:var(--body);font-family:var(--base);border-radius:15px;padding:18px 18px;cursor:pointer;transition:transform .16s var(--pop),border-color .16s,box-shadow .16s;overflow:hidden}
+.deptbtn:hover,.deptbtn.on{transform:translateY(-4px);border-color:var(--maroon);box-shadow:0 16px 38px rgba(192,32,37,.16)}
+.deptbtn.on{background:linear-gradient(155deg,#fff,var(--maroon-tint));box-shadow:inset 0 0 0 1.5px var(--maroon),0 14px 34px rgba(192,32,37,.18)}
+.deptbtn .dbar{width:18px;height:3px;background:var(--maroon);border-radius:2px;flex:none;transition:.14s}
+.deptbtn.on .dbar,.deptbtn:hover .dbar{width:26px}
+.deptbtn .dname{font-size:13.5px;font-weight:800;letter-spacing:.02em;color:var(--ink);flex:1}
+.deptbtn .dcount{font-size:11px;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:1px 8px}
+.deptbtn.on .dcount{color:var(--maroon);border-color:var(--maroon)}
+.depticon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:none;border-radius:9px;color:var(--maroon);background:var(--maroon-tint);transition:transform .16s var(--pop)}
+.depticon svg{width:20px;height:20px}
+.deptbtn:hover .depticon,.deptbtn.on .depticon{transform:scale(1.1)}
+.deptbtn.on .depticon{background:var(--maroon);color:#fff}
+.deptempty{color:var(--muted);font-size:13px;text-align:center;padding:22px 0 4px;letter-spacing:.02em}
+.deptbtn::before{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(192,32,37,.14),transparent);transform:skewX(-18deg);opacity:0;pointer-events:none}
+.deptbtn:hover::before{opacity:1;animation:deptSheen .8s ease}
+@keyframes deptSheen{0%{left:-60%}100%{left:130%}}
+.deptbtn .dbar{box-shadow:0 0 10px rgba(192,32,37,.4)}
+#rolestage.entered .deptbtn{animation:deptIn .5s ease both}
+#rolestage.entered .deptbtn:nth-child(2){animation-delay:.08s}
+#rolestage.entered .deptbtn:nth-child(3){animation-delay:.16s}
+#rolestage.entered .deptbtn:nth-child(4){animation-delay:.24s}
+@keyframes deptIn{from{opacity:0}to{opacity:1}}
+/* ===== per-operator hover SCAN — every one distinct; small emblem anim stays separate ===== */
+/* mc CATALYST — targeting-reticle snap */
+.opcard[data-r="mc"] .scan{top:0;height:100%;background:linear-gradient(transparent 47%,rgba(230,90,95,.55) 47% 48%,transparent 48%),linear-gradient(90deg,transparent 47%,rgba(230,90,95,.55) 47% 48%,transparent 48%)}
+.opcard[data-r="mc"]:hover .scan{animation:scReticle 1s ease-in-out infinite}
+@keyframes scReticle{0%{opacity:0;transform:scale(1.5)}45%{opacity:1;transform:scale(1)}75%{opacity:1}100%{opacity:0;transform:scale(1)}}
+/* cs ARCHITECT — diagonal blueprint sweep */
+.opcard[data-r="cs"] .scan{height:60%;background:linear-gradient(115deg,transparent,rgba(230,90,95,.34),transparent)}
+.opcard[data-r="cs"]:hover .scan{animation:scDiag 1.15s linear infinite}
+@keyframes scDiag{0%{transform:translate(-30%,-70%) rotate(-14deg)}100%{transform:translate(30%,300%) rotate(-14deg)}}
+/* producer FIELD — sniper scope closing in */
+.opcard[data-r="producer"] .scan{top:0;height:100%;background:radial-gradient(circle at 50% 45%,transparent 28%,rgba(230,90,95,.5) 31%,transparent 35%,transparent 60%,rgba(0,0,0,.45) 100%)}
+.opcard[data-r="producer"]:hover .scan{animation:scScope 1s ease-in-out infinite}
+@keyframes scScope{0%{opacity:0;transform:scale(1.6)}45%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.65)}}
+/* smm SIGNAL — equalizer / broadcast bars */
+.opcard[data-r="smm"] .scan{top:auto;bottom:0;height:46%;background:repeating-linear-gradient(90deg,rgba(230,90,95,.55) 0 3px,transparent 3px 10px);transform-origin:bottom}
+.opcard[data-r="smm"]:hover .scan{animation:scEq .45s steps(4) infinite}
+@keyframes scEq{0%{transform:scaleY(.3);opacity:.5}50%{transform:scaleY(1);opacity:.9}100%{transform:scaleY(.55);opacity:.6}}
+/* copywriter SCRIBE — smooth ink wipe left to right */
+.opcard[data-r="copywriter"] .scan{top:0;bottom:0;height:100%;width:38%;left:0;right:auto;background:linear-gradient(90deg,transparent,rgba(230,90,95,.4),rgba(255,255,255,.35),transparent)}
+.opcard[data-r="copywriter"]:hover .scan{animation:scInk 1.2s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes scInk{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+/* sales CLOSER — arrow streak (Hanzo) */
+.opcard[data-r="sales"] .scan{height:16%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.5),rgba(230,90,95,.5),transparent)}
+.opcard[data-r="sales"]:hover .scan{animation:scArrow .8s cubic-bezier(.7,0,.2,1) infinite}
+@keyframes scArrow{0%{transform:translate(-60%,-90%) rotate(-20deg);opacity:0}30%{opacity:1}100%{transform:translate(60%,360%) rotate(-20deg);opacity:0}}
+/* tech ENGINEER — binary 010101 rain */
+.opcard[data-r="tech"] .scan{top:0;height:100%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='96'%3E%3Cg font-family='monospace' font-size='14' fill='%23e05a5f'%3E%3Ctext x='4' y='16'%3E0%3C/text%3E%3Ctext x='22' y='30'%3E1%3C/text%3E%3Ctext x='40' y='16'%3E1%3C/text%3E%3Ctext x='4' y='48'%3E1%3C/text%3E%3Ctext x='22' y='62'%3E0%3C/text%3E%3Ctext x='40' y='48'%3E0%3C/text%3E%3Ctext x='4' y='80'%3E0%3C/text%3E%3Ctext x='22' y='94'%3E1%3C/text%3E%3Ctext x='40' y='80'%3E1%3C/text%3E%3C/g%3E%3C/svg%3E");background-repeat:repeat;-webkit-mask-image:linear-gradient(180deg,transparent,#000 28%,#000 72%,transparent);mask-image:linear-gradient(180deg,transparent,#000 28%,#000 72%,transparent)}
+.opcard[data-r="tech"]:hover .scan{animation:scBinary 1.5s linear infinite}
+@keyframes scBinary{0%{background-position:0 0}100%{background-position:0 96px}}
+/* finance LEDGER — scrolling ticker tape */
+.opcard[data-r="finance"] .scan{top:52%;height:13%;background:repeating-linear-gradient(90deg,rgba(230,90,95,.6) 0 10px,transparent 10px 22px)}
+.opcard[data-r="finance"]:hover .scan{animation:scTicker 1s linear infinite}
+@keyframes scTicker{0%{background-position:0 0}100%{background-position:44px 0}}
+/* hr GUARDIAN — shield popping open */
+.opcard[data-r="hr"] .scan{top:0;height:100%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M12 1 L22 5 V13 C22 20 17 25 12 27 C7 25 2 20 2 13 V5 Z' fill='rgba(230,90,95,0.14)' stroke='%23e05a5f' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center 42%;background-size:50% auto;transform-origin:50% 42%}
+.opcard[data-r="hr"]:hover .scan{animation:scShield 1.3s ease-out infinite}
+@keyframes scShield{0%{opacity:0;transform:scale(.5)}30%{opacity:1;transform:scale(1.14)}46%{transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+/* cssuccess SHEPHERD — starburst pulse */
+.opcard[data-r="cssuccess"] .scan{top:0;height:100%;background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.42),rgba(230,90,95,.35) 20%,transparent 55%)}
+.opcard[data-r="cssuccess"]:hover .scan{animation:scStar 1.4s ease-out infinite}
+@keyframes scStar{0%{opacity:0;transform:scale(.4) rotate(0)}45%{opacity:1;transform:scale(1) rotate(8deg)}100%{opacity:0;transform:scale(1.3) rotate(0)}}
+/* videoeditor CUTTER — fine electric zap (Clash-Royale style: quick thin crackle, then quiet) */
+/* videoeditor CUTTER — fine full-width blade line sweeping down the card (the "cut") */
+.opcard[data-r="videoeditor"] .scan{left:0;width:100%;height:2px;top:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 30%,#ff2f34 50%,rgba(255,255,255,.9) 70%,transparent);box-shadow:0 0 10px 1px rgba(255,60,66,.9),0 0 3px rgba(255,255,255,.9);opacity:0}
+.opcard[data-r="videoeditor"]:hover .scan{animation:scBlade 1.5s cubic-bezier(.5,0,.3,1) infinite}
+@keyframes scBlade{0%{top:-3%;opacity:0}10%{opacity:1}88%{opacity:1}100%{top:103%;opacity:0}}
+/* ===== COMMAND upgrade ladder (a power-up path, not characters) ===== */
+.cmdtrack{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap;margin:6px 0 4px}
+.cmdnode{position:relative;flex:1;min-width:168px;max-width:230px;text-align:center;border:1px solid #3a1418;background:linear-gradient(160deg,#1a0f10,#0d0809);border-radius:15px;padding:18px 14px 15px;cursor:pointer;font-family:var(--base);transition:transform .16s var(--pop),border-color .16s,box-shadow .16s;overflow:hidden}
+.cmdnode::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px);pointer-events:none}
+.cmdnode:hover{transform:translateY(-5px);border-color:var(--maroon);box-shadow:0 18px 46px rgba(192,32,37,.34)}
+.cmdnode.on{border-color:var(--maroon);box-shadow:inset 0 0 0 1px var(--maroon),0 0 30px rgba(192,32,37,.4)}
+.cmdrank{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#e0777a;font-weight:800;margin-bottom:10px}
+.cmdemblem{width:56px;height:56px;margin:0 auto 10px;border-radius:50%;background:radial-gradient(circle,#2a1113,#120a0b);border:2px solid var(--maroon);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(192,32,37,.5);transition:transform .16s var(--pop);animation:cmdPulse 2.2s ease-in-out infinite}
+@keyframes cmdPulse{0%,100%{box-shadow:0 0 0 0 rgba(192,32,37,.5)}55%{box-shadow:0 0 0 9px rgba(192,32,37,0)}}
+.cmdem{width:26px;height:26px}
+.cmdnode:hover .cmdemblem{transform:scale(1.08) rotate(-4deg)}
+.cmdname{font-size:1.02rem;color:#fff;font-weight:800;letter-spacing:-.01em}
+.cmdcall{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8a8a8a;font-weight:800;margin:2px 0 8px}
+.cmdup{display:flex;align-items:center;justify-content:center;color:#5a1216;font-size:20px;font-weight:800;align-self:center;animation:cmdUp 1.5s ease-in-out infinite}
+@keyframes cmdUp{0%,100%{transform:translateY(2px);opacity:.5}50%{transform:translateY(-3px);opacity:1}}
+/* command battle-pass · its own screen */
+#cmdtrackstage.cmdpass{background:#0a0a0a;color:#eee;border-top:1px solid #1c1c1c;border-bottom:1px solid #1c1c1c}
+#cmdtrackstage .eyebrow{color:#e0777a}
+#cmdtrackstage h2{color:#fff}
+#cmdtrackstage .sub{color:#9a9a9a}
+#cmdtrackstage .sub b{color:#e0777a}
+.cmdlink{display:inline-block;margin-top:34px;color:#e0777a;font-weight:800;font-size:14px;text-decoration:none;border:1px solid #5a1216;border-radius:24px;padding:11px 20px;background:#160c0d;transition:.15s}
+.cmdlink:hover{border-color:var(--maroon);background:#1c0e0f;transform:translateY(-2px)}
+.battlepass{position:relative;margin-top:30px;align-items:stretch}
+.battlepass::before{content:"";position:absolute;top:104px;left:8%;right:8%;height:3px;background:linear-gradient(90deg,#3a1418,var(--maroon) 20%,var(--maroon) 80%,#3a1418);border-radius:2px;z-index:0}
+/* ===== operator PORTRAIT cards (character art) ===== */
+.opportrait{position:relative;width:100%;aspect-ratio:3/4;border-radius:10px;overflow:hidden;margin-bottom:10px;background:#0a0a0a;border:1px solid #2a1416;z-index:1}
+.opimg{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transition:transform .3s var(--popp,var(--pop))}
+.opcard:hover .opimg{transform:scale(1.05)}
+.opcard.on .opportrait{border-color:var(--maroon);box-shadow:0 0 0 1px var(--maroon)}
+.opembadge{position:absolute;right:8px;bottom:8px;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,#2a1113,#0d0809);border:1.6px solid var(--maroon);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.55);z-index:5}
+.opembadge svg{width:16px;height:16px}
+.opcard .scan{z-index:4}
+.opcard::after{z-index:2}
+/* ===== COMMAND CHAMBER · themed, animated, escalates by rank ===== */
+.cmdchamber{position:relative;overflow:hidden;background:#070707;color:#fff;border-top:1px solid #1c1c1c;border-bottom:1px solid #1c1c1c;min-height:92vh;display:flex;align-items:center;text-align:center}
+.cmdchamber .wrap{position:relative;z-index:2;width:100%}
+.cmdchamber .sub{color:#b3b3b3;margin-left:auto;margin-right:auto}
+.cmdchamber .cmdTitle{font-size:clamp(2rem,5vw,3.4rem);line-height:1.02;letter-spacing:-.04em;color:#fff;font-weight:800;margin:0 0 10px}
+.cmdchamber .cmdTitle span{color:var(--maroon)}
+/* ambient background layers (always animating) */
+.chamberbg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.cbgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(72% 62% at 50% 40%,#000,transparent 80%);mask-image:radial-gradient(72% 62% at 50% 40%,#000,transparent 80%);opacity:.55;animation:cbDrift 18s linear infinite}
+@keyframes cbDrift{to{background-position:46px 46px,46px 46px}}
+.cbglow{position:absolute;left:50%;top:38%;width:900px;height:900px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(192,32,37,.32),transparent 62%);animation:cbPulse 5s ease-in-out infinite}
+@keyframes cbPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.95)}50%{opacity:.85;transform:translate(-50%,-50%) scale(1.08)}}
+.cbrays{position:absolute;left:50%;top:38%;width:1500px;height:1500px;transform:translate(-50%,-50%);opacity:0;background:repeating-conic-gradient(from 0deg,rgba(230,90,95,.14) 0deg 3deg,transparent 3deg 12deg);-webkit-mask-image:radial-gradient(circle,#000 18%,transparent 60%);mask-image:radial-gradient(circle,#000 18%,transparent 60%);animation:cbSpin 44s linear infinite}
+@keyframes cbSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.cbembers{position:absolute;inset:0;opacity:0;background-image:radial-gradient(2px 2px at 20% 80%,rgba(230,90,95,.7),transparent),radial-gradient(2px 2px at 42% 92%,rgba(230,90,95,.5),transparent),radial-gradient(1.5px 1.5px at 66% 86%,rgba(230,90,95,.6),transparent),radial-gradient(2px 2px at 82% 76%,rgba(230,90,95,.5),transparent),radial-gradient(1.5px 1.5px at 54% 96%,rgba(230,90,95,.6),transparent);background-repeat:no-repeat;animation:cbRise 6s linear infinite}
+@keyframes cbRise{0%{transform:translateY(24px);opacity:0}30%{opacity:1}100%{transform:translateY(-140px);opacity:0}}
+/* rank escalation: II adds rays + some embers, III maxes everything */
+#cmdstage[data-rank="2"] .cbrays{opacity:.5}
+#cmdstage[data-rank="2"] .cbembers{opacity:.5}
+#cmdstage[data-rank="2"] .cbglow{animation-duration:4s}
+#cmdstage[data-rank="3"] .cbrays{opacity:.95;animation-duration:26s}
+#cmdstage[data-rank="3"] .cbembers{opacity:1}
+#cmdstage[data-rank="3"] .cbglow{background:radial-gradient(circle,rgba(192,32,37,.5),transparent 60%);animation-duration:3s}
+.rankbadge{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:#e0777a;border:1px solid var(--maroon);border-radius:20px;padding:7px 15px;margin-bottom:16px;background:rgba(192,32,37,.1)}
+#cmdstage[data-rank="3"] .rankbadge{animation:badgePulse 2.2s ease-in-out infinite}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 12px rgba(192,32,37,.4)}50%{box-shadow:0 0 30px rgba(192,32,37,.85)}}
+/* rank sigil (replaces the chest) */
+.cmdsigil{position:relative;width:112px;height:112px;margin:22px auto 10px;border-radius:50%;background:radial-gradient(circle,#2a1113,#0d0809);border:2px solid var(--maroon);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(192,32,37,.55),inset 0 0 20px rgba(192,32,37,.35);animation:cmdPulse 2.6s ease-in-out infinite}
+.cmdsigil::before{content:"";position:absolute;inset:-11px;border-radius:50%;border:1px solid rgba(192,32,37,.4);animation:sigRing 3s ease-in-out infinite}
+@keyframes sigRing{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.8;transform:scale(1.09)}}
+.cmdsigil span{font-size:40px;font-weight:800;color:#fff;letter-spacing:.02em;text-shadow:0 0 18px rgba(192,32,37,.85)}
+#cmdstage[data-rank="3"] .cmdsigil{box-shadow:0 0 50px rgba(192,32,37,.85),inset 0 0 26px rgba(192,32,37,.5)}
+/* revealed modules — special power tiles, distinct from the path list */
+.upwrap{margin:0 auto}
+.uphead{font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#e0777a;margin:30px 0 16px}
+.upgrades{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;max-width:840px;margin:0 auto}
+.upcard{position:relative;display:block;text-decoration:none;border:1px solid var(--maroon);border-radius:16px;padding:24px 18px 20px;background:linear-gradient(160deg,#1c0e0f,#0d0809);box-shadow:0 14px 36px rgba(192,32,37,.3),inset 0 0 0 1px rgba(192,32,37,.12);text-align:center;color:#fff;opacity:0;transform:translateY(16px) scale(.96);overflow:hidden}
+.upcard::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px);pointer-events:none}
+.upcard{animation:upPop .55s var(--popp) forwards;animation-delay:var(--d,0s)}
+@keyframes upPop{to{opacity:1;transform:none}}
+a.upcard:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(192,32,37,.5)}
+.upcore{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;background:radial-gradient(circle,#3a1416,#120a0b);border:2px solid var(--maroon);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(192,32,37,.55);font-size:20px;animation:cmdPulse 2.4s ease-in-out infinite}
+#cmdstage[data-rank="3"] .upcore{box-shadow:0 0 28px rgba(192,32,37,.9)}
+.upcard.locked{border-style:dashed;border-color:#5a3a3c;background:linear-gradient(160deg,#141011,#0c0809);box-shadow:none}
+.upcard.locked .upcore{border-color:var(--lock);color:var(--lock);box-shadow:none;animation:none}
+.upflash{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#e0777a}
+.upcard.locked .upflash{color:var(--lock)}
+.uptitle{font-size:1.14rem;font-weight:800;color:#fff;letter-spacing:-.01em;margin:6px 0 6px}
+.upcard p{margin:0;font-size:.88rem;color:#a9a9a9;line-height:1.45}
+.upgo{display:inline-block;margin-top:13px;font-size:12px;font-weight:800;color:#e0777a}
+.uplock{display:inline-block;margin-top:13px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--lock);border:1px dashed var(--lock);border-radius:20px;padding:3px 10px}
+.cmdalways{margin-top:22px;font-size:12.5px;color:#8a8a8a;display:flex;align-items:center;gap:8px;justify-content:center}
+.cmdalways b{color:var(--maroon)}
+/* ===== inline COMMAND TRACK ===== */
+#cmdtrackstage{position:fixed;inset:0;z-index:200;background:#fff;color:var(--body);overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;justify-content:center}
+#cmdtrackstage.active{display:flex;animation:ctPage .4s var(--popp)}
+@keyframes ctPage{from{opacity:0}to{opacity:1}}
+#cmdtrackstage::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(120deg,transparent 40%,rgba(192,32,37,.10) 50%,transparent 60%);transform:translateX(-120%)}
+#cmdtrackstage.active::before{animation:enSweep .9s ease}
+#cmdtrackstage .wrap{position:relative;z-index:1}
+#cmdtrackstage.active .wrap{animation:enWrap .6s var(--popp)}
+#cmdtrackstage .eyebrow{color:var(--maroon)}
+.ctback{position:fixed;top:20px;left:20px;z-index:210;appearance:none;border:1px solid var(--line);background:#fff;color:var(--body);font-family:var(--base);font-size:13px;font-weight:700;border-radius:22px;padding:9px 16px;cursor:pointer;box-shadow:var(--shadow)}
+.ctback:hover{border-color:var(--maroon);color:var(--maroon)}
+#cmdtrackstage h2{color:var(--ink)}
+#cmdtrackstage .sub{color:var(--muted)}
+#cmdtrackstage .sub b{color:var(--maroon)}
+.ctladder{display:flex;align-items:stretch;justify-content:center;gap:12px;flex-wrap:wrap;margin:30px 0 6px;position:relative}
+.ctladder::before{content:"";position:absolute;top:52px;left:8%;right:8%;height:3px;background:linear-gradient(90deg,#3a1418,var(--maroon) 20%,var(--maroon) 80%,#3a1418);border-radius:2px;z-index:0}
+.cttier{position:relative;z-index:1;flex:1;min-width:190px;max-width:270px;border:1px solid #3a1418;background:linear-gradient(160deg,#1a0f10,#0d0809);border-radius:16px;padding:20px 16px 16px;cursor:pointer;text-align:center;transition:transform .18s var(--popp),border-color .18s,box-shadow .18s;overflow:hidden}
+.cttier:hover{transform:translateY(-5px);border-color:var(--maroon);box-shadow:0 18px 44px rgba(192,32,37,.3)}
+.cttier.on{border-color:var(--maroon);box-shadow:inset 0 0 0 1px var(--maroon),0 0 30px rgba(192,32,37,.4)}
+.cttier .num{width:60px;height:60px;margin:0 auto 12px;border-radius:50%;background:radial-gradient(circle,#2a1113,#0d0809);border:2px solid var(--maroon);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;box-shadow:0 0 18px rgba(192,32,37,.55)}
+.cttier .rk{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#e0777a;font-weight:800}
+.cttier .nm{font-size:1.1rem;font-weight:800;color:#fff;margin:3px 0 6px;letter-spacing:-.01em}
+.cttier .ct{font-size:11px;color:#8a8a8a;font-weight:700}
+.cttier .up{position:absolute;top:-8px;right:14px;font-size:16px;color:#5a1216}
+.ctpanelhead{text-align:center;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#e0777a;margin:28px 0 16px}
+.ctmods{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;max-width:840px;margin:0 auto}
+.ctmod{position:relative;display:block;text-decoration:none;border:1px solid var(--maroon);border-radius:16px;padding:22px 18px 18px;background:linear-gradient(160deg,#1c0e0f,#0d0809);box-shadow:0 14px 34px rgba(192,32,37,.28);color:#fff;overflow:hidden;opacity:0;transform:translateY(16px) scale(.96);animation:upPop .55s var(--popp) forwards;animation-delay:var(--d,0s)}
+.ctmod::before{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);transform:skewX(-18deg);opacity:0;pointer-events:none}
+.ctmod:hover::before{opacity:1;animation:ctShine .85s ease}
+@keyframes ctShine{0%{left:-70%}100%{left:130%}}
+.ctmod:hover{transform:translateY(-6px);box-shadow:0 24px 52px rgba(192,32,37,.5)}
+.ctmod .core{width:52px;height:52px;margin:0 auto 12px;border-radius:14px;background:radial-gradient(circle,#3a1416,#120a0b);border:2px solid var(--maroon);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px rgba(192,32,37,.55)}
+.ctmod .flash{text-align:center;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#e0777a}
+.ctmod h3{text-align:center;font-size:1.12rem;font-weight:800;color:#fff;margin:6px 0 6px;letter-spacing:-.01em}
+.ctmod p{text-align:center;margin:0;font-size:.88rem;color:#a9a9a9;line-height:1.45}
+.ctmod .go{display:block;text-align:center;margin-top:13px;font-size:12px;font-weight:800;color:#e0777a}
+.ctalways{text-align:center;margin-top:24px;font-size:12.5px;color:#8a8a8a}
+.ctalways b{color:var(--maroon)}
+.ctmod.locked{border-color:#3a2224;opacity:.55;cursor:default;box-shadow:none;animation:none}
+.ctmod.locked .core{border-color:#5a3a3c;color:#8a8a8a;box-shadow:none;animation:none}
+.ctmod.locked:hover{transform:none;box-shadow:none}
+.ctmod.locked::before{display:none}
+.cmdteaser.locked{background:#f4f4f4;border-color:var(--line);color:var(--muted);cursor:default}
+.cmdteaser.locked:hover{background:#f4f4f4;color:var(--muted);transform:none}
+/* ===== FEEDBACK widget ===== */
+.fbbtn{position:fixed;right:18px;bottom:18px;z-index:60;appearance:none;border:1px solid var(--maroon);background:var(--maroon);color:#fff;font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.03em;padding:11px 16px;border-radius:24px;cursor:pointer;box-shadow:0 10px 28px rgba(192,32,37,.42)}
+.fbbtn:hover{background:#d5252b}
+.fbpanel{position:fixed;right:18px;bottom:70px;z-index:61;width:min(340px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:16px;padding:16px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none}
+.fbpanel.on{display:block}
+.fbpanel h4{margin:0 0 4px;color:#fff;font-size:15px;font-weight:800}
+.fbpanel .fbp{margin:0 0 10px;color:#8a8a8a;font-size:12px}
+.fbpanel textarea{width:100%;min-height:92px;background:#0a0a0a;border:1px solid #262626;border-radius:10px;color:#eee;font-family:var(--base);font-size:13px;padding:9px;resize:vertical}
+.fbpanel textarea:focus{outline:none;border-color:var(--maroon)}
+.fbrow{display:flex;gap:8px;margin-top:10px}
+.fbsend{flex:1;appearance:none;border:1px solid var(--maroon);background:var(--maroon);color:#fff;font-weight:800;font-size:13px;border-radius:10px;padding:9px;cursor:pointer}
+.fbsend:hover{background:#d5252b}
+.fbclose{appearance:none;border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:10px;padding:9px 12px;cursor:pointer;font-size:13px}
+.fbthanks{color:#5bbf85;font-size:13px;font-weight:700;margin-top:8px;display:none}
+/* ===== DEV VIEW ===== */
+#devstage{background:#0a0a0a;color:#ddd;display:none;border-bottom:1px solid #1c1c1c}
+#devstage.show{display:block}
+#devstage .eyebrow{color:#e0777a}
+#devstage h2{color:#fff}
+#devstage .sub{color:#9a9a9a}
+.devscroll{overflow-x:auto;border:1px solid #1e1e1e;border-radius:12px}
+.devtable{width:100%;border-collapse:collapse;font-size:13px}
+.devtable th,.devtable td{text-align:left;padding:9px 13px;border-bottom:1px solid #1e1e1e;white-space:nowrap}
+.devtable th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#7c7c7c}
+.devtable td{color:#cfcfcf}
+.devtable .dbuilt{color:#4ea36a;font-weight:800}
+.devtable .dgap{color:#c0603a;font-weight:800}
+.devtable a{color:#e0777a;text-decoration:none;font-weight:700}
+.devtable a:hover{text-decoration:underline}
+.devtable code{color:#8f8f8f;font-size:11.5px}
+/* ===== review checklist (founder QA) ===== */
+#revSummary{display:flex;gap:16px;align-items:center;margin:2px 0 12px;font-size:13px;color:#bbb;flex-wrap:wrap}
+#revFilter{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
+#revFilter .flbl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#767676;font-weight:700;margin-right:2px}
+#revFilter button{appearance:none;border:1px solid #2a2a2a;background:#141414;color:#bbb;font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:16px;cursor:pointer;transition:.14s}
+#revFilter button:hover{border-color:#C02025;color:#fff}
+#revFilter button.on{background:#C02025;border-color:#C02025;color:#fff}
+.grpcopy{appearance:none;border:1px solid #C02025;background:#fff;color:#C02025;font-weight:800;font-size:10.5px;padding:4px 9px;border-radius:14px;cursor:pointer;transition:.14s}
+.grpcopy:hover{background:#C02025;color:#fff}
+#revSummary b{color:#fff}
+#revSummary .rok{color:#5bbf85}#revSummary .rwork{color:#e0916f}#revSummary .rtodo{color:#8a8a8a}
+#revBar{flex:1;min-width:160px;height:8px;background:#1e1e1e;border-radius:5px;overflow:hidden;max-width:340px}
+#revBar i{display:block;height:100%;width:0;background:var(--maroon);transition:width .4s var(--ease)}
+.revbtn{appearance:none;border:1px solid #333;background:#141414;color:#cfcfcf;font-family:var(--base);font-size:11px;font-weight:800;border-radius:14px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:.14s}
+.revbtn.work{border-color:#c0603a;color:#e0916f;background:#1a100c}
+.revbtn.ok{border-color:#2f7d4f;color:#5bbf85;background:#0d160f}
+.revnote{width:320px;min-height:64px;background:#0f0f0f;border:1px solid #262626;color:#ddd;font-family:var(--base);font-size:13px;line-height:1.45;border-radius:8px;padding:8px 11px;resize:vertical;vertical-align:top}
+.revnote:focus{outline:none;border-color:var(--maroon)}
+.slidect{text-align:center;font-weight:800;color:#e0777a;white-space:nowrap}
+.slidect .sc{display:inline-block;min-width:22px}
+.slidect .sc.scfew{color:#5bbf85}
+.revreset{appearance:none;border:1px solid #333;background:transparent;color:#7c7c7c;font-family:var(--base);font-size:11px;font-weight:700;border-radius:12px;padding:5px 12px;cursor:pointer}
+.revreset:hover{border-color:#c0603a;color:#e0916f}
+/* ===== LEVEL MAP ===== */
+.maphead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:8px}
+.mapRole span{color:var(--maroon)}
+.rolexp{display:flex;align-items:center;gap:14px}
+.ring{--p:0;width:58px;height:58px;border-radius:50%;flex:none;
+  background:conic-gradient(var(--maroon) calc(var(--p)*1%), var(--line2) 0);
+  display:flex;align-items:center;justify-content:center;position:relative}
+.ring::before{content:"";position:absolute;inset:6px;border-radius:50%;background:#fafafa}
+.ring b{position:relative;font-size:14px;font-weight:800;color:var(--ink)}
+.rolexp .xptxt{font-size:.9rem;color:var(--muted)}
+.rolexp .xptxt b{color:var(--ink)}
+.levels{margin-top:26px;position:relative}
+.levels::before{content:"";position:absolute;left:27px;top:14px;bottom:14px;width:2px;background:var(--line);z-index:0}
+.lvl{position:relative;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:stretch;padding:9px 0;z-index:1;text-decoration:none}
+.node{width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--muted);flex:none;transition:.16s}
+.lvl.built .node{border-color:var(--maroon);color:var(--maroon)}
+.lvl.done .node{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.lvl.locked .node{border-style:dashed;border-color:var(--lock);color:var(--lock);background:#fcfcfc}
+.lcard{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff;box-shadow:var(--shadow);transition:transform .16s var(--pop),border-color .16s;display:flex;flex-direction:column}
+a.lvl:hover .lcard{transform:translateX(3px);border-color:var(--maroon)}
+a.lvl:hover .node{transform:scale(1.06)}
+.lvl.locked .lcard{background:#fbfbfb;box-shadow:none;border-style:dashed}
+.lstep{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--maroon);font-weight:800}
+.lvl.locked .lstep{color:var(--lock)}
+.lcard h3{margin:5px 0 5px;font-size:1.16rem;color:var(--ink);font-weight:800;letter-spacing:-.01em}
+.lvl.locked .lcard h3{color:var(--muted)}
+.lcard p{margin:0;font-size:.9rem;color:var(--muted);line-height:1.45}
+.lfoot{display:flex;align-items:center;gap:12px;margin-top:13px}
+.prog{flex:1;height:6px;background:var(--line2);border-radius:4px;overflow:hidden;max-width:280px}
+.prog i{display:block;height:100%;width:0;background:var(--maroon);transition:width .5s var(--ease)}
+.status{font-size:11px;font-weight:800;letter-spacing:.02em;white-space:nowrap;padding:3px 11px;border-radius:20px;border:1px solid var(--line);color:var(--muted)}
+.status.on{color:var(--maroon);border-color:var(--maroon)}
+.status.done{color:#fff;background:var(--maroon);border-color:var(--maroon)}
+.tobuild{align-self:flex-start;margin-top:12px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--lock);border:1px dashed var(--lock);border-radius:20px;padding:4px 12px}
+.lgo{align-self:center;margin-left:auto;color:var(--line);font-size:20px}
+a.lvl:hover .lgo{color:var(--maroon)}
+/* path screen (#mapstage) uses the default light .stage.alt styling */
+.phasehead{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:800;letter-spacing:.02em;color:var(--ink);margin:34px 0 14px}
+.phasehead em{font-style:normal;font-weight:600;color:var(--muted);font-size:12.5px}
+.phasehead .phnum{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--maroon);color:#fff;font-size:13px;font-weight:800;flex:none}
+.phcmd .phnum{background:#5a1216}
+.lvl.gated .lcard{opacity:.72}
+.cmdteaser{display:block;text-decoration:none;border:1px solid var(--maroon);border-radius:14px;padding:16px 18px;background:var(--maroon-tint);color:var(--maroon);font-weight:800;font-size:.95rem;transition:transform .16s var(--ease),background .16s,color .16s;margin-left:74px}
+.cmdteaser:hover{background:var(--maroon);color:#fff;transform:translateX(3px)}
+@media(max-width:640px){.cmdteaser{margin-left:0}}
+
+/* ===== COVERAGE MAP (founder view) ===== */
+.covnote{background:var(--maroon-tint);border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;font-size:.9rem;color:var(--body);margin-bottom:24px;max-width:720px}
+.covnote b{color:var(--maroon)}
+.covgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.covrole{border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.covrole .ch{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:10px}
+.covrole h4{margin:0;font-size:1.05rem;color:var(--ink);font-weight:800}
+.covrole .cc{font-size:12px;font-weight:800;white-space:nowrap}
+.covrole .cc .cb{color:var(--maroon)}
+.covrole .cc .cg{color:var(--lock)}
+.covbar{display:flex;height:8px;border-radius:5px;overflow:hidden;background:var(--line2);margin-bottom:12px}
+.covbar .fill{background:var(--maroon)}
+.covitem{display:flex;align-items:center;gap:9px;font-size:.86rem;padding:4px 0;color:var(--body)}
+.covitem .mk{width:16px;height:16px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.covitem.b .mk{background:var(--maroon);color:#fff}
+.covitem.g .mk{border:1.5px dashed var(--lock);color:var(--lock)}
+.covitem.g{color:var(--muted)}
+
+footer{padding:40px 0 60px;border-top:1px solid var(--line2);font-size:12px;color:var(--muted);text-align:center}
+footer b{color:var(--ink)}
+@media (max-width:640px){
+  .hero{min-height:82vh}
+  .hstats{gap:20px}
+  .lvl{grid-template-columns:44px 1fr;gap:12px}
+  .node{width:44px;height:44px;font-size:14px}
+  .levels::before{left:21px}
+  .lgo{display:none}
+  /* denser, full-width operator grid on phones — 2 cards per row */
+  .opgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .opcard{padding:11px 9px 12px}
+  .opname{font-size:.9rem;margin:3px 0 6px}
+  .opcall{font-size:9px;letter-spacing:.16em}
+  .opmeta{font-size:9.5px}
+}
+@media (max-width:380px){
+  .opgrid{gap:8px}
+  .opcard{padding:9px 7px 11px}
+}
+/* ===== phones: most of the team opens this on a handset ===== */
+@media (max-width:760px){
+  /* Top bar carries four things now. It must claim a full row of the hero's
+     flex layout, otherwise it sits beside the headline and squeezes it. */
+  .htop{position:static;flex:0 0 100%;width:100%;padding:16px 18px 0;flex-wrap:wrap;gap:8px;row-gap:10px;justify-content:flex-start}
+  .hero{min-height:0;padding-bottom:38px;flex-wrap:wrap;align-content:flex-start}
+  .hbrand{flex:0 0 auto;margin-right:auto}
+  .hwho{margin-left:0;margin-right:0;order:3;flex:1 1 100%;justify-content:flex-start}
+  .ctwrap{order:2}
+  .ctbar{margin-left:0}
+  .hportal{order:1;font-size:11px}
+  /* The tooltip is anchored right and would run off a narrow screen. */
+  .cttip{right:auto;left:50%;transform:translate(-50%,-6px);width:min(300px,88vw)}
+  .ctwrap:hover .cttip,.ctwrap:focus-within .cttip{transform:translate(-50%,0)}
+  .hero .wrap{padding-top:26px}
+  .hbadge{font-size:10px}
+  .hlead{font-size:1rem;line-height:1.55}
+  .hstats{gap:0;margin-top:30px;display:grid;grid-template-columns:repeat(3,1fr)}
+  .hstat b{font-size:1.5rem}
+  .hstat span{font-size:9.5px;letter-spacing:.06em;line-height:1.25;display:block}
+  /* Do next: one card at a time, the point of the whole screen. */
+  .dncard{min-height:0;padding:17px 17px 15px;border-radius:14px}
+  .dncard.now{padding:16px 16px 14px}
+  .dncard h4{font-size:15px}
+  .dncard p{font-size:12px}
+  .dnhead{gap:6px}
+  .dneye{font-size:10px;letter-spacing:.18em}
+  .allmods{padding:14px 16px;font-size:11.5px;letter-spacing:.06em}
+  /* Level map: the ring and the header stop fighting for the same row. */
+  .maphead{flex-direction:column;align-items:flex-start;gap:14px}
+  .rolexp{width:100%}
+  .rolexp .xptxt{font-size:.82rem}
+  .phasehead{font-size:11px}
+  .lcard h3{font-size:.98rem}
+  .lcard p{font-size:.82rem}
+  /* Reveal: give the name room and keep the button thumb-reachable. */
+  .rvl{padding:22px 18px}
+  .rvl .rname{font-size:12.5px}
+  .rvl .rdept{letter-spacing:.18em;font-size:11px;gap:9px}
+  .rvl .rnote{font-size:13px}
+  .rvl .rsub{font-size:12px}
+  .rvl .rgo{padding:16px 34px;font-size:14px;width:100%}
+  .rvl .rgowrap{width:100%;max-width:320px}
+  .rvl .rmark{font-size:11rem}
+}
+@media (max-width:420px){
+  .htop{padding:14px 14px 0}
+  .ctbar{padding:6px 10px;font-size:10px;gap:5px}
+  .hstat b{font-size:1.32rem}
+  .hstat span{font-size:9px}
+  .rvl .rrole{font-size:2.15rem}
+  .rvl .rshine{font-size:2.15rem}
+}
+/* command track — phone layout: stack the rank tiers, drop the horizontal connector, single-column modules */
+@media (max-width:700px){
+  #cmdtrackstage{justify-content:flex-start}
+  #cmdtrackstage .wrap{padding-top:60px;padding-bottom:40px}
+  .ctladder{flex-direction:column;align-items:stretch;gap:12px;margin:20px 0 6px}
+  .ctladder::before{display:none}
+  .cttier{min-width:0;max-width:none;width:100%;flex:0 0 auto}
+  .ctmods{grid-template-columns:1fr;max-width:100%}
+  .ctback{top:12px;left:12px;padding:8px 14px}
+}
+@media (prefers-reduced-motion:reduce){.rise,.rise.in{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<!-- Role reveal. Stays empty and hidden until a real role is resolved, so it
+     can never flash a placeholder position at somebody. -->
+<div class="rvl" id="rvl" role="status" aria-live="polite">
+  <div class="rglow"></div>
+  <div class="rring"></div>
+  <div class="rring r2"></div>
+  <div class="rmark" id="rvlMark" aria-hidden="true"></div>
+  <div class="rfr t"></div><div class="rfr b"></div><div class="rfr l"></div><div class="rfr r"></div>
+  <div class="rmote" style="left:18%;top:62%;animation-delay:.9s"></div>
+  <div class="rmote" style="left:31%;top:34%;animation-delay:2.1s"></div>
+  <div class="rmote" style="left:68%;top:58%;animation-delay:1.5s"></div>
+  <div class="rmote" style="left:81%;top:38%;animation-delay:3.0s"></div>
+  <div class="rin">
+    <div class="reye">Koocester Academy</div>
+    <div class="rname" id="rvlName"></div>
+    <div class="rrolewrap">
+      <h2 class="rrole" id="rvlRole"></h2>
+      <div class="rshine" id="rvlShine" aria-hidden="true"></div>
+    </div>
+    <div class="rdept" id="rvlDept"><i></i><span id="rvlDeptTxt"></span><i></i></div>
+    <p class="rnote">This is the seat you fill. <b>Every module below was built for it.</b></p>
+    <p class="rsub">Clear your path, and the Command Track opens.</p>
+    <div class="rgowrap">
+      <div class="rgopulse"></div>
+      <button class="rgo" id="rvlGo" type="button"><span>Start training</span></button>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="hbg"></div>
+  <div class="htop"><div class="hbrand"><img class="logo" src="koocester-logo.png" alt="Koocester"><span class="htag">The Academy</span></div><div class="hwho" id="hwho" hidden></div><div class="ctwrap"><a class="ctbar locked" id="ctBar" href="#cmdtrackstage"><span class="ctlock" id="ctBarIcon">◆</span>Command Track</a><div class="cttip" id="ctTip"><b>◆ Command Track</b><p id="ctTipBody">Earned, never given. Three ranks sit above your role, and each one opens when you have proven the last.</p><div class="ctranks"><span>I · Manager</span><span>II · HOD</span><span>III · C-Suite</span></div></div></div><a class="hportal" href="portal.html">‹ Staff Portal</a></div>
+  <div class="wrap">
+    <div class="hbadge rise">◢ Onboarding protocol</div>
+    <h1 class="rise" id="heroTitle">Welcome to<br><span>Koocester</span></h1>
+    <p class="hlead rise">Clear the foundations, then master the modules built for your seat. One level at a time. This is where you learn the job you were hired to do.</p>
+    <div class="startrow rise">
+      <button class="start" id="start" hidden>▸ See what is next</button>
+    </div>
+    <div class="hstats rise">
+      <div class="hstat"><b id="sRoles">&nbsp;</b><span id="sRolesL">modules outstanding</span></div>
+      <div class="hstat"><b id="sDepts">&nbsp;</b><span id="sDeptsL">modules cleared</span></div>
+      <div class="hstat"><b id="sRanks">&nbsp;</b><span id="sRanksL">in your path</span></div>
+    </div>
+  </div>
+  <div class="scrollcue">⌄</div>
+</header>
+
+<!-- ===== STEP 1 · CHOOSE ROLE ===== -->
+<!-- Founder tools. Nobody picks a specialist any more: roles come from the HR
+     base. This grid survives only so an admin can inspect another role's path
+     before reassigning someone. Hidden by default, revealed for admins. -->
+<section class="stage" id="rolestage" hidden>
+  <div class="wrap">
+    <div class="roshead">
+      <div>
+        <div class="eyebrow rise">Founder tools</div>
+        <h2 class="rise">Inspect any role</h2>
+      </div>
+      <button class="devtoggle rise" id="devToggle" title="Developer view — press D">⚙ Dev</button>
+    </div>
+    <p class="sub rise">Roles are assigned from the HR base. Open a department to see exactly what that role trains on before you move somebody into it.</p>
+    <div class="deptbar" id="deptBar"></div>
+    <div id="deptGridWrap">
+      <div class="opgrid" id="deptGrid"></div>
+      <p class="deptempty" id="deptEmpty">▲ Pick a department to inspect its roles.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMMAND TRACK · inline (the higher path) ===== -->
+<section class="stage" id="cmdtrackstage">
+  <button class="ctback" id="ctBack">‹ Back to the Academy</button>
+  <div class="wrap">
+    <div class="eyebrow rise">Command · the higher path</div>
+    <h2 class="rise">The Command Track</h2>
+    <p class="sub rise">Command isn't picked at the start — it's <b>earned</b>. Master your role, then rise: lead the floor, then a whole department, then the company. Each tier stacks on the last.</p>
+    <div class="ctladder" id="ctLadder"></div>
+    <div class="ctpanelhead" id="ctHead"></div>
+    <div class="ctmods" id="ctMods"></div>
+    <p class="ctalways"><b>Always on.</b> Permanent upgrades — you build on the foundations, you don't relearn them.</p>
+  </div>
+</section>
+
+<section class="stage" id="devstage">
+  <div class="wrap">
+    <div class="eyebrow">Founder view · review checklist</div>
+    <h2>Review every module</h2>
+    <p class="sub">Open each deck, then set its status and jot slide-level fixes. Your progress saves on this device. Press <b>D</b> to toggle.</p>
+    <div id="revSummary"></div>
+    <div id="revFilter"></div>
+    <div class="devscroll"><table class="devtable" id="devTable"></table></div>
+  </div>
+</section>
+
+<!-- ===== STEP 2 · LEVEL MAP ===== -->
+<section class="stage alt" id="mapstage" hidden>
+  <div class="wrap">
+    <div class="maphead">
+      <div>
+        <div class="eyebrow rise in">Your path</div>
+        <h2 class="mapRole" id="mapRole"></h2>
+      </div>
+      <div class="rolexp" id="rolexp"></div>
+    </div>
+    <div class="levels" id="levels"></div>
+  </div>
+</section>
+
+<!-- ===== COVERAGE MAP (founder — shown only with Dev view) ===== -->
+<section class="stage" id="coverage" hidden>
+  <div class="wrap">
+    <div class="eyebrow rise">For building the Academy</div>
+    <h2 class="rise">Coverage map — what's built, what's missing</h2>
+    <p class="sub rise">Every role and the modules it needs. Filled = ready to play. Dashed = a gap to build. Use this to spot exactly which module to create next, per position.</p>
+    <div class="covnote rise"><b>Note:</b> dashed "to build" modules are suggested gaps, not yet written — tell me which to build and I'll create them to the house standard.</div>
+    <div class="covgrid" id="covgrid"></div>
+  </div>
+</section>
+
+<footer><b>koocester</b> academy · your progress saves on this device</footer>
+
+<button class="fbbtn" id="fbBtn">✎ Feedback</button>
+<div class="fbpanel" id="fbPanel">
+  <h4>Make this better</h4>
+  <p class="fbp">Spot something confusing, wrong, or missing? Your note reaches the team.</p>
+  <textarea id="fbText" placeholder="e.g. the Producer deck's HEART slide needs a clearer example…"></textarea>
+  <div class="fbrow"><button class="fbsend" id="fbSend">Send</button><button class="fbclose" id="fbClose">Close</button></div>
+  <div class="fbthanks" id="fbThanks">✓ Thank you — logged.</div>
+</div>
+
+<script>
+(function(){
+  // ===== MODULE LIBRARY =====
+  // built:true → playable deck (href). built:false → a gap to create (no href).
+  var M={
+    // shared foundations
+    f_brand:{step:'Foundation', title:'Brand guideline', desc:'How we look and sound. One maroon, one voice, one standard.', href:'brand-guideline-training.html', key:'koo-brand-slides', built:true},
+    f_company:{step:'Foundation', title:'Company &amp; values', desc:'Who Koocester is. Values, purpose, vision.', href:'company-values-training.html', key:'koo-company-slides', built:true},
+    f_tools:{step:'Foundation', title:'Tools &amp; accounts', desc:'Day one setup. Lark, logins, the channels you live in.', href:'tools-accounts-training.html', key:'koo-tools-slides', built:true},
+    f_policies:{step:'Foundation', title:'Policies, leave &amp; compliance', desc:'Leave management, gifts, barter, disclosure and everyday non-negotiables.', href:'policies-compliance-training.html', key:'koo-policies-slides', built:true},
+    f_90days:{step:'Foundation', title:'Your first 90 days', desc:'Your probation timeline — week by week, what to complete and when.', href:'first-90-days-training.html', key:'koo-90d-slides', built:true},
+    f_offboard:{step:'Foundation', title:'Offboarding &amp; handover', desc:'How we leave well and hand over cleanly. The exit process, the handover doc, access, and the checklist.', href:'offboarding-handover-training.html', key:'koo-offb-slides', built:true},
+    f_rewards:{step:'Foundation', title:'Rewards &amp; consequences', desc:'How we hold the standard — what earns reward, what triggers consequence.', href:'rewards-consequences-training.html', key:'koo-rc-slides', built:true},
+    f_comms:{step:'Foundation', title:'Communication &amp; meetings', desc:'How we talk and meet — Lark norms, the rules, and the rituals.', href:'communication-meetings-training.html', key:'koo-comms-slides', built:true},
+    f_1on1:{step:'Foundation', title:'One-to-ones', desc:'How we run our regular one-to-ones — connect, grow, and support each other.', href:'one-to-ones-training.html', key:'koo-1on1-slides', built:true},
+    f_security:{step:'Foundation', title:'Security &amp; IT access', desc:'Lock down accounts, protect client data, report anything suspicious.', href:'security-it-access-training.html', key:'koo-security-slides', built:true},
+    f_org:{step:'Foundation', title:'The org &amp; who to ask', desc:'How Koocester is structured and exactly who to ask when you\'re stuck.', href:'org-who-to-ask-training.html', key:'koo-org-slides', built:true},
+    f_ai:{step:'Foundation · AI-native', title:'Working AI-native', desc:'Work from the command centre: focused sessions, Wispr Flow, governed AI workflows and human-owned judgment.', href:'how-we-use-ai-training.html', key:'koo-ai-slides', built:true},
+    f_device:{step:'Foundation', title:'Company devices — do\'s &amp; don\'ts', desc:'How to use, secure and care for the device Koocester gives you.', href:'device-management-training.html', key:'koo-device-slides', built:true},
+    // the base
+    base:{step:'Everyone in marketing', title:'How the base works', desc:'The whole Marketing &amp; Delivery workflow — every stage, owner and clock.', href:'mnd-workflow-slides.html', key:'koo-wf-slides', built:true},
+    // roles
+    mc:{step:'Your role', title:'Marketing coordinator', desc:'You start the engine. Every video begins with your pitch.', href:'marketing-coordinator-training.html', key:'koo-mc-slides', built:true},
+    cs:{step:'Your role', title:'Content strategist', desc:'The bridge between the idea and the shoot. Plan it, then guard it.', href:'content-strategist-training.html', key:'koo-cs-slides', built:true},
+    producer:{step:'Your role', title:'Producer', desc:'Find the guest, run the shoot, deliver the footage.', href:'producer-training.html', key:'koo-prod-slides', built:true},
+    smm:{step:'Your role', title:'Social media manager', desc:'Take finished content live and close the loop.', href:'smm-training.html', key:'koo-smm-slides', built:true},
+    copywriter:{step:'Your role', title:'Copywriter', desc:'Source strong stories, then write the words that make them convert and travel.', href:'copywriter-training.html', key:'koo-cw-slides', built:true},
+    veditor:{step:'Your role', title:'Video editing — the Koocester way', desc:'The editing SOP &amp; brand guideline — subtitles, titles, motion, export.', href:'video-editor-training.html', key:'koo-ve-slides', built:true},
+    ve_pacing:{step:'Specialisation', title:'Editing fundamentals — pacing &amp; rhythm', desc:'The craft of the cut — hook, pacing, rhythm, energy, when to cut.', href:'editing-fundamentals-training.html', key:'koo-edfund-slides', built:true},
+    ve_capcut:{step:'Specialisation', title:'CapCut proficiency', desc:'Edit fast and clean in CapCut, exactly to the Koocester SOP.', href:'capcut-training.html', key:'koo-capcut-slides', built:true},
+    events:{step:'Your role', title:'Events', desc:'Plan and run events that fill the room and turn attendance into leads.', href:'events-training.html', key:'koo-events-slides', built:true},
+    sales:{step:'Your role', title:'Sales', desc:'Bring the clients in, then hand them to the base.', href:'sales-training.html', key:'koo-sales-slides', built:true},
+    admin:{step:'Your role', title:'Admin', desc:'The quartermaster — equipment, access, calendars and the logistics that keep the whole squad moving.', href:'admin-training.html', key:'koo-admin-slides', built:true},
+    manager:{step:'Your role', title:'Manager', desc:'Above the pipeline. Your job starts where a record stops moving.', href:'manager-training.html', key:'koo-mgr-slides', built:true},
+    tech:{step:'Your role', title:'Tech', desc:'Keep the machine running, and the safe way to change things.', href:'tech-maintainer-training.html', key:'koo-tech-slides', built:true},
+    // producer skill
+    network:{step:'Producer · specialisation', title:'Sourcing &amp; networking', desc:'Find credible people, qualify hard, lock the shoot.', href:'sourcing-networking-training.html', key:'koo-network-slides', built:true},
+    shoot:{step:'Producer · specialisation', title:'How to shoot', desc:'Shoot day start to finish. Reach early, hook first, back up by HEART.', href:'producer-shoot-training.html', key:'koo-shoot-slides', built:true},
+    // offer & conversion
+    offer:{step:'Offer &amp; conversion', title:'Offer creation &amp; lead magnets', desc:'Grand Slam Offers and lead magnets that turn views into leads.', href:'offer-creation-training.html', key:'koo-offer-slides', built:true},
+    landing:{step:'Offer &amp; conversion', title:'Building landing pages', desc:'Pages that turn the click into a captured lead.', href:'landing-page-training.html', key:'koo-landing-slides', built:true},
+    amend:{step:'Offer &amp; conversion', title:'Amending videos', desc:'The approver\'s eye and amendment strategies.', href:'amending-videos-training.html', key:'koo-amend-slides', built:true},
+    // ===== SUGGESTED GAPS (to build) =====
+    mc_dash:{step:'Specialisation', title:'Reading your dashboard', desc:'Read your n8n command dashboard — lead vs lag, your OMTM, and act on it.', href:'mc-dashboard-training.html', key:'koo-mcdash-slides', built:true},
+    cs_story:{step:'Specialisation', title:'How to storyboard', desc:'Plan the whole video arc by arc — hook, establishment, arcs, CTA — so the shoot writes itself.', href:'how-to-storyboard-training.html', key:'koo-storyboard-slides', built:true},
+    story:{step:'Specialisation', title:'Storytelling &amp; showmanship', desc:'Earn attention and make people care — the skill beneath the storyboard.', href:'storytelling-showmanship-training.html', key:'koo-storytelling-slides', built:true},
+    finance:{step:'Your role', title:'Finance', desc:'Reconcile, check the books, run the machine — automate the mundane, own the judgment.', href:'finance-training.html', key:'koo-finance-slides', built:true},
+    fin_dash:{step:'Specialisation', title:'Reading your dashboard', desc:'Read your finance dashboard — where the numbers come from, lead vs lag, act on it.', href:'finance-dashboard-training.html', key:'koo-findash-slides', built:true},
+    hr:{step:'Your role', title:'HR', desc:'People &amp; culture — hire, grow, run the back office, handle the hard things.', href:'hr-training.html', key:'koo-hr-slides', built:true},
+    perf_mgmt:{step:'Specialisation', title:'Performance management &amp; PIP', desc:'HR-owned: the fair performance process and the Improvement Program.', href:'performance-management-training.html', key:'koo-pm-slides', built:true},
+    cs_success:{step:'Your role', title:'Customer success', desc:'Own the client outcome — onboard, deliver, keep them for life.', href:'customer-success-training.html', key:'koo-cs-success-slides', built:true},
+    poppy:{step:'Specialisation', title:'Poppy AI', desc:'Your content second-brain — research, hooks and where the storyboard gets built.', href:'poppy-ai-training.html', key:'koo-poppy-slides', built:true},
+    hubspot:{step:'Specialisation', title:'HubSpot', desc:'The CRM: contacts, deals, pipeline — log every lead and never lose a follow-up.', href:'sales-hubspot-training.html', key:'koo-hubspot-slides', built:true},
+    xero:{step:'Specialisation', title:'Xero', desc:'Accounting management — invoicing, bank reconciliation, reports.', href:'xero-training.html', key:'koo-xero-slides', built:true},
+    aspire:{step:'Specialisation', title:'Aspire', desc:'Expense management — claims and reimbursements.', href:'aspire-training.html', key:'koo-aspire-slides', built:true},
+    leadflow:{step:'Specialisation', title:'Lead flow &amp; community', desc:'ManyChat, sequencing, posting, comments, and DMs → qualify → hand to Sales.', href:'smm-leadflow-training.html', key:'koo-leadflow-slides', built:true},
+    cw_captions:{step:'Specialisation', title:'Captions &amp; how to make a carousel', desc:'Source the topic, choose storytelling or showcase, then build every beat.', href:'captions-carousels-training.html', key:'koo-capcar-slides', built:true},
+    leading:{step:'Specialisation', title:'Leading the Koocester way', desc:'Player-coach leadership — 1-on-1s, feedback, coaching, hard conversations, holding the standard.', href:'leading-the-koocester-way-training.html', key:'koo-leading-slides', built:true},
+    coaching:{step:'Command', title:'The coaching rhythm', desc:'Weekly 1-on-1s, coaching off data, the monthly review — turn good people into great.', href:'coaching-rhythm-training.html', key:'koo-coach-slides', built:true},
+    tech_auto:{step:'Specialisation', title:'Automations &amp; AnyCross', desc:'Read, safely change, and rebuild the fan-outs.', href:'automations-anycross-training.html', key:'koo-anycross-slides', built:true},
+    tech_n8n:{step:'Specialisation', title:'n8n &amp; integrations', desc:'The always-on layer: briefs, syncs, alerts.', href:'n8n-integrations-training.html', key:'koo-n8n-slides', built:true},
+    tech_devaccess:{step:'Specialisation', title:'Device &amp; access administration', desc:'Provision &amp; wipe the fleet, run the access lifecycle, manage credentials &amp; secrets.', href:'device-access-admin-training.html', key:'koo-deviceaccess-slides', built:true},
+    sales_disco:{step:'Specialisation', title:'Discovery &amp; qualifying', desc:'Run the call that finds a real fit.', href:'discovery-qualifying-training.html', key:'koo-discovery-slides', built:true},
+    sales_close:{step:'Specialisation', title:'Closing &amp; handoff', desc:'Win the client and hand a clean brief to delivery.', href:'closing-handoff-training.html', key:'koo-closing-slides', built:true},
+    sales_process:{step:'Specialisation', title:'The 7-step sales process', desc:'The Koocester way to sell, prospecting through follow-up.', href:'sales-process-training.html', key:'koo-salesproc-slides', built:true},
+    hod_strategy:{step:'Command', title:'Department strategy', desc:'Set direction for a whole department and its numbers.', href:'department-strategy-training.html', key:'koo-deptstrat-slides', built:true},
+    hod_pl:{step:'Command', title:'Owning a P&amp;L', desc:'Run a department like a business — revenue, cost, margin.', href:'owning-a-pl-training.html', key:'koo-pl-slides', built:true},
+    exec_vision:{step:'Command', title:'Vision &amp; direction', desc:'Set where the company is going, and why.', href:'vision-direction-training.html', key:'koo-vision-slides', built:true},
+    exec_capital:{step:'Command', title:'Capital &amp; growth', desc:'Fund the machine — raise, allocate, place the bets.', href:'capital-growth-training.html', key:'koo-capital-slides', built:true},
+    exec_org:{step:'Command', title:'Org design &amp; culture', desc:'Build the org and protect the culture at scale.', href:'org-design-culture-training.html', key:'koo-orgculture-slides', built:true},
+    exec_scale:{step:'Command', title:'Building a scalable company', desc:'Constraint, systems, transferability and an organisation that grows beyond its current leaders.', href:'building-scalable-company-training.html', key:'koo-scalecompany-slides', built:true},
+    community:{step:'Your role', title:'Community manager', desc:'Build the moat, belonging that pays. The member journey, running the room, and community to revenue.', href:'community-manager-training.html', key:'koo-community-slides', built:true},
+    tech_monitor:{step:'Specialisation', title:'Automations &amp; monitoring', desc:'How the machine watches itself, the three monitoring layers and the alert playbook.', href:'automations-monitoring-training.html', key:'koo-automon-slides', built:true}
+  };
+  var FOUND=['f_company','f_brand','f_tools','f_policies','f_90days','f_offboard','f_rewards','f_comms','f_1on1','f_security','f_org','f_ai','f_device'];
+  // ===== ROLE PATHS (ordered) =====
+  var ROLES=[
+    ['mc','Marketing coordinator','You start the engine.',['base','mc','offer','landing','amend','story','mc_dash']],
+    ['cs','Content strategist','Plan it, then guard it.',['base','cs','cs_story','story','poppy','offer','landing','amend']],
+    ['producer','Producer','Find, shoot, deliver.',['base','producer','network','shoot','cs_story','story']],
+    ['smm','Social media manager','Go live, close the loop.',['base','smm','leadflow','story']],
+    ['copywriter','Copywriter','Words that convert.',['base','copywriter','cw_captions','story','offer']],
+    ['videoeditor','Video editor','Cut it sharp — the Koocester edit.',['base','veditor','ve_pacing','ve_capcut','cs_story','story','amend']],
+    ['events','Events','Fill the room — plan, run, and make the moment.',['base','events']],
+    ['community','Community manager','Build the moat, belonging that pays.',['community','leadflow','events','story']],
+    ['trainer','Trainer','Teach the room, then convert it. Growth Academy, delivered.',['story','offer','events','sales_disco']],
+    ['manager','Manager','A rank you earn — lead the floor and the people.',['base','leading','coaching']],
+    ['tech','Tech','Keep the machine running.',['base','tech','tech_auto','tech_n8n','tech_monitor','tech_devaccess']],
+    ['sales','Sales','Bring the clients in.',['sales','sales_process','hubspot','story','sales_disco','sales_close']],
+    ['finance','Finance','Reconcile and run the machine.',['finance','xero','aspire','fin_dash']],
+    ['hr','HR','People, culture & the back office — hire, grow, protect, equip.',['hr','admin','perf_mgmt']],
+    ['cssuccess','Customer success','Own the client\'s win — onboard, deliver, retain.',['cs_success']],
+    ['hod','Head of Department','Run a whole department — strategy, people, P&L.',['base','leading','coaching','hod_strategy','hod_pl']],
+    ['csuite','C-Suite','Set the company\'s direction and the bets.',['leading','coaching','exec_vision','exec_capital','exec_org','exec_scale']]
+  ];
+
+  var $=function(id){return document.getElementById(id);};
+  // Resolved entitlement, set once academy-access.js reports back. Until then
+  // it is null and allowed() stays permissive, so nothing renders as locked
+  // on the strength of a value we have not actually loaded yet.
+  var ACCESS=null;
+  function allowed(k){
+    var m=M[k]; if(!m) return false;
+    if(!ACCESS || ACCESS.degraded || ACCESS.isAdmin) return true;
+    if(!ACCESS.assigned) return false;
+    return ACCESS.decks.has(String(m.href||'').toLowerCase());
+  }
+  function pct(key){ if(!key) return -1; var a=null; try{a=JSON.parse(localStorage.getItem(key)||'null');}catch(e){} if(Array.isArray(a)&&a.length) return Math.round(a.filter(Boolean).length/a.length*100); return 0; }
+  var GATE={"admin-training.html":"koo-admin-gate","amending-videos-training.html":"koo-amend-gate","aspire-training.html":"koo-aspire-gate","automations-anycross-training.html":"koo-anycross-gate","brand-guideline-training.html":"koo-brand-gate","building-scalable-company-training.html":"koo-scalecompany-gate","capcut-training.html":"koo-capcut-gate","capital-growth-training.html":"koo-capital-gate","captions-carousels-training.html":"koo-capcar-gate","closing-handoff-training.html":"koo-closing-gate","coaching-rhythm-training.html":"koo-coach-gate","communication-meetings-training.html":"koo-comms-gate","company-values-training.html":"koo-values-gate","content-strategist-training.html":"koo-cs-gate","community-manager-training.html":"koo-community-gate","automations-monitoring-training.html":"koo-automon-gate","copywriter-training.html":"koo-cw-gate","customer-success-training.html":"koo-cs-success-gate","department-strategy-training.html":"koo-deptstrat-gate","device-access-admin-training.html":"koo-deviceaccess-gate","device-management-training.html":"koo-device-gate","discovery-qualifying-training.html":"koo-discovery-gate","editing-fundamentals-training.html":"koo-edit-gate","events-training.html":"koo-events-gate","finance-dashboard-training.html":"koo-findash-gate","finance-training.html":"koo-finance-gate","first-90-days-training.html":"koo-90d-gate","how-to-storyboard-training.html":"koo-storyboard-gate","how-we-use-ai-training.html":"koo-ai-gate-v2","how-we-use-lark-training.html":"koo-lark-gate","hr-training.html":"koo-hr-gate","landing-page-training.html":"koo-landing-gate","leading-the-koocester-way-training.html":"koo-leading-gate","manager-training.html":"koo-mgr-gate","marketing-coordinator-training.html":"koo-mc-gate","mc-dashboard-training.html":"koo-mcdash-gate","mnd-workflow-slides.html":"koo-wf-gate","n8n-integrations-training.html":"koo-n8n-gate","offer-creation-training.html":"koo-offer-gate","one-to-ones-training.html":"koo-1on1-gate","org-design-culture-training.html":"koo-orgculture-gate","org-who-to-ask-training.html":"koo-org-gate","owning-a-pl-training.html":"koo-pl-gate","performance-management-training.html":"koo-pm-gate","policies-compliance-training.html":"koo-policies-gate","poppy-ai-training.html":"koo-poppy-gate","producer-shoot-training.html":"koo-shoot-gate","producer-training.html":"koo-prod-gate","rewards-consequences-training.html":"koo-rc-gate","sales-admin-training.html":"koo-salesadmin-gate","sales-hubspot-training.html":"koo-hubspot-gate","sales-training.html":"koo-sales-gate","sales-process-training.html":"koo-salesproc-gate","security-it-access-training.html":"koo-security-gate","smm-leadflow-training.html":"koo-leadflow-gate","smm-training.html":"koo-smm-gate","sourcing-networking-training.html":"koo-network-gate","storytelling-showmanship-training.html":"koo-storytelling-gate","tech-maintainer-training.html":"koo-tech-gate","tools-accounts-training.html":"koo-tools-gate","video-editor-training.html":"koo-ve-gate","vision-direction-training.html":"koo-vision-gate","xero-training.html":"koo-xero-gate"};window.KOO_GATE=GATE;window.KOO_VERS={"how-we-use-ai-training.html":4,"org-who-to-ask-training.html":2,"mnd-workflow-slides.html":2,"producer-training.html":2,"copywriter-training.html":2,"content-strategist-training.html":2,"marketing-coordinator-training.html":2,"smm-training.html":2,"sales-training.html":2,"sales-admin-training.html":2};
+  window.KOO_VERS["mnd-workflow-slides.html"]=3;
+  function donePct(m){ var g=m&&m.href&&GATE[m.href]; if(!g) return 0; var a=null; try{a=JSON.parse(localStorage.getItem(g)||"null");}catch(e){} if(!Array.isArray(a)||!a.length) return 0; var yes=a.filter(function(v){return v==="yes";}).length; return Math.round(yes/a.length*100); }
+
+  function isBuilt(k){ return M[k]&&M[k].built; }
+
+  /* hero stats are the person's own numbers now, painted by paintHeroStats */
+
+  // ===== specialist operators =====
+  var OP={
+    mc:{call:'CATALYST',em:'star',head:'headset'}, cs:{call:'ARCHITECT',em:'board',head:'glasses'}, producer:{call:'FIELD',em:'cam',head:'cap'},
+    smm:{call:'SIGNAL',em:'chat',head:'cans'}, copywriter:{call:'SCRIBE',em:'pen',head:'hair'}, videoeditor:{call:'CUTTER',em:'cam',head:'cans'}, events:{call:'SIREN',em:'spark',head:'hair'}, community:{call:'HOST',em:'people',head:'hair'}, sales:{call:'CLOSER',em:'arrow',head:'tie'},
+    tech:{call:'ENGINEER',em:'gear',head:'visor'}, finance:{call:'LEDGER',em:'bars',head:'sqglass'},
+    hr:{call:'GUARDIAN',em:'people',head:'bun'}, cssuccess:{call:'SHEPHERD',em:'heart',head:'earpiece'},
+    manager:{call:'COMMAND',em:'rank',head:'beret',rank:'RANK I'}, hod:{call:'MARSHAL',em:'chevrons',head:'peakcap',rank:'RANK II'}, csuite:{call:'OVERLORD',em:'crown',head:'crown',rank:'RANK III'}
+  };
+  var EM={
+    star:'<path d="M0,-7 1.6,-2.2 6.7,-2.2 2.6,1 4.1,6.5 0,3.3 -4.1,6.5 -2.6,1 -6.7,-2.2 -1.6,-2.2Z" fill="#fff" stroke="none"/>',
+    board:'<rect x="-7" y="-5" width="14" height="10" rx="1.5"/><path d="M-7,-1 H7 M-3.5,-5 -1.5,-1 M0.5,-5 2.5,-1"/>',
+    cam:'<rect x="-7" y="-4.5" width="10" height="9" rx="1.5"/><path d="M3,-1.5 7,-3.5 7,3.5 3,1.5Z"/>',
+    chat:'<path d="M-7,-5 H7 V2.5 H-1.5 L-4.5,6 -4.5,2.5 -7,2.5 Z"/>',
+    pen:'<path d="M-5,6.5 L1.5,-6 4.5,-4 -2,8 Z M-5,6.5 -3.2,4.6"/>',
+    arrow:'<path d="M-6,5.5 L0,-6 L6,5.5 M-3.2,1 H3.2"/>',
+    gear:'<circle r="3"/><path d="M0,-7 V-4.2 M0,7 V4.2 M-7,0 H-4.2 M7,0 H4.2 M-5,-5 -3,-3 M5,5 3,3 M5,-5 3,-3 M-5,5 -3,3"/>',
+    check:'<rect x="-7" y="-6" width="14" height="12" rx="1.5"/><path d="M-4,0 -1,3 4,-3.5"/>',
+    bars:'<path d="M-8,6 H7 M-6,6 V0 M-1,6 V-4.5 M4,6 V-2"/>',
+    rank:'<path d="M-6,-1 0,-6.5 6,-1 M-6,5 0,-0.5 6,5"/>',
+    chevrons:'<path d="M-6,-2 0,-6.5 6,-2 M-6,2.5 0,-2 6,2.5 M-6,7 0,2.5 6,7"/>',
+    crown:'<path d="M-7,4 -6,-4 -2,-0.5 0,-6 2,-0.5 6,-4 7,4 Z" fill="#fff" stroke="none"/>',
+    heart:'<path d="M0,5.5 C-6.5,-1.5 -3.5,-7.5 0,-3.2 C3.5,-7.5 6.5,-1.5 0,5.5 Z" fill="#fff" stroke="none"/>',
+    people:'<circle cx="-3.2" cy="-3" r="2.4"/><circle cx="3.2" cy="-3" r="2.4"/><path d="M-7,6.5 Q-3.2,0.5 0.6,4.5 M7,6.5 Q3.2,0.5 -0.6,4.5"/>',
+    spark:'<path d="M0,-8 1.5,-1.5 8,0 1.5,1.5 0,8 -1.5,1.5 -8,0 -1.5,-1.5Z" fill="#fff" stroke="none"/>'
+  };
+  var HEAD={
+    headset:'<path d="M35 50 Q60 18 85 50" fill="none" stroke="#0a0a0a" stroke-width="5"/><rect x="31" y="46" width="8" height="13" rx="3" fill="#0a0a0a"/><rect x="81" y="46" width="8" height="13" rx="3" fill="#0a0a0a"/><path d="M81 58 Q72 63 66 59" fill="none" stroke="#0a0a0a" stroke-width="2.5"/><circle cx="66" cy="59" r="2.4" fill="#C02025"/>',
+    glasses:'<g stroke="#0a0a0a" stroke-width="3" fill="none"><circle cx="50" cy="50" r="7.5"/><circle cx="70" cy="50" r="7.5"/><path d="M57.5 50 H62.5 M42.5 50 36 49 M77.5 50 84 49"/></g>',
+    cap:'<path d="M36 41 Q60 19 84 41 Z" fill="#0a0a0a"/><rect x="34" y="40" width="52" height="5" rx="2" fill="#0a0a0a"/><path d="M34 45 18 50 34 43 Z" fill="#0a0a0a"/>',
+    cans:'<path d="M33 52 Q60 20 87 52" fill="none" stroke="#0a0a0a" stroke-width="5"/><rect x="29" y="47" width="10" height="17" rx="4" fill="#0a0a0a"/><rect x="81" y="47" width="10" height="17" rx="4" fill="#0a0a0a"/>',
+    hair:'<path d="M34 43 Q42 24 60 24 Q80 24 86 43 Q80 33 60 32 Q45 32 34 43 Z" fill="#0a0a0a"/>',
+    tie:'<path d="M52 78 60 84 68 78" fill="none" stroke="#0a0a0a" stroke-width="3"/><path d="M60 84 56 91 60 108 64 91 Z" fill="#0a0a0a"/>',
+    visor:'<rect x="37" y="45" width="46" height="10" rx="5" fill="#0a0a0a"/><rect x="40" y="48" width="40" height="3" rx="1.5" fill="#C02025"/>',
+    neat:'<path d="M38 40 Q60 25 82 40 L82 35 Q60 30 38 35 Z" fill="#0a0a0a"/>',
+    sqglass:'<g stroke="#0a0a0a" stroke-width="3" fill="none"><rect x="42" y="44" width="15" height="12" rx="2"/><rect x="63" y="44" width="15" height="12" rx="2"/><path d="M57 50 H63"/></g>',
+    bun:'<path d="M35 43 Q43 25 60 25 Q78 25 85 43 Q78 33 60 32 Q45 32 35 43Z" fill="#0a0a0a"/><circle cx="60" cy="27" r="6" fill="#0a0a0a"/>',
+    beret:'<path d="M36 39 Q60 22 82 39 Q78 44 60 44 Q44 44 36 39 Z" fill="#0a0a0a"/><circle cx="80" cy="33" r="2.5" fill="#C02025"/>',
+    peakcap:'<path d="M34 39 Q60 20 86 39 Z" fill="#0a0a0a"/><rect x="32" y="38" width="56" height="6" rx="2" fill="#0a0a0a"/><rect x="50" y="39" width="20" height="4" fill="#C02025"/><path d="M32 44 20 49 32 42Z" fill="#0a0a0a"/>',
+    crown:'<path d="M40 36 46 26 53 34 60 22 67 34 74 26 80 36 80 42 40 42 Z" fill="#0a0a0a"/><circle cx="60" cy="24" r="2.5" fill="#C02025"/><circle cx="46" cy="27" r="2" fill="#C02025"/><circle cx="74" cy="27" r="2" fill="#C02025"/>',
+    earpiece:'<path d="M84 47 Q91 54 86 63" fill="none" stroke="#0a0a0a" stroke-width="4"/><circle cx="84" cy="47" r="3.6" fill="#0a0a0a"/><path d="M86 63 Q79 66 73 62" fill="none" stroke="#0a0a0a" stroke-width="2.5"/><circle cx="73" cy="62" r="2.2" fill="#C02025"/>'
+  };
+  function operatorSVG(rid){
+    var o=OP[rid]||{}, e=EM[o.em]||'', hg=HEAD[o.head]||'';
+    return '<svg class="opsvg" viewBox="0 0 120 155" aria-hidden="true">'
+      +'<defs><linearGradient id="og_'+rid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C02025"/><stop offset="1" stop-color="#4a0c0f"/></linearGradient></defs>'
+      +'<g class="opbody"><path d="M18 155 C18 112 37 99 60 99 C83 99 102 112 102 155 Z" fill="url(#og_'+rid+')"/>'
+      +'<ellipse cx="60" cy="50" rx="25" ry="27" fill="url(#og_'+rid+')"/>'
+      +'<rect x="42" y="47" width="36" height="5" rx="2.5" fill="#fff" opacity=".82"/>'+hg+'</g>'
+      +'<circle class="opglow" cx="60" cy="124" r="22" fill="#C02025" opacity="0"/>'
+      +'<circle cx="60" cy="124" r="17" fill="#0a0a0a" stroke="#C02025" stroke-width="2"/>'
+      +'<g transform="translate(60,124)"><g class="opem" stroke="#fff" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+e+'</g></g>'
+      +'</svg>';
+  }
+  // small role emblem chip overlaid on the portrait — keeps its per-role hover micro-animation
+  function emblemChip(rid){
+    var o=OP[rid]||{}, e=EM[o.em]||'';
+    return '<span class="opembadge"><svg viewBox="-10 -10 20 20" aria-hidden="true"><g class="opem" stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+e+'</g></svg></span>';
+  }
+  // operator card art = character portrait + emblem chip
+  function operatorArt(rid){
+    return '<div class="opportrait"><img class="opimg" src="operators/'+rid+'.png" alt="" loading="lazy">'+emblemChip(rid)+'<span class="opgloss"></span></div>';
+  }
+  function cmdEmblemSVG(em){ var e=EM[em]||''; return '<svg class="cmdem" viewBox="-10 -10 20 20" aria-hidden="true"><g stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+e+'</g></svg>'; }
+  var SPEC={mc:'offer',cs:'cs_story',producer:'shoot',smm:'leadflow',copywriter:'story',videoeditor:'veditor',events:'events',community:'community',sales:'hubspot',tech:'tech',finance:'finance',hr:'hr',cssuccess:'cs_success',manager:'leading',hod:'hod_strategy',csuite:'exec_vision'};
+  var curSpec=null, curRole=null, curSpecDone=false;
+  var COMMAND=['manager','hod','csuite'];
+  var DEPT={mc:'Marketing',cs:'Marketing',producer:'Marketing',smm:'Marketing',copywriter:'Marketing',videoeditor:'Marketing',events:'Marketing',community:'Marketing',sales:'Sales & Success',cssuccess:'Sales & Success',trainer:'Growth Academy',tech:'Operations',finance:'Finance & People',hr:'Finance & People'};
+  // Hero stats. Org totals mean nothing to the person reading them: they hold
+  // one role, not seventeen. Once a path is loaded these become THEIR numbers.
+  // Until then the tiles stay blank rather than show a number that is not theirs.
+  var lastPathStats=null;
+  function paintHeroStats(){
+    var a=$('sRoles'), b=$('sDepts'), c=$('sRanks');
+    var la=$('sRolesL'), lb=$('sDeptsL'), lc=$('sRanksL');
+    if(!a||!b||!c) return;
+    if(!lastPathStats){ a.innerHTML='&nbsp;'; b.innerHTML='&nbsp;'; c.innerHTML='&nbsp;'; return; }
+    a.textContent=String(lastPathStats.left);   if(la) la.textContent = lastPathStats.left===1?'module outstanding':'modules outstanding';
+    b.textContent=String(lastPathStats.cleared);if(lb) lb.textContent = lastPathStats.cleared===1?'module cleared':'modules cleared';
+    c.textContent=String(lastPathStats.total);  if(lc) lc.textContent='in your path';
+  }
+  var DEPT_ORDER=['Marketing','Sales & Success','Operations','Finance & People'];
+  function cardFor(r,idx){
+    idx=idx||0;
+    var mods=r[3], built=mods.filter(isBuilt).length, gap=mods.length-built, o=OP[r[0]]||{call:'OPERATOR'};
+    var t=document.createElement('button');
+    t.className='opcard asm'+(COMMAND.indexOf(r[0])>-1?' prestige':''); t.setAttribute('data-r',r[0]);
+    t.style.setProperty('--d',(idx*0.12)+'s');
+    t.style.setProperty('--fx',(idx%2? '130px':'-130px'));
+    t.innerHTML='<span class="scan"></span>'+operatorArt(r[0])
+      +(o.rank?'<div class="rankchip">'+o.rank+'</div>':'')
+      +'<div class="opcall">'+o.call+'</div><div class="opname">'+r[1]+'</div>'
+      +'<div class="opmeta"><span class="b">'+built+' ready</span>'+(gap>0?'<span class="dot"></span>'+gap+' to build':'')+'</div>'
+      +(r[0]==='mc'?'<div class="opgate">🔒 Unlock at Manager</div>':'');
+    t.onclick=function(){ selectRole(r[0]); };
+    t.addEventListener('animationend',function(e){ if(e.animationName==='asmCard') t.classList.remove('asm'); });
+    return t;
+  }
+  var deptBarEl=$('deptBar'), deptGridEl=$('deptGrid'), deptEmptyEl=$('deptEmpty'), cmdTrackEl=$('cmdTrack');
+  var curDept=null;
+  // ---- department selector: pick a department, its operators reveal below ----
+  var DEPTICON={
+    'Marketing':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4l3 .5 2 4.5 2-.5-1-4M3 10l11-5v14L3 14"/><path d="M18 9a3 3 0 0 1 0 6"/></svg>',
+    'Sales & Success':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>',
+    'Operations':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2 2M16.7 16.7l2 2M18.7 5.3l-2 2M7.3 16.7l-2 2"/></svg>',
+    'Finance & People':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11M9.3 20V5M14.7 20V13M20 20V8M3 20.5h18"/></svg>'
+  };
+  DEPT_ORDER.forEach(function(dep){
+    var members=ROLES.filter(function(r){return DEPT[r[0]]===dep;});
+    if(!members.length) return;
+    var b=document.createElement('button'); b.className='deptbtn rise'; b.setAttribute('data-dep',dep);
+    b.innerHTML='<span class="depticon">'+(DEPTICON[dep]||'')+'</span><span class="dname">'+dep+'</span><span class="dcount">'+members.length+'</span>';
+    b.onclick=function(){ selectDept(dep); };
+    deptBarEl.appendChild(b);
+  });
+  function selectDept(dep,skipMark){
+    curDept=dep;
+    [].forEach.call(deptBarEl.querySelectorAll('.deptbtn'),function(x){x.classList.toggle('on',x.getAttribute('data-dep')===dep);});
+    if(deptEmptyEl) deptEmptyEl.style.display='none';
+    deptGridEl.innerHTML='';
+    ROLES.filter(function(r){return DEPT[r[0]]===dep;}).forEach(function(r,i){ deptGridEl.appendChild(cardFor(r,i)); });
+    reveal(deptGridEl);
+    if(curRole){ [].forEach.call(deptGridEl.querySelectorAll('.opcard'),function(x){x.classList.toggle('on',x.getAttribute('data-r')===curRole);}); }
+  }
+  // ---- command ladder now lives in command-ascension.html; render here only if the element exists ----
+  if(cmdTrackEl) COMMAND.forEach(function(rid,i){
+    var r=ROLES.filter(function(x){return x[0]===rid;})[0]; if(!r) return;
+    var o=OP[rid]||{}, mods=r[3], built=mods.filter(isBuilt).length, gap=mods.length-built;
+    var node=document.createElement('button'); node.className='cmdnode rise'; node.setAttribute('data-r',rid);
+    node.innerHTML='<div class="cmdrank">'+(o.rank||('RANK '+(i+1)))+'</div>'
+      +'<div class="cmdemblem">'+cmdEmblemSVG(o.em)+'</div>'
+      +'<div class="cmdname">'+r[1]+'</div><div class="cmdcall">'+(o.call||'')+'</div>'
+      +'<div class="opmeta"><span class="b">'+built+' ready</span>'+(gap>0?'<span class="dot"></span>'+gap+' to build':'')+'</div>';
+    node.onclick=function(){ selectRole(rid); };
+    cmdTrackEl.appendChild(node);
+    if(i<COMMAND.length-1){ var arw=document.createElement('div'); arw.className='cmdup'; arw.textContent='▲'; cmdTrackEl.appendChild(arw); }
+  });
+  // ===== developer view =====
+  (function(){
+    var tbl=$('devTable'); if(!tbl) return;
+    var keys=Object.keys(M), builtKeys=keys.filter(function(k){return M[k].built;});
+    var STLBL={todo:'⬜ To review',work:'🟡 Needs work',ok:'✅ Approved'}, STNEXT={todo:'work',work:'ok',ok:'todo'};
+    // ---- review ownership: who reviews which module (delegation) ----
+    var OWN={
+      f_company:'Everyone',f_brand:'Everyone',f_tools:'Everyone',f_policies:'Everyone',f_90days:'Everyone',f_offboard:'Everyone',f_rewards:'Everyone',f_comms:'Everyone',f_1on1:'Everyone',f_security:'Everyone',f_org:'Everyone',f_ai:'Everyone',f_device:'Everyone',base:'Everyone',
+      mc:'Marketing',mc_dash:'Marketing',offer:'Marketing',landing:'Marketing',amend:'Marketing',
+      cs:'Content Strategy',cs_story:'Content Strategy',story:'Content Strategy',poppy:'Content Strategy',
+      producer:'Producer',network:'Producer',shoot:'Producer',
+      veditor:'Video Editor',ve_pacing:'Video Editor',ve_capcut:'Video Editor',
+      copywriter:'Copywriter',cw_captions:'Copywriter',
+      smm:'Social Media',leadflow:'Social Media',
+      sales:'Sales',sales_process:'Sales',sales_disco:'Sales',sales_close:'Sales',hubspot:'Sales',
+      cs_success:'Customer Success',
+      finance:'Finance',fin_dash:'Finance',xero:'Finance',aspire:'Finance',
+      hr:'HR',perf_mgmt:'HR',
+      tech:'Tech',tech_auto:'Tech',tech_n8n:'Tech',tech_devaccess:'Tech',
+      admin:'Admin',events:'Events',
+      manager:'Leadership',leading:'Leadership',coaching:'Leadership',
+      hod_strategy:'Command',hod_pl:'Command',exec_vision:'Command',exec_capital:'Command',exec_org:'Command',exec_scale:'Command'
+    };
+    var OWN_ORDER=['Everyone','Marketing','Content Strategy','Producer','Video Editor','Copywriter','Social Media','Sales','Customer Success','Finance','HR','Tech','Admin','Events','Leadership','Command'];
+    var OWN_NAME={Everyone:'Hakim',Marketing:'Mike','Content Strategy':'Shahrukh',Producer:'Hakim → Thaddeus checks','Video Editor':'Iman',Copywriter:'Ratnasari','Social Media':'Talulla',Sales:'Cheryl','Customer Success':'Hakim',Finance:'Mishkat',HR:'Bhavani',Tech:'Faiz',Admin:'Rina',Events:'Hakim',Leadership:'Hakim',Command:'Hakim'};
+    var YOURS={Everyone:1,Leadership:1,Command:1,Events:1,'Customer Success':1,Producer:1};
+    var OWN_WHO={Everyone:'you (Hakim) — all-hands foundation',Marketing:'Mike','Content Strategy':'Shahrukh',Producer:'you (Hakim) → Thaddeus checks','Video Editor':'Iman',Copywriter:'Ratnasari','Social Media':'Talulla (senior SMM)',Sales:'Cheryl','Customer Success':'you (Hakim)',Finance:'Mishkat',HR:'Bhavani',Tech:'Faiz',Admin:'Rina',Events:'you (Hakim) — for now',Leadership:'you (Hakim) — leadership',Command:'you (Hakim) — command'};
+    function rget(k){ try{return localStorage.getItem('koo-rev-'+k)||'todo';}catch(e){return 'todo';} }
+    function nget(k){ try{return localStorage.getItem('koo-revn-'+k)||'';}catch(e){return '';} }
+    function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+    function rowFor(k){
+      var m=M[k], own=OWN[k]||'';
+      var usedBy=ROLES.filter(function(r){return r[3].indexOf(k)>-1;}).map(function(r){return r[0];});
+      if(FOUND.indexOf(k)>-1) usedBy=['all'].concat(usedBy);
+      var st=rget(k);
+      var rev=m.built?'<button class="revbtn '+(st==='todo'?'':st)+'" data-k="'+k+'">'+STLBL[st]+'</button>':'<span class="dgap">○ to build</span>';
+      var note=m.built?'<textarea class="revnote" data-k="'+k+'" placeholder="notes… paste slide-level fixes here">'+esc(nget(k))+'</textarea>':'';
+      var sc=(m.built&&m.href)?'<span class="sc" data-href="'+m.href+'">…</span>':'—';
+      return '<tr data-own="'+own+'"><td>'+m.title+'</td><td><code>'+(usedBy.join(', ')||'—')+'</code></td><td class="slidect">'+sc+'</td><td>'+rev+'</td><td>'+note+'</td><td>'+(m.href?'<a href="'+m.href+'">open ▸</a>':'')+'</td></tr>';
+    }
+    function buildRows(){
+      var h='<tr class="dhrow"><th>Module</th><th>Used by</th><th title="slides in the deck — fewer = quicker to review">Slides</th><th>Review</th><th>Notes (slide issues, fixes)</th><th></th></tr>';
+      var seen={};
+      OWN_ORDER.forEach(function(own){
+        var mine=keys.filter(function(k){return OWN[k]===own;});
+        if(!mine.length) return;
+        mine.forEach(function(k){seen[k]=1;});
+        var b=mine.filter(function(k){return M[k].built;}), ok=b.filter(function(k){return rget(k)==='ok';}).length;
+        var mine_you=(own==='Everyone'||own==='Leadership'||own==='Command'||own==='Events'||own==='Customer Success');
+        var bg=mine_you?'#faf3f3':(YOURS[own]?'#fbf6f6':'#f2f2f2');
+        h+='<tr class="grp" data-own="'+own+'"><td colspan="6" style="background:'+bg+';padding:10px 13px;border-top:2px solid #C02025">'
+          +'<b style="font-size:13px;color:#0a0a0a">'+own+'</b> '
+          +'<span style="font-size:11.5px;color:#767676">· reviewer </span><b style="font-size:12.5px;color:#C02025">'+(OWN_NAME[own]||OWN_WHO[own]||'')+'</b>'
+          +(YOURS[own]?' <span style="background:#C02025;color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:2px 7px;border-radius:11px;margin-left:6px">★ YOU REVIEW</span>':'')
+          +'<span style="float:right;display:inline-flex;gap:10px;align-items:center">'
+          +'<span style="font-size:11.5px;color:'+(b.length&&ok===b.length?'#1b7f4b':'#767676')+'">'+ok+' / '+b.length+' approved</span>'
+          +(b.length?'<button class="grpcopy" data-own="'+own+'">⧉ copy links</button>':'')
+          +'</span></td></tr>';
+        mine.forEach(function(k){ h+=rowFor(k); });
+      });
+      var rest=keys.filter(function(k){return !seen[k];});
+      if(rest.length){ h+='<tr class="grp" data-own="__rest"><td colspan="6" style="background:#fff4e5;padding:10px 13px;border-top:2px solid #C02025"><b>Unassigned</b> · assign a reviewer</td></tr>'; rest.forEach(function(k){ h+=rowFor(k); }); }
+      return h;
+    }
+    var REVBASE='https://koocester-academy.pages.dev/';
+    function renderFilter(){
+      var el=$('revFilter'); if(!el) return;
+      var owners=OWN_ORDER.filter(function(o){return keys.some(function(k){return OWN[k]===o;});});
+      var h='<span class="flbl">Delegate to</span><button class="on" data-own="all">All</button>';
+      owners.forEach(function(o){ h+='<button data-own="'+o+'">'+o+'</button>'; });
+      el.innerHTML=h;
+      [].forEach.call(el.querySelectorAll('button'),function(btn){ btn.onclick=function(){
+        var o=btn.getAttribute('data-own');
+        [].forEach.call(el.querySelectorAll('button'),function(x){x.classList.toggle('on',x===btn);});
+        applyFilter(o);
+      }; });
+    }
+    function applyFilter(o){
+      [].forEach.call(tbl.querySelectorAll('tr'),function(tr){
+        if(tr.classList.contains('dhrow')){ tr.style.display=''; return; }
+        var own=tr.getAttribute('data-own');
+        tr.style.display=(o==='all'||own===o)?'':'none';
+      });
+    }
+    function copyGroup(own){
+      var b=keys.filter(function(k){return OWN[k]===own && M[k].built && M[k].href;});
+      var lines=b.map(function(k){ return '• '+M[k].title.replace(/&amp;/g,'&')+' — '+REVBASE+M[k].href; });
+      var nm=OWN_NAME[own]||own;
+      var txt='Hi '+nm+' — you\'re assigned the '+own+' Academy decks. Please review (login koocester / onboarding):\n'+lines.join('\n')
+        +'\n\nOpen each, read it through, and use the Feedback button (bottom-right of any slide) to flag anything wrong or unclear. Tell Hakim when your set is clean.';
+      var done=false;
+      try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); done=true; } }catch(e){}
+      if(!done){ try{ var ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done=true; }catch(e){} }
+      if(!done){ try{ window.prompt('Copy this list for '+own+':', txt); }catch(e){} }
+      return txt;
+    }
+    function summary(){
+      var ok=0,work=0,todo=0;
+      builtKeys.forEach(function(k){ var s=rget(k); if(s==='ok')ok++; else if(s==='work')work++; else todo++; });
+      var n=builtKeys.length, p=n?Math.round(ok/n*100):0, el=$('revSummary'); if(!el) return;
+      el.innerHTML='<span><b>'+ok+'</b> / '+n+' approved</span><div id="revBar"><i style="width:'+p+'%"></i></div>'
+        +'<span class="rok">✅ '+ok+'</span><span class="rwork">🟡 '+work+'</span><span class="rtodo">⬜ '+todo+'</span>'
+        +'<button class="revreset" id="revExport">⬇ export approvals</button>'
+        +'<button class="revreset" id="revReset" disabled title="disabled — review progress is protected" style="opacity:.38;cursor:not-allowed">reset all</button>';
+      var re=$('revExport'); if(re) re.onclick=function(){
+        var out={generated:new Date().toISOString(),approved:0,total:builtKeys.length,decks:[]};
+        builtKeys.forEach(function(k){ var m=M[k],st=rget(k); if(st==='ok')out.approved++;
+          out.decks.push({id:k,title:(m.title||'').replace(/&amp;/g,'&'),href:m.href||'',status:st,notes:nget(k)}); });
+        var txt=JSON.stringify(out,null,2);
+        try{ if(navigator.clipboard) navigator.clipboard.writeText(txt); }catch(e){}
+        try{ var blob=new Blob([txt],{type:'application/json'}),a=document.createElement('a');
+          a.href=URL.createObjectURL(blob); a.download='koocester-academy-review-state.json';
+          document.body.appendChild(a); a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500); }catch(e){}
+        re.textContent='✓ copied + saved'; setTimeout(function(){re.textContent='⬇ export approvals';},1900);
+      };
+      /* reset-all disabled — review progress is protected */
+    }
+    function bind(){
+      [].forEach.call(tbl.querySelectorAll('.revbtn'),function(b){ b.onclick=function(){ var k=b.getAttribute('data-k'), ns=STNEXT[rget(k)]; try{localStorage.setItem('koo-rev-'+k,ns);}catch(e){} b.className='revbtn '+(ns==='todo'?'':ns); b.textContent=STLBL[ns]; summary(); }; });
+      [].forEach.call(tbl.querySelectorAll('.revnote'),function(inp){ inp.oninput=function(){ try{localStorage.setItem('koo-revn-'+inp.getAttribute('data-k'),inp.value);}catch(e){} }; });
+      [].forEach.call(tbl.querySelectorAll('.grpcopy'),function(btn){ btn.onclick=function(e){ e.stopPropagation(); copyGroup(btn.getAttribute('data-own')); var t=btn.textContent; btn.textContent='✓ copied'; setTimeout(function(){btn.textContent=t;},1600); }; });
+    }
+    var SLC={"admin-training.html":18,"amending-videos-training.html":16,"aspire-training.html":15,"automations-anycross-training.html":27,"brand-guideline-training.html":42,"capcut-training.html":27,"capital-growth-training.html":23,"captions-carousels-training.html":30,"closing-handoff-training.html":20,"coaching-rhythm-training.html":21,"communication-meetings-training.html":21,"company-values-training.html":25,"content-strategist-training.html":26,"copywriter-training.html":29,"customer-success-training.html":26,"department-strategy-training.html":23,"device-access-admin-training.html":24,"device-management-training.html":19,"discovery-qualifying-training.html":18,"editing-fundamentals-training.html":22,"events-training.html":30,"finance-dashboard-training.html":21,"finance-training.html":19,"first-90-days-training.html":23,"how-to-storyboard-training.html":30,"how-we-use-ai-training.html":31,"how-we-use-lark-training.html":22,"hr-training.html":22,"landing-page-training.html":21,"leading-the-koocester-way-training.html":39,"manager-training.html":23,"marketing-coordinator-training.html":36,"mc-dashboard-training.html":17,"n8n-integrations-training.html":23,"offer-creation-training.html":23,"org-design-culture-training.html":23,"org-who-to-ask-training.html":18,"owning-a-pl-training.html":21,"performance-management-training.html":19,"policies-compliance-training.html":28,"poppy-ai-training.html":16,"producer-shoot-training.html":30,"producer-training.html":27,"rewards-consequences-training.html":19,"sales-admin-training.html":24,"sales-hubspot-training.html":14,"sales-training.html":19,"sales-process-training.html":36,"security-it-access-training.html":23,"smm-leadflow-training.html":29,"smm-training.html":31,"sourcing-networking-training.html":23,"storytelling-showmanship-training.html":21,"tech-maintainer-training.html":33,"tools-accounts-training.html":22,"video-editor-training.html":31,"vision-direction-training.html":20,"xero-training.html":15,"mnd-workflow-slides.html":39,"one-to-ones-training.html":23};
+    SLC["capital-growth-training.html"]=24;
+    SLC["mnd-workflow-slides.html"]=40;
+    SLC["n8n-integrations-training.html"]=24;
+    SLC["policies-compliance-training.html"]=33;
+    SLC["community-manager-training.html"]=29;
+    SLC["automations-monitoring-training.html"]=29;
+    SLC["building-scalable-company-training.html"]=26;
+    function countSlides(){
+      [].forEach.call(tbl.querySelectorAll('.sc'),function(el){
+        var href=el.getAttribute('data-href'); if(!href) return;
+        var n=SLC[href];
+        if(n!=null){ el.textContent=n; if(n<=18) el.classList.add('scfew'); return; }
+        if(location.protocol!=='file:'){ fetch(href).then(function(r){return r.text();}).then(function(t){var c=(t.match(/<section class="slide/g)||[]).length; el.textContent=c; if(c<=18)el.classList.add('scfew');}).catch(function(){el.textContent='?';}); }
+        else el.textContent='?';
+      });
+    }
+    function draw(){ tbl.innerHTML=buildRows(); bind(); summary(); countSlides(); renderFilter(); }
+    draw();
+    var devStage=$('devstage');
+    // Founder only. This bar binds at parse time, before access resolves, so it
+    // cannot rely on the elements having been removed yet — it checks the flag
+    // on every invocation and does nothing until the database has confirmed
+    // is_founder(). Before this, pressing D revealed the dev view and the
+    // coverage map to anyone signed in.
+    function toggleDev(){
+      if(window.__KOO_FOUNDER__ !== true) return;
+      if(!devStage || !devStage.parentNode) return;
+      var on=devStage.classList.toggle('show'); var cov=$('coverage');
+      if(cov) cov.hidden=!on;
+      if(on) devStage.scrollIntoView({behavior:'smooth'});
+    }
+    var dt=$('devToggle'); if(dt) dt.onclick=toggleDev;
+    document.addEventListener('keydown',function(e){ var tag=(e.target&&e.target.tagName||'').toLowerCase(); if((e.key==='d'||e.key==='D')&&tag!=='input'&&tag!=='textarea') toggleDev(); });
+  })();
+
+  // ===== level map =====
+  function levelHTML(k,i,locked){
+    var m=M[k]; if(!m) return '';
+    var built=m.built && allowed(k), p=built?donePct(m):-1, isSpec=(k===curSpec);
+    if(!allowed(k)){
+      // Guards against drift: a module listed in this file's role path but not
+      // in the assigned curriculum. Show it, do not link it.
+      return '<div class="lvl rise locked gated"><div class="node">🔒</div><div class="lcard">'
+        +'<div class="lstep">'+m.step+'</div><h3>'+m.title+'</h3><p>'+m.desc+'</p>'
+        +'<span class="tobuild">🔒 Not assigned to you</span></div></div>';
+    }
+    if(locked){
+      // locked may be a string: the reason it is not open yet.
+      var lockMsg = (typeof locked==='string' && locked) ? locked : 'Clear the foundation to unlock';
+      var li='<div class="node">🔒</div><div class="lcard">'
+        +(isSpec?'<span class="specbadge">★ Signature specialty</span>':'')
+        +'<div class="lstep">'+m.step+'</div><h3>'+m.title+'</h3><p>'+m.desc+'</p>'
+        +'<span class="tobuild">🔒 '+lockMsg+'</span></div>';
+      return '<div class="lvl rise locked gated">'+li+'</div>';
+    }
+    var cls='lvl '+(built?(p>=100?'built done':'built'):'locked')+(isSpec?' spec':'');
+    var node=isSpec?'★':(built?(p>=100?'✓':(i+1)):'🔒');
+    var inner='<div class="node">'+node+'</div><div class="lcard">'
+      +(isSpec?'<span class="specbadge">★ Signature specialty</span>':'')
+      +'<div class="lstep">'+m.step+'</div><h3>'+m.title+'</h3><p>'+m.desc+'</p>';
+    if(built){
+      var stTxt=p>=100?'complete':(p>0?p+'% done':'not started');
+      var stCls=p>=100?'status done':(p>0?'status on':'status');
+      inner+='<div class="lfoot"><div class="prog"><i style="width:'+(p>0?p:0)+'%"></i></div>'
+        +'<span class="'+stCls+'">'+stTxt+'</span></div>';
+    } else {
+      inner+='<span class="tobuild">Level locked · to build</span>';
+    }
+    inner+='</div>'+(built?'<span class="lgo">▸</span>':'');
+    if(built) return '<a class="lvl rise '+cls.replace('lvl ','')+'" href="'+m.href+'">'+inner+'</a>';
+    return '<div class="lvl rise '+cls.replace('lvl ','')+'">'+inner+'</div>';
+  }
+  function selectRole(rid,skipScroll){
+    var r=ROLES.filter(function(x){return x[0]===rid;})[0]; if(!r) return;
+    // Leadership roles used to bail here and show the Command Track overlay
+    // instead of a path. They have real curricula now (C-Suite carries 19
+    // modules), so they get their path like everyone else. The Command Track
+    // is reachable from the top bar.
+    curRole=rid;
+    if(DEPT[rid] && curDept!==DEPT[rid]) selectDept(DEPT[rid],true);
+    [].forEach.call(document.querySelectorAll('.opcard,.cmdnode'),function(x){x.classList.toggle('on',x.getAttribute('data-r')===rid);});
+    var _sel=document.querySelector('.opcard[data-r="'+rid+'"]'); if(_sel){ _sel.classList.remove('lockin'); void _sel.offsetWidth; _sel.classList.add('lockin'); }
+    curSpec=SPEC[rid]||null;
+    // phased path: 1 Foundation → 2 Specialisation (gated) → 3 Command teaser
+    var path=FOUND.concat(r[3]);
+    var fBuilt=FOUND.filter(isBuilt);
+    var foundDone=fBuilt.length>0 && fBuilt.every(function(k){return donePct(M[k])>=100;});
+    // Sequenced Foundations: exactly one is open at a time, so there is never
+    // a decision to make about what to do next.
+    var openFoundIdx=-1;
+    for(var fi=0; fi<FOUND.length; fi++){
+      var fk=FOUND[fi];
+      if(M[fk] && M[fk].built && allowed(fk) && donePct(M[fk])<100){ openFoundIdx=fi; break; }
+    }
+    // What is actually left, in the order they should do it.
+    var builtPath=path.filter(function(k){ return isBuilt(k) && allowed(k); });
+    var outstanding=builtPath.filter(function(k){ return donePct(M[k])<100; });
+    var clearedCount=builtPath.length-outstanding.length;
+    lastPathStats={ total:builtPath.length, left:outstanding.length, cleared:clearedCount };
+
+    // ---- Do next: the three that matter today ----
+    var html='';
+    if(outstanding.length){
+      html+='<div class="donext"><div class="dnhead"><span class="dneye">Your next module</span>'
+        +'<span class="dncount">'+outstanding.length+' outstanding of '+builtPath.length+'</span></div>'
+        +'<div class="dngrid">'+outstanding.slice(0,1).map(function(k,i){
+          var m=M[k], p=donePct(m);
+          return '<a class="dncard'+(i===0?' now':'')+'" href="'+m.href+'">'
+            +'<span class="dnnum">'+String(i+1).padStart(2,'0')+'</span>'
+            +(i===0?'<span class="dnnow">Start here</span>':'')
+            +'<div class="dnstep">'+m.step+'</div><h4>'+m.title+'</h4><p>'+m.desc+'</p>'
+            +(p>0?'<div class="dnbar"><i style="width:'+p+'%"></i></div>':'')
+            +'<div class="dngo">'+(p>0?'Resume · '+p+'% done ▸':'Begin ▸')+'</div></a>';
+        }).join('')+'</div></div>';
+    } else {
+      html+='<div class="donext alldone"><div class="dnhead"><span class="dneye">Your next module</span></div>'
+        +'<p class="dnclear">Every module assigned to you is cleared. When something new lands, or a module is updated, it appears here first.</p></div>';
+    }
+
+    // ---- The full path, collapsed by default ----
+    html+='<button class="allmods" id="allModsBtn" type="button" aria-expanded="false" aria-controls="allWrap">See your full path · '+builtPath.length+' modules</button>';
+    html+='<div class="allwrap" id="allWrap" hidden>';
+    html+='<div class="phasehead"><span class="phnum">1</span>Foundation <em>· everyone starts here</em></div>';
+    html+=FOUND.map(function(k,i){
+      var done=M[k]&&M[k].built&&donePct(M[k])>=100;
+      var lock=(openFoundIdx>-1 && i>openFoundIdx && !done) ? 'Clear the module above first' : false;
+      return levelHTML(k,i,lock);
+    }).join('');
+    html+='<div class="phasehead"><span class="phnum">2</span>Your role'+(foundDone?'':' <em>· clear the foundation to unlock</em>')+'</div>';
+    html+=r[3].map(function(k,i){return levelHTML(k,FOUND.length+i,!foundDone);}).join('');
+    var sBuilt=r[3].filter(isBuilt);
+    var specDone=foundDone && sBuilt.length>0 && sBuilt.every(function(k){return donePct(M[k])>=100;});
+    curSpecDone=specDone;
+    html+='<div class="phasehead phcmd"><span class="phnum">3</span>Command track <em>· earned, later</em></div>';
+    html+=specDone
+      ? '<a class="cmdteaser" href="#" id="pathCmd">◆ Command Track unlocked — lead the floor →</a>'
+      : '<div class="cmdteaser locked">🔒 Master your role to unlock the Command Track</div>';
+    html+='</div>'; // close .allwrap
+    $('mapRole').innerHTML='Your path · <span>'+r[1]+'</span>';
+    $('levels').innerHTML=html;
+    var _pc=$('pathCmd'); if(_pc) _pc.onclick=function(e){ e.preventDefault(); showCmd(); };
+    // Full path stays folded away until asked for.
+    var _am=$('allModsBtn'), _aw=$('allWrap');
+    if(_am && _aw) _am.onclick=function(){
+      var open=_aw.hidden;
+      _aw.hidden=!open;
+      _am.setAttribute('aria-expanded', open?'true':'false');
+      _am.textContent=(open?'Hide the full path':'See your full path · '+builtPath.length+' modules');
+      if(open) reveal(_aw);
+    };
+    paintHeroStats();
+    // role xp: cleared built levels / total built levels
+    var builtKeys=path.filter(isBuilt), cleared=builtKeys.filter(function(k){return donePct(M[k])>=100;}).length;
+    var ringP=builtKeys.length?Math.round(cleared/builtKeys.length*100):0;
+    $('rolexp').innerHTML='<div class="ring" style="--p:'+ringP+'"><b>'+ringP+'%</b></div>'
+      +'<div class="xptxt"><b>'+cleared+' of '+builtKeys.length+'</b> levels cleared<br>'+(path.length-builtKeys.length)+' still to build</div>';
+    var ms=$('mapstage'); ms.hidden=false;
+    var _cst=$('cmdstage'); if(_cst) _cst.hidden=true;
+    reveal(ms);
+    if(!skipScroll) ms.scrollIntoView({behavior:'smooth',block:'start'});
+    /* role is assigned in the HR base, never remembered from this device */
+  }
+  // ===== command power-up (chest unlock) =====
+  function openCommand(rid,skipScroll){
+    var r=ROLES.filter(function(x){return x[0]===rid;})[0]; if(!r) return;
+    curRole=rid;
+    [].forEach.call(document.querySelectorAll('.opcard,.cmdnode'),function(x){x.classList.toggle('on',x.getAttribute('data-r')===rid);});
+    var o=OP[rid]||{}, cs=$('cmdstage');
+    cs.setAttribute('data-rank', String(COMMAND.indexOf(rid)+1));
+    var rb=$('cmdRankBadge'); if(rb) rb.textContent='◆ '+(o.rank||'Command');
+    $('cmdTitle').innerHTML='<span>'+r[1]+'</span>';
+    $('cmdSub').textContent='A permanent power-up that stacks on the role you already mastered. Open the crate, then enter each module to train.';
+    var mods=r[3].filter(function(k){return k!=='base' && FOUND.indexOf(k)<0;});
+    var up=$('cmdUpgrades'); up.innerHTML='';
+    mods.forEach(function(k,i){
+      var m=M[k]; if(!m) return;
+      var built=m.built && allowed(k);
+      var el=document.createElement(built?'a':'div');
+      el.className='upcard'+(built?'':' locked'); el.style.setProperty('--d',(i*0.1)+'s');
+      if(built) el.href=m.href;
+      el.innerHTML='<div class="upcore">'+(built?'⚡':'🔒')+'</div>'
+        +'<div class="upflash">'+(built?'Upgrade unlocked':(allowed(k)?'Upgrade · to build':'Not assigned to you'))+'</div>'
+        +'<div class="uptitle">'+m.title+'</div><p>'+m.desc+'</p>'
+        +(built?'<span class="upgo">Enter ▸</span>':'<span class="uplock">'+(allowed(k)?'To build':'Assigned on promotion')+'</span>');
+      up.appendChild(el);
+    });
+    var sig=$('cmdSigil'); if(sig){ sig.innerHTML='<span>'+(['I','II','III'][COMMAND.indexOf(rid)]||'')+'</span>'; }
+    var ms=$('mapstage'); if(ms) ms.hidden=true;
+    cs.hidden=false;
+    reveal(cs);
+    if(!skipScroll) cs.scrollIntoView({behavior:'smooth',block:'start'});
+    /* role is assigned in the HR base, never remembered from this device */
+  }
+
+  // ===== coverage map =====
+  var cov=$('covgrid');
+  ROLES.forEach(function(r){
+    var path=FOUND.concat(r[3]); // show foundations too? keep role-specific to spot gaps clearly:
+    var mods=r[3];
+    var built=mods.filter(isBuilt).length, total=mods.length, gap=total-built;
+    var fill=Math.round(built/total*100);
+    var items=mods.map(function(k){
+      var m=M[k]; var b=m&&m.built;
+      return '<div class="covitem '+(b?'b':'g')+'"><span class="mk">'+(b?'✓':'+')+'</span>'+m.title+'</div>';
+    }).join('');
+    var d=document.createElement('div');
+    d.className='covrole rise';
+    d.innerHTML='<div class="ch"><h4>'+r[1]+'</h4><span class="cc"><span class="cb">'+built+' built</span>'
+      +(gap>0?' · <span class="cg">'+gap+' to build</span>':'')+'</span></div>'
+      +'<div class="covbar"><div class="fill" style="width:'+fill+'%"></div></div>'+items;
+    cov.appendChild(d);
+  });
+
+  // ===== reveal on scroll =====
+  function reveal(scope){
+    var els=(scope||document).querySelectorAll('.rise:not(.in)');
+    [].forEach.call(els,function(el,i){ setTimeout(function(){el.classList.add('in');}, Math.min(i*60,360)); });
+  }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });},{threshold:.12});
+    [].forEach.call(document.querySelectorAll('.rise'),function(el){io.observe(el);});
+  } else { reveal(document); }
+  // hero rises immediately
+  reveal(document.querySelector('.hero'));
+  // safety net: never leave content hidden even if the observer misfires
+  setTimeout(function(){ reveal(document); }, 1400);
+
+  // play the operator-select entrance when it scrolls into view too
+  if('IntersectionObserver' in window){ var reo=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('entered'); });},{threshold:.2}); var _rst=$('rolestage'); if(_rst) reo.observe(_rst); }
+  // Takes them to their own path. There is nothing to choose on the way.
+  (function(){ var s=$('start'); if(!s) return; s.onclick=function(){
+    var ms=$('mapstage'); if(ms && !ms.hidden) ms.scrollIntoView({behavior:'smooth',block:'start'});
+  }; })();
+  function showCmd(){ var ct=$('cmdtrackstage'); if(!ct) return; ct.classList.add('active'); ct.scrollTop=0; document.body.style.overflow='hidden'; }
+  function hideCmd(){ var ct=$('cmdtrackstage'); if(ct) ct.classList.remove('active'); document.body.style.overflow=''; }
+  (function(){ var ab=document.querySelector('.ascendbtn'); if(ab) ab.addEventListener('click',function(e){ e.preventDefault(); showCmd(); }); var bk=$('ctBack'); if(bk) bk.onclick=hideCmd; document.addEventListener('keydown',function(e){ if(e.key==='Escape') hideCmd(); }); })();
+  // Command Track bar. Never hidden: a locked rank you can see is a target,
+  // a rank you cannot see is not. The tooltip states what opens it.
+  function paintCommandBar(a){
+    var bar=$('ctBar'), icon=$('ctBarIcon'), body=$('ctTipBody'); if(!bar) return;
+    bar.onclick=function(e){ e.preventDefault(); showCmd(); };
+    var LEAD=['leading-the-koocester-way-training.html','coaching-rhythm-training.html'];
+    var open = !!a && (a.isAdmin || ['manager','hod','csuite'].indexOf(a.roleSlug)>-1
+      || (a.decks && LEAD.some(function(d){ return a.decks.has(d); })));
+    bar.classList.toggle('open',open);
+    bar.classList.toggle('locked',!open);
+    if(icon) icon.textContent = open ? '◆' : '🔒';
+    if(body){
+      body.textContent = open
+        ? 'Your rank is live. Lead the floor, then a department, then the company. Each tier stacks on the last.'
+        : 'Earned, never given. Command opens for managers, heads of department and the C-Suite. Master your role, take responsibility for people, and this is where it leads.';
+    }
+  }
+  // ===== inline Command Track =====
+  (function(){
+    var ladder=$('ctLadder'), modsEl=$('ctMods'), head=$('ctHead'); if(!ladder) return;
+    var RANKS=[{rid:'manager',rk:'Rank I',num:'I'},{rid:'hod',rk:'Rank II',num:'II'},{rid:'csuite',rk:'Rank III',num:'III'}];
+    var ICON={leading:'⚔',hod_strategy:'◆',hod_pl:'▲',exec_vision:'◉',exec_capital:'△',exec_org:'✦',exec_scale:'⬡'};
+    function modsFor(rid){ var r=ROLES.filter(function(x){return x[0]===rid;})[0]; if(!r) return []; return r[3].filter(function(k){return k!=='base'&&FOUND.indexOf(k)<0;}); }
+    RANKS.forEach(function(R,i){
+      var r=ROLES.filter(function(x){return x[0]===R.rid;})[0], nm=r?r[1]:R.rid, n=modsFor(R.rid).length;
+      var t=document.createElement('button'); t.className='cttier'+(i===0?' on':''); t.setAttribute('data-i',i);
+      t.innerHTML=(i<RANKS.length-1?'<div class="up">▲</div>':'')+'<div class="num">'+R.num+'</div><div class="rk">'+R.rk+'</div><div class="nm">'+nm+'</div><div class="ct">'+n+' module'+(n>1?'s':'')+'</div>';
+      t.onclick=function(){ selectTier(i); };
+      ladder.appendChild(t);
+    });
+    function selectTier(i){
+      [].forEach.call(ladder.querySelectorAll('.cttier'),function(x){x.classList.toggle('on',+x.getAttribute('data-i')===i);});
+      var R=RANKS[i], r=ROLES.filter(function(x){return x[0]===R.rid;})[0], nm=r?r[1]:R.rid;
+      head.textContent=curSpecDone?('⚡ '+nm+' · command modules · enter to train'):('🔒 '+nm+' · master your role to unlock');
+      modsEl.innerHTML='';
+      modsFor(R.rid).forEach(function(k,idx){
+        var m=M[k]; if(!m) return;
+        // Command modules are leadership decks. They open only when this
+        // person is actually assigned them, not merely because they cleared
+        // their own role. Otherwise the tile links somewhere the deck guard
+        // will just turn away.
+        var mine=allowed(k);
+        var un=curSpecDone && m.built && mine;
+        var el=document.createElement(un?'a':'div'); el.className='ctmod'+(un?'':' locked'); el.style.setProperty('--d',(idx*0.09)+'s');
+        if(un) el.href=m.href;
+        var flash=un?'Upgrade unlocked':(!mine?'Not assigned to you':(curSpecDone?'To build':'Locked'));
+        var foot=un?'<span class="go">Enter ▸</span>'
+          :(!mine?'<span class="go" style="color:#8a8a8a">Assigned on promotion</span>'
+          :(curSpecDone?'':'<span class="go" style="color:#8a8a8a">Master your role first</span>'));
+        el.innerHTML='<div class="core">'+(un?(ICON[k]||'⚡'):'🔒')+'</div><div class="flash">'+flash+'</div><h3>'+m.title+'</h3><p>'+m.desc+'</p>'+foot;
+        modsEl.appendChild(el);
+      });
+    }
+    selectTier(0);
+  })();
+  // ===== feedback capture (paste an n8n webhook URL into FEEDBACK_WEBHOOK to route to Lark) =====
+  (function(){
+    var FEEDBACK_WEBHOOK='';
+    var btn=$('fbBtn'),panel=$('fbPanel'),txt=$('fbText'),send=$('fbSend'),close=$('fbClose'),thx=$('fbThanks');
+    if(!btn) return;
+    btn.onclick=function(){ panel.classList.toggle('on'); if(panel.classList.contains('on')&&txt) txt.focus(); };
+    if(close) close.onclick=function(){ panel.classList.remove('on'); };
+    if(send) send.onclick=function(){
+      var msg=(txt.value||'').trim(); if(!msg) return;
+      var where=curRole||'hub', payload={message:msg,where:where,page:'academy'};
+      try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(payload); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+      if(FEEDBACK_WEBHOOK){ try{ fetch(FEEDBACK_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); }catch(e){} }
+      else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback')+'&body='+encodeURIComponent(msg+'\n\n[from: '+where+']'),'_blank'); }catch(e){} }
+      txt.value=''; if(thx) thx.style.display='block'; setTimeout(function(){ if(thx) thx.style.display='none'; panel.classList.remove('on'); },1600);
+    };
+  })();
+
+  // ===== role comes from the HR base, not from a picker =====
+  // Resolves the signed-in person, paints who they are top-right, and loads
+  // their assigned path. Staff never choose. Academy admins keep the picker.
+  function initials(nm,em){
+    var s=String(nm||'').trim();
+    if(s){ var p=s.split(/\s+/); return ((p[0]||'')[0]||'')+(p.length>1?(p[p.length-1][0]||''):''); }
+    return (String(em||'K')[0]||'K').toUpperCase();
+  }
+  // Real name, never derived from the email. ceo@koocester.com is not "Ceo".
+  function displayName(a){
+    var f=(a&&a.fullName||'').trim();
+    if(f) return f;
+    var e=(a&&a.email||'').split('@')[0];
+    return e ? e.replace(/[._-]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) : '';
+  }
+  function firstName(a){ var d=displayName(a); return d ? d.split(/\s+/)[0] : ''; }
+
+  // The hero greets a returning person by name. A first-timer still gets the
+  // welcome, because for them it is true.
+  function paintHero(a){
+    var h=$('heroTitle'); if(!h) return;
+    var fn=firstName(a);
+    var returning = fn && lastPathStats && lastPathStats.cleared>0;
+    h.innerHTML = returning
+      ? 'Welcome back,<br><span>'+esc(fn)+'</span>'
+      : (fn ? 'Welcome,<br><span>'+esc(fn)+'</span>' : 'Welcome to<br><span>Koocester</span>');
+  }
+
+  function paintWho(a){
+    var el=$('hwho'); if(!el) return;
+    var nm=displayName(a);
+    var role, cls='wrl';
+    if(a.degraded){ role='Role unavailable'; cls='wrl none'; }
+    else if(a.roleLabel){ role=a.roleLabel; }
+    else { role='No role assigned'; cls='wrl none'; }
+    el.innerHTML='<div class="wav">'+initials(nm,a.email)+'</div>'
+      +'<div class="wtx"><span class="wnm">'+esc(nm)+'</span><span class="'+cls+'">'+esc(role)+'</span></div>'
+      +(a.mismatch?'<span class="wflag" title="'+esc(a.mismatchNote||'The HR base and the portal profile disagree on this person. Tech is reconciling it.')+'">⚠</span>':'');
+    el.hidden=false;
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // Announce the position, then hand them to their path. Nobody picks a role
+  // here any more, so the reveal replaces the old "choose your operator" step.
+  // Plays once per session: a returning visitor lands straight on their path
+  // rather than sitting through it again.
+  function playReveal(a){
+    var el=$('rvl'); if(!el) return;
+    var goTo=function(){ var ms=$('mapstage'); if(ms) ms.scrollIntoView({behavior:'smooth',block:'start'}); };
+
+    // Only ever reveal a role we actually resolved.
+    if(!a || a.degraded || !a.assigned || !a.roleLabel){ goTo(); return; }
+
+    var seen=false;
+    try{ seen = sessionStorage.getItem('koo-academy-revealed')===a.roleSlug; }catch(e){}
+    if(seen){ goTo(); return; }
+
+    var nm=firstName(a);
+    $('rvlName').textContent = nm ? (nm+', your position is') : 'Your position is';
+
+    // Set each letter as its own element so the name lands character by
+    // character rather than as one block. The shine layer carries the same
+    // text underneath so the maroon highlight travels through the letterforms.
+    var role=String(a.roleLabel), rEl=$('rvlRole'), sEl=$('rvlShine');
+    rEl.textContent=''; rEl.setAttribute('aria-label',role);
+    role.split('').forEach(function(c,i){
+      var s=document.createElement('span');
+      s.className = c===' ' ? 'ch sp' : 'ch';
+      s.textContent = c===' ' ? ' ' : c;
+      s.style.animationDelay = (0.42 + i*0.045) + 's';
+      rEl.appendChild(s);
+    });
+    if(sEl) sEl.textContent=role;
+    var mk=$('rvlMark'); if(mk) mk.textContent=(role[0]||'').toUpperCase();
+
+    var dept=DEPT[a.roleSlug]||a.department||'';
+    var dEl=$('rvlDept'), dTxt=$('rvlDeptTxt');
+    if(dept){ dTxt.textContent=dept; dEl.style.display=''; } else { dEl.style.display='none'; }
+
+    var done=false;
+    function dismiss(){
+      if(done) return; done=true;
+      try{ sessionStorage.setItem('koo-academy-revealed',a.roleSlug); }catch(e){}
+      el.classList.add('out');
+      setTimeout(function(){ el.classList.remove('on','go','out'); document.body.style.overflow=''; goTo(); },340);
+    }
+
+    document.body.style.overflow='hidden';
+    el.classList.add('on');
+    void el.offsetWidth;
+    el.classList.add('go');
+
+    // The reveal holds until they choose to start. No timer, no click-away:
+    // this is a moment, and it should end when the person ends it. Escape is
+    // kept purely as an accessibility escape hatch.
+    $('rvlGo').onclick=dismiss;
+    document.addEventListener('keydown',function k(e){
+      if(e.key==='Escape'||e.key==='Enter'){ document.removeEventListener('keydown',k); dismiss(); }
+    });
+  }
+
+  // Review hook. ?reveal=Producer forces the reveal with a sample role so it
+  // can be checked in Chrome from file://, where there is no session and the
+  // access layer correctly refuses to guess a position. Preview only: it never
+  // grants access to anything, it just plays the animation.
+  // Exposed so it can be driven from the console too: KOO_PREVIEW('Producer').
+  // Some embedded browsers strip the query string from file:// URLs.
+  window.KOO_PREVIEW=function(label){
+    label=label||'Producer';
+    var hit=ROLES.filter(function(x){ return x[1].toLowerCase()===String(label).toLowerCase(); })[0];
+    try{ sessionStorage.removeItem('koo-academy-revealed'); }catch(e){}
+    var slug = hit?hit[0]:'producer';
+    // Render the real path too, so the whole experience can be reviewed from
+    // file:// and not just the opening animation.
+    var rs=$('rolestage'); if(rs) rs.hidden=true;
+    var st=$('start'); if(st) st.hidden=true;
+    selectRole(slug,true);
+    playReveal({ assigned:true, degraded:false, isAdmin:false,
+      roleLabel: hit?hit[1]:label, roleSlug: slug,
+      email:'preview@koocester.com', decks:new Set() });
+  };
+  (function(){
+    var m=/[?&]reveal=([^&]*)/.exec(location.search); if(!m) return;
+    window.KOO_PREVIEW(decodeURIComponent((m[1]||'Producer').replace(/\+/g,' ')));
+  })();
+
+  function showNotice(title,body){
+    // #rolestage is REMOVED for non-admins (founder tools must fail closed), so
+    // this can no longer borrow it. Build our own panel when it is gone, or the
+    // "role not assigned" / "could not reach the database" messages would vanish
+    // for exactly the people who need them.
+    var rs=$('rolestage');
+    if(!rs){
+      rs=document.createElement('section');
+      rs.className='stage'; rs.id='noticestage';
+      var anchor=$('start')||document.querySelector('main')||document.body;
+      anchor.parentNode ? anchor.parentNode.insertBefore(rs,anchor) : document.body.appendChild(rs);
+    }
+    rs.innerHTML='<div class="wrap"><div class="eyebrow rise in">Your training</div>'
+      +'<h2 class="rise in">'+esc(title)+'</h2><p class="sub rise in">'+esc(body)+'</p></div>';
+    rs.hidden=false;
+  }
+
+  if(window.KOO_ACCESS){
+    window.KOO_ACCESS.ready.then(function(a){
+      ACCESS=a;
+      paintWho(a);
+      paintCommandBar(a);
+
+      // FOUNDER TOOLS — Hakim only (2026-07-20). Deliberately NOT gated on
+      // isAdmin: is_academy_admin() is also true for Tech and for the academy
+      // admins list, and that flag exists to bypass deck locks, not to expose
+      // the org's whole role map. Gate on founder identity and nothing else.
+      //
+      // FAIL CLOSED: for everyone else this is REMOVED FROM THE DOM, not merely
+      // hidden. Hiding relied on one assignment landing; a degraded access
+      // layer, a race, or showNotice() reusing this element could reveal
+      // "Inspect any role" and the Dev toggle. Mishkat saw exactly that.
+      // Removing it means there is nothing left to reveal by accident.
+      // TWO different jobs, so two different gates (2026-07-20).
+      //
+      // 1. ROLE INSPECTOR (#rolestage) — can_reassign. Hakim + Bhavani. She
+      //    runs HR: she cannot sensibly move somebody into a role without
+      //    first seeing what that role trains on. Same flag that gates the
+      //    reassignment tools, because it is the same task.
+      // 2. DEV VIEW + COVERAGE MAP (#devstage, #coverage) — is_founder(),
+      //    Hakim alone. These are build tools: every module, every gap, every
+      //    unbuilt deck. Nobody needs them to do their job.
+      //
+      // The D key toggled 2 for ANYONE signed in — the listener binds at parse
+      // time and never asked who was pressing it. That was the real hole, and
+      // gating only the visible panel would have left it open.
+      window.__KOO_FOUNDER__ = (a.isFounder === true);
+      var rs=$('rolestage');
+      if(a.canReassign === true){
+        if(rs) rs.hidden=false;
+      } else if(rs && rs.parentNode){
+        rs.parentNode.removeChild(rs); rs=null;
+      }
+      if(!window.__KOO_FOUNDER__){
+        ['devstage','coverage'].forEach(function(id){
+          var el=$(id); if(el && el.parentNode) el.parentNode.removeChild(el);
+        });
+        // The Dev button lives inside the inspector, so Bhavani would see a
+        // button whose target no longer exists. Take it out with them.
+        var dt=$('devToggle'); if(dt && dt.parentNode) dt.parentNode.removeChild(dt);
+      }
+
+      if(a.degraded){
+        // We could not reach the database. Say so. Never invent a role.
+        showNotice('We could not load your training right now',
+          'Your role lives in the HR base and the portal could not reach it. Refresh in a moment. If it keeps happening, tell Tech.');
+        return;
+      }
+      if(!a.assigned){
+        showNotice('Your role has not been assigned yet',
+          'Your curriculum loads automatically once your role is set in the HR base. Ask your manager or Tech to set it, then refresh this page.');
+        return;
+      }
+      selectRole(a.roleSlug,true);
+      paintHero(a);
+      var st=$('start'); if(st) st.hidden=false;
+      playReveal(a);
+    });
+  }
+})();
+</script>
+<!-- ===== training-completion capture: records each PASSED deck (current gate = current version) to the portal DB, RLS-safe. Fail-silent so it can never block the hub. Powers % onboarded + retrain-on-version-bump. ===== -->
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const SB_URL='https://lfppmsppvqtjyusfrlkf.supabase.co';
+const SB_KEY='<SUPABASE_ANON_KEY>';
+const GATE = window.KOO_GATE || {};   // deck href -> gate localStorage key (bumping a deck's version = a NEW gate key)
+const VERS = window.KOO_VERS || {};   // deck href -> version (default 1)
+function passed(gk){ try{ const a=JSON.parse(localStorage.getItem(gk)||'null'); return Array.isArray(a)&&a.length>0 && a.every(function(v){return v==='yes';}); }catch(e){ return false; } }
+(async function(){
+  try{
+    const sb = createClient(SB_URL, SB_KEY);
+    const s = await sb.auth.getSession();
+    const u = s && s.data && s.data.session && s.data.session.user;
+    if(!u) return;
+    const now = new Date().toISOString();
+    const rows = Object.keys(GATE)
+      .filter(function(href){ return passed(GATE[href]); })
+      .map(function(href){ return { user_id: u.id, deck: href, pct: 100, status: 'completed', gate: { v: (VERS[href]||1) }, completed_at: now, updated_at: now }; });
+    if(rows.length) await sb.from('progress').upsert(rows, { onConflict: 'user_id,deck' });
+  }catch(e){ /* never block the Academy */ }
+})();
+</script>
+</body>
+</html>

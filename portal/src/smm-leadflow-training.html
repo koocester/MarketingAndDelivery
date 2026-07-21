@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koocester Academy · Lead flow &amp; community</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E4E4E4; --line2:#F0F0F0; --bg:#fff; --ok:#1b7f4b;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;transform:translateX(52px);transition:opacity .38s var(--ease),transform .5s var(--pop),visibility .4s}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.inner{width:100%;max-width:1000px;padding:0 clamp(28px,8vw,120px);margin:0 auto}
+/* body slides — pop · premium (energy, no toy-bounce) */
+.slide .inner>*{opacity:0}
+.slide.active .inner>*{animation:pop .52s var(--popp) both}
+.slide.active .inner>*:nth-child(1){animation-delay:.03s}
+.slide.active .inner>*:nth-child(2){animation-delay:.10s}
+.slide.active .inner>*:nth-child(3){animation-delay:.17s}
+.slide.active .inner>*:nth-child(4){animation-delay:.24s}
+.slide.active .inner>*:nth-child(5){animation-delay:.31s}
+.slide.active .inner>*:nth-child(n+6){animation-delay:.38s}
+@keyframes pop{0%{opacity:0;transform:translateY(22px) scale(.965)}100%{opacity:1;transform:none}}
+/* opening slide — signature line-mask (brand first impression) */
+.slide.title .inner .lnwrap{display:block;overflow:hidden}
+.slide.title .inner .ln{display:block}
+.slide.title .inner>.logo,.slide.title .inner>.eyebrow,.slide.title .inner>.lead{opacity:0}
+.slide.title.active .inner>.logo{animation:fiFade .6s var(--ease) both}
+.slide.title.active .inner>.eyebrow{animation:fiFade .6s var(--ease) .12s both}
+.slide.title.active .inner>h1{opacity:1;animation:none}
+.slide.title.active .inner .ln{animation:fiMask .82s cubic-bezier(.16,.84,.44,1) both}
+.slide.title.active .inner h1 .lnwrap:nth-child(1) .ln{animation-delay:.30s}
+.slide.title.active .inner h1 .lnwrap:nth-child(2) .ln{animation-delay:.42s}
+.slide.title.active .inner h1 .lnwrap:nth-child(3) .ln{animation-delay:.54s}
+.slide.title.active .inner>.lead{animation:fiRise .7s var(--ease) .62s both}
+@keyframes fiFade{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:none}}
+@keyframes fiRise{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes fiMask{0%{transform:translateY(110%)}100%{transform:translateY(0)}}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:22px}
+h1{font-size:clamp(2.6rem,6.5vw,3.9rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
+h2{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 18px}
+.lead{font-size:clamp(1.08rem,2.2vw,1.4rem);line-height:1.55;color:var(--body);max-width:820px;margin:0}
+p{margin:.6em 0}
+.small{font-size:.82rem;color:var(--muted)}
+.logo{height:34px;width:auto;display:block;margin-bottom:34px}
+.rule{width:56px;height:3px;background:var(--maroon);border:0;margin:0 0 26px}
+.big{font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.06;margin:0 0 18px}
+.big em{color:var(--maroon);font-style:normal}
+.cite{font-size:.85rem;color:var(--muted);margin-top:16px}
+.cite b{color:var(--maroon)}
+ul.pts{margin:8px 0 0;padding-left:20px;max-width:840px}
+ul.pts li{margin:.5em 0;font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.45}
+ol.pts{margin:10px 0 0;padding-left:0;list-style:none;max-width:840px;counter-reset:s}
+ol.pts li{counter-increment:s;position:relative;padding:11px 0 11px 48px;font-size:clamp(1.02rem,2vw,1.2rem);line-height:1.4;border-bottom:1px solid var(--line2)}
+ol.pts li:last-child{border-bottom:0}
+ol.pts li::before{content:counter(s);position:absolute;left:0;top:10px;width:30px;height:30px;border-radius:50%;background:var(--maroon-tint);border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+ol.pts li b{color:var(--ink)}
+/* project → deliverables viz */
+.dlv{margin-top:14px;max-width:680px}
+.pbox{border:2px solid var(--maroon);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.pbox .plbl{font-weight:800;color:var(--maroon);font-size:15px}
+.pbox .plbl span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:8px}
+.pbox .drow{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.dchip{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.dchip .dt{font-weight:700;color:var(--ink);font-size:14px}
+.dchip .ds{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+/* fill order */
+.fill1{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:14px;box-shadow:var(--shadow)}
+.fill1 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--maroon);color:#fff;font-weight:800;font-size:14px;align-items:center;justify-content:center;margin-right:10px}
+.fill1 .t{font-size:1.3rem;font-weight:800;color:var(--ink)}
+.fill1 .s{font-size:13.5px;color:var(--maroon);margin-top:8px;font-weight:600}
+.fillrest{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fr{border:1px solid var(--line);border-radius:24px;padding:9px 15px;font-size:14px;color:var(--body);display:flex;align-items:center;gap:8px}
+.fr .fn{color:var(--maroon);font-weight:800}
+/* two-up objective */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.obx{border:2px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.obx.lead-gen{border-color:var(--maroon);background:var(--maroon-tint)}
+.obx h3{margin:0 0 4px;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.obx.lead-gen h3{color:var(--maroon)}
+.obx.aware h3{color:var(--ink)}
+.obx .sub{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.obx ul{margin:0;padding-left:18px}
+.obx li{margin:.35em 0;font-size:.98rem;line-height:1.4}
+/* deadline flow */
+.dlflow{display:flex;align-items:stretch;gap:8px;margin:16px 0 6px;flex-wrap:wrap}
+.dlnode{border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:center;min-width:150px;box-shadow:var(--shadow)}
+.dlnode.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.dlnode .t{font-weight:800;color:var(--ink);font-size:15px}
+.dlnode .s{font-size:11.5px;color:var(--muted);margin-top:4px}
+.dlnode.hot .t{color:var(--maroon)}
+.dlarr{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;font-weight:700}
+.dlsub{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+/* full six-node sequence flow */
+.seqflow{display:flex;align-items:stretch;gap:6px;margin:18px 0 6px;flex-wrap:wrap}
+.sfnode{background:var(--maroon);color:#fff;border-radius:12px;padding:12px 14px;flex:1;min-width:128px;box-shadow:var(--shadow)}
+.sfnode .sfn{font-size:10px;letter-spacing:.04em;text-transform:uppercase;opacity:.7;font-weight:700}
+.sfnode .sft{font-size:13.5px;font-weight:800;margin-top:2px;line-height:1.25}
+.sfnode .sfs{font-size:11px;opacity:.85;margin-top:3px;line-height:1.3}
+.sfarr{display:flex;align-items:center;justify-content:center;color:var(--maroon);font-size:18px;font-weight:800}
+@media (max-width:900px){.sfarr{display:none}.seqflow{gap:9px}}
+/* email → manychat channel translation */
+.chanwrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.chancol{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.chancol.mc{border-color:var(--maroon);background:var(--maroon-tint)}
+.chancol h3{margin:0 0 3px;font-size:1.2rem;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.chancol.mc h3{color:var(--maroon)}
+.chancol .sub{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.chansteps{margin:0;padding:0;list-style:none;counter-reset:c}
+.chansteps li{counter-increment:c;position:relative;padding:8px 0 8px 32px;font-size:.9rem;line-height:1.35;border-bottom:1px solid var(--line2)}
+.chansteps li:last-child{border-bottom:0}
+.chansteps li::before{content:counter(c);position:absolute;left:0;top:6px;width:21px;height:21px;border-radius:50%;background:#fff;border:2px solid var(--line);color:var(--muted);font-weight:800;font-size:10.5px;display:flex;align-items:center;justify-content:center}
+.chancol.mc .chansteps li::before{border-color:var(--maroon);color:var(--maroon);background:#fff}
+.chansteps li b{color:var(--ink)}
+/* best-time-to-post formula */
+.formula{border:2px solid var(--maroon);background:var(--maroon-tint);border-radius:16px;padding:20px 22px;margin-top:16px;box-shadow:var(--shadow);max-width:900px}
+.formula .feq{font-size:clamp(1.02rem,2.1vw,1.3rem);font-weight:800;color:var(--maroon);letter-spacing:-.01em}
+.formula .feq span{color:var(--ink)}
+.formula ol{margin:14px 0 0;padding-left:20px}
+.formula ol li{margin:.4em 0;font-size:.95rem;line-height:1.4;color:var(--body)}
+.formula ol li b{color:var(--ink)}
+/* approve / reject */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.dbox{border:2px solid var(--line);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.dbox.ok{border-color:var(--ok)}
+.dbox.no{border-color:var(--maroon)}
+.dbox h3{margin:0 0 8px;font-size:1.15rem}
+.dbox.ok h3{color:var(--ok)}
+.dbox.no h3{color:var(--maroon)}
+.dbox ul{margin:0;padding-left:18px}
+.dbox li{margin:.32em 0;font-size:.95rem;line-height:1.4}
+/* views list */
+.vrows{margin-top:12px;max-width:880px}
+.vrow{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:11px 0;border-bottom:1px solid var(--line2);align-items:baseline}
+.vrow .vn{color:var(--maroon);font-weight:700;font-size:14px}
+.vrow .vt{font-size:14px;color:var(--body);line-height:1.4}
+.vrow .vt b{color:var(--ink)}
+.callout{border-left:3px solid var(--maroon);background:var(--maroon-tint);padding:12px 16px;margin-top:16px;border-radius:0 8px 8px 0;font-size:.95rem}
+.callout b{color:var(--maroon)}
+.future{border:1px dashed var(--maroon);border-radius:12px;padding:11px 15px;margin-top:14px;font-size:13px;color:var(--body)}
+.future b{color:var(--maroon);text-transform:uppercase;letter-spacing:.04em;font-size:11px}
+/* MC pipeline strip */
+.mcpipe{display:flex;align-items:stretch;gap:6px;margin:14px 0 4px;flex-wrap:wrap}
+.pst{border:1px solid var(--line);border-radius:11px;padding:11px 13px;min-width:104px;box-shadow:var(--shadow);background:#fff}
+.pst .po{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pst .pn{font-size:13.5px;color:var(--ink);font-weight:700;margin-top:3px}
+.pst.hot{border:2px solid var(--maroon);background:var(--maroon-tint)}
+.pst.hot .po,.pst.hot .pn{color:var(--maroon)}
+.pst.you2{border:2px solid var(--maroon)}
+.pst.you2 .po{color:var(--maroon)}
+.pa{display:flex;align-items:center;color:var(--line);font-size:18px;font-weight:700}
+.pa.hot{color:var(--maroon)}
+/* diagnose a video · funnel + matrix */
+.funnel{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+.fstage{border:2px solid var(--maroon);color:var(--maroon);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:24px;background:var(--maroon-tint)}
+.farr{color:var(--maroon);font-weight:800}
+.diag{border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);max-width:980px}
+.drow{display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1.6fr;border-bottom:1px solid var(--line2)}
+.drow:last-child{border-bottom:0}
+.drow>span{padding:11px 14px;font-size:12.5px;line-height:1.4;color:var(--body);border-right:1px solid var(--line2)}
+.drow>span:last-child{border-right:0}
+.drow.dhead>span{background:#fafafa;font-weight:800;color:var(--ink);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.drow .sym{font-weight:700;color:var(--ink)}
+.drow .stg{color:var(--maroon);font-weight:700}
+@media (max-width:760px){.diag .drow{grid-template-columns:1fr 1fr}.diag .drow.dhead{display:none}.diag .drow>span{border-right:0}}
+/* read-aloud play button */
+.arrow.play.on{background:var(--maroon);border-color:var(--maroon);color:#fff}
+/* what success looks like */
+.wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;max-width:900px}
+.win{border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:12px;padding:15px 18px;box-shadow:var(--shadow)}
+.win b{display:block;color:var(--ink);font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.25;margin-bottom:5px}
+.win span{font-size:13px;color:var(--muted);line-height:1.4}
+/* graded MCQ */
+.quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario b{color:var(--ink)}
+.quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
+.opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
+.opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
+.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct .kx{color:var(--ok)}
+.opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+.fb.show{max-height:260px;padding:13px 16px}
+.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
+.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb b{font-weight:800}
+/* divider */
+.slide.divider{background:var(--ink)}
+.slide.divider .eyebrow{color:#fff;opacity:.55}
+.slide.divider h2{color:#fff}
+.slide.divider .rule{background:var(--maroon)}
+.slide.title .inner,.slide.close .inner{max-width:900px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 8px}
+.tag{padding:8px 15px;border:1px solid var(--maroon);border-radius:24px;font-size:13.5px;color:var(--maroon);font-weight:700}
+a.tag{text-decoration:none;display:inline-block;transition:.15s}
+a.tag:hover{background:var(--maroon);color:#fff}
+/* checklist */
+.check label{display:flex;gap:13px;align-items:flex-start;padding:12px 0;cursor:pointer;font-size:clamp(.98rem,1.9vw,1.12rem);color:var(--body);border-bottom:1px solid var(--line2)}
+.check input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;flex:none;margin-top:2px;cursor:pointer;transition:.15s}
+.check input:checked{background:var(--maroon);border-color:var(--maroon)}
+.check input:checked+span{color:var(--muted);text-decoration:line-through}
+.pct{color:var(--maroon);font-weight:700}
+/* Yes/No certification gate */
+.gate{max-width:820px;margin-top:6px}
+.grow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line2)}
+.grow:last-child{border-bottom:0}
+.gq{font-size:clamp(1rem,1.9vw,1.14rem);color:var(--body);font-weight:600;line-height:1.35}
+.grow.on-yes .gq{color:var(--ink)}
+.grow.on-no .gq{color:var(--maroon)}
+.gopt{display:flex;gap:8px;flex:none}
+.gbtn{appearance:none;border:1.5px solid var(--line);background:#fff;color:var(--muted);font-family:var(--base);font-size:13px;font-weight:800;letter-spacing:.02em;padding:8px 17px;border-radius:22px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s,color .15s}
+.gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
+.grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
+.proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
+.proceed:hover{transform:translateY(-2px)}
+.proceed:active{transform:scale(.96)}
+/* chrome */
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--maroon);width:0;transition:width .4s var(--ease);z-index:10}
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);right:auto;display:flex;align-items:center;gap:14px;z-index:10}
+.count{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.arrow{width:46px;height:46px;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;cursor:pointer;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:transform .14s var(--ease),border-color .15s,color .15s}
+.arrow:hover{border-color:var(--maroon);color:var(--maroon);transform:translateY(-2px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.28;cursor:default;transform:none}
+.brandmark{position:fixed;bottom:26px;left:28px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
+.brandmark b{color:var(--ink)}
+.home{position:fixed;top:22px;left:28px;z-index:10;font-size:12px;letter-spacing:.02em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:24px;padding:7px 13px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);transition:.15s}
+.home:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:660px){.duo,.decide,.chanwrap{grid-template-columns:1fr}.vrow{grid-template-columns:1fr}.brandmark{display:none}}
+@media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<a class="home" href="academy.html">← Academy</a>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title">
+    <div class="inner">
+      <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
+      <div class="eyebrow">Koocester Academy · role certification</div>
+      <h1><span class="lnwrap"><span class="ln">Lead flow &amp;</span></span><span class="lnwrap"><span class="ln">community</span></span></h1>
+      <p class="lead" style="margin-top:20px">Social Media Manager. You turn a comment into a lead, a lead into a warm handoff, and every reply into a relationship.</p>
+    </div>
+  </section>
+
+  <!-- 2 · MISSION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Your mission</div>
+      <h2>The post is the hook. You run everything after it.</h2>
+      <p class="lead">Once a video or carousel goes live, it's yours: the ManyChat flow that catches the comment, the sequence that nurtures the DM, the schedule that keeps posts consistent, and the triage that turns comments and messages into pipeline.</p>
+    </div>
+  </section>
+
+  <!-- 3 · WHAT SUCCESS LOOKS LIKE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">What success looks like</div>
+      <div class="big">You're winning when…</div>
+      <div class="wins">
+        <div class="win"><b>Every lead-gen post has a working flow</b><span>comment → DM → magnet → lead, tested before it posts</span></div>
+        <div class="win"><b>DMs get answered fast</b><span>speed decides whether a warm lead stays warm</span></div>
+        <div class="win"><b>Warm leads reach Sales with context</b><span>who they are, what they want, what you promised</span></div>
+        <div class="win"><b>Comments turn into community</b><span>replies, pins, and conversations — not silence</span></div>
+      </div>
+      <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hit it — and the final gate checks you against it.</p>
+    </div>
+  </section>
+
+  <!-- 4 · DIVIDER — THE MECHANIC -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part one</div>
+      <hr class="rule">
+      <h2>ManyChat &amp; lead flow</h2>
+      <p class="lead" style="color:#bbb">The mechanic that turns a comment into a lead.</p>
+    </div>
+  </section>
+
+  <!-- 4b · MANYCHAT OWNERSHIP -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Who owns this · you, not Tech</div>
+      <h2 style="margin-bottom:6px">ManyChat is owned by the Social Media Manager, not Tech.</h2>
+      <div class="seqflow">
+        <div class="sfnode"><div class="sfn">1</div><div class="sft">Alert in SMM Updates</div><div class="sfs">the ManyChat alert arrives in the SMM Updates channel</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">2</div><div class="sft">Build the flow</div><div class="sfs">you build the ManyChat flow end to end</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">3</div><div class="sft">Press "ManyChat built"</div><div class="sfs">press the button once the flow is live</div></div>
+      </div>
+      <div class="callout"><b>This is your build, not a Tech ticket.</b> The ManyChat alert arrives in the SMM Updates channel. The Social Media Manager builds the flow, then presses the "ManyChat built" button. Tech does not own it and does not press it for you.</div>
+    </div>
+  </section>
+
+  <!-- 5 · THE MECHANIC — FULL SEQUENCE AS NODES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">See the whole sequence, not just the first DM</div>
+      <h2 style="margin-bottom:6px">One flow. Six nodes.</h2>
+      <div class="seqflow">
+        <div class="sfnode"><div class="sfn">1</div><div class="sft">Comment keyword</div><div class="sfs">viewer triggers it in the comments</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">2</div><div class="sft">Instant value</div><div class="sfs">deliver the magnet, same moment</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">3</div><div class="sft">Follow-up + proof</div><div class="sfs">more value or a case study, a beat later</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">4</div><div class="sft">Soft offer / CTA</div><div class="sfs">once trust is built, not before</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">5</div><div class="sft">Re-engage once</div><div class="sfs">one nudge to whoever's gone quiet</div></div>
+        <div class="sfarr">→</div>
+        <div class="sfnode"><div class="sfn">6</div><div class="sft">Hand-off / nurture</div><div class="sfs">warm → Sales with context, cold → drip</div></div>
+      </div>
+      <div class="callout"><b>This is one sequence, not six separate messages.</b> Set the keyword, the value delivery, the follow-up, the offer, the re-engage and the hand-off — every node, every time, before the post goes live.</div>
+      <div class="future"><b>Confirm our exact setup</b> &nbsp; the exact keyword, DM copy and capture step live in our ManyChat build — check the current flow before assuming it matches this diagram.</div>
+    </div>
+  </section>
+
+  <!-- 5b · EMAIL SEQUENCE → MANYCHAT TRANSLATION -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Same logic, different inbox</div>
+      <h2 style="margin-bottom:6px">Write it as an email sequence first. Then translate it.</h2>
+      <div class="chanwrap">
+        <div class="chancol">
+          <h3>Email drip</h3>
+          <div class="sub">the sequence you already know</div>
+          <ol class="chansteps">
+            <li><b>Welcome</b> — confirm the signup, set expectation</li>
+            <li><b>Value</b> — deliver the resource you promised</li>
+            <li><b>Case study</b> — proof it works, real results</li>
+            <li><b>Offer</b> — the pitch, one clear CTA</li>
+            <li><b>Last-call</b> — urgency nudge before the list goes cold</li>
+          </ol>
+        </div>
+        <div class="chancol mc">
+          <h3>ManyChat DM sequence</h3>
+          <div class="sub">same logic, comment-triggered</div>
+          <ol class="chansteps">
+            <li><b>Instant value</b> — deliver the magnet, same moment</li>
+            <li><b>Follow-up + proof</b> — a quick win or case study, a beat later</li>
+            <li><b>Soft offer / CTA</b> — book a call, view the offer</li>
+            <li><b>Re-engage once</b> — one "still around?" nudge</li>
+            <li><b>Hand-off / nurture</b> — warm → Sales with context, cold → drip</li>
+          </ol>
+        </div>
+      </div>
+      <div class="callout"><b>ManyChat sequencing is email sequencing in the DMs.</b> Same spacing, same read-the-moment logic — the inbox just moved into Instagram and Facebook messages.</div>
+    </div>
+  </section>
+
+  <!-- 5c · BOOK PRINCIPLES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Steal from the people who already mapped this</div>
+      <h2 style="margin-bottom:6px">Four books, four follow-up principles — already in your sequence.</h2>
+      <div class="vrows">
+        <div class="vrow"><span class="vn">Hormozi — $100M Leads</span><span class="vt"><b>Give value first.</b> Deliver the magnet before you ever ask for anything — that's node 2, Instant value, non-negotiable.</span></div>
+        <div class="vrow"><span class="vn">Brunson — DotCom Secrets</span><span class="vt"><b>Value ladder + soap-opera sequence.</b> Don't offer immediately — build value with a story first, that's Follow-up + proof before the offer.</span></div>
+        <div class="vrow"><span class="vn">Cialdini — Influence</span><span class="vt"><b>Reciprocity &amp; commitment.</b> They opted in (a small commitment), you gave first (reciprocity) — that's why the soft offer lands instead of feeling pushy.</span></div>
+        <div class="vrow"><span class="vn">Godin — Permission Marketing</span><span class="vt"><b>Earn the right to keep messaging.</b> One re-engage nudge, not a barrage — permission expires the moment you spam it.</span></div>
+      </div>
+      <div class="callout"><b>Practical, not a book report.</b> Every principle above already lives in your six nodes — this is why the sequence works, not just that it does.</div>
+    </div>
+  </section>
+
+  <!-- 6 · THE LEAK -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The standard · non-negotiable</div>
+      <div class="big">A post with no working flow is <em>a leak</em>.</div>
+      <p class="lead">Views and comments mean nothing if the DM never fires, the magnet never delivers, or the lead never gets captured. Test the flow end to end before the post ships — not after someone complains they never heard back.</p>
+    </div>
+  </section>
+
+  <!-- 7 · DIVIDER — SEQUENCING -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part two</div>
+      <hr class="rule">
+      <h2>Sequencing</h2>
+      <p class="lead" style="color:#bbb">One DM is not a flow. Build the sequence.</p>
+    </div>
+  </section>
+
+  <!-- 8 · SEQUENCING STEPS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Build it like an email sequence</div>
+      <h2 style="margin-bottom:6px">Don't stop at one DM.</h2>
+      <ol class="pts">
+        <li><b>Instant value</b> — deliver exactly what they asked for, immediately.</li>
+        <li><b>Follow-up</b> — more value or proof, a beat later.</li>
+        <li><b>The offer</b> — the soft CTA, once trust is built.</li>
+        <li><b>Re-engage</b> — one nudge to whoever went quiet.</li>
+        <li><b>Hand-off or nurture</b> — warm leads go to Sales, cold ones stay in the drip.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 9 · SPACE & MATCH -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Same logic as an email drip</div>
+      <div class="big">Space the messages. Match the message to where they are.</div>
+      <p class="lead">A lead who just opted in isn't ready for the offer, and a lead who's gone cold doesn't need more value — they need one clean re-engage. Sequencing is reading the moment, not blasting the same message on a timer.</p>
+    </div>
+  </section>
+
+  <!-- 10 · DIVIDER — POSTING & SCHEDULING -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part three</div>
+      <hr class="rule">
+      <h2>Posting &amp; scheduling</h2>
+      <p class="lead" style="color:#bbb">Cadence and consistency.</p>
+    </div>
+  </section>
+
+  <!-- 11 · CADENCE & CONSISTENCY -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">The cadence · non-negotiable basics</div>
+      <ul class="pts">
+        <li><b>A content calendar</b> — know what's posting and when, before the day arrives.</li>
+        <li><b>Post at the page's best times</b> — when the audience is actually there.</li>
+        <li><b>Platform-native formatting</b> — never a straight re-post across platforms.</li>
+        <li><b>Caption + hook + CTA</b> — every post earns its own scroll-stop and its own ask.</li>
+      </ul>
+      <div class="callout"><b>Consistency beats sporadic bursts.</b> A steady cadence compounds; a flurry of posts followed by silence resets you every time.</div>
+      <div class="formula">
+        <div class="feq">Audience-active time <span>−</span> lead-time <span>=</span> post time</div>
+        <ol>
+          <li><b>Check the platform's analytics</b> for when YOUR audience is online — not a generic "best time to post" list.</li>
+          <li><b>Post 30–60 minutes before that peak</b> — gives the algorithm lead-time to pick it up before your audience arrives.</li>
+          <li><b>Test 2–3 windows</b> over a few weeks; compare saves and reach, not just likes.</li>
+          <li><b>Lock the winner.</b> Re-test only if performance drifts.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · CAPTURE URL + POST DATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Every post · no exceptions</div>
+      <div class="big">Capture the post URL. Mark the <em>actual</em> post date.</div>
+      <p class="lead">The moment it's live, log the URL and the real date it posted — not the date it was scheduled for. This is what makes performance trackable and what every dashboard downstream depends on.</p>
+    </div>
+  </section>
+
+  <!-- 13 · DIVIDER — COMMENTS -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part four</div>
+      <hr class="rule">
+      <h2>Handling comments</h2>
+      <p class="lead" style="color:#bbb">Triage fast. Every comment is reach.</p>
+    </div>
+  </section>
+
+  <!-- 14 · TRIAGE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Triage fast · a comment a day doesn't wait</div>
+      <div class="decide">
+        <div class="dbox ok"><h3>Engage →</h3><ul>
+          <li>Reply to real questions</li>
+          <li>Pin the best comment</li>
+          <li>Reply, converse — community is the moat</li>
+          <li>Route buying-intent comments to DM</li>
+        </ul></div>
+        <div class="dbox no"><h3>Handle ✕</h3><ul>
+          <li>Hide or handle spam and trolls</li>
+          <li>Don't let noise bury real questions</li>
+          <li>Don't leave buying-intent sitting in public</li>
+        </ul></div>
+      </div>
+      <div class="big" style="margin-top:22px;font-size:clamp(1.5rem,3.4vw,2.1rem)">Reply. Converse. <em>Community is the moat.</em></div>
+    </div>
+  </section>
+
+  <!-- 14b · HANDLING HATE COMMENTS -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Trolls happen · protect the room</div>
+      <h2 style="margin-bottom:6px">Hate comments aren't a content problem. They're a protection duty.</h2>
+      <div class="decide">
+        <div class="dbox ok"><h3>Do →</h3><ul>
+          <li>Don't feed it — no public back-and-forth with a troll</li>
+          <li>Respond once with grace, or hide/report abuse and move on</li>
+          <li>Keep genuine criticism up — disagreement isn't hate</li>
+          <li>If it targets the guest, step in fast and shield them</li>
+        </ul></div>
+        <div class="dbox no"><h3>Don't ✕</h3><ul>
+          <li>Don't argue in public — it feeds the algorithm and the troll</li>
+          <li>Don't reflexively delete every negative comment</li>
+          <li>Don't leave a guest exposed and unanswered</li>
+          <li>Don't mirror the tone — grace de-escalates, matching energy doesn't</li>
+        </ul></div>
+      </div>
+      <div class="callout"><b>Guests are a special case.</b> We invited them on — their reputation is on us. If hate targets a guest or interviewee, shield them fast: hide or report abusive comments, respond with grace, and don't let it sit.</div>
+    </div>
+  </section>
+
+  <!-- 15 · COMMUNITY MOAT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Why this matters</div>
+      <div class="big">Every comment is reach <em>and</em> a relationship.</div>
+      <p class="lead">A reply keeps someone in the algorithm's eye and in yours. Ignored comments cost you both — the engagement, and the person who might have become a lead.</p>
+    </div>
+  </section>
+
+  <!-- 16 · DIVIDER — DMs TO SALES -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part five</div>
+      <hr class="rule">
+      <h2>DMs → qualify → hand to Sales</h2>
+      <p class="lead" style="color:#bbb">Don't close it. Pass it clean.</p>
+    </div>
+  </section>
+
+  <!-- 17 · DM PIPELINE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Leads land in the DMs · your five moves</div>
+      <div class="mcpipe">
+        <div class="pst hot"><div class="po">1</div><div class="pn">Respond fast</div></div>
+        <div class="pa hot">→</div>
+        <div class="pst"><div class="po">2</div><div class="pn">Qualify lightly</div></div>
+        <div class="pa">→</div>
+        <div class="pst"><div class="po">3</div><div class="pn">Capture details</div></div>
+        <div class="pa">→</div>
+        <div class="pst you2"><div class="po">4</div><div class="pn">Hand to Sales</div></div>
+        <div class="pa">→</div>
+        <div class="pst"><div class="po">5</div><div class="pn">Log it</div></div>
+      </div>
+      <div class="callout"><b>Speed wins.</b> A fast first reply is the single biggest lever on whether a warm lead stays warm.</div>
+    </div>
+  </section>
+
+  <!-- 18 · HAND OFF WITH CONTEXT -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Qualify light · need, fit, timing, budget signal</div>
+      <div class="big">Hand off <em>warm</em>. Hand off with <em>context</em>.</div>
+      <p class="lead">Don't try to close it yourself. Once a lead is warm, pass who they are, what they want, and what you promised — clean context beats a fast half-answer. Then log it so nothing drops between you and Sales.</p>
+      <div class="future"><b>Confirm our exact setup</b> &nbsp; where warm leads get logged and how the handoff to Sales is recorded may differ by page — check the current process before assuming.</div>
+    </div>
+  </section>
+
+  <!-- 19 · DIVIDER — YOUR TURN -->
+  <section class="slide divider">
+    <div class="inner">
+      <div class="eyebrow">Part six</div>
+      <hr class="rule">
+      <h2>Your turn</h2>
+      <p class="lead" style="color:#bbb">Four calls. Get them graded.</p>
+    </div>
+  </section>
+
+  <!-- 20 · MCQ 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 1 · before it posts</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> A post with no working flow is a leak. Hold it, test comment → DM → magnet → capture end to end, then post."
+        data-no="<b>No.</b> Posting without a tested flow leaks every lead it earns. Hold the post, test the comment → DM → magnet → capture loop, then ship it.">
+        <div class="scenario">A lead-gen video is set to post today with a comment-the-keyword CTA. Nobody has tested whether the ManyChat flow actually fires yet.</div>
+        <div class="q">What do you do?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Post it — test the flow after it's live</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Hold the post, test the flow end-to-end first</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Post it without the CTA, add the flow later</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 · MCQ 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 2 · triage</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Buying-intent comments move to DM — that's where you qualify and capture, not in the public thread."
+        data-no="<b>Not quite.</b> Buying-intent belongs in DM, where you can qualify and capture properly — not answered publicly or left unactioned.">
+        <div class="scenario">Someone comments: "How much does this cost, can I book a call?" under your lead-gen post.</div>
+        <div class="q">What's the right move?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Reply publicly with the price</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Move the conversation to DM</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Like the comment and move on</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 · MCQ 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 3 · the handoff</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> Qualify lightly, then hand it to Sales with full context — who they are, what they want, what you promised. You pass it clean, you don't close it."
+        data-no="<b>No.</b> Don't try to close it yourself. Qualify lightly, then hand it to Sales with context — that's your job, closing is theirs.">
+        <div class="scenario">A DM lead confirms real interest, rough budget, and timing.</div>
+        <div class="q">What do you do next?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Try to close the deal yourself in the DM</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>Qualify lightly, then hand to Sales with context</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Leave it in the inbox until Sales asks</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 · MCQ 4 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Question 4 · sequencing</div>
+      <div class="quiz" data-answer="B"
+        data-ok="<b>Correct.</b> One DM is not a flow. Build the sequence — value, follow-up, offer, one re-engage nudge — same logic as an email drip."
+        data-no="<b>No.</b> A single DM and silence isn't sequencing. Build it: value, follow-up, offer, then one re-engage nudge before you let it go cold.">
+        <div class="scenario">You sent one DM delivering the lead magnet and nothing else. Three days pass with no reply.</div>
+        <div class="q">What should have happened?</div>
+        <div class="opts">
+          <button class="opt" data-k="A"><span class="kx">A</span>Nothing — one DM is enough once value is delivered</button>
+          <button class="opt" data-k="B"><span class="kx">B</span>A built sequence: value, follow-up, offer, one re-engage</button>
+          <button class="opt" data-k="C"><span class="kx">C</span>Send the exact same DM again immediately</button>
+        </div>
+        <div class="fb"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24 · GATE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Certification · answer Yes to every question</div>
+      <h2 style="margin-bottom:6px">Can you say Yes to all five?</h2>
+      <div class="gate" id="gate">
+        <div class="grow"><span class="gq">Does every lead-gen post have a working comment → DM → magnet → lead flow?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you build a sequence, not stop at one DM?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you capture the post URL every time?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you reply to and triage comments?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">Do you qualify DMs lightly and hand warm leads to Sales with context?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+      </div>
+      <div class="gstate" id="gstate">Answer Yes to all five to unlock the next stage.</div>
+      <button class="proceed" id="proceed">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 25 · CLOSE -->
+  <section class="slide close">
+    <div class="inner">
+      <img class="logo" style="height:40px" src="koocester-logo.png" alt="koocester">
+      <h2 style="margin-top:8px">Capture the lead. Nurture the flow. Hand it off clean.</h2>
+      <p class="lead">You turn a comment into a relationship and a relationship into pipeline. Test the flow, sequence the DM, keep the cadence, triage the comments, and pass warm leads with context.</p>
+      <div class="tags" style="margin-top:24px">
+        <a class="tag" href="smm-training.html">SMM core training →</a>
+        <a class="tag" href="academy.html">Back to Academy</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brandmark"><b>koocester</b> academy · lead flow &amp; community</div>
+<div class="nav">
+  <button class="arrow play" id="play" aria-label="Read this slide aloud" title="Read aloud · auto-advances like a video">▶</button>
+  <span class="count" id="count">1 / 29</span>
+  <button class="arrow" id="prev" aria-label="Previous">‹</button>
+  <button class="arrow" id="next" aria-label="Next">›</button>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0,n=slides.length;
+  var bar=document.getElementById('bar'),count=document.getElementById('count');
+  var prev=document.getElementById('prev'),next=document.getElementById('next');
+  function show(k){
+    i=Math.max(0,Math.min(n-1,k));
+    slides.forEach(function(s,x){s.classList.toggle('active',x===i)});
+    bar.style.width=((i)/(n-1)*100)+'%';
+    count.textContent=(i+1)+' / '+n;
+    prev.disabled=i===0;next.disabled=i===n-1;
+  }
+  next.onclick=function(){stopPlay();show(i+1)};prev.onclick=function(){stopPlay();show(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();stopPlay();show(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();stopPlay();show(i-1)}
+  });
+  // ===== read-aloud "watch it" mode: reads the slide, then auto-advances like a video =====
+  var playBtn=document.getElementById('play'),playing=false,hasTTS=('speechSynthesis' in window);
+  function slideText(){var el=slides[i].querySelector('.inner');return el?el.innerText.replace(/\s+/g,' ').trim():'';}
+  function speakNow(){
+    if(!hasTTS)return; window.speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(slideText()); u.rate=1; u.pitch=1;
+    u.onend=function(){ if(playing){ if(i<n-1){ show(i+1); setTimeout(speakNow,450); } else { stopPlay(); } } };
+    window.speechSynthesis.speak(u);
+  }
+  function startPlay(){ if(!hasTTS){alert('Read-aloud needs a modern browser (Chrome/Safari).');return;} playing=true; if(playBtn){playBtn.textContent='❚❚';playBtn.classList.add('on');} speakNow(); }
+  function stopPlay(){ playing=false; if(playBtn){playBtn.textContent='▶';playBtn.classList.remove('on');} if(hasTTS)window.speechSynthesis.cancel(); }
+  if(playBtn) playBtn.onclick=function(){ playing?stopPlay():startPlay(); };
+  window.addEventListener('beforeunload',stopPlay);
+  // graded MCQ — inline data-ok / data-no feedback, scales to any count
+  [].forEach.call(document.querySelectorAll('.quiz'),function(quiz){
+    var ans=quiz.getAttribute('data-answer');
+    var fb=quiz.querySelector('.fb');
+    [].forEach.call(quiz.querySelectorAll('.opt'),function(btn){
+      btn.addEventListener('click',function(){
+        var k=btn.getAttribute('data-k'),right=(k===ans);
+        [].forEach.call(quiz.querySelectorAll('.opt'),function(b){b.disabled=true;if(b.getAttribute('data-k')===ans)b.classList.add('correct');});
+        if(!right)btn.classList.add('wrong');
+        fb.innerHTML=right?quiz.getAttribute('data-ok'):quiz.getAttribute('data-no');
+        fb.className='fb show '+(right?'ok':'no');
+      });
+    });
+  });
+  // Yes/No certification gate — all Yes unlocks, any No holds it
+  var rows=[].slice.call(document.querySelectorAll('#gate .grow'));
+  var gstate=document.getElementById('gstate');
+  var proceed=document.getElementById('proceed');
+  if(proceed) proceed.addEventListener('click',function(){var nx=document.getElementById('next');if(nx)nx.click();});
+  var gkey='koo-leadflow-gate';var gsaved=[];try{gsaved=JSON.parse(localStorage.getItem(gkey)||'[]')||[]}catch(e){}
+  rows.forEach(function(row,x){
+    if(gsaved[x]==='yes')row.classList.add('on-yes');
+    if(gsaved[x]==='no')row.classList.add('on-no');
+    row.querySelector('.gbtn.yes').addEventListener('click',function(){row.classList.remove('on-no');row.classList.add('on-yes');gupd();});
+    row.querySelector('.gbtn.no').addEventListener('click',function(){row.classList.remove('on-yes');row.classList.add('on-no');gupd();});
+  });
+  function gupd(){
+    var yes=0,no=0,state=[];
+    rows.forEach(function(row){
+      var v=row.classList.contains('on-yes')?'yes':row.classList.contains('on-no')?'no':null;
+      state.push(v); if(v==='yes')yes++; if(v==='no')no++;
+    });
+    try{localStorage.setItem(gkey,JSON.stringify(state));}catch(e){}
+    if(no>0){gstate.className='gstate blocked';gstate.textContent='Not yet — a No means revisit that step before you go on. ('+no+' to fix)';if(proceed)proceed.className='proceed';}
+    else if(yes===rows.length){gstate.className='gstate ready';gstate.textContent='✓ Certified — you can proceed to the next stage.';if(proceed)proceed.className='proceed show';}
+    else {gstate.className='gstate';gstate.textContent='Answer Yes to all '+rows.length+' to unlock the next stage. ('+yes+'/'+rows.length+')';if(proceed)proceed.className='proceed';}
+  }
+  gupd();show(0);
+})();
+</script>
+<!-- koo-feedback-widget -->
+<style>
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-panel.on{display:block}
+.koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel textarea:focus{outline:none;border-color:#C02025}
+.koofb-row{display:flex;gap:8px;margin-top:9px}
+.koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
+.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+</style>
+<button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
+<div class="koofb-panel" id="koofbPanel">
+  <h4>Improve this slide</h4>
+  <p class="koofb-p">What's confusing, wrong, or could be clearer here? Your note reaches the team.</p>
+  <textarea id="koofbText" placeholder="e.g. this example doesn't land&hellip;"></textarea>
+  <div class="koofb-row"><button class="koofb-send" id="koofbSend">Send</button><button class="koofb-close" id="koofbClose">Close</button></div>
+  <div class="koofb-thx" id="koofbThx">&#10003; Thanks &mdash; logged.</div>
+</div>
+<script>
+(function(){
+  var WEBHOOK='';
+  var deck=(location.pathname.split('/').pop()||'deck').replace('.html','');
+  var b=document.getElementById('koofbBtn'),p=document.getElementById('koofbPanel'),t=document.getElementById('koofbText'),s=document.getElementById('koofbSend'),c=document.getElementById('koofbClose'),x=document.getElementById('koofbThx');
+  if(!b) return;
+  function slide(){ try{ var n=document.querySelectorAll('.slide'); var mid=window.innerHeight*0.5; for(var i=0;i<n.length;i++){ var r=n[i].getBoundingClientRect(); if(r.top<=mid&&r.bottom>=mid) return i+1; } }catch(e){} return ''; }
+  b.onclick=function(){ p.classList.toggle('on'); if(p.classList.contains('on')) t.focus(); };
+  c.onclick=function(){ p.classList.remove('on'); };
+  s.onclick=function(){ var m=(t.value||'').trim(); if(!m) return; var pay={message:m,deck:deck,slide:slide(),page:'deck'};
+    try{ var a=JSON.parse(localStorage.getItem('koo-feedback')||'[]'); a.push(pay); localStorage.setItem('koo-feedback',JSON.stringify(a)); }catch(e){}
+    if(WEBHOOK){ try{ fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pay)}); }catch(e){} }
+    else { try{ window.open('mailto:koocester@gmail.com?subject='+encodeURIComponent('Academy feedback: '+deck)+'&body='+encodeURIComponent(m+'\n\n[deck: '+deck+', slide ~'+pay.slide+']'),'_blank'); }catch(e){} }
+    t.value=''; x.style.display='block'; setTimeout(function(){ x.style.display='none'; p.classList.remove('on'); },1500);
+  };
+})();
+</script>
+<!-- /koo-feedback-widget -->
+<!-- koo-navfix -->
+<style>#play{position:fixed;top:16px;right:16px;bottom:auto;left:auto;transform:none;z-index:20;margin:0}.nav{gap:16px}.nav #prev{order:0}.nav #count{order:1}.nav #next{order:2}</style>
+<script>(function(){try{var p=document.getElementById('play');if(p&&p.parentNode!==document.body)document.body.appendChild(p);}catch(e){}})();</script>
+<!-- /koo-navfix -->
+
+<!-- koo-rotate-hint -->
+<style>
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
+@keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
+.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+@media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
+</style>
+<div class="koo-rot" id="kooRot">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M3 11a9 9 0 0 1 4-7M21 13a9 9 0 0 1-4 7"/></svg>
+  <span>Rotate your phone for the best view</span>
+  <button type="button" onclick="this.parentElement.classList.remove('show');try{sessionStorage.setItem('koo-rot-x','1')}catch(e){}">Got it</button>
+</div>
+<script>(function(){var el=document.getElementById('kooRot');try{if(el&&!sessionStorage.getItem('koo-rot-x'))el.classList.add('show');}catch(e){if(el)el.classList.add('show');}})();</script>
+<!-- /koo-rotate-hint -->
+
+</body>
+</html>

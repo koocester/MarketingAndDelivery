@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script src="koo-auth-guard.js?v=2026072104"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Sales Kit · Koocester</title>
+<style>
+:root{
+  --maroon:#C02025; --maroon-tint:#F2CECF; --maroon-deep:#C93B3F; --ink:#000; --body:#333; --muted:#666;
+  --line:#CCC; --line2:#CCC; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:var(--base);
+  --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.22,1.12,.4,1);
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;line-height:1.55;text-rendering:optimizeLegibility}
+
+/* ---------- top nav (portal chrome) ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,5vw,56px);border-bottom:1px solid var(--line2);position:sticky;top:0;background:rgba(255,255,255,.82);backdrop-filter:blur(24px) saturate(1.2);z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:23px}
+.brand .tag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);font-weight:800;border:1px solid var(--maroon);border-radius:5px;padding:4px 9px;background:var(--maroon-tint);font-family:var(--mono)}
+.topright{display:flex;align-items:center;gap:16px}
+.back{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+.back:hover{color:var(--maroon)}
+.printbtn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--maroon);border:none;border-radius:8px;padding:9px 14px;cursor:pointer;transition:background .16s,transform .16s var(--pop);white-space:nowrap}
+.printbtn:hover{background:var(--maroon-deep);transform:translateY(-1px)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1040px;margin:0 auto;padding:clamp(28px,5vw,52px) clamp(20px,5vw,56px) 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:14px}
+section{margin-top:clamp(40px,7vw,72px)}
+.sec-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px}
+h1{font-size:clamp(3rem,6.4vw,5.25rem);line-height:.96;letter-spacing:-.055em;color:var(--ink);font-weight:700;margin:0 0 22px}
+h2{font-size:clamp(1.8rem,3.5vw,2.7rem);line-height:1.04;letter-spacing:-.04em;color:var(--ink);font-weight:700;margin:0 0 20px}
+h3{margin:0;font-size:1.2rem;color:var(--ink);font-weight:800;letter-spacing:-.015em}
+.lead{color:var(--muted);font-size:clamp(1rem,1.6vw,1.22rem);max-width:650px;margin:0 0 6px;line-height:1.55}
+p{margin:0 0 12px}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(18px) scale(.985)}
+.reveal.in{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .62s var(--pop)}
+
+/* ---------- hero ---------- */
+.hero{padding-top:8px}
+.confid{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:2px 0 24px}
+.reachcallout{display:flex;align-items:center;gap:14px;background:var(--maroon);color:#fff;border-radius:16px;padding:20px 24px;max-width:680px;box-shadow:var(--shadow)}
+.reachcallout .big{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.reachcallout .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;margin-bottom:4px}
+.reachcallout .dot{width:44px;height:44px;flex:none;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:22px}
+
+/* ---------- who we are ---------- */
+.points{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:6px}
+.point{border:1px solid var(--line);border-radius:22px;padding:22px;background:rgba(255,255,255,.9);box-shadow:0 18px 50px rgba(0,0,0,.05);transition:transform .45s var(--pop),box-shadow .45s var(--ease),border-color .3s}
+.point .n{font-family:var(--mono);font-size:11px;color:var(--maroon);font-weight:700;margin-bottom:10px}
+.point b{display:block;color:var(--ink);font-size:1rem;margin-bottom:5px}
+.point span{color:var(--muted);font-size:.92rem}
+
+/* ---------- plan / package cards ---------- */
+.shared{border:1.5px solid var(--line);border-left:4px solid var(--maroon);border-radius:14px;background:var(--maroon-tint);padding:18px 22px;margin-bottom:22px}
+.shared .sh-t{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:10px}
+.shared ul{margin:0;padding-left:18px;color:var(--body);font-size:.95rem}
+.shared li{margin-bottom:6px}
+.shared li:last-child{margin-bottom:0}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.plan{position:relative;border:1px solid var(--line);border-radius:26px;padding:28px 26px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.07);display:flex;flex-direction:column;overflow:hidden;transition:transform .45s var(--pop),box-shadow .45s var(--ease)}
+.plan.featured{border-color:var(--maroon);border-width:2px}
+.ribbon{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:20px;background:var(--maroon-tint);color:var(--muted);border:1px solid var(--line)}
+.ribbon.hot{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.plan h3{font-size:1.5rem;margin-bottom:4px}
+.plan .cadence{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.inclist{list-style:none;margin:0 0 20px;padding:0;flex:1}
+.inclist li{position:relative;padding-left:24px;margin-bottom:11px;font-size:.94rem;color:var(--body)}
+.inclist li::before{content:"";position:absolute;left:0;top:7px;width:9px;height:9px;border-radius:50%;background:var(--maroon)}
+.price{display:flex;align-items:baseline;gap:8px;border-top:1px solid var(--line);padding-top:16px}
+.price .amt{font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.price .per{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+
+/* ---------- main video package ---------- */
+.mainpkg{border:1px solid var(--maroon);border-radius:28px;background:#fff;box-shadow:0 24px 70px rgba(0,0,0,.08);overflow:hidden}
+.mainpkg .hd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:24px 26px;background:var(--maroon-tint);border-bottom:1.5px solid var(--line)}
+.mainpkg .hd .handle{font-family:var(--mono);font-size:12px;color:var(--maroon);font-weight:700;margin-top:4px}
+.mainpkg .hd .amt{font-size:2rem;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.mainpkg .bd{padding:24px 26px}
+.mainpkg .bd .grp{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 12px}
+.incgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.incgrid li{list-style:none;position:relative;padding-left:24px;font-size:.94rem;color:var(--body)}
+.incgrid li::before{content:"";position:absolute;left:0;top:7px;width:9px;height:9px;border-radius:50%;background:var(--maroon)}
+
+/* ---------- verticals ---------- */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.vcard{border:1px solid var(--line);border-radius:22px;padding:22px;background:#fff;display:flex;flex-direction:column;box-shadow:0 16px 46px rgba(0,0,0,.05);transition:transform .45s var(--pop),box-shadow .45s var(--ease)}
+.vcard h3{font-size:1.15rem;margin-bottom:3px}
+.vcard .handle{font-family:var(--mono);font-size:11px;color:var(--maroon);font-weight:700;margin-bottom:14px}
+.vcard .vamt{font-size:1.5rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-top:auto}
+.vcard .opens{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line2)}
+
+/* ---------- bundles ---------- */
+.bundles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bundle{border:1px solid var(--line);border-radius:24px;padding:30px 22px;background:#fff;text-align:center;box-shadow:0 16px 46px rgba(0,0,0,.05);transition:transform .45s var(--pop),box-shadow .45s var(--ease)}
+.bundle .q{font-size:1.05rem;font-weight:800;color:var(--ink);margin-bottom:10px}
+.bundle .off{font-size:2.2rem;font-weight:800;color:var(--maroon);letter-spacing:-.03em;line-height:1}
+.bundle .offlbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+/* ---------- add-ons ---------- */
+.addons{border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.06);background:#fff}
+.addrow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:14px 22px;border-bottom:1px solid var(--line2)}
+.addrow:last-child{border-bottom:none}
+.addrow:nth-child(even){background:var(--maroon-tint)}
+.addrow .name{font-size:.96rem;color:var(--ink)}
+.addrow .name small{display:block;color:var(--muted);font-size:.83rem;margin-top:2px}
+.addrow .cost{font-family:var(--mono);font-size:.92rem;font-weight:700;color:var(--maroon);text-align:right;white-space:nowrap}
+
+/* ---------- exclusivity ---------- */
+.excl{background:var(--ink);color:#fff;border-radius:30px;padding:42px 40px;box-shadow:0 30px 90px rgba(0,0,0,.18);position:relative;overflow:hidden}
+.excl .badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--maroon);border-radius:20px;padding:6px 12px;margin-bottom:18px}
+.excl h2{color:#fff;margin-bottom:8px}
+.excl .note{color:#CCC;font-size:.9rem;margin-bottom:20px}
+.excl ul{margin:0 0 24px;padding-left:20px}
+.excl li{margin-bottom:10px;color:#fff;font-size:.98rem}
+.excl .invest{display:flex;align-items:baseline;gap:10px;border-top:1px solid rgba(255,255,255,.16);padding-top:20px}
+.excl .invest .amt{font-size:2rem;font-weight:800;color:#fff;letter-spacing:-.02em}
+.excl .invest .lbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#CCC}
+
+/* ---------- workflow ---------- */
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.step{flex:1;min-width:150px;border:1px solid var(--line);border-radius:24px;padding:26px 18px;background:#fff;text-align:center;position:relative;box-shadow:0 14px 42px rgba(0,0,0,.05)}
+.step .num{width:34px;height:34px;margin:0 auto 12px;border-radius:50%;background:var(--maroon-tint);border:1px solid #E49D9F;color:var(--maroon);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.step b{display:block;color:var(--ink);font-size:1.05rem}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--maroon);font-size:22px;padding:0 6px;flex:none}
+.span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:16px}
+.span b{color:var(--maroon)}
+
+/* ---------- talent tiers ---------- */
+.tcols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.tcol{border:1px solid var(--line);border-radius:26px;padding:28px;background:#fff;box-shadow:0 18px 52px rgba(0,0,0,.06)}
+.tcol .cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:700;margin-bottom:16px}
+.tier{margin-bottom:16px}
+.tier:last-child{margin-bottom:0}
+.tier b{display:block;color:var(--ink);font-size:1rem;margin-bottom:3px}
+.tier span{color:var(--muted);font-size:.9rem}
+
+/* ---------- fine print ---------- */
+.fine{border:1px solid var(--line);border-radius:28px;background:#fff;padding:34px 38px;box-shadow:0 20px 60px rgba(0,0,0,.06)}
+.fine .cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:12px}
+.fine ul{margin:0;padding-left:18px;color:var(--muted);font-size:.9rem}
+.fine li{margin-bottom:7px}
+.fine li:last-child{margin-bottom:0}
+
+/* ---------- footer CTA ---------- */
+.cta{margin-top:clamp(48px,8vw,80px);background:#000;color:#fff;border-radius:22px;padding:clamp(36px,6vw,56px);text-align:center}
+.cta h2{color:#fff;font-size:clamp(1.6rem,3.6vw,2.4rem);margin-bottom:16px}
+.cta .contact{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 28px;font-family:var(--mono);font-size:.95rem;letter-spacing:.02em}
+.cta .contact a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4)}
+.footline{text-align:center;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:32px 0 48px}
+
+/* ---------- full-screen slide deck ---------- */
+html,body{height:100%;overflow:hidden}
+.top{position:fixed;inset:0 0 auto 0;height:58px;padding-top:0;padding-bottom:0}
+.wrap{position:fixed;inset:58px 0 0;max-width:none;margin:0;padding:0;overflow:hidden}
+.slide{position:absolute;top:0;bottom:0;left:50%;width:min(100%,1040px);margin:0;padding:clamp(34px,5vw,64px) clamp(24px,5vw,56px) 92px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;opacity:0;visibility:hidden;filter:blur(10px);transform:translateX(calc(-50% + 54px)) scale(.985);transition:opacity .42s var(--ease),transform .62s var(--pop),filter .42s var(--ease),visibility .42s}
+.slide.active{opacity:1;visibility:visible;filter:blur(0);transform:translateX(-50%) scale(1)}
+.slide>*{opacity:0}
+.slide.active>*{animation:slidePop .5s var(--pop) both}
+.slide.active>*:nth-child(2){animation-delay:.06s}
+.slide.active>*:nth-child(3){animation-delay:.12s}
+.slide.active>*:nth-child(4){animation-delay:.18s}
+@keyframes slidePop{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.slide.cta{left:0;width:100%;max-width:none;border-radius:0;padding-left:clamp(24px,8vw,120px);padding-right:clamp(24px,8vw,120px);transform:translateX(54px)}
+.slide.cta.active{transform:none}
+.slide .addons{max-height:min(66vh,650px)}
+.slide .addrow{padding-top:12px;padding-bottom:12px}
+.nav{position:fixed;left:50%;bottom:20px;z-index:30;transform:translateX(-50%);display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:999px;padding:6px 8px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+.nav button{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--ink);font:700 18px var(--base);cursor:pointer}
+.nav button:hover{border-color:var(--maroon);color:var(--maroon)}
+.nav button:disabled{opacity:.32;cursor:default}
+.count{min-width:64px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)}
+.progress{position:fixed;left:0;bottom:0;height:4px;background:var(--maroon);z-index:31;transition:width .35s var(--ease)}
+.footline{display:none}
+
+/* ---------- premium motion system ---------- */
+.hero{overflow:hidden}
+.hero-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr);gap:clamp(38px,7vw,82px);align-items:center;position:relative;z-index:2}
+.title-line{display:block;overflow:hidden}
+.title-line.accent{color:var(--maroon)}
+.hero.active .title-line{animation:titleMask .9s cubic-bezier(.16,.84,.44,1) both}
+.hero.active .title-line:nth-child(2){animation-delay:.12s}
+.hero.active .lead{animation:softRise .72s var(--ease) .3s both}
+.hero.active .confid{animation:softRise .72s var(--ease) .4s both}
+.hero-wash{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.hero-wash span{position:absolute;border-radius:50%;filter:blur(56px);opacity:.58;will-change:transform}
+.hero-wash span:nth-child(1){width:360px;height:360px;background:#F2CECF;right:-70px;top:-100px;animation:ambientOne 11s ease-in-out infinite alternate}
+.hero-wash span:nth-child(2){width:270px;height:270px;background:#E49D9F;right:16%;bottom:-150px;opacity:.24;animation:ambientTwo 13s ease-in-out infinite alternate}
+.hero-wash span:nth-child(3){width:190px;height:190px;background:#D76C6F;left:-95px;top:25%;opacity:.13;animation:ambientThree 15s ease-in-out infinite alternate}
+.hero-metric{position:relative;aspect-ratio:1;display:grid;place-items:center;max-width:390px;width:100%;justify-self:end}
+.metric-card{position:relative;z-index:3;width:78%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(255,255,255,.88);border:1px solid #E49D9F;box-shadow:0 34px 90px rgba(0,0,0,.11);backdrop-filter:blur(20px);animation:metricFloat 6s ease-in-out infinite}
+.metric-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);font-weight:800;max-width:170px;line-height:1.35}
+.metric-number{font-size:clamp(2.4rem,4.8vw,4rem);line-height:1;letter-spacing:-.065em;color:#000;font-weight:700;margin:13px 0 8px}
+.metric-number span{color:var(--maroon)}
+.metric-caption{font-size:13px;color:var(--muted);font-weight:600}
+.metric-orbit{position:absolute;border-radius:50%;inset:4%;border:1px solid #E49D9F;animation:orbitSpin 18s linear infinite}
+.metric-orbit::before{content:"";position:absolute;width:13px;height:13px;border-radius:50%;background:var(--maroon);top:9%;left:18%;box-shadow:0 0 0 8px #F2CECF}
+.metric-orbit.orbit-two{inset:0;border-style:dashed;border-color:#CCC;animation-duration:28s;animation-direction:reverse}
+.metric-orbit.orbit-two::before{width:8px;height:8px;top:auto;bottom:12%;left:auto;right:12%;background:#C93B3F;box-shadow:none}
+.slide.active .point,.slide.active .vcard,.slide.active .bundle,.slide.active .plan,.slide.active .step,.slide.active .tcol,.slide.active .addrow{animation:cardLift .68s var(--pop) both}
+.points>*:nth-child(2),.vgrid>*:nth-child(2),.bundles>*:nth-child(2),.duo>*:nth-child(2),.flow>*:nth-child(2),.tcols>*:nth-child(2),.addons>*:nth-child(2){animation-delay:.07s!important}
+.points>*:nth-child(3),.vgrid>*:nth-child(3),.bundles>*:nth-child(3),.flow>*:nth-child(3),.addons>*:nth-child(3){animation-delay:.14s!important}
+.points>*:nth-child(4),.vgrid>*:nth-child(4),.flow>*:nth-child(4),.addons>*:nth-child(4){animation-delay:.21s!important}
+.addons>*:nth-child(5){animation-delay:.28s!important}.addons>*:nth-child(6){animation-delay:.35s!important}.addons>*:nth-child(7){animation-delay:.42s!important}.addons>*:nth-child(8){animation-delay:.49s!important}.addons>*:nth-child(9){animation-delay:.56s!important}
+.slide.active .plan.featured::after{content:"";position:absolute;inset:-40% auto -40% -55%;width:34%;transform:rotate(14deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:planSheen 5.5s ease-in-out 1s infinite}
+.slide.active .bundle .off{animation:numberBreath 4s ease-in-out infinite}
+.slide.active .bundle:nth-child(2) .off{animation-delay:.35s}.slide.active .bundle:nth-child(3) .off{animation-delay:.7s}
+.slide.active .arrow{animation:arrowPulse 1.8s ease-in-out infinite}
+.slide.active .arrow:nth-of-type(2){animation-delay:.22s}.slide.active .arrow:nth-of-type(3){animation-delay:.44s}
+.excl::after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:var(--maroon);right:-190px;top:-190px;filter:blur(18px);opacity:.72;animation:exclGlow 8s ease-in-out infinite alternate}
+.excl>*{position:relative;z-index:1}
+.slide.cta{overflow:hidden;background:#000;isolation:isolate}
+.slide.cta::before,.slide.cta::after{content:"";position:absolute;border-radius:50%;filter:blur(50px);z-index:-1}
+.slide.cta::before{width:520px;height:520px;background:var(--maroon);right:-150px;top:-250px;opacity:.72;animation:ctaDrift 10s ease-in-out infinite alternate}
+.slide.cta::after{width:360px;height:360px;background:#D76C6F;left:-140px;bottom:-220px;opacity:.28;animation:ctaDrift 13s ease-in-out infinite alternate-reverse}
+.cta-orbit{width:110px;height:110px;border:1px solid #E49D9F;border-radius:50%;margin:0 auto 26px;position:relative;animation:orbitSpin 14s linear infinite}
+.cta-orbit::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:5px;left:18px;box-shadow:0 0 0 8px rgba(255,255,255,.14)}
+.cta-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#CCC;font-weight:700;margin-bottom:16px}
+.cta h2{font-size:clamp(2.5rem,6vw,5.4rem);max-width:980px;margin:0 auto 34px;letter-spacing:-.055em;line-height:.98}
+.cta .contact{gap:12px}
+.cta .contact a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 22px;border-radius:999px;border:1px solid #CCC;font-weight:700;transition:transform .35s var(--pop),background .25s,border-color .25s}
+.cta .contact a:hover{transform:translateY(-3px)}
+.cta .contact .contact-primary{background:#fff;color:#000;border-color:#fff}
+.cta .contact .contact-secondary{background:transparent;color:#fff}
+.nav{box-shadow:0 14px 46px rgba(0,0,0,.12)}
+.nav button{transition:transform .25s var(--pop),border-color .2s,color .2s}
+.nav button:not(:disabled):hover{transform:scale(1.08)}
+@keyframes titleMask{from{opacity:0;transform:translateY(105%)}to{opacity:1;transform:none}}
+@keyframes softRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes ambientOne{to{transform:translate(-60px,70px) scale(1.15)}}
+@keyframes ambientTwo{to{transform:translate(80px,-55px) scale(.9)}}
+@keyframes ambientThree{to{transform:translate(55px,35px) scale(1.2)}}
+@keyframes orbitSpin{to{transform:rotate(360deg)}}
+@keyframes metricFloat{50%{transform:translateY(-10px);box-shadow:0 44px 100px rgba(0,0,0,.14)}}
+@keyframes cardLift{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes planSheen{0%,60%{left:-55%}85%,100%{left:130%}}
+@keyframes numberBreath{50%{transform:scale(1.045)}}
+@keyframes arrowPulse{50%{transform:translateX(5px);opacity:.55}}
+@keyframes exclGlow{to{transform:translate(-80px,80px) scale(1.12);opacity:.45}}
+@keyframes ctaDrift{to{transform:translate(-110px,90px) scale(1.12)}}
+
+/* ---------- responsive ---------- */
+@media (max-width:720px){
+  .duo,.tcols{grid-template-columns:1fr}
+  .bundles{grid-template-columns:1fr}
+  .incgrid{grid-template-columns:1fr}
+  .arrow{transform:rotate(90deg);padding:6px 0}
+  .slide.active .arrow{animation:none;transform:rotate(90deg)}
+  .step{width:100%}
+  .slide{justify-content:flex-start;padding-top:34px}
+  .hero-layout{grid-template-columns:1fr;gap:26px}
+  .hero-metric{max-width:280px;justify-self:center}
+  .metric-number{font-size:2.5rem}
+  h1{font-size:clamp(2.65rem,13vw,4.4rem)}
+  .cta h2{font-size:clamp(2.4rem,12vw,4.4rem)}
+  .brand .tag{display:none}
+  .topright .printbtn{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+  .slide{transition:opacity .2s linear,visibility .2s;filter:none}
+  .printbtn:hover,.plan:hover,.nav button:hover,.cta .contact a:hover{transform:none}
+}
+
+/* ---------- PRINT: clean client deck ---------- */
+@media print{
+  @page{margin:14mm}
+  .top,.printbtn,.back,.topright{display:none !important}
+  html,body{height:auto;overflow:visible}
+  body{background:#fff;color:#000}
+  .wrap{max-width:none;padding:0}
+  .wrap{position:static;overflow:visible}
+  .slide{position:static;width:auto;opacity:1 !important;visibility:visible !important;transform:none !important;display:block;overflow:visible;padding:0;margin-top:22px;page-break-after:always}
+  .slide>*{opacity:1 !important;transform:none !important;animation:none !important}
+  .hero-wash,.metric-orbit,.cta-orbit,.slide.cta::before,.slide.cta::after,.excl::after{display:none!important}
+  .nav,.progress{display:none !important}
+  section{margin-top:22px;break-inside:avoid;page-break-inside:avoid}
+  .plan,.point,.vcard,.bundle,.addons,.excl,.mainpkg,.shared,.tcol,.step,.fine,.reachcallout,.cta,.flow{
+    break-inside:avoid;page-break-inside:avoid;box-shadow:none
+  }
+  .reachcallout,.cta{background:var(--maroon) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .excl{background:var(--ink) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .shared{background:var(--maroon-tint) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mainpkg .hd{background:var(--maroon-tint) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .addrow:nth-child(even){background:#fff}
+  a{color:inherit;text-decoration:none}
+  h1{font-size:2.4rem}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><img src="koocester-logo.png" alt="Koocester"><span class="tag">SME · Company Kit</span></div>
+  <div class="topright">
+    <a class="back" href="../sales-kits.html">← Sales Kits</a>
+    <button class="printbtn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 2. HERO -->
+  <section class="slide hero active">
+    <div class="hero-wash" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="hero-layout">
+      <div class="hero-copy">
+        <div class="eyebrow">Koocester Media Kit</div>
+        <h1><span class="title-line">The all-round</span><span class="title-line accent">growth partnership.</span></h1>
+        <p class="lead">We turn credible brands into category-defining ones. Luxury lifestyle storytelling, produced end to end, placed in front of an audience that is already leaning in.</p>
+        <div class="confid">Small &amp; Medium Enterprises · Confidential</div>
+      </div>
+      <div class="hero-metric" aria-label="Guaranteed monthly exposure to more than one million niche-engaged followers">
+        <div class="metric-orbit orbit-one" aria-hidden="true"></div>
+        <div class="metric-orbit orbit-two" aria-hidden="true"></div>
+        <div class="metric-card">
+          <div class="metric-label">Guaranteed monthly exposure</div>
+          <div class="metric-number">1,000,000<span>+</span></div>
+          <div class="metric-caption">niche-engaged followers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. WHO WE ARE -->
+  <section class="slide">
+    <div class="sec-label">01 · Who we are</div>
+    <h2>A luxury lifestyle media house, built full-funnel.</h2>
+    <div class="points">
+      <div class="point">
+        <div class="n">01</div>
+        <b>Four worlds, one voice</b>
+        <span>Luxury lifestyle media across Homes, Business, Autos and Food.</span>
+      </div>
+      <div class="point">
+        <div class="n">02</div>
+        <b>End to end</b>
+        <span>Full-funnel delivery: production, posting, and community and comments management.</span>
+      </div>
+      <div class="point">
+        <div class="n">03</div>
+        <b>Top-tier priority</b>
+        <span>Highest-tier client priority so your objectives lead the queue.</span>
+      </div>
+      <div class="point">
+        <div class="n">04</div>
+        <b>Always front of mind</b>
+        <span>Consistent top-of-mind awareness across every Koocester platform.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. RECURRING BRAND PARTNER PLANS -->
+  <section class="slide">
+    <div class="sec-label">02 · Recurring Brand Partner plans</div>
+    <h2>Become a Koocester Brand Partner.</h2>
+    <div class="shared">
+      <div class="sh-t">Every plan includes</div>
+      <ul>
+        <li>Highest tier client priority to meet your brand objectives.</li>
+        <li>Guaranteed monthly exposure to 1,000,000+ niche-engaged followers.</li>
+        <li>Drives consistent top-of-mind awareness through consistent brand presence across Koocester platforms.</li>
+      </ul>
+    </div>
+    <div class="duo">
+      <div class="plan">
+        <span class="ribbon">Best Entry</span>
+        <h3>Silver Plan</h3>
+        <div class="cadence">2 videos / month</div>
+        <ul class="inclist">
+          <li>2x Koocester Homes, Business, Autos or Foodie Video Package.</li>
+          <li>Each package: Storyboards, Video Shooting, Editing, Posting.</li>
+          <li>2 relevant Instagram collaboration tags.</li>
+        </ul>
+        <div class="price"><span class="amt">SGD 6,000</span><span class="per">per month</span></div>
+      </div>
+      <div class="plan featured">
+        <span class="ribbon hot">★ Best Value</span>
+        <h3>Gold Plan</h3>
+        <div class="cadence">2 videos / month</div>
+        <ul class="inclist">
+          <li>1x Koocester Main Video Package.</li>
+          <li>1x Koocester Homes, Business, Autos or Foodie Video Package.</li>
+          <li>Each package: Storyboards, Video Shooting, Editing, Posting.</li>
+          <li>2 relevant Instagram collaboration tags.</li>
+        </ul>
+        <div class="price"><span class="amt">SGD 8,000</span><span class="per">per month</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MAIN VIDEO PACKAGE -->
+  <section class="slide">
+    <div class="sec-label">03 · The Main Video Package</div>
+    <div class="mainpkg">
+      <div class="hd">
+        <div>
+          <h3>The Main Video Package</h3>
+          <div class="handle">@koocester · Best Seller</div>
+        </div>
+        <div class="amt">SGD 7,000</div>
+      </div>
+      <div class="bd">
+        <div class="grp">What is included</div>
+        <ul class="incgrid">
+          <li>Production</li>
+          <li>Post Production</li>
+          <li>All Social Media Handling with Comments Management</li>
+          <li>1x Instagram Reel on @koocester</li>
+          <li>1x TikTok Video on @koocester</li>
+          <li>1x Facebook Reel on @koocester</li>
+          <li>1x Instagram Story Repost</li>
+          <li>1x TikTok Story Repost</li>
+          <li>1x Facebook Story Repost</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. VERTICAL PACKAGES -->
+  <section class="slide">
+    <div class="sec-label">04 · Vertical packages at a glance</div>
+    <h2>Same production, placed on the right channel.</h2>
+    <p class="lead">Each vertical package carries the same inclusions as the Main package, posted on that vertical's handle.</p>
+    <div class="vgrid" style="margin-top:22px">
+      <div class="vcard">
+        <h3>Homes</h3>
+        <div class="handle">@koocesterhomes</div>
+        <div class="vamt">SGD 3,500</div>
+        <div class="opens">Opens its own kit</div>
+      </div>
+      <div class="vcard">
+        <h3>Business</h3>
+        <div class="handle">@koocesterbusiness</div>
+        <div class="vamt">SGD 3,000</div>
+        <div class="opens">Opens its own kit</div>
+      </div>
+      <div class="vcard">
+        <h3>Autos</h3>
+        <div class="handle">@koocesterautos</div>
+        <div class="vamt">SGD 3,000</div>
+        <div class="opens">Opens its own kit</div>
+      </div>
+      <div class="vcard">
+        <h3>Foodie</h3>
+        <div class="handle">@koocesterfoodie</div>
+        <div class="vamt">Price on request</div>
+        <div class="opens">Opens its own kit</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. BUNDLE PACKAGES -->
+  <section class="slide">
+    <div class="sec-label">05 · Bundle packages</div>
+    <h2>Take more, pay less.</h2>
+    <p class="lead">Short-term branding pushes. Stack videos in one order and the discount grows.</p>
+    <div class="bundles" style="margin-top:22px">
+      <div class="bundle">
+        <div class="q">2 videos</div>
+        <div class="off">10%</div>
+        <div class="offlbl">off total</div>
+      </div>
+      <div class="bundle">
+        <div class="q">3 videos</div>
+        <div class="off">20%</div>
+        <div class="offlbl">off total</div>
+      </div>
+      <div class="bundle">
+        <div class="q">4 videos or more</div>
+        <div class="off">30%</div>
+        <div class="offlbl">off total</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ADD-ONS -->
+  <section class="slide">
+    <div class="sec-label">06 · Add-ons</div>
+    <h2>Extend any package.</h2>
+    <div class="addons" style="margin-top:18px">
+      <div class="addrow"><div class="name">Product Ad Placements</div><div class="cost">SGD 1,000 / month</div></div>
+      <div class="addrow"><div class="name">Collab with business account</div><div class="cost">SGD 1,000</div></div>
+      <div class="addrow"><div class="name">Collab with Koocester account</div><div class="cost">SGD 1,000</div></div>
+      <div class="addrow"><div class="name">Guaranteed Viewership<small>100k views / 300k views</small></div><div class="cost">SGD 500 / SGD 1,000</div></div>
+      <div class="addrow"><div class="name">Ad usage rights<small>1 month, 2 months, 3 months, 6 months, 12 months at multiplier x1 / x1.5 / x2 / x3 / x4</small></div><div class="cost">from SGD 3,000</div></div>
+      <div class="addrow"><div class="name">Talent or Subject sourcing</div><div class="cost">from SGD 1,000</div></div>
+    </div>
+  </section>
+
+  <!-- 8B. ADD-ONS · DISTRIBUTION AND ACCESS -->
+  <section class="slide">
+    <div class="sec-label">06 · Add-ons · distribution and access</div>
+    <h2>Extend the reach or accelerate delivery.</h2>
+    <div class="addons" style="margin-top:18px">
+      <div class="addrow"><div class="name">Priority or urgent video<small>1 to 3 days</small></div><div class="cost">SGD 1,000</div></div>
+      <div class="addrow"><div class="name">For Koocester to do the video</div><div class="cost">SGD 5,000</div></div>
+      <div class="addrow"><div class="name">Added objective</div><div class="cost">SGD 1,000</div></div>
+      <div class="addrow"><div class="name">Additional round of revision</div><div class="cost">SGD 200</div></div>
+      <div class="addrow"><div class="name">Instagram, Facebook or TikTok Story on @koocester<small>cross-posted</small></div><div class="cost">SGD 1,000</div></div>
+      <div class="addrow"><div class="name">Link in Bio on @koocester</div><div class="cost">SGD 1,000 / week or SGD 3,000 / month</div></div>
+      <div class="addrow"><div class="name">Link in Linktree on @koocester</div><div class="cost">SGD 500 / week or SGD 1,000 / month</div></div>
+      <div class="addrow"><div class="name">Livestreaming</div><div class="cost">SGD 1,000 / hour</div></div>
+      <div class="addrow"><div class="name">Koocester speak at an event</div><div class="cost">SGD 20,000</div></div>
+    </div>
+  </section>
+
+  <!-- 9. EXCLUSIVITY -->
+  <section class="slide">
+    <div class="sec-label">07 · Exclusivity package</div>
+    <div class="excl">
+      <span class="badge">Top-up on a recurring plan only</span>
+      <h2>Own your category on Koocester.</h2>
+      <div class="note">Available exclusively as a top-up on a recurring plan.</div>
+      <ul>
+        <li>Koocester will not promote or feature any other brands of your category across all social media platforms (TikTok, Instagram, Facebook, and any affiliate sub-channel) for the partnership duration.</li>
+        <li>Full creative alignment to your marketing and objective needs: exclusive taglines, captions, and branding in all relevant videos.</li>
+        <li>Ensures undivided brand focus.</li>
+        <li>Duration from 1 month.</li>
+      </ul>
+      <div class="invest"><span class="amt">from SGD 50,000</span><span class="lbl">investment</span></div>
+    </div>
+  </section>
+
+  <!-- 10. WORKFLOW -->
+  <section class="slide">
+    <div class="sec-label">08 · How it works</div>
+    <h2>From payment to posted.</h2>
+    <div class="flow" style="margin-top:22px">
+      <div class="step"><div class="num">1</div><b>Payment</b></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="num">2</div><b>Filming</b></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="num">3</div><b>Revision</b></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="num">4</div><b>Posting</b></div>
+    </div>
+    <div class="span">Filming to Posting: <b>1 to 2 weeks</b></div>
+  </section>
+
+  <!-- 11. TALENT SOURCING TIERS -->
+  <section class="slide">
+    <div class="sec-label">09 · Talent sourcing tiers</div>
+    <h2>The right face for the story.</h2>
+    <div class="tcols" style="margin-top:22px">
+      <div class="tcol">
+        <div class="cap">Individuals</div>
+        <div class="tier">
+          <b>Public Figure / Key Opinion Leader (KOL)</b>
+          <span>Celebrities, influencers, and founders with large followings and high public interest.</span>
+        </div>
+        <div class="tier">
+          <b>Thought Leader / Industry Voice</b>
+          <span>Entrepreneurs, professionals, or niche experts with inspiring stories or credibility.</span>
+        </div>
+        <div class="tier">
+          <b>Everyday Persons / Community Profile</b>
+          <span>Normal individuals with unique life journeys or authentic appeal.</span>
+        </div>
+      </div>
+      <div class="tcol">
+        <div class="cap">Business</div>
+        <div class="tier">
+          <b>Established Brand / Market Leader</b>
+          <span>Renowned corporations or legacy brands with strong market authority.</span>
+        </div>
+        <div class="tier">
+          <b>Growing Business / Emerging Enterprise</b>
+          <span>Small and medium enterprises, startups, or expanding companies with a strong value proposition.</span>
+        </div>
+        <div class="tier">
+          <b>Local Business / Passion-Driven Venture</b>
+          <span>Small businesses or niche ventures with authentic journeys or community appeal.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. FINE PRINT -->
+  <section class="slide">
+    <div class="fine">
+      <div class="cap">The fine print</div>
+      <ul>
+        <li>Each video is strictly subjected to 1 objective.</li>
+        <li>Each video includes 2 rounds of revision.</li>
+        <li>Rates are based on supply and demand in accordance to the market price.</li>
+        <li>Editing timeframe is between 1 to 2 weeks.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13. FOOTER CTA -->
+  <section class="slide cta">
+    <div class="cta-orbit" aria-hidden="true"></div>
+    <div class="cta-kicker">Your next chapter can start here.</div>
+    <h2>Ready to become a Koocester Brand Partner?</h2>
+    <div class="contact">
+      <span><a class="contact-primary" href="mailto:connect@koocester.com">connect@koocester.com</a></span>
+      <span><a class="contact-secondary" href="https://www.koocester.com">www.koocester.com</a></span>
+    </div>
+  </section>
+
+  <div class="footline">Koocester Group · Confidential Media Kit · Small &amp; Medium Enterprises</div>
+
+</main>
+
+<div class="nav" aria-label="Slide navigation">
+  <button id="prev" type="button" aria-label="Previous slide">‹</button>
+  <div class="count"><span id="current">1</span> / <span id="total">13</span></div>
+  <button id="next" type="button" aria-label="Next slide">›</button>
+</div>
+<div class="progress" id="progress"></div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var current=document.getElementById('current');
+  var total=document.getElementById('total');
+  var progress=document.getElementById('progress');
+  var prev=document.getElementById('prev');
+  var next=document.getElementById('next');
+  var index=0;
+  var fromHash=parseInt(location.hash.replace('#slide-',''),10);
+  if(fromHash>=1&&fromHash<=slides.length){index=fromHash-1}
+  total.textContent=slides.length;
+  function show(n){
+    index=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(slide,i){slide.classList.toggle('active',i===index)});
+    current.textContent=index+1;
+    progress.style.width=((index+1)/slides.length*100)+'%';
+    prev.disabled=index===0;
+    next.disabled=index===slides.length-1;
+    history.replaceState(null,'','#slide-'+(index+1));
+  }
+  prev.addEventListener('click',function(){show(index-1)});
+  next.addEventListener('click',function(){show(index+1)});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(index+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(index-1)}
+    if(e.key==='Home'){show(0)}
+    if(e.key==='End'){show(slides.length-1)}
+  });
+  var touchX=null;
+  document.addEventListener('touchstart',function(e){touchX=e.changedTouches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(touchX===null)return;
+    var dx=e.changedTouches[0].clientX-touchX;
+    if(Math.abs(dx)>55)show(index+(dx<0?1:-1));
+    touchX=null;
+  },{passive:true});
+  show(index);
+})();
+</script>
+</body>
+</html>
