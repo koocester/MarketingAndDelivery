@@ -4,6 +4,13 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 
 ## [Unreleased]
 
+### Added — Copywriter-bot readiness pass (2026-07-22)
+Discovery-only session from the Windows workstation (no MCP connectors available there; no production system touched, nothing pushed).
+- `docs/COPYWRITER_BOT_SPEC.md` — grounded v1 spec: revive the archived transcript→`Caption (AI)` path as a scheduled n8n workflow; drafts only, `Reviewed Caption (final)` stays human-only; strict-JSON output; error branch to Lark (the global error handler is a stub); blockers incl. exporting the archived "AI Video Summary ×4" workflows and confirming the SLA-engine state.
+- `docs/CONNECTORS.md` — connector *verification ledger* (complements doc 06): GitHub + portal verified from the workstation; Metabase/n8n liveness only; Lark/Supabase/HubSpot/Xero/Metricool/Aspire unverified there pending MCP setup.
+- `docs/GITHUB_OWNERSHIP.md` — the repo is **public under a personal account**; no secret values in tree or history, but internal endpoints/architecture are exposed. Recommendation: flip private → transfer to a company org → branch protection → rotate flagged credentials. Not executed (owner actions).
+- `SYSTEM_CONTEXT`/`DATA_FLOW` docs deliberately **not** created — already covered by `README.md`, `docs/02`, and `docs/05` (no duplicates rule).
+
 ### Added — Portal source + Academy auth deep-dive (2026-07-21)
 - `portal/src/` — the **actual portal source** committed as a sanitized snapshot (103 HTML pages, 10 JS, `deploy.sh`, curriculum map + rollback runbook). Two secret classes replaced with placeholders exactly like the n8n exports: `<SUPABASE_ANON_KEY>` (26 files) and `<REDACTED_N8N_BASIC_AUTH>` (3 Functions). Binary assets (~22M of portraits/brand/logos) intentionally excluded; restored on deploy from the vault. The vault source is untouched.
 - `portal/04-academy-auth.md` — the identity subsystem in full: passwordless email-OTP sign-in, the `koo_session` cookie (shape, why not HttpOnly, 400-day + token-rotation mirroring), `safeNext()` redirect safety, the four-layer gate stack, roles/permissions with the exact column/RPC per field, and the `is_founder()` open verification (with the SQL to close it).
