@@ -1,0 +1,55 @@
+{
+  "run_id": "run-2026-07-22-001-copywriter-bot",
+  "task_id": "automate-copywriting-stage-md-carousel",
+  "role_id": "automation-engineer",
+  "project_id": "koocester-marketing-delivery",
+  "trigger_id": "manual-ceo-brief-2026-07-22",
+  "revision": 1,
+  "active_branch": "agent/automation-engineer/copywriter-bot/run-2026-07-22-001 (NOT CREATED — working dir is not a git repo; see escalation E-5)",
+  "source_snapshot_id": "snapshot-2026-07-22-discovery",
+  "state": "ESCALATED",
+  "owner": "Automation Engineer Worker (Claude, Fable 5)",
+  "inputs": {
+    "orchestrator": "01-company-agent-orchestrator.md",
+    "role_prompt": "02-automation-engineer-master-system-prompt-v3.md",
+    "mission_brief": "mission-brief.md"
+  },
+  "affected_systems": ["Lark (M&D Base)", "Canva", "n8n", "GitHub (pending)"],
+  "proposed_write_targets": {
+    "lark": {
+      "app_token": "BG8PbaZFna1NQksNWkglTN85gSf",
+      "table_id": "tblnMZctdGYfXjYL",
+      "fields": ["Canva Link", "Caption", "Carousel Stage"],
+      "note": "No writes performed this run. All Lark access was read-only discovery."
+    }
+  },
+  "limits": {
+    "max_revisions": 3,
+    "max_runtime": "single discovery/planning session",
+    "budget": "planning only — no production writes"
+  },
+  "approval_level": "CEO approval required before any build step (see escalations)",
+  "discovery_snapshot": {
+    "taken_at": "2026-07-22",
+    "lark": {
+      "base": "BG8PbaZFna1NQksNWkglTN85gSf (M&D Base, 21 tables)",
+      "carousels_table": "tblnMZctdGYfXjYL (69 fields, rev 4215)",
+      "videos_table": "tbl8wIByJQwhIUei (124 fields, rev 16693)",
+      "pending_copywriting_count": 17,
+      "stage_options": ["Not Started", "Copywriting", "Amendments Needed", "Final Approval (Head Copywriter/Client)", "Ready to Upload", "Completed", "On Hold", "To Reupload", "Reject/DO NOT POST", "Taken Down", "Pending Copywriting"],
+      "lark_app_id": "cli_aa914316d6b8deed"
+    },
+    "n8n": {
+      "instance_project": "Koocester Group <ceo@koocester.com> (LTEF9CFjbRXTH9hr)",
+      "workflow_count": 55,
+      "error_workflow": "ReSF67JnUkuFRkCZ",
+      "lark_credential": "Lark App Secret (Koocester) [3HvLTgbxXknIviCu]",
+      "adjacent_workflows": ["KxebTkw9GfV6Icqr Auto-stamp Upload Date", "sGqmBZSMjF8OYTZF Carousel Contributors Extract", "G073XJeZikGaEWUR Monthly Content Engine"]
+    },
+    "canva": {
+      "brand_kits": ["kAGyYlLbSCs"],
+      "brand_templates": [],
+      "note": "ZERO brand templates visible to connector — locked-template autofill path is blocked"
+    }
+  }
+}
