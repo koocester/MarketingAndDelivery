@@ -46,3 +46,16 @@ Verified live in Rasayel (Faiz logged in, app id 124386, workspace user Tech tec
 1. Faiz creates an API key in Rasayel (Settings → API management) and enters it **directly into the n8n credential store** as a new credential (never through chat).
 2. n8n workflow-creation permission for this session (previous attempt classifier-denied) or Faiz creates the 3-node probe manually.
 3. Housekeeping decision open: HubSpot native WhatsApp channel ("Koocester Indonesia" +65 8034-0629) vs Rasayel — which owns client WhatsApp long-term; recommend consolidating on Rasayel to avoid split inboxes.
+
+## 2026-07-23 — Rasayel REST API research complete (rest.developers.rasayel.io)
+
+- Auth: `Authorization: Basic <basic-auth-value>` — the "Basic Auth value" shown at key creation, NOT the Bearer/JWT token (that is for the GraphQL API). Key scope must be Read/Write to send. Faiz created key "Customer Succ…" 2026-07-23; value goes directly into n8n Header Auth credential `Rasayel API` (name `Authorization`).
+- Send: `POST https://api.rasayel.io/v1/messages`, addressable by `conversation_id` OR `phone` + `channel_id` (no pre-registered contact needed — removes the ManyChat-era subscriber-mapping requirement from the design; cx_state.clients maps client → phone + channel only).
+  - Text (session): `{"phone","channel_id","type":"TEXT","text":{"body":"…"}}` → 201 with full message object (sent/delivered/read/failed timestamps + failure_reason for delivery audit).
+  - Template (out-of-window): `{"phone","channel_id","type":"TEMPLATE","template":{"message_template_id":N,"components":[…]}}`.
+  - Also NOTE (internal) and MEDIA types.
+- Templates: full CRUD at `/v1/templates` (create resubmits to Meta) — CX-specific templates can be provisioned via API.
+- Conversations: `GET /v1/conversations?phone=…&channel_id=…` — supports the pre-send session-window check (last_inbound_message_at within 24h → TEXT, else TEMPLATE).
+- Rate limits: leaky bucket, 100 capacity, 20 req/min refill; `X_Rasayel_Api_Call_Capacity` + `Retry-After` headers. Far above CX volumes; n8n retry policy will honor Retry-After.
+- Webhooks: "Message created/updated" subscriptions exist (GraphQL docs + API Dashboard Webhooks section) — inbound path for CX-W5; exact payloads to verify when subscribing.
+- D-1 probe (Rasayel version) ready to build once the `Rasayel API` credential exists in n8n: webhook → POST /v1/messages (TEXT to internal number) → respond; second call with TEMPLATE type.
