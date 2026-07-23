@@ -78,3 +78,10 @@ Verified live in Rasayel (Faiz logged in, app id 124386, workspace user Tech tec
 - CX-W1 created in n8n: `CX-W1 — Client Project Update Engine (soak: diff only, no sends)` (id UXOGKObos0HXbYbb, inactive, validated 0 errors). Design per r4 §4 CX-W1 steps 1–3 only: every 15m (+ manual probe webhook `cx-w1-soak-probe`) → house Lark token pattern → paged search of Projects (Delivery) with client-side Engagement=Client filter → diff vs cx_state.project_snapshot on status/progress/pace/due date → events written with idempotency keys (first run writes state=BASELINE so the initial flood can never become sends) → snapshot upsert. No drafting, no gating, no sending in this version.
 - Soak plan: Faiz publishes; baseline run seeds snapshots; 2 days of diff accuracy review against real project activity before the draft/gate/send stages are added.
 - Note: events.client_id left NULL during soak; the client mapping (cx_state.clients incl. wa_phone) fills when the pilot list (D-2) arrives.
+
+## 2026-07-23 — CX-W1 published; baseline run verified; soak underway (checklist item 6 in progress)
+
+- Faiz published CX-W1 (UXOGKObos0HXbYbb); baseline run executed via manual probe 10:22 SGT-equivalent.
+- First-run finding fixed in place: Lark search API returns DuplexLink fields as `{link_record_ids:[…]}` with no display text, so client_name was null. Fix: each run also reads Clients & Vendor (tblWpq8b0uo1vBtX, Client Name + Client ID) and maps link ids → names/CLI-#### ids. Both Code nodes patched (updateNode); change took effect live.\n- Verified in cx_state after re-run: 363/363 snapshots with project_id + status; 363/363 with client_name and client_id (CLI-####); 40 with Pace, 55 with due dates (plausible — formulas only fill when inputs set); 363 events all state=BASELINE; second run produced 0 DETECTED events and no duplicates (idempotency proven).
+- Soak now running on the 15-minute schedule. Review gate: ~2 days of DETECTED events compared against real project activity before building draft/review/send stages.
+- events.client_id now populates (CLI-####) for all post-baseline events; superseded the earlier NULL note.
