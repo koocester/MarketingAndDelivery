@@ -1,0 +1,27 @@
+{
+  "id": "Wn8b9rOQcDRhqF6E",
+  "name": "Storyboard Copilot — W2 Winners → Poppy AI (weekly)",
+  "active": false,
+  "snapshot_date": "2026-07-23",
+  "state": "built, inactive, mode=assisted, digest DM → Faiz",
+  "nodes": [
+    {"name": "Manual Webhook", "type": "webhook", "note": "GET winners-poppy-run"},
+    {"name": "Weekly Mon 08:00", "type": "scheduleTrigger"},
+    {"name": "Config", "type": "set", "note": "mode=assisted, topN=5, digestReceiveId=Faiz open_id, winnersQuery 90d by engagement_rate"},
+    {"name": "Get Lark Token", "type": "httpRequest"},
+    {"name": "Query Winners", "type": "postgres", "note": "content_perf.reels trailing 90 days"},
+    {"name": "Join Winners to Video Records", "type": "code", "note": "post-URL key join (PCR logic), aggregate per VID, topN by total views"},
+    {"name": "Read Upload Ledger", "type": "postgres", "note": "copilot.poppy_uploads current week"},
+    {"name": "Filter Already Uploaded", "type": "code"},
+    {"name": "Any New Winners?", "type": "if"},
+    {"name": "Build Package + Staging Doc", "type": "code", "note": "package text + ledger SQL"},
+    {"name": "Create Package Doc", "type": "googleDocs"},
+    {"name": "Insert Package Text", "type": "googleDocs"},
+    {"name": "Package Doc URL", "type": "code"},
+    {"name": "Record Ledger", "type": "postgres", "note": "insert on conflict do nothing (vid, week_start)"},
+    {"name": "DM Digest", "type": "code", "note": "one-click human upload prompt while assisted"},
+    {"name": "Nothing New (log)", "type": "code"}
+  ],
+  "flow": "triggers → Config → Get Lark Token → Query Winners → Join → Read Ledger → Filter → Any New? [yes → Build Package → Create Doc → Insert → URL → Record Ledger → DM Digest | no → Nothing New]",
+  "settings": {"errorWorkflow": "ReSF67JnUkuFRkCZ", "timezone": "Asia/Singapore"}
+}
