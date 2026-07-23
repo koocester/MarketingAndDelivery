@@ -1,5 +1,12 @@
 # Decision Log — run-2026-07-23-001
 
+## DEC-003 — WhatsApp delivery channel: Rasayel, not ManyChat (2026-07-23)
+
+- Decision maker: Faiz (in chat: questioned ManyChat given the paid Rasayel subscription, directed and enabled the Rasayel verification).
+- Evidence: ManyChat has WhatsApp connected on no account (browser-verified); Rasayel is live with channel "Koocester Support" +65 8086 3787 (app 124386, channel 99720), a HubSpot-certified integration active in portal 242943364, a library of Meta-accepted templates, proven sends (2026-07-14), and API + webhooks available on the current plan.
+- Decision: the CX agent's WhatsApp delivery and inbound triage run on Rasayel (API + webhooks). ManyChat remains lead-gen only, out of CX scope. Brief §9/§19's "likely ManyChat" is superseded by this evidence; the mission's channel requirement (WhatsApp, HubSpot as system of record) is unchanged.
+- Follow-ups: engineering package delivery-adapter revision before CX-W1 build; API key created by a human directly into n8n credentials; consolidation decision on the HubSpot-native "Koocester Indonesia" +65 8034-0629 channel.
+
 ## DEC-002 — Design approval and build authorization (2026-07-23)
 
 - Decision maker: Faiz (in chat, this session).
