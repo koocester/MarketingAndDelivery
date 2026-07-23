@@ -71,3 +71,10 @@ Verified live in Rasayel (Faiz logged in, app id 124386, workspace user Tech tec
 - Receipt on the handset confirmed pending Faiz's verbal confirmation (delivery timestamps populate asynchronously in Rasayel).
 - Template insight for CX-W1/W2: `order_status_update` ({{1}} name, {{2}} sender, {{3}} order/project, {{4}} status) is a workable interim template for out-of-window project status updates until CX-specific templates are approved. `general_feedback_request` covers CX-W3's ask.
 - Checklist position: item 1 DONE. Next per §18: item 2 (fix hardcoded Lark secret in Qlo9PWJ7f3PqwF9i + resolve V-1/V-2), item 3 (HubSpot properties, D-4), with the package's delivery-adapter revision (ManyChat → Rasayel, per DEC-003) to be folded in before CX-W1 is built.
+
+## 2026-07-23 — cx_state schema applied; CX-W1 soak workflow built (checklist item 5 done, item 6 staged)
+
+- Supabase migration `cx_state_schema_v1` applied to Godmode Dashboard project (wnerzolcmjrsktfqferw): schema `cx_state` with tables clients, project_snapshot, events, messages, feedback + indexes. Reverse migration: `DROP SCHEMA cx_state CASCADE;` (documented, not staged). Amended per r5: clients.wa_phone replaces ManyChat subscriber columns.
+- CX-W1 created in n8n: `CX-W1 — Client Project Update Engine (soak: diff only, no sends)` (id UXOGKObos0HXbYbb, inactive, validated 0 errors). Design per r4 §4 CX-W1 steps 1–3 only: every 15m (+ manual probe webhook `cx-w1-soak-probe`) → house Lark token pattern → paged search of Projects (Delivery) with client-side Engagement=Client filter → diff vs cx_state.project_snapshot on status/progress/pace/due date → events written with idempotency keys (first run writes state=BASELINE so the initial flood can never become sends) → snapshot upsert. No drafting, no gating, no sending in this version.
+- Soak plan: Faiz publishes; baseline run seeds snapshots; 2 days of diff accuracy review against real project activity before the draft/gate/send stages are added.
+- Note: events.client_id left NULL during soak; the client mapping (cx_state.clients incl. wa_phone) fills when the pilot list (D-2) arrives.
