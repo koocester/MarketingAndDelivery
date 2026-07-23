@@ -59,3 +59,15 @@ Verified live in Rasayel (Faiz logged in, app id 124386, workspace user Tech tec
 - Rate limits: leaky bucket, 100 capacity, 20 req/min refill; `X_Rasayel_Api_Call_Capacity` + `Retry-After` headers. Far above CX volumes; n8n retry policy will honor Retry-After.
 - Webhooks: "Message created/updated" subscriptions exist (GraphQL docs + API Dashboard Webhooks section) — inbound path for CX-W5; exact payloads to verify when subscribing.
 - D-1 probe (Rasayel version) ready to build once the `Rasayel API` credential exists in n8n: webhook → POST /v1/messages (TEXT to internal number) → respond; second call with TEMPLATE type.
+
+## 2026-07-23 — ✅ D-1 COMPLETE: Rasayel WhatsApp outbound proven (deployment checklist item 1 done)
+
+- Credential: `Rasayel for Customer Success` (n8n id mpqr9eVtImd0S5ZL, httpHeaderAuth) created by Faiz; value is the Rasayel Basic Auth key (key name "Customer Succ…", Read/Write).
+- Probe workflow: `CX — D-1 Rasayel WhatsApp Probe (temporary)` (n8n id SentryvcX7iW14Yp), published by Faiz for the test, **deactivated immediately after** (public webhook, temporary by design; kept for reuse when CX-W1 needs a manual send tester).
+- Evidence (all via n8n execution of the probe, channel 99720 "Koocester Support" +65 8086 3787, target internal test number +65 8917 5822):
+  1. Auth + read: GET /v1/templates → 200, 21 accepted templates enumerated with ids/variables (e.g. courtesy_check_in 673901 {{1}} {{2}}, follow_up_reminder 673908 {{1}}..{{3}}, general_feedback_request 673911, order_status_update 673910 {{1}}..{{4}}).
+  2. Session TEXT send: POST /v1/messages → 200, message id 315011078, uuid fb1c45b9-d5f1-4e28-b3ae-544325b6f192, sent_at 2026-07-23T10:01:22Z, conversation 22586514, failure_reason null.
+  3. TEMPLATE send (out-of-window path): template 673901 courtesy_check_in with BODY params ["Faiz","the Koocester team"] → 200, message id 315011166, uuid 3c796d84-fa65-431d-b779-64bac6820034, sent_at 2026-07-23T10:01:42Z, same conversation.
+- Receipt on the handset confirmed pending Faiz's verbal confirmation (delivery timestamps populate asynchronously in Rasayel).
+- Template insight for CX-W1/W2: `order_status_update` ({{1}} name, {{2}} sender, {{3}} order/project, {{4}} status) is a workable interim template for out-of-window project status updates until CX-specific templates are approved. `general_feedback_request` covers CX-W3's ask.
+- Checklist position: item 1 DONE. Next per §18: item 2 (fix hardcoded Lark secret in Qlo9PWJ7f3PqwF9i + resolve V-1/V-2), item 3 (HubSpot properties, D-4), with the package's delivery-adapter revision (ManyChat → Rasayel, per DEC-003) to be folded in before CX-W1 is built.
