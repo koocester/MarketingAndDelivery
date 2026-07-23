@@ -1,5 +1,15 @@
 # Decision Log — run-2026-07-23-001
 
+## DEC-005 — Defer HubSpot properties and project_number backfill (2026-07-23)
+
+- Decision maker: Faiz (in chat), on engineering advice that items 3–4 do not block pilot sends but remain required for the full mission.
+- Decision: checklist items 3–4 deferred. Interim: cx_state (Supabase) holds CX log/health/feedback/renewals; daily digest to CX owner replaces cx_health property writes; one-time replay into HubSpot when D-4 executes. Rasayel's HubSpot integration keeps logging raw conversations meanwhile.
+
+## DEC-004 — Defer hardcoded Lark secret fix (2026-07-23)
+
+- Decision maker: Faiz (in chat).
+- Decision: the pre-existing hardcoded Lark app secret in PCR data workflow Qlo9PWJ7f3PqwF9i stays for now (internal exposure only). Hard revisit gate: before steady-state autonomy (D-5) or any n8n access expansion.
+
 ## DEC-003 — WhatsApp delivery channel: Rasayel, not ManyChat (2026-07-23)
 
 - Decision maker: Faiz (in chat: questioned ManyChat given the paid Rasayel subscription, directed and enabled the Rasayel verification).
