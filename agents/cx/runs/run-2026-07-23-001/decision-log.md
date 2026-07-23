@@ -1,5 +1,11 @@
 # Decision Log — run-2026-07-23-001
 
+## DEC-002 — Design approval and build authorization (2026-07-23)
+
+- Decision maker: Faiz (in chat, this session).
+- Decision: revision 004 design approved per `approval-package.md`; build phase authorized, starting with deployment checklist item 1 (D-1: prove ManyChat WhatsApp outbound to an internal test number).
+- Note: role work stays on the standing `cx` branch per repo convention; no merge to main performed as part of this approval.
+
 ## DEC-001 — QA-201 resolution (2026-07-23)
 
 - Decision maker: Faiz (in chat, this session), per escalation-report.md.

@@ -20,8 +20,8 @@
     "max_budget": "most cost efficient path; no paid API commitments without approval"
   },
   "approval_level": "pilot: Hakim reviews all client-facing messages before send; agent never closes renewals, touches pricing, or answers deep sales questions",
-  "current_state": "READY_FOR_HUMAN_REVIEW",
-  "current_owner": "human (Faiz/Hakim) — approval per approval-package.md; DEC-001 resolved the QA-201 escalation",
+  "current_state": "HUMAN_APPROVED",
+  "current_owner": "automation-engineer — build phase per DEC-002, executing deployment checklist from item 1 (D-1)",
   "affected_systems": ["Lark M&D base (read)", "n8n (design only this run)", "HubSpot (design only; properties not yet built)", "ManyChat/WhatsApp (design only; unconfirmed)", "Metricool via PCR (read, reuse)"],
   "proposed_write_targets": {
     "this_run": ["Git repository CX (docs/design artifacts only)"],
