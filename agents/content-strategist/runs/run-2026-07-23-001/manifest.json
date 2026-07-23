@@ -1,0 +1,40 @@
+{
+  "run_id": "run-2026-07-23-001",
+  "task_id": "storyboard-copilot",
+  "role_id": "automation-engineer",
+  "project_id": "koocester-content-machine",
+  "trigger_id": "manual-ceo-brief-2026-07-22",
+  "revision": 2,
+  "active_branch": "agent/automation-engineer/storyboard-copilot/run-2026-07-23-001",
+  "source_snapshot_id": "snapshot-2026-07-23-001",
+  "lark_sources": {
+    "base_app_token": "BG8PbaZFna1NQksNWkglTN85gSf",
+    "video_table_id": "tbl8wIByJQwhIUei",
+    "pages_table_id": "tblUscIBwxElzzXi",
+    "lead_magnet_table_id": "tblHACGPIPBfGUxj",
+    "content_performance_table_id": "tblzJ6NURzH6QVxt",
+    "content_performance_reels_table_id": "tblIypxKaOsakPxu",
+    "storyboard_templates_table_id": "tbltAvfRbbfOub7R",
+    "discovered_via": "n8n workflows KxebTkw9GfV6Icqr and Qlo9PWJ7f3PqwF9i (tenant-token path); Lark MCP field/table listing",
+    "snapshot_taken_at": "2026-07-23"
+  },
+  "idempotency_key": "storyboard-copilot-run-2026-07-23-001",
+  "limits": {
+    "max_revisions": 3,
+    "max_runtime": "single working session",
+    "max_budget": "most cost-efficient path per brief section 14"
+  },
+  "approval_level": "design package for human review; no production Lark writes, no schema changes, no publishing in this run",
+  "state": "READY_FOR_HUMAN_REVIEW",
+  "owner": "faiz (human review)",
+  "affected_systems": ["Lark M&D base (read-only this run)", "n8n (read-only this run)", "local git repo"],
+  "proposed_write_targets_this_run": ["runs/run-2026-07-23-001/** (git only)"],
+  "proposed_write_targets_at_deployment": [
+    "Lark: Videos.Storyboard (Lark Doc) URL field (fldv0yaIgF) on the record being planned",
+    "Lark: new Lark Doc per storyboard draft (internal permissions)",
+    "Lark: DM notification to the record's Strategist; weekly group digest",
+    "Lark: winners staging doc (assisted mode only, internal permissions)",
+    "Postgres: copilot.storyboard_claims (concurrency claims) and copilot.poppy_uploads (upload ledger)",
+    "Poppy AI: winning-video stats upload (path pending Faiz's identifier)"
+  ]
+}
