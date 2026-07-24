@@ -41,3 +41,8 @@ Approvals received: E3 yes (Postgres tables), E2 pilot = Wendi Amalia, E4 build 
   - Business MIM6dg6RroEguax416JllFlrgVb · Homes OsvCdITeyoPbJJxtlijlQj3HgH6 · Wealth HCKEd44xTogFKPxpxYDlzNtigLh · Autos VpNJd1FjVoYXaTxQK3VlknhNg4f · Foodie Hsg6dXTTXoYDiAxFjGMl5gdVgnf
 - Boards discovery: each board carries the same operating system — benchmark groups (virality, lead-gen, gold standard incl. the Snoopy formula), losing-video groups, past storyboards, the GUIDE + template PDFs, and a per-vertical strategist prompt with Step 0 Lead-Gen/Awareness classification, CTA tiers, per-section gating checklists and a compliance checkbox. The snapshots encode this.
 - Remaining before pilot: a real Planning-stage video with transcript (Wendi's next one) → trigger W1 dry-run.
+
+## 2026-07-24 — eligibility check
+
+- 183 videos in Planning (majority Wendi's), ZERO with a transcript attached — nothing eligible for the dry-run yet. Transcript upload is evidently not part of the strategists' current flow; the pilot introduces it.
+- Nearest shoot: VID-0543 Homes SG Key Concept SG, shoot date Sun 26 Jul — natural first pilot once Wendi attaches her discovery-call transcript. VID-0570..0572 (Soulbrix, Lead Generation) are good early candidates to exercise the offer path.
