@@ -85,3 +85,16 @@ Verified live in Rasayel (Faiz logged in, app id 124386, workspace user Tech tec
 - First-run finding fixed in place: Lark search API returns DuplexLink fields as `{link_record_ids:[…]}` with no display text, so client_name was null. Fix: each run also reads Clients & Vendor (tblWpq8b0uo1vBtX, Client Name + Client ID) and maps link ids → names/CLI-#### ids. Both Code nodes patched (updateNode); change took effect live.\n- Verified in cx_state after re-run: 363/363 snapshots with project_id + status; 363/363 with client_name and client_id (CLI-####); 40 with Pace, 55 with due dates (plausible — formulas only fill when inputs set); 363 events all state=BASELINE; second run produced 0 DETECTED events and no duplicates (idempotency proven).
 - Soak now running on the 15-minute schedule. Review gate: ~2 days of DETECTED events compared against real project activity before building draft/review/send stages.
 - events.client_id now populates (CLI-####) for all post-baseline events; superseded the earlier NULL note.
+
+## 2026-07-23 — Onboarding flow context from Faiz (separate build, CX-W0 dependency)
+
+Faiz is building the client onboarding process outside this run:
+- `onboarding.koocester.com/?cid=CLI-0042` → page POSTs {cid, answers} to an n8n webhook (fire-and-forget) → Lark token → map fields (strip "CLI-", find record by Client ID) → UPDATE client record: intake fields, Status=Intake Received, assigns Rina, builds the Client Brief → Lark rejection posts error to Tech Updates group.
+- Prerequisites he set: (1) Clients table structure finalized after the audit cleanup (re-stage the 149, cut clutter, fix dropdown bug, add Vendor flag) so builds target a stable schema; (2) HubSpot gets a "Ready to onboard" gate + cleanup as the safe trigger.
+
+**CX implications recorded:**
+1. **CX-W0 trigger changes**: r4 triggered onboarding off "first project entering Planning/In Production". The better trigger is Faiz's funnel — CX welcome slots in after Status=Intake Received / Client Brief built. CX-W0 build is ON HOLD until Faiz confirms the onboarding flow is final.
+2. **Schema-change risk to CX-W1**: the soak workflow reads Clients & Vendor by field name (`Client Name`, `Client ID`) every run. The audit cleanup may rename/restructure fields → re-verify CX-W1's Clients read (and the Projects `Client` link) right after the cleanup lands. Watch the error workflow for CX-W1 failures during cleanup.
+3. **Vendor flag** is a welcome extra scoping guard: CX comms exclude Vendor-flagged records by design once the flag exists.
+4. **Client Brief + intake answers** become the natural context pack for CX-W0's welcome and "what success looks like" framing — better than reconstructing from Projects data.
+5. **Suggestion passed to Faiz**: add a "best WhatsApp number for updates" field to the intake form → auto-fills cx_state.clients.wa_phone for every onboarded client, removing manual pilot mapping over time.
