@@ -72,11 +72,7 @@ h1{font-size:clamp(1.9rem,4.4vw,2.8rem);line-height:1.04;letter-spacing:-.03em;c
 <script>
 // Sales kit variants. sme: live href per kit. mnc: coming soon across the board.
 const KITS = [
-  { icon:'⭐', name:'Company Sales Kit', desc:'The all-round pitch. Who Koocester is, what we deliver, pricing and the path to launch.', sme:'sales-kit-slides.html?kit=COMPANY', flag:'Start here' },
-  { icon:'🏠', name:'Homes Sales Kit', desc:'For property, interiors and luxury real-estate clients.', sme:'sales-kit-slides.html?kit=HOMES', note:'SGD 3,500' },
-  { icon:'📈', name:'Business Sales Kit', desc:'For finance, professional services and B2B founders.', sme:'sales-kit-slides.html?kit=BUSINESS', note:'SGD 3,000' },
-  { icon:'🚗', name:'Autos Sales Kit', desc:'For automotive brands and dealerships.', sme:'sales-kit-slides.html?kit=AUTOS', note:'SGD 3,000' },
-  { icon:'🍽️', name:'Foodie Sales Kit', desc:'For food and beverage brands, restaurants and cafes.', sme:'sales-kit-slides.html?kit=FOODIE', note:'SGD 1,500' },
+  { icon:'⭐', name:'Company Sales Kit', desc:'The one pitch for every category. Who Koocester is, what we deliver, the à la carte price for every vertical, and the path to launch.', sme:'sales-kit-slides.html?kit=COMPANY', flag:'Start here' },
 ];
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let SEG = 'sme';
@@ -99,8 +95,8 @@ function render(){
       '<div class="meta">'+tag+'</div></'+el+'>';
   }).join('');
   document.getElementById('note').innerHTML = live
-    ? '<b>Small &amp; Medium Enterprises.</b> Every kit now uses the same Academy engine: Singapore, Malaysia and Indonesia; English, Chinese, Bahasa Indonesia and Bahasa Melayu; presentation mode and PDF export.'
-    : '<b>MNC rate card in progress.</b> The enterprise kits are being built. For multinational and large-account pitches, start from the Company kit for now.';
+    ? '<b>Small &amp; Medium Enterprises.</b> One kit covers every category — the à la carte price for each vertical is inside. Singapore, Malaysia and Indonesia; English, Chinese, Bahasa Indonesia and Bahasa Melayu; presentation mode and PDF export.'
+    : '<b>MNC rate card in progress.</b> The enterprise kit is being built. For multinational and large-account pitches, use the SME Company kit for now.';
 }
 document.getElementById('seg').addEventListener('click', function(e){
   const b = e.target.closest('button'); if(!b) return;
