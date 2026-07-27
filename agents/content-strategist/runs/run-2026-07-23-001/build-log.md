@@ -46,3 +46,11 @@ Approvals received: E3 yes (Postgres tables), E2 pilot = Wendi Amalia, E4 build 
 
 - 183 videos in Planning (majority Wendi's), ZERO with a transcript attached — nothing eligible for the dry-run yet. Transcript upload is evidently not part of the strategists' current flow; the pilot introduces it.
 - Nearest shoot: VID-0543 Homes SG Key Concept SG, shoot date Sun 26 Jul — natural first pilot once Wendi attaches her discovery-call transcript. VID-0570..0572 (Soulbrix, Lead Generation) are good early candidates to exercise the offer path.
+
+## 2026-07-27 — DM blocker found (bot availability scope)
+
+- Re-checked eligibility: still 0 Planning records with a transcript attached.
+- Attempted to DM Wendi (ou_1385847fff7c4a3a3fb456dbbc40a699) the transcript reminder via the Lark bot (app cli_aa914316d6b8deed). FAILED: code 230013 "Bot has NO availability to this user." The app's availability scope does not include Wendi.
+- IMPACT ON PILOT: W1's "Notify Strategist (DM)" node uses the same bot and will fail the same way until scope is fixed. Wendi would never receive the "storyboard ready" DM. BLOCKER for the pilot notification path (new E-item).
+- FIX (admin, Faiz): Lark Admin Console → app cli_aa914316d6b8deed → availability scope → include Wendi or all employees. Then W1 DMs work and the reminder can be resent.
+- Reminder to Wendi: Faiz will pass it to her directly this round; no DM sent by the bot.
