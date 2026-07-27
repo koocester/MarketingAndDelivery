@@ -1,18 +1,22 @@
-# Sales kit update — ✅ DEPLOYED 2026-07-27 ~17:10 SGT
+# Sales kit update — ⚠️ ROLLED BACK, publish via vault (status 2026-07-27 evening)
 
-**Update: this went live.** tech@koocester.com received Super Admin on the
-Cloudflare account and the deploy ran from Faiz's machine (deployment
-`37386727`, 114 files + Functions bundle). Verified live: hub shows one kit
-per tab, MY shows the fixed rate card, SG/ID untouched, auth gate returns 302
-without a session. Note: the deploy reset active portal sessions — staff just
-sign in again with their email code.
+**What happened:** the deploy from Faiz's machine (deployment `37386727`)
+shipped correctly EXCEPT the edge functions: the GitHub copies of
+`functions/*.js` are SANITIZED — `SUPABASE_ANON_KEY` and every n8n basic-auth
+password are literal placeholders. The deployed middleware therefore rejected
+every session (portal-wide login loop) and the dash/hr-feed/mgmt-deck proxies
+lost their credentials. Production was **rolled back to Hakim's deployment
+`06ee5817`** within ~20 minutes; the portal works again and the sales kit is
+temporarily back to the old version.
 
-**⚠️ Still required from Hakim:** copy `portal/src/sales-kits.html` and
-`portal/src/sales-kit-slides.html` from branch `sales-kit-my-rates` into the
-vault's `04. Resources/Training/` — otherwise the next vault deploy reverts
-these prices. Also note the vault's `functions/` may have drifted: this deploy
-shipped the repo's 21-July functions, so if the vault changed edge functions
-after 21 July, re-deploy from the vault after syncing the two sales-kit files.
+**LESSON / RULE: never deploy this repo's `functions/` directory. Only the
+vault holds the real edge functions.** The static files in this repo are fine
+(and now live-synced); the functions are placeholders by design.
+
+**To publish the sales kit — use Option A below (vault deploy) ONLY.** It is
+two minutes for Hakim: copy the two sales-kit files from branch
+`sales-kit-my-rates` into `04. Resources/Training/`, run `./deploy.sh`. His
+vault functions are real, so nothing breaks and the new prices go live.
 
 ---
 
