@@ -24,13 +24,15 @@ Each day, auto-produce **5 carousel drafts per page**, per that page's niche, so
 - Anthropic credential for synthesis; Postgres drafts table; Lark write-back pattern.
 - Pages table in Lark (`tblUscIBwxElzzXi`) maps page → vertical/country/niche.
 
-## Decisions required before build (material)
-- **D1 — Approved-sources policy shift.** Original brief = approved sources only. This engine pulls from the open web. Confirm the bot may use external news sources for drafts, with mandatory human review as the safeguard.
-- **D2 — 🚩 Photo copyright (highest risk).** BBC/CNN/press images are almost always copyrighted; reusing them (even by hotlink) on Koocester's socials is a licensing/legal exposure, not just a technical step. Options: (a) use only license-cleared/stock/owned imagery + a licensed stock API; (b) generate images; (c) restrict to sources that grant reuse. **Recommend NOT republishing press photos.** Needs your explicit direction.
-- **D3 — Factual/repro risk.** Synthesizing news = making claims + paraphrasing copyrighted text. Rules: substantially reworded (no copy-paste), source-cited, human-verified. Bot marks anything uncertain.
-- **D4 — Volume.** 5/page/day × number of live pages could far exceed the original ~27/day target and Canva/API quotas. Confirm which pages are in scope and the true daily total.
-- **D5 — Aspect-ratio set.** Which platforms/ratios exactly (IG 4:5 + 1:1? TikTok 9:16? FB?), and do we build a master per ratio or use Canva resize?
-- **D6 — "Trending" definition & recency window.** How is trending judged (news volume, recency, region), and how fresh must a story be?
+## Decisions (CEO-resolved 2026-07-24)
+- **D1 — Approved-sources policy shift → APPROVED.** Bot may use external web/news sources for WF-3 drafts; mandatory human review (copywriter checks context) is the safeguard.
+- **D2 — Photos → RESOLVED: licensed stock OR generated images only. NEVER press/article photos.** No republishing BBC/CNN or any article imagery. Use a licensed-stock API and/or image generation, keyed to the carousel topic.
+- **D3 — Factual/repro rules (standing).** Synthesis must be substantially reworded (no copy-paste of article text), source-cited in provenance, and human-verified. Bot flags anything uncertain; never invents claims.
+- **D4 — Pages in scope → ALL five verticals:** Autos, Homes, Business, Foodie, Wealth. 5 carousels per page per day. (True daily total = 5 × number of live pages across these verticals/countries — size against Canva/API quotas at build.)
+- **D5 — Aspect ratios → Instagram, TikTok, Facebook.** Render once per UNIQUE ratio and reuse across any platform sharing it (dedupe). Working set: 4:5 portrait (IG feed + FB) and 9:16 (TikTok); confirm exact per-platform ratios at build. NOTE: current tokenized masters are 1:1 (1080×1080) — WF-3 needs 4:5 and 9:16 master variants per vertical (Canva resize + re-tokenize).
+- **D6 — "Trending" definition & recency window.** STILL OPEN: how trending is judged (news volume / recency / region) and how fresh a story must be. Propose at build.
 
-## Note
-This is a net-new workflow (WF-3), parallel to WF-1. It does not change WF-1. Build only after D1–D6 are answered; D2 (photo rights) is a hard gate.
+## Note — TWO PARALLEL JOBS (both human-reviewed, bot never publishes)
+- **Job 1 = WF-1 (original brief):** carousels from APPROVED sources already in Lark — video transcript (needs the Frame.io/AssemblyAI transcript stage) or a Marketing-linked article; images = copywriter's hand-picked b-roll from the Google Drive folder. Per-vertical tokenized masters, 1:1 today.
+- **Job 2 = WF-3 (this spec):** daily 5-per-page carousels from web-discovered trending articles, clustered across 2+ sources, synthesized, with licensed-stock/generated images, in IG/TikTok/FB ratios.
+WF-3 is net-new and does not change WF-1. Only D6 remains open; D2 photo-rights gate is now resolved (stock/generated only).
