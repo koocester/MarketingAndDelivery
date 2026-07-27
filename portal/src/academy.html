@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-nav.js?v=2026072304"></script>
 <script src="koo-auth-guard.js?v=2026072104"></script>
 <script src="academy-access.js?v=2026072104"></script>
 <meta charset="utf-8">
@@ -106,7 +106,7 @@ h2{font-size:clamp(1.7rem,3.6vw,2.5rem);line-height:1.06;letter-spacing:-.03em;c
 .allmods:hover{border-color:var(--maroon);color:var(--maroon)}
 .allmods:after{content:' ▾';color:var(--maroon)}
 .allmods[aria-expanded="true"]:after{content:' ▴'}
-.allwrap{margin-top:22px}
+.allwrap{margin-top:22px;position:relative}
 @media (max-width:860px){.dngrid{grid-template-columns:1fr}.dncard{min-height:0}}
 /* ===== role reveal: a rank being conferred, not a form being filled =====
    Maroon only. The "shine" is a maroon highlight travelling through the
@@ -597,7 +597,7 @@ a.upcard:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(192,32,37,
 .rolexp .xptxt{font-size:.9rem;color:var(--muted)}
 .rolexp .xptxt b{color:var(--ink)}
 .levels{margin-top:26px;position:relative}
-.levels::before{content:"";position:absolute;left:27px;top:14px;bottom:14px;width:2px;background:var(--line);z-index:0}
+.allwrap::before{content:"";position:absolute;left:27px;top:14px;bottom:14px;width:2px;background:var(--line);z-index:0}
 .lvl{position:relative;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:stretch;padding:9px 0;z-index:1;text-decoration:none}
 .node{width:56px;height:56px;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--muted);flex:none;transition:.16s}
 .lvl.built .node{border-color:var(--maroon);color:var(--maroon)}
@@ -656,7 +656,7 @@ footer b{color:var(--ink)}
   .hstats{gap:20px}
   .lvl{grid-template-columns:44px 1fr;gap:12px}
   .node{width:44px;height:44px;font-size:14px}
-  .levels::before{left:21px}
+  .allwrap::before{left:21px}
   .lgo{display:none}
   /* denser, full-width operator grid on phones — 2 cards per row */
   .opgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -773,7 +773,7 @@ footer b{color:var(--ink)}
   <div class="wrap">
     <div class="hbadge rise">◢ Onboarding protocol</div>
     <h1 class="rise" id="heroTitle">Welcome to<br><span>Koocester</span></h1>
-    <p class="hlead rise">Clear the foundations, then master the modules built for your seat. One level at a time. This is where you learn the job you were hired to do.</p>
+    <p class="hlead rise">Clear the foundations, then master the modules built for your seat. This is where you learn the job you were hired to do.</p>
     <div class="startrow rise">
       <button class="start" id="start" hidden>▸ See what is next</button>
     </div>
@@ -875,7 +875,7 @@ footer b{color:var(--ink)}
   // built:true → playable deck (href). built:false → a gap to create (no href).
   var M={
     // shared foundations
-    f_brand:{step:'Foundation', title:'Brand guideline', desc:'How we look and sound. One maroon, one voice, one standard.', href:'brand-guideline-training.html', key:'koo-brand-slides', built:true},
+    f_brand:{step:'Foundation', title:'Master Brand Guideline', desc:'How we look and sound. One maroon, one voice, one standard. The canonical reference.', href:'master-brand-guideline.html', key:'koo-brand-slides', built:true},
     f_company:{step:'Foundation', title:'Company &amp; values', desc:'Who Koocester is. Values, purpose, vision.', href:'company-values-training.html', key:'koo-company-slides', built:true},
     f_tools:{step:'Foundation', title:'Tools &amp; accounts', desc:'Day one setup. Lark, logins, the channels you live in.', href:'tools-accounts-training.html', key:'koo-tools-slides', built:true},
     f_policies:{step:'Foundation', title:'Policies, leave &amp; compliance', desc:'Leave management, gifts, barter, disclosure and everyday non-negotiables.', href:'policies-compliance-training.html', key:'koo-policies-slides', built:true},
@@ -941,7 +941,8 @@ footer b{color:var(--ink)}
     exec_org:{step:'Command', title:'Org design &amp; culture', desc:'Build the org and protect the culture at scale.', href:'org-design-culture-training.html', key:'koo-orgculture-slides', built:true},
     exec_scale:{step:'Command', title:'Building a scalable company', desc:'Constraint, systems, transferability and an organisation that grows beyond its current leaders.', href:'building-scalable-company-training.html', key:'koo-scalecompany-slides', built:true},
     community:{step:'Your role', title:'Community manager', desc:'Build the moat, belonging that pays. The member journey, running the room, and community to revenue.', href:'community-manager-training.html', key:'koo-community-slides', built:true},
-    tech_monitor:{step:'Specialisation', title:'Automations &amp; monitoring', desc:'How the machine watches itself, the three monitoring layers and the alert playbook.', href:'automations-monitoring-training.html', key:'koo-automon-slides', built:true}
+    tech_monitor:{step:'Specialisation', title:'Automations &amp; monitoring', desc:'How the machine watches itself, the three monitoring layers and the alert playbook.', href:'automations-monitoring-training.html', key:'koo-automon-slides', built:true},
+    gm:{step:'Your role', title:'General Manager', desc:'Run the company in the founder\'s stead — the operating system, the numbers, the rhythm, the people and the handover.', href:'general-manager-training.html', key:'koo-gm-gate', built:true}
   };
   var FOUND=['f_company','f_brand','f_tools','f_policies','f_90days','f_offboard','f_rewards','f_comms','f_1on1','f_security','f_org','f_ai','f_device'];
   // ===== ROLE PATHS (ordered) =====
@@ -951,7 +952,7 @@ footer b{color:var(--ink)}
     ['producer','Producer','Find, shoot, deliver.',['base','producer','network','shoot','cs_story','story']],
     ['smm','Social media manager','Go live, close the loop.',['base','smm','leadflow','story']],
     ['copywriter','Copywriter','Words that convert.',['base','copywriter','cw_captions','story','offer']],
-    ['videoeditor','Video editor','Cut it sharp — the Koocester edit.',['base','veditor','ve_pacing','ve_capcut','cs_story','story','amend']],
+    ['videoeditor','Video editor','Cut it sharp — the Koocester edit.',['base','veditor','ve_pacing','ve_capcut','story','amend']],
     ['events','Events','Fill the room — plan, run, and make the moment.',['base','events']],
     ['community','Community manager','Build the moat, belonging that pays.',['community','leadflow','events','story']],
     ['trainer','Trainer','Teach the room, then convert it. Growth Academy, delivered.',['story','offer','events','sales_disco']],
@@ -962,7 +963,8 @@ footer b{color:var(--ink)}
     ['hr','HR','People, culture & the back office — hire, grow, protect, equip.',['hr','admin','perf_mgmt']],
     ['cssuccess','Customer success','Own the client\'s win — onboard, deliver, retain.',['cs_success']],
     ['hod','Head of Department','Run a whole department — strategy, people, P&L.',['base','leading','coaching','hod_strategy','hod_pl']],
-    ['csuite','C-Suite','Set the company\'s direction and the bets.',['leading','coaching','exec_vision','exec_capital','exec_org','exec_scale']]
+    ['csuite','C-Suite','Set the company\'s direction and the bets.',['leading','coaching','exec_vision','exec_capital','exec_org','exec_scale']],
+    ['gm','General Manager','Run the company in the founder\'s stead.',['gm','leading','coaching','exec_vision','exec_capital','exec_org','exec_scale']]
   ];
 
   var $=function(id){return document.getElementById(id);};
@@ -977,8 +979,11 @@ footer b{color:var(--ink)}
     return ACCESS.decks.has(String(m.href||'').toLowerCase());
   }
   function pct(key){ if(!key) return -1; var a=null; try{a=JSON.parse(localStorage.getItem(key)||'null');}catch(e){} if(Array.isArray(a)&&a.length) return Math.round(a.filter(Boolean).length/a.length*100); return 0; }
-  var GATE={"admin-training.html":"koo-admin-gate","amending-videos-training.html":"koo-amend-gate","aspire-training.html":"koo-aspire-gate","automations-anycross-training.html":"koo-anycross-gate","brand-guideline-training.html":"koo-brand-gate","building-scalable-company-training.html":"koo-scalecompany-gate","capcut-training.html":"koo-capcut-gate","capital-growth-training.html":"koo-capital-gate","captions-carousels-training.html":"koo-capcar-gate","closing-handoff-training.html":"koo-closing-gate","coaching-rhythm-training.html":"koo-coach-gate","communication-meetings-training.html":"koo-comms-gate","company-values-training.html":"koo-values-gate","content-strategist-training.html":"koo-cs-gate","community-manager-training.html":"koo-community-gate","automations-monitoring-training.html":"koo-automon-gate","copywriter-training.html":"koo-cw-gate","customer-success-training.html":"koo-cs-success-gate","department-strategy-training.html":"koo-deptstrat-gate","device-access-admin-training.html":"koo-deviceaccess-gate","device-management-training.html":"koo-device-gate","discovery-qualifying-training.html":"koo-discovery-gate","editing-fundamentals-training.html":"koo-edit-gate","events-training.html":"koo-events-gate","finance-dashboard-training.html":"koo-findash-gate","finance-training.html":"koo-finance-gate","first-90-days-training.html":"koo-90d-gate","how-to-storyboard-training.html":"koo-storyboard-gate","how-we-use-ai-training.html":"koo-ai-gate-v2","how-we-use-lark-training.html":"koo-lark-gate","hr-training.html":"koo-hr-gate","landing-page-training.html":"koo-landing-gate","leading-the-koocester-way-training.html":"koo-leading-gate","manager-training.html":"koo-mgr-gate","marketing-coordinator-training.html":"koo-mc-gate","mc-dashboard-training.html":"koo-mcdash-gate","mnd-workflow-slides.html":"koo-wf-gate","n8n-integrations-training.html":"koo-n8n-gate","offer-creation-training.html":"koo-offer-gate","one-to-ones-training.html":"koo-1on1-gate","org-design-culture-training.html":"koo-orgculture-gate","org-who-to-ask-training.html":"koo-org-gate","owning-a-pl-training.html":"koo-pl-gate","performance-management-training.html":"koo-pm-gate","policies-compliance-training.html":"koo-policies-gate","poppy-ai-training.html":"koo-poppy-gate","producer-shoot-training.html":"koo-shoot-gate","producer-training.html":"koo-prod-gate","rewards-consequences-training.html":"koo-rc-gate","sales-admin-training.html":"koo-salesadmin-gate","sales-hubspot-training.html":"koo-hubspot-gate","sales-training.html":"koo-sales-gate","sales-process-training.html":"koo-salesproc-gate","security-it-access-training.html":"koo-security-gate","smm-leadflow-training.html":"koo-leadflow-gate","smm-training.html":"koo-smm-gate","sourcing-networking-training.html":"koo-network-gate","storytelling-showmanship-training.html":"koo-storytelling-gate","tech-maintainer-training.html":"koo-tech-gate","tools-accounts-training.html":"koo-tools-gate","video-editor-training.html":"koo-ve-gate","vision-direction-training.html":"koo-vision-gate","xero-training.html":"koo-xero-gate"};window.KOO_GATE=GATE;window.KOO_VERS={"how-we-use-ai-training.html":4,"org-who-to-ask-training.html":2,"mnd-workflow-slides.html":2,"producer-training.html":2,"copywriter-training.html":2,"content-strategist-training.html":2,"marketing-coordinator-training.html":2,"smm-training.html":2,"sales-training.html":2,"sales-admin-training.html":2};
+  var GATE={"admin-training.html":"koo-admin-gate","amending-videos-training.html":"koo-amend-gate","aspire-training.html":"koo-aspire-gate","automations-anycross-training.html":"koo-anycross-gate","master-brand-guideline.html":"koo-brand-gate","building-scalable-company-training.html":"koo-scalecompany-gate","general-manager-training.html":"koo-gm-gate","capcut-training.html":"koo-capcut-gate","capital-growth-training.html":"koo-capital-gate","captions-carousels-training.html":"koo-capcar-gate","closing-handoff-training.html":"koo-closing-gate","coaching-rhythm-training.html":"koo-coach-gate","communication-meetings-training.html":"koo-comms-gate","company-values-training.html":"koo-values-gate","content-strategist-training.html":"koo-cs-gate","community-manager-training.html":"koo-community-gate","automations-monitoring-training.html":"koo-automon-gate","copywriter-training.html":"koo-cw-gate","customer-success-training.html":"koo-cs-success-gate","department-strategy-training.html":"koo-deptstrat-gate","device-access-admin-training.html":"koo-deviceaccess-gate","device-management-training.html":"koo-device-gate","discovery-qualifying-training.html":"koo-discovery-gate","editing-fundamentals-training.html":"koo-edit-gate","events-training.html":"koo-events-gate","finance-dashboard-training.html":"koo-findash-gate","finance-training.html":"koo-finance-gate","first-90-days-training.html":"koo-90d-gate","offboarding-handover-training.html":"koo-offb-gate","how-to-storyboard-training.html":"koo-storyboard-gate","how-we-use-ai-training.html":"koo-ai-gate-v2","how-we-use-lark-training.html":"koo-lark-gate","hr-training.html":"koo-hr-gate","landing-page-training.html":"koo-landing-gate","leading-the-koocester-way-training.html":"koo-leading-gate","manager-training.html":"koo-mgr-gate","marketing-coordinator-training.html":"koo-mc-gate","mc-dashboard-training.html":"koo-mcdash-gate","mnd-workflow-slides.html":"koo-wf-gate","n8n-integrations-training.html":"koo-n8n-gate","offer-creation-training.html":"koo-offer-gate","one-to-ones-training.html":"koo-1on1-gate","org-design-culture-training.html":"koo-orgculture-gate","org-who-to-ask-training.html":"koo-org-gate","owning-a-pl-training.html":"koo-pl-gate","performance-management-training.html":"koo-pm-gate","policies-compliance-training.html":"koo-policies-gate","poppy-ai-training.html":"koo-poppy-gate","producer-shoot-training.html":"koo-shoot-gate","producer-training.html":"koo-prod-gate","rewards-consequences-training.html":"koo-rc-gate","sales-admin-training.html":"koo-salesadmin-gate","sales-hubspot-training.html":"koo-hubspot-gate","sales-training.html":"koo-sales-gate","sales-process-training.html":"koo-salesproc-gate","security-it-access-training.html":"koo-security-gate","smm-leadflow-training.html":"koo-leadflow-gate","smm-training.html":"koo-smm-gate","sourcing-networking-training.html":"koo-network-gate","storytelling-showmanship-training.html":"koo-storytelling-gate","tech-maintainer-training.html":"koo-tech-gate","tools-accounts-training.html":"koo-tools-gate","video-editor-training.html":"koo-ve-gate","vision-direction-training.html":"koo-vision-gate","xero-training.html":"koo-xero-gate"};window.KOO_GATE=GATE;window.KOO_VERS={"how-we-use-ai-training.html":4,"org-who-to-ask-training.html":2,"mnd-workflow-slides.html":2,"producer-training.html":2,"copywriter-training.html":2,"content-strategist-training.html":2,"marketing-coordinator-training.html":2,"smm-training.html":2,"sales-training.html":2,"sales-admin-training.html":2};
   window.KOO_VERS["mnd-workflow-slides.html"]=3;
+  window.KOO_VERS["manager-training.html"]=2;
+  window.KOO_VERS["leading-the-koocester-way-training.html"]=2;
+  window.KOO_VERS["company-values-training.html"]=2;
   function donePct(m){ var g=m&&m.href&&GATE[m.href]; if(!g) return 0; var a=null; try{a=JSON.parse(localStorage.getItem(g)||"null");}catch(e){} if(!Array.isArray(a)||!a.length) return 0; var yes=a.filter(function(v){return v==="yes";}).length; return Math.round(yes/a.length*100); }
 
   function isBuilt(k){ return M[k]&&M[k].built; }
@@ -991,7 +996,8 @@ footer b{color:var(--ink)}
     smm:{call:'SIGNAL',em:'chat',head:'cans'}, copywriter:{call:'SCRIBE',em:'pen',head:'hair'}, videoeditor:{call:'CUTTER',em:'cam',head:'cans'}, events:{call:'SIREN',em:'spark',head:'hair'}, community:{call:'HOST',em:'people',head:'hair'}, sales:{call:'CLOSER',em:'arrow',head:'tie'},
     tech:{call:'ENGINEER',em:'gear',head:'visor'}, finance:{call:'LEDGER',em:'bars',head:'sqglass'},
     hr:{call:'GUARDIAN',em:'people',head:'bun'}, cssuccess:{call:'SHEPHERD',em:'heart',head:'earpiece'},
-    manager:{call:'COMMAND',em:'rank',head:'beret',rank:'RANK I'}, hod:{call:'MARSHAL',em:'chevrons',head:'peakcap',rank:'RANK II'}, csuite:{call:'OVERLORD',em:'crown',head:'crown',rank:'RANK III'}
+    manager:{call:'COMMAND',em:'rank',head:'beret',rank:'RANK I'}, hod:{call:'MARSHAL',em:'chevrons',head:'peakcap',rank:'RANK II'}, csuite:{call:'OVERLORD',em:'crown',head:'crown',rank:'RANK III'},
+    gm:{call:'HELM',em:'crown',head:'peakcap'}
   };
   var EM={
     star:'<path d="M0,-7 1.6,-2.2 6.7,-2.2 2.6,1 4.1,6.5 0,3.3 -4.1,6.5 -2.6,1 -6.7,-2.2 -1.6,-2.2Z" fill="#fff" stroke="none"/>',
@@ -1048,10 +1054,16 @@ footer b{color:var(--ink)}
     return '<div class="opportrait"><img class="opimg" src="operators/'+rid+'.png" alt="" loading="lazy">'+emblemChip(rid)+'<span class="opgloss"></span></div>';
   }
   function cmdEmblemSVG(em){ var e=EM[em]||''; return '<svg class="cmdem" viewBox="-10 -10 20 20" aria-hidden="true"><g stroke="#fff" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+e+'</g></svg>'; }
-  var SPEC={mc:'offer',cs:'cs_story',producer:'shoot',smm:'leadflow',copywriter:'story',videoeditor:'veditor',events:'events',community:'community',sales:'hubspot',tech:'tech',finance:'finance',hr:'hr',cssuccess:'cs_success',manager:'leading',hod:'hod_strategy',csuite:'exec_vision'};
+  var SPEC={mc:'offer',cs:'cs_story',producer:'shoot',smm:'leadflow',copywriter:'story',videoeditor:'veditor',events:'events',community:'community',sales:'hubspot',tech:'tech',finance:'finance',hr:'hr',cssuccess:'cs_success',manager:'leading',hod:'hod_strategy',csuite:'exec_vision',gm:'gm'};
   var curSpec=null, curRole=null, curSpecDone=false;
   var COMMAND=['manager','hod','csuite'];
-  var DEPT={mc:'Marketing',cs:'Marketing',producer:'Marketing',smm:'Marketing',copywriter:'Marketing',videoeditor:'Marketing',events:'Marketing',community:'Marketing',sales:'Sales & Success',cssuccess:'Sales & Success',trainer:'Growth Academy',tech:'Operations',finance:'Finance & People',hr:'Finance & People'};
+  // Leadership modules are the Command-Track ladder, never a "role module". They
+  // are derived from what the command ranks carry, so they render ONCE — in the
+  // Command Track — instead of double-billing under "Your role" for anyone whose
+  // seat is a rank (manager/hod/csuite) or the GM. Completing a role no longer
+  // waits on them, so the ladder auto-unlocks once the foundation and craft are clear.
+  var CMD_MODS={};COMMAND.forEach(function(rid){var rr=ROLES.filter(function(x){return x[0]===rid;})[0];if(rr)rr[3].forEach(function(k){if(k!=='base'&&FOUND.indexOf(k)<0)CMD_MODS[k]=1;});});
+  var DEPT={mc:'Marketing',cs:'Marketing',producer:'Marketing',smm:'Marketing',copywriter:'Marketing',videoeditor:'Marketing',events:'Marketing',community:'Marketing',sales:'Sales & Success',cssuccess:'Sales & Success',trainer:'Growth Academy',tech:'Operations',finance:'Finance & People',hr:'Finance & People',gm:'Operations'};
   // Hero stats. Org totals mean nothing to the person reading them: they hold
   // one role, not seventeen. Once a path is loaded these become THEIR numbers.
   // Until then the tiles stay blank rather than show a number that is not theirs.
@@ -1251,6 +1263,8 @@ footer b{color:var(--ink)}
     SLC["community-manager-training.html"]=29;
     SLC["automations-monitoring-training.html"]=29;
     SLC["building-scalable-company-training.html"]=26;
+    SLC["manager-training.html"]=30;
+    SLC["company-values-training.html"]=26;
     function countSlides(){
       [].forEach.call(tbl.querySelectorAll('.sc'),function(el){
         var href=el.getAttribute('data-href'); if(!href) return;
@@ -1347,12 +1361,11 @@ footer b{color:var(--ink)}
     // ---- Do next: the three that matter today ----
     var html='';
     if(outstanding.length){
-      html+='<div class="donext"><div class="dnhead"><span class="dneye">Your next module</span>'
+      html+='<div class="donext"><div class="dnhead"><span class="dneye">'+(outstanding.length>1?'Your next modules':'Your next module')+'</span>'
         +'<span class="dncount">'+outstanding.length+' outstanding of '+builtPath.length+'</span></div>'
-        +'<div class="dngrid">'+outstanding.slice(0,1).map(function(k,i){
+        +'<div class="dngrid">'+outstanding.slice(0,3).map(function(k,i){
           var m=M[k], p=donePct(m);
           return '<a class="dncard'+(i===0?' now':'')+'" href="'+m.href+'">'
-            +'<span class="dnnum">'+String(i+1).padStart(2,'0')+'</span>'
             +(i===0?'<span class="dnnow">Start here</span>':'')
             +'<div class="dnstep">'+m.step+'</div><h4>'+m.title+'</h4><p>'+m.desc+'</p>'
             +(p>0?'<div class="dnbar"><i style="width:'+p+'%"></i></div>':'')
@@ -1369,13 +1382,21 @@ footer b{color:var(--ink)}
     html+='<div class="phasehead"><span class="phnum">1</span>Foundation <em>· everyone starts here</em></div>';
     html+=FOUND.map(function(k,i){
       var done=M[k]&&M[k].built&&donePct(M[k])>=100;
-      var lock=(openFoundIdx>-1 && i>openFoundIdx && !done) ? 'Clear the module above first' : false;
+      var lock=(openFoundIdx>-1 && i>openFoundIdx+2 && !done) ? 'Clear the module above first' : false;
       return levelHTML(k,i,lock);
     }).join('');
     html+='<div class="phasehead"><span class="phnum">2</span>Your role'+(foundDone?'':' <em>· clear the foundation to unlock</em>')+'</div>';
-    html+=r[3].map(function(k,i){return levelHTML(k,FOUND.length+i,!foundDone);}).join('');
-    var sBuilt=r[3].filter(isBuilt);
-    var specDone=foundDone && sBuilt.length>0 && sBuilt.every(function(k){return donePct(M[k])>=100;});
+    // Leadership modules belong to the Command Track, not "Your role" — so filter
+    // them out here. A pure rank (C-Suite) has no craft left, so it points down to
+    // the ladder instead of showing an empty phase.
+    var roleMods=r[3].filter(function(k){return !CMD_MODS[k];});
+    if(roleMods.length){
+      html+=roleMods.map(function(k,i){return levelHTML(k,FOUND.length+i,!foundDone);}).join('');
+    }else{
+      html+='<div class="lvl rise built"><div class="node">◆</div><div class="lcard"><span class="lstep">Command rank</span><h3>Your training is the Command Track</h3><p>This seat is a rank, not a craft. Your modules live in the Command Track below, and open once your foundation is clear.</p></div></div>';
+    }
+    var sBuilt=roleMods.filter(isBuilt);
+    var specDone=foundDone && (sBuilt.length===0 || sBuilt.every(function(k){return donePct(M[k])>=100;}));
     curSpecDone=specDone;
     html+='<div class="phasehead phcmd"><span class="phnum">3</span>Command track <em>· earned, later</em></div>';
     html+=specDone
@@ -1486,7 +1507,7 @@ footer b{color:var(--ink)}
     var bar=$('ctBar'), icon=$('ctBarIcon'), body=$('ctTipBody'); if(!bar) return;
     bar.onclick=function(e){ e.preventDefault(); showCmd(); };
     var LEAD=['leading-the-koocester-way-training.html','coaching-rhythm-training.html'];
-    var open = !!a && (a.isAdmin || ['manager','hod','csuite'].indexOf(a.roleSlug)>-1
+    var open = !!a && (a.isAdmin || ['manager','hod','csuite','gm'].indexOf(a.roleSlug)>-1
       || (a.decks && LEAD.some(function(d){ return a.decks.has(d); })));
     bar.classList.toggle('open',open);
     bar.classList.toggle('locked',!open);
@@ -1606,7 +1627,7 @@ footer b{color:var(--ink)}
     if(!a || a.degraded || !a.assigned || !a.roleLabel){ goTo(); return; }
 
     var seen=false;
-    try{ seen = sessionStorage.getItem('koo-academy-revealed')===a.roleSlug; }catch(e){}
+    try{ seen = localStorage.getItem('koo-academy-revealed')===a.roleSlug; }catch(e){}
     if(seen){ goTo(); return; }
 
     var nm=firstName(a);
@@ -1634,7 +1655,7 @@ footer b{color:var(--ink)}
     var done=false;
     function dismiss(){
       if(done) return; done=true;
-      try{ sessionStorage.setItem('koo-academy-revealed',a.roleSlug); }catch(e){}
+      try{ localStorage.setItem('koo-academy-revealed',a.roleSlug); }catch(e){}
       el.classList.add('out');
       setTimeout(function(){ el.classList.remove('on','go','out'); document.body.style.overflow=''; goTo(); },340);
     }
@@ -1662,7 +1683,7 @@ footer b{color:var(--ink)}
   window.KOO_PREVIEW=function(label){
     label=label||'Producer';
     var hit=ROLES.filter(function(x){ return x[1].toLowerCase()===String(label).toLowerCase(); })[0];
-    try{ sessionStorage.removeItem('koo-academy-revealed'); }catch(e){}
+    try{ localStorage.removeItem('koo-academy-revealed'); }catch(e){}
     var slug = hit?hit[0]:'producer';
     // Render the real path too, so the whole experience can be reviewed from
     // file:// and not just the opening animation.
@@ -1763,7 +1784,7 @@ footer b{color:var(--ink)}
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SB_URL='https://lfppmsppvqtjyusfrlkf.supabase.co';
-const SB_KEY='<SUPABASE_ANON_KEY>';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcHBtc3BwdnF0anl1c2ZybGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5MzMzMDAsImV4cCI6MjA5OTUwOTMwMH0.juL94msBxiqlwIhdhraOhxF69MmrohuW4TkY_2J5oGs';
 const GATE = window.KOO_GATE || {};   // deck href -> gate localStorage key (bumping a deck's version = a NEW gate key)
 const VERS = window.KOO_VERS || {};   // deck href -> version (default 1)
 function passed(gk){ try{ const a=JSON.parse(localStorage.getItem(gk)||'null'); return Array.isArray(a)&&a.length>0 && a.every(function(v){return v==='yes';}); }catch(e){ return false; } }

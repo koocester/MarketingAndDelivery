@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-nav.js?v=2026072304"></script>
 <script src="admin/koo-admin-guard.js?v=2026072005"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -66,7 +66,7 @@ h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.05;letter-spacing:-.03em;col
 </main>
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const supabase = createClient('https://lfppmsppvqtjyusfrlkf.supabase.co','<SUPABASE_ANON_KEY>');
+const supabase = createClient('https://lfppmsppvqtjyusfrlkf.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcHBtc3BwdnF0anl1c2ZybGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5MzMzMDAsImV4cCI6MjA5OTUwOTMwMH0.juL94msBxiqlwIhdhraOhxF69MmrohuW4TkY_2J5oGs');
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function ago(d){ if(!d) return '—'; const t=new Date(d).getTime(), m=Math.floor((Date.now()-t)/60000); if(m<1)return 'now'; if(m<60)return m+'m'; const h=Math.floor(m/60); if(h<24)return h+'h'; const dd=Math.floor(h/24); return dd<30?dd+'d':Math.floor(dd/30)+'mo'; }
 async function load(){

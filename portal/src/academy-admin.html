@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-nav.js?v=2026072304"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Academy assignment · Koocester</title>
@@ -84,7 +84,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SB_URL='https://lfppmsppvqtjyusfrlkf.supabase.co';
-const SB_KEY='<SUPABASE_ANON_KEY>';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcHBtc3BwdnF0anl1c2ZybGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5MzMzMDAsImV4cCI6MjA5OTUwOTMwMH0.juL94msBxiqlwIhdhraOhxF69MmrohuW4TkY_2J5oGs';
 const sb = createClient(SB_URL, SB_KEY);
 const $ = (id)=>document.getElementById(id);
 const esc = (s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

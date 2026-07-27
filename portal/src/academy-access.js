@@ -28,7 +28,7 @@
   'use strict';
 
   var SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
-  var SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcHBtc3BwdnF0anl1c2ZybGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5MzMzMDAsImV4cCI6MjA5OTUwOTMwMH0.juL94msBxiqlwIhdhraOhxF69MmrohuW4TkY_2J5oGs';
 
   // A blank, honest default. Never presented to the user as if it were real
   // data: callers check .assigned and .degraded before rendering anything.

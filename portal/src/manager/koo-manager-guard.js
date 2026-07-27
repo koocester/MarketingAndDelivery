@@ -25,7 +25,7 @@
   'use strict';
 
   var SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
-  var SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcHBtc3BwdnF0anl1c2ZybGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5MzMzMDAsImV4cCI6MjA5OTUwOTMwMH0.juL94msBxiqlwIhdhraOhxF69MmrohuW4TkY_2J5oGs';
 
   /* MUST MIRROR portal.html (MANAGER_ROLES + MANAGER_EMAILS), functions/dash.js
    * and functions/mgmt-deck.js. This list had drifted to just founder + head of

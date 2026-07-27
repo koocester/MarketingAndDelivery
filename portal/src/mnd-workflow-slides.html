@@ -872,7 +872,7 @@ a.tag.btn.lead-role:hover{background:var(--maroon);color:#fff}
           <h3>Video pipeline</h3>
           <div class="ltrow"><span class="task"><b>Producer</b> · raw footage</span><span class="ltpill">16h</span></div>
           <div class="ltrow"><span class="task"><b>Content strategist</b> · approve source</span><span class="ltpill">12h</span></div>
-          <div class="ltrow"><span class="task"><b>Mktg coord (Head of Growth)</b> · approve organic</span><span class="ltpill">3h</span></div>
+          <div class="ltrow"><span class="task"><b>Head Editor</b> · approve organic</span><span class="ltpill">3h</span></div>
           <div class="ltrow"><span class="task"><b>Video editor</b> · editing<sup style="color:var(--maroon)">◆</sup></span><span class="ltpill">4–8h</span></div>
           <div class="ltrow"><span class="task"><b>Content strategist</b> · QC</span><span class="ltpill">16h</span></div>
           <div class="ltrow"><span class="task"><b>Video editor</b> · amendments</span><span class="ltpill">6h</span></div>
@@ -1240,7 +1240,7 @@ a.tag.btn.lead-role:hover{background:var(--maroon);color:#fff}
     Done:{clock:'live',mc:'live',actions:[]}
   };}
   var VLANES_ORG=[
-    ['OrgApproval','Organic approval','Marketing coordinator'],['Rejected','Rejected / Do not post','—','dead'],
+    ['OrgApproval','Organic approval','Head Editor'],['Rejected','Rejected / Do not post','—','dead'],
     ['Editing','Editing','Video editor'],['QC','Strategist QC','Content strategist'],['Amend','Amendments','Video editor','amend'],
     ['Final','Final approval','Marketing coordinator'],['Ready','SMM · Ready','Social media manager'],['Done','Completed','Social media manager']
   ];
@@ -1262,7 +1262,7 @@ a.tag.btn.lead-role:hover{background:var(--maroon);color:#fff}
       note:'⚡ Events run the <b>same pipeline as an internal campaign</b> — they just start with an <b>events handover</b>, exactly like a client video starts with a <b>sales handover</b>. Then source → approve → plan → shoot → edit → QC → final approval → post. ManyChat builds from Editing. Dotted views = fix &amp; resubmit.',
       flow:(function(){ var f=videoFlow('12h left'); f.Handover={clock:'—',mc:'wait',actions:[{label:'Hand over →',to:'Project'}]}; return f; })() },
     organic:{ readyLane:'Ready', start:'OrgApproval', lanes:VLANES_ORG, title:'VID-0143 · organic',
-      note:'⚡ Organic videos start at the <b>Head of growth / Marketing coordinator</b> approval (3h). Approve goes <b>straight to editing</b>. Reject sends it to the separate <b>Rejected / Do not post</b> view.',
+      note:'⚡ Organic videos start at the <b>Head Editor</b> approval (3h). Approve goes <b>straight to editing</b>. Reject sends it to the separate <b>Rejected / Do not post</b> view.',
       flow:{
         OrgApproval:{clock:'3h left',mc:'wait',actions:[{label:'Approve → editing',to:'Editing'},{label:'Reject ✕',to:'Rejected',reject:1}]},
         Rejected:{clock:'—',mc:'wait',actions:[]},

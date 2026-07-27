@@ -7,10 +7,10 @@
 <title>Koocester Academy · Manager</title>
 <style>
 :root{
-  --maroon:#C02025; --maroon-tint:#faf3f3; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#EEE; --bg:#fff; --ok:#1b7f4b;
-  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
+  --maroon:#C02025; --maroon-tint:#fde8e8; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#eee; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Arial,sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
-  --shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.06);
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 12px 34px rgba(0,0,0,.06);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -77,23 +77,45 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 .win span{font-size:13px;color:var(--muted);line-height:1.4}
 .cite{font-size:.85rem;color:var(--muted);margin-top:16px}
 .cite b{color:var(--maroon)}
+/* employee mindset → owner mindset */
+.mindset-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,340px);gap:30px;align-items:center}
+.mindset-stack{display:grid;gap:10px;margin-top:16px}
+.mindset-card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.mindset-card.owner{border-color:var(--maroon);border-left:4px solid var(--maroon);background:var(--maroon-tint)}
+.mindset-label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--muted);margin-bottom:6px}
+.mindset-card.owner .mindset-label{color:var(--maroon)}
+.mindset-card p{font-size:clamp(.96rem,1.7vw,1.1rem);line-height:1.42;margin:0;color:var(--ink)}
+.manager-move{margin-top:12px;padding:11px 14px;border-left:3px solid var(--maroon);font-size:.92rem;line-height:1.4;color:var(--body)}
+.manager-move b{color:var(--maroon)}
+.mindset-shot{width:100%;aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--line2);box-shadow:var(--shadow)}
+.mindset-shot img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 55%;transform:scale(1.02)}
+.mindset-source{font-size:11px;color:var(--muted);text-align:center;margin:9px 0 0}
+.system-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:22px 0}
+.system-node{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;box-shadow:var(--shadow)}
+.system-node strong{display:block;color:var(--ink);font-size:1.05rem;margin-bottom:6px}
+.system-node span{display:block;color:var(--muted);font-size:.88rem;line-height:1.42}
+.system-node.fix{background:var(--maroon);border-color:var(--maroon)}
+.system-node.fix strong,.system-node.fix span{color:#fff}
+.system-arrow{display:flex;align-items:center;color:var(--maroon);font-weight:800}
+.system-principle{border:1px solid var(--maroon);border-radius:14px;padding:16px 18px;background:var(--maroon-tint);font-size:clamp(1rem,2vw,1.16rem);line-height:1.45;color:var(--ink)}
+.system-principle b{color:var(--maroon)}
 /* graded MCQ */
 .quiz{border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:14px;box-shadow:var(--shadow);max-width:820px}
-.quiz .scenario{font-size:14px;color:var(--body);background:#f7f7f7;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
+.quiz .scenario{font-size:14px;color:var(--body);background:#eee;border-left:3px solid var(--maroon);border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px}
 .quiz .scenario b{color:var(--ink)}
 .quiz .q{font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:14px}
 .opts{display:flex;flex-direction:column;gap:9px}
 .opt{appearance:none;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-family:var(--base);font-size:14.5px;padding:13px 16px;border-radius:12px;cursor:pointer;transition:transform .12s var(--ease),border-color .15s,background .15s}
 .opt:hover{border-color:var(--maroon);transform:translateY(-1px)}
 .opt .kx{font-weight:800;color:var(--maroon);margin-right:8px}
-.opt.correct{border-color:var(--ok);background:#eefaf2}
+.opt.correct{border-color:var(--ok);background:#e9f7ec}
 .opt.correct .kx{color:var(--ok)}
 .opt.wrong{border-color:var(--maroon);background:var(--maroon-tint)}
 .opt:disabled{cursor:default}
 .fb{margin-top:14px;font-size:14px;line-height:1.5;border-radius:12px;padding:0 16px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
 .fb.show{max-height:260px;padding:13px 16px}
-.fb.ok{background:#eefaf2;color:#0f5d34;border:1px solid #bfe6cf}
-.fb.no{background:var(--maroon-tint);color:#7a1418;border:1px solid #f0c9cb}
+.fb.ok{background:#e9f7ec;color:#1A7F37;border:1px solid #1A7F37}
+.fb.no{background:var(--maroon-tint);color:#9E191D;border:1px solid #F2CECF}
 .fb b{font-weight:800}
 .slide.divider{background:var(--ink)}
 .slide.divider .eyebrow{color:#fff;opacity:.55}
@@ -111,9 +133,9 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 .gbtn:hover{border-color:var(--ink);transform:translateY(-1px)}
 .grow.on-yes .gbtn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
 .grow.on-no .gbtn.no{background:var(--maroon);border-color:var(--maroon);color:#fff}
-.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#fafafa;transition:.25s;max-width:820px}
-.gstate.ready{border-color:var(--ok);background:#eefaf2;color:#0f5d34}
-.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#7a1418}
+.gstate{margin-top:20px;font-weight:800;font-size:1rem;padding:14px 18px;border-radius:12px;border:1px solid var(--line);color:var(--muted);background:#eee;transition:.25s;max-width:820px}
+.gstate.ready{border-color:var(--ok);background:#e9f7ec;color:#1A7F37}
+.gstate.blocked{border-color:var(--maroon);background:var(--maroon-tint);color:#9E191D}
 .proceed{display:none;margin-top:16px;appearance:none;border:0;background:var(--maroon);color:#fff;font-family:var(--base);font-size:15px;font-weight:800;padding:13px 26px;border-radius:26px;cursor:pointer;transition:transform .14s var(--ease),opacity .2s}
 .proceed.show{display:inline-block;animation:pop .5s var(--popp) both}
 .proceed:hover{transform:translateY(-2px)}
@@ -126,7 +148,13 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 .arrow:disabled{opacity:.3;cursor:default}
 .brandmark{position:fixed;bottom:24px;left:26px;font-size:12px;letter-spacing:.02em;color:var(--muted);z-index:10}
 .brandmark b{color:var(--ink)}
-@media (max-width:600px){.brandmark{display:none}.duo{grid-template-columns:1fr}}
+@media (max-width:700px){
+  .brandmark{display:none}.duo{grid-template-columns:1fr}
+  .mindset-grid{grid-template-columns:1fr;gap:14px}
+  .mindset-shot{display:none}
+  .system-flow{grid-template-columns:1fr}
+  .system-arrow{justify-content:center;transform:rotate(90deg)}
+}
 @media (prefers-reduced-motion:reduce){.slide,.slide .inner>*{transition:opacity .01s!important;animation:none!important;opacity:1!important;transform:none!important}}
 </style>
 </head>
@@ -141,7 +169,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
       <img class="logo" style="height:42px" src="koocester-logo.png" alt="koocester">
       <div class="eyebrow">Koocester Academy · role certification</div>
       <h1><span class="lnwrap"><span class="ln">The</span></span><span class="lnwrap"><span class="ln">Manager</span></span></h1>
-      <p class="lead" style="margin-top:20px">You don't do the stage work. You keep the pipeline flowing.</p>
+      <p class="lead" style="margin-top:20px">You build the people and systems that keep the pipeline flowing.</p>
     </div>
   </section>
 
@@ -160,7 +188,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
       <div class="wins">
         <div class="win"><b>No bottleneck lives long</b><span>you spot the wall and clear it same day</span></div>
         <div class="win"><b>Every role is on its lead time</b><span>no stage quietly running over its clock</span></div>
-        <div class="win"><b>You escalate the right things</b><span>the person who's blocking, not the record</span></div>
+        <div class="win"><b>You diagnose before you blame</b><span>find the system failure, then coach the accountable owner</span></div>
         <div class="win"><b>The floor keeps moving</b><span>work flows end to end, nothing stalls silently</span></div>
       </div>
       <p class="cite" style="margin-top:16px"><b>This is the bar.</b> Everything that follows is how you hold it — and the final gate checks you against it.</p>
@@ -186,10 +214,134 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 
   <section class="slide divider">
     <div class="inner">
+      <div class="eyebrow">The manager switch</div>
+      <hr class="rule">
+      <h2>Employee mindset → owner mindset</h2>
+      <p class="lead" style="color:#999">A promotion is not only more responsibility. It changes how you think: from completing your own work to owning the conditions that let the whole team succeed.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="mindset-grid">
+        <div>
+          <div class="eyebrow">Owner mindset · time</div>
+          <h2>Measure output, not hours.</h2>
+          <div class="mindset-stack">
+            <div class="mindset-card"><span class="mindset-label">Employee mindset</span><p>“How many hours did I work?”</p></div>
+            <div class="mindset-card owner"><span class="mindset-label">Owner mindset</span><p>“What outcome did those hours produce?”</p></div>
+          </div>
+          <div class="manager-move"><b>The manager move:</b> define the output, standard and deadline before work starts.</div>
+        </div>
+        <div>
+          <div class="mindset-shot"><img src="assets/manager/owner-time.jpg" alt="Reference comparing employee and owner mindsets about time"></div>
+          <p class="mindset-source">Reference: @itsalvinhuang · supplied by Hakim</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="mindset-grid">
+        <div>
+          <div class="eyebrow">Owner mindset · problems</div>
+          <h2>Own the outcome. Assign the action.</h2>
+          <div class="mindset-stack">
+            <div class="mindset-card"><span class="mindset-label">Employee mindset</span><p>“That’s not my department.”</p></div>
+            <div class="mindset-card owner"><span class="mindset-label">Owner mindset</span><p>Everything affecting the outcome deserves my attention—even when someone else owns the work.</p></div>
+          </div>
+          <div class="manager-move"><b>The manager move:</b> take responsibility for the result without taking every task back into your own hands.</div>
+        </div>
+        <div>
+          <div class="mindset-shot"><img src="assets/manager/owner-problems.jpg" alt="Reference comparing employee and owner mindsets about problems"></div>
+          <p class="mindset-source">Reference: @itsalvinhuang · supplied by Hakim</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="mindset-grid">
+        <div>
+          <div class="eyebrow">Owner mindset · feedback</div>
+          <h2>Turn criticism into information.</h2>
+          <div class="mindset-stack">
+            <div class="mindset-card"><span class="mindset-label">Employee mindset</span><p>Takes criticism of the business personally.</p></div>
+            <div class="mindset-card owner"><span class="mindset-label">Owner mindset</span><p>Treats criticism as information that can improve the business.</p></div>
+          </div>
+          <div class="manager-move"><b>The manager move:</b> separate ego from evidence, then convert feedback into a decision or test.</div>
+        </div>
+        <div>
+          <div class="mindset-shot"><img src="assets/manager/owner-feedback.jpg" alt="Reference comparing employee and owner mindsets about feedback"></div>
+          <p class="mindset-source">Reference: @itsalvinhuang · supplied by Hakim</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="mindset-grid">
+        <div>
+          <div class="eyebrow">Owner mindset · growth</div>
+          <h2>Build capability beyond yourself.</h2>
+          <div class="mindset-stack">
+            <div class="mindset-card"><span class="mindset-label">Employee mindset</span><p>Get better at doing the work.</p></div>
+            <div class="mindset-card owner"><span class="mindset-label">Owner mindset</span><p>Build people and systems that can do the work repeatedly.</p></div>
+          </div>
+          <div class="manager-move"><b>The manager move:</b> teach, document, delegate and inspect.</div>
+        </div>
+        <div>
+          <div class="mindset-shot"><img src="assets/manager/owner-growth.jpg" alt="Reference comparing employee and owner mindsets about growth"></div>
+          <p class="mindset-source">Reference: @itsalvinhuang · supplied by Hakim</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="mindset-grid">
+        <div>
+          <div class="eyebrow">Owner mindset · security</div>
+          <h2>Make yourself replaceable in operations.</h2>
+          <div class="mindset-stack">
+            <div class="mindset-card"><span class="mindset-label">Employee mindset</span><p>Holds information and control because being needed feels safe.</p></div>
+            <div class="mindset-card owner"><span class="mindset-label">Owner mindset</span><p>Shares knowledge and builds operations that do not depend on one person.</p></div>
+          </div>
+          <div class="manager-move"><b>The manager move:</b> if the team cannot run without you, the system is not finished.</div>
+        </div>
+        <div>
+          <div class="mindset-shot"><img src="assets/manager/owner-security.jpg" alt="Reference comparing employee and owner mindsets about security"></div>
+          <p class="mindset-source">Reference: @itsalvinhuang · supplied by Hakim</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="inner">
+      <div class="eyebrow">Systems thinking for managers</div>
+      <h2>Fix the system, not the person.</h2>
+      <div class="system-flow">
+        <div class="system-node"><strong>See the failure</strong><span>What outcome broke, stalled or repeated?</span></div>
+        <div class="system-arrow">→</div>
+        <div class="system-node"><strong>Trace the system</strong><span>Check the standard, handoff, owner and feedback loop.</span></div>
+        <div class="system-arrow">→</div>
+        <div class="system-node fix"><strong>Fix the system</strong><span>Change the condition that made the failure likely.</span></div>
+      </div>
+      <div class="system-principle"><b>Problems are system failures, not people failures.</b> Improve the system first, then coach the person inside the improved system.</div>
+    </div>
+  </section>
+
+  <section class="slide divider">
+    <div class="inner">
       <div class="eyebrow">Part one</div>
       <hr class="rule">
       <h2>Reading the base</h2>
-      <p class="lead" style="color:#bbb">Where to look, and what "good" looks like.</p>
+      <p class="lead" style="color:#999">Where to look, and what "good" looks like.</p>
     </div>
   </section>
 
@@ -218,7 +370,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
       <div class="eyebrow">Part two</div>
       <hr class="rule">
       <h2>The guardrails</h2>
-      <p class="lead" style="color:#bbb">The gates that protect quality. Know what each one is for.</p>
+      <p class="lead" style="color:#999">The gates that protect quality. Know what each one is for.</p>
     </div>
   </section>
 
@@ -254,7 +406,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
         <span class="step gate">Start copywriting</span><span class="arw">·</span>
         <span class="step gate">Approve carousel</span>
       </div>
-      <p class="lead"><b>Start copywriting</b> fires when a copywriter picks it up, so the 3 hour clock starts fair. <b>Approve carousel:</b> good means copy is on brand, error free, and true to the source video.</p>
+      <p class="lead"><b>Start copywriting</b> fires when a copywriter picks it up, so the copywriting clock starts fairly. <b>Approve carousel:</b> good means copy is on brand, error free, and true to the source video.</p>
     </div>
   </section>
 
@@ -262,7 +414,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
     <div class="inner">
       <div class="eyebrow">When something is stuck</div>
       <ul class="pts">
-        <li><b>Overdue at a gate?</b> The approver is the blocker. Chase the person, not the record.</li>
+        <li><b>Overdue at a gate?</b> Diagnose the approval system first: named owner, visible deadline and clear approval standard. Then speak to the accountable person.</li>
         <li><b>Bouncing in amendments?</b> The notes weren't specific. Get one clear pass.</li>
         <li><b>Aging in Ready to Upload?</b> The SMM has a backlog. Rebalance or reprioritise.</li>
       </ul>
@@ -274,7 +426,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
       <div class="eyebrow">Part three</div>
       <hr class="rule">
       <h2>Views &amp; permissions</h2>
-      <p class="lead" style="color:#bbb">Build your own lens. Leave the shared ones alone.</p>
+      <p class="lead" style="color:#999">Build your own lens. Leave the shared ones alone.</p>
     </div>
   </section>
 
@@ -308,10 +460,10 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
     <div class="inner">
       <div class="eyebrow">Your morning</div>
       <ol class="pts">
-        <li>Read the 8am brief in Manager Updates. It opens with the bottleneck and the one move for today.</li>
+        <li>Read the morning brief in Manager Updates. It opens with the bottleneck and the one move for today.</li>
         <li>Make that move first, before anything else.</li>
         <li>Clear your approval gates. They run on clocks.</li>
-        <li>Scan your team's queue for anything stuck two days.</li>
+        <li>Scan your team's queue for anything stuck beyond its clock.</li>
         <li>If someone is named in the brief, talk to them today, not Friday.</li>
       </ol>
     </div>
@@ -322,7 +474,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
       <div class="eyebrow">Part four</div>
       <hr class="rule">
       <h2>Your turn</h2>
-      <p class="lead" style="color:#bbb">Three calls. Get them graded.</p>
+      <p class="lead" style="color:#999">Three calls. Get them graded.</p>
     </div>
   </section>
 
@@ -330,9 +482,9 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
     <div class="inner">
       <div class="eyebrow">Question 1 · reading the pipeline</div>
       <div class="quiz" data-answer="B"
-        data-ok="<b>Correct.</b> The stage with the most records piled up is today's bottleneck — that's where you focus first. A slow-looking stage isn't the same as a broken one; the pile-up is the signal."
-        data-no="<b>Not quite.</b> Where's the wall? The stage with the most records piled up is today's bottleneck. That's the read, not the people or the SLA clock on its own.">
-        <div class="scenario">The Manager Pipeline view shows Editing has 14 records queued while every other stage has 2 or 3.</div>
+        data-ok="<b>Correct.</b> The stage with the largest pile-up is today's bottleneck — a system signal to investigate, not a verdict on the people in it."
+        data-no="<b>Not quite.</b> The largest pile-up shows where the system is constrained. Diagnose the flow before judging the people.">
+        <div class="scenario">The Manager Pipeline view shows Editing has a much larger queue than every other stage.</div>
         <div class="q">What does this tell you?</div>
         <div class="opts">
           <button class="opt" data-k="A"><span class="kx">A</span>The editors are slow workers — replace them</button>
@@ -348,12 +500,12 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
     <div class="inner">
       <div class="eyebrow">Question 2 · something is stuck</div>
       <div class="quiz" data-answer="A"
-        data-ok="<b>Correct.</b> Overdue at a gate means the approver is the blocker. Chase the person, not the record — the record can't move itself, and the clock doesn't fix it on its own."
-        data-no="<b>No.</b> Overdue at a gate? The approver is the blocker. Chase the person, not the record — rejecting or waiting doesn't address why it's stuck.">
-        <div class="scenario">A video has sat at Final Approval three days past its clock.</div>
+        data-ok="<b>Correct.</b> First check whether the approval system has a named owner, visible deadline and clear standard. Fix any missing condition, then speak to the accountable owner."
+        data-no="<b>No.</b> Waiting or restarting does not diagnose why the approval stalled. Check the system, fix the missing condition, then speak to the accountable owner.">
+        <div class="scenario">A video has sat at Final Approval well past its clock.</div>
         <div class="q">What's the right move?</div>
         <div class="opts">
-          <button class="opt" data-k="A"><span class="kx">A</span>Chase the approver — the person is the blocker, not the record</button>
+          <button class="opt" data-k="A"><span class="kx">A</span>Check the approval system, fix what is missing, then speak to the accountable owner</button>
           <button class="opt" data-k="B"><span class="kx">B</span>Reject the video and start it over from scratch</button>
           <button class="opt" data-k="C"><span class="kx">C</span>Leave it — the SLA clock will escalate it eventually</button>
         </div>
@@ -388,7 +540,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
         <div class="grow"><span class="gq">Do you read the Manager Pipeline view every morning, overdue first?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
         <div class="grow"><span class="gq">Can you name today's bottleneck and who owns it?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
         <div class="grow"><span class="gq">Do you know every gate and what it protects?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
-        <div class="grow"><span class="gq">When something's stuck, do you chase the person, not the record?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
+        <div class="grow"><span class="gq">When something is stuck, do you diagnose the system before blaming the person?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
         <div class="grow"><span class="gq">Do you build personal views and never edit a locked shared view?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
         <div class="grow"><span class="gq">Do you rebalance load before anyone drowns?</span><span class="gopt"><button class="gbtn yes">Yes</button><button class="gbtn no">No</button></span></div>
       </div>
@@ -413,7 +565,7 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 
 <div class="brandmark"><b>koocester</b> academy · manager</div>
 <div class="nav">
-  <span class="count" id="count">1 / 23</span>
+  <span class="count" id="count">1 / 30</span>
   <button class="arrow" id="prev" aria-label="Previous">‹</button>
   <button class="arrow" id="next" aria-label="Next">›</button>
 </div>
@@ -478,17 +630,17 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 </script>
 <!-- koo-feedback-widget -->
 <style>
-.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(192,32,37,.4)}
-.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#0f0f0f;border:1px solid #2a2a2a;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
+.koofb-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border:1px solid #C02025;background:#C02025;color:#fff;font:800 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:.03em;padding:11px 15px;border-radius:22px;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.06)}
+.koofb-panel{position:fixed;right:16px;bottom:64px;z-index:9999;width:min(330px,92vw);background:#000;border:1px solid #333;border-radius:14px;padding:15px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif}
 .koofb-panel.on{display:block}
 .koofb-panel h4{margin:0 0 3px;color:#fff;font-size:14px;font-weight:800}
-.koofb-panel .koofb-p{margin:0 0 9px;color:#8a8a8a;font-size:12px}
-.koofb-panel textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #262626;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
+.koofb-panel .koofb-p{margin:0 0 9px;color:#999;font-size:12px}
+.koofb-panel textarea{width:100%;min-height:80px;background:#000;border:1px solid #333;border-radius:9px;color:#eee;font:13px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:8px;resize:vertical;box-sizing:border-box}
 .koofb-panel textarea:focus{outline:none;border-color:#C02025}
 .koofb-row{display:flex;gap:8px;margin-top:9px}
 .koofb-send{flex:1;border:1px solid #C02025;background:#C02025;color:#fff;font-weight:800;font-size:13px;border-radius:9px;padding:8px;cursor:pointer}
-.koofb-close{border:1px solid #333;background:transparent;color:#9a9a9a;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
-.koofb-thx{color:#5bbf85;font-size:13px;font-weight:700;margin-top:7px;display:none}
+.koofb-close{border:1px solid #333;background:transparent;color:#999;border-radius:9px;padding:8px 11px;cursor:pointer;font-size:13px}
+.koofb-thx{color:#1A7F37;font-size:13px;font-weight:700;margin-top:7px;display:none}
 </style>
 <button class="koofb-btn" id="koofbBtn">&#9998; Feedback</button>
 <div class="koofb-panel" id="koofbPanel">
@@ -523,10 +675,10 @@ ul.pts li,ol.pts li{margin:.5em 0;font-size:clamp(1rem,2vw,1.2rem);line-height:1
 
 <!-- koo-rotate-hint -->
 <style>
-.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.4);max-width:88vw}
+.koo-rot{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:9998;display:none;align-items:center;gap:9px;background:#C02025;color:#fff;font:700 12.5px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:10px 14px;border-radius:24px;box-shadow:0 10px 28px rgba(0,0,0,.55);max-width:88vw}
 .koo-rot svg{width:19px;height:19px;flex:none;animation:kooRotSpin 2.4s ease-in-out infinite}
 @keyframes kooRotSpin{0%,55%{transform:rotate(0)}78%,100%{transform:rotate(90deg)}}
-.koo-rot button{margin-left:2px;background:rgba(255,255,255,.26);border:0;color:#fff;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
+.koo-rot button{margin-left:2px;background:#fff;border:0;color:#C02025;font:700 11.5px 'Helvetica Neue',Helvetica,Arial,sans-serif;padding:5px 10px;border-radius:20px;cursor:pointer}
 @media (max-width:820px) and (orientation:portrait){.koo-rot.show{display:flex}}
 </style>
 <div class="koo-rot" id="kooRot">

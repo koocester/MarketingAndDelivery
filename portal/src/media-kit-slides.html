@@ -8,8 +8,8 @@
 <title>Koocester · Media Kit</title>
 <style>
 :root{
-  --maroon:#C02025; --maroon-2:#e0555a; --maroon-tint:#faf3f3; --ink:#0a0a0a; --body:#333; --muted:#767676; --line:#E6E4E1; --line2:#F1F0EE; --bg:#fff; --ok:#1b7f4b;
-  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --maroon:#C02025; --maroon-2:#C93B3F; --maroon-tint:#F2CECF; --ink:#000; --body:#333; --muted:#666; --line:#CCC; --line2:#F2CECF; --bg:#fff; --ok:#1A7F37;
+  --base:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif; --mono:'Helvetica Neue',Helvetica,Inter,'SF Pro Text',Arial,sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1); --pop:cubic-bezier(.34,1.56,.64,1); --popp:cubic-bezier(.22,1.12,.4,1);
   --shadow:0 1px 2px rgba(0,0,0,.04),0 14px 40px rgba(0,0,0,.07); --glass:saturate(1.4) blur(14px);
 }
@@ -18,8 +18,8 @@ html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-webkit-font-smoothing:antialiased;overflow:hidden}
 .bgfx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .bgfx .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;mix-blend-mode:multiply}
-.bgfx .o1{width:46vw;height:46vw;left:-10vw;top:-12vw;background:radial-gradient(circle,#f7d9da,transparent 68%);animation:drift1 22s ease-in-out infinite}
-.bgfx .o2{width:38vw;height:38vw;right:-8vw;bottom:-10vw;background:radial-gradient(circle,#f3e3e4,transparent 66%);animation:drift2 27s ease-in-out infinite}
+.bgfx .o1{width:46vw;height:46vw;left:-10vw;top:-12vw;background:radial-gradient(circle,#F2CECF,transparent 68%);animation:drift1 22s ease-in-out infinite}
+.bgfx .o2{width:38vw;height:38vw;right:-8vw;bottom:-10vw;background:radial-gradient(circle,#F2CECF,transparent 66%);animation:drift2 27s ease-in-out infinite}
 .bgfx .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(10,10,10,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.022) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(circle at 50% 45%,#000 30%,transparent 78%)}
 @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(6vw,4vw)}}
 @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-5vw,-3vw)}}
@@ -52,6 +52,7 @@ body{margin:0;background:var(--bg);color:var(--body);font-family:var(--base);-we
 .eyebrow:before{content:"";width:22px;height:2px;background:var(--maroon);display:inline-block}
 h1{font-size:clamp(2.5rem,6.3vw,3.8rem);line-height:1.03;letter-spacing:-.035em;color:var(--ink);font-weight:800;margin:0}
 h1 em,.lead em,.mega em{color:var(--maroon);font-style:normal}
+.lead em.growth-positive{color:var(--ok)}
 h2{font-size:clamp(1.9rem,4.3vw,2.6rem);line-height:1.08;letter-spacing:-.03em;color:var(--ink);font-weight:800;margin:0 0 8px}
 .lead{font-size:clamp(1.02rem,2vw,1.28rem);line-height:1.5;color:var(--body);max-width:760px;margin:6px 0 0}
 img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
@@ -87,6 +88,15 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 @keyframes warpin{0%{opacity:0;transform:translateY(14px) scale(.9);filter:blur(6px)}100%{opacity:1;transform:none;filter:none}}
 .netnote{margin-top:18px;font-size:13px;color:var(--muted)}
 .netnote b{color:var(--maroon)}
+/* country average views */
+.avggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.avgcard{border:1px solid var(--line);border-top:4px solid var(--maroon);border-radius:16px;padding:22px;background:rgba(255,255,255,.82);box-shadow:var(--shadow)}
+.avgcard .country{font-size:13px;font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.06em}
+.avgcard .avgn{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--maroon);margin-top:18px;font-variant-numeric:tabular-nums}
+.avgcard .avgl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:9px}
+.avgcard .posts{border-top:1px solid var(--line);margin-top:18px;padding-top:11px;font-size:12px;color:var(--muted)}
+.avgmeta{margin-top:18px;font-size:12px;color:var(--muted);line-height:1.5}
+.avgmeta b{color:var(--maroon)}
 /* momentum */
 .cbfull{border:1px solid var(--line);border-radius:16px;padding:16px 22px 8px;box-shadow:var(--shadow);background:rgba(255,255,255,.72);backdrop-filter:var(--glass);margin-top:16px}
 .cbfull .ct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
@@ -123,13 +133,13 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 .vrow .vn{font-weight:700;font-size:14px;color:var(--ink)}
 .vrow .vt{height:20px;background:var(--line2);border-radius:6px;overflow:hidden}
 .vrow .vt i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--maroon),var(--maroon-2));border-radius:6px;transition:width .85s var(--pop)}
-.vrow .vv{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--ink);min-width:112px;text-align:right}
+.vrow .vv{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--ink);min-width:156px;text-align:right}
 .vrow .vv small{color:var(--muted);font-weight:400;margin-left:8px}
 /* content */
 .cg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
 .tc{border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:.22s var(--ease);text-decoration:none;display:block}
 .tc:hover{transform:translateY(-4px);border-color:var(--maroon)}
-.tc .th{aspect-ratio:9/12;position:relative;display:flex;align-items:flex-end;padding:12px;background:linear-gradient(150deg,#2a2226,#4a3c42 60%,#5a4a50);overflow:hidden}
+.tc .th{aspect-ratio:9/12;position:relative;display:flex;align-items:flex-end;padding:12px;background:linear-gradient(150deg,#000,#333 60%,#666);overflow:hidden}
 .tc .th:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.14),transparent 60%)}
 .tc .play{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);border:1.5px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center}
 .tc .play:before{content:"";border-left:12px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:3px}
@@ -146,7 +156,7 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 .brc span{display:block;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em}
 /* client logos */
 .logos{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px}
-.lgo{border:1px solid var(--line);border-radius:12px;padding:18px 12px;min-height:66px;flex:0 0 calc(25% - 9px);display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:14px;color:#6f6f6f;letter-spacing:.01em;box-shadow:var(--shadow);background:rgba(255,255,255,.72);filter:grayscale(1);transition:.2s var(--ease)}
+.lgo{border:1px solid var(--line);border-radius:12px;padding:18px 12px;min-height:66px;flex:0 0 calc(25% - 9px);display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:14px;color:#666;letter-spacing:.01em;box-shadow:var(--shadow);background:rgba(255,255,255,.72);filter:grayscale(1);transition:.2s var(--ease)}
 .lgo img{max-height:30px;max-width:78%;width:auto;object-fit:contain}
 .lgo:hover{border-color:var(--maroon);color:var(--maroon);filter:none;transform:translateY(-3px)}
 /* testimonials */
@@ -167,7 +177,7 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 .fw li{list-style:none;font-size:14px;color:var(--ink);padding:6px 0 6px 24px;position:relative;line-height:1.35}
 .fw.yes li:before{content:"✓";position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--maroon);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .fw.no li{color:var(--muted)}
-.fw.no li:before{content:"";position:absolute;left:3px;top:12px;width:10px;height:2px;background:#c9c4c6}
+.fw.no li:before{content:"";position:absolute;left:3px;top:12px;width:10px;height:2px;background:#CCC}
 /* comparison */
 .cmp{width:100%;border-collapse:collapse;margin-top:16px;font-size:12.5px}
 .cmp th{text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 6px;border-bottom:1px solid var(--line)}
@@ -176,10 +186,10 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 .cmp td{padding:9px 6px;border-bottom:1px solid var(--line2);text-align:center;color:var(--body)}
 .cmp td:first-child{text-align:left;font-weight:600;color:var(--ink)}
 .cmp td.us{background:var(--maroon-tint);font-weight:800;color:var(--maroon)}
-.cmp .full{color:var(--ok);font-weight:800}.cmp .part{color:var(--maroon-2);font-weight:800}.cmp .none{color:#c9c4c6;font-weight:700}
+.cmp .full{color:var(--ok);font-weight:800}.cmp .part{color:var(--maroon-2);font-weight:800}.cmp .none{color:#CCC;font-weight:700}
 .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted);align-items:center}
 .legend span{display:inline-flex;align-items:center;gap:6px}
-.legend .full{color:var(--ok)}.legend .part{color:var(--maroon-2)}.legend .none{color:#c9c4c6}
+.legend .full{color:var(--ok)}.legend .part{color:var(--maroon-2)}.legend .none{color:#CCC}
 /* value stack */
 .stack{margin-top:18px;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
 .srow{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:13px 20px;border-bottom:1px solid var(--line2)}
@@ -215,7 +225,7 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .slide.close{background:var(--ink)}
 .slide.close h1{color:#fff}
-.slide.close .lead,.slide.close .cite{color:#c9c4c6}
+.slide.close .lead,.slide.close .cite{color:#CCC}
 .slide.close .eyebrow{color:#fff;opacity:.7}.slide.close .eyebrow:before{background:#fff}
 .slide.close .inner{text-align:center}
 .ctybar{position:fixed;top:20px;left:26px;z-index:12;display:inline-flex;gap:6px}
@@ -228,7 +238,7 @@ img.logo{height:38px;width:auto;display:block;margin-bottom:30px}
 /* deliberately the odd one out: the bar above filters the deck, this one acts on it */
 .pdfbar button{position:relative;overflow:hidden;appearance:none;display:inline-flex;align-items:center;gap:8px;
   border:1.5px solid var(--maroon);
-  background:linear-gradient(135deg,#d02a30 0%,var(--maroon) 45%,#9d161a 100%);
+  background:linear-gradient(135deg,#C93B3F 0%,var(--maroon) 55%,#C02025 100%);
   color:#fff;font-family:var(--base);font-size:12px;font-weight:800;letter-spacing:.05em;
   padding:9px 17px;border-radius:22px;cursor:pointer;
   box-shadow:0 6px 18px -6px rgba(192,32,37,.65),inset 0 1px 0 rgba(255,255,255,.28);
@@ -279,7 +289,7 @@ body.presenting .presentbar{top:12px;right:12px}
 @media print{
   @page{size:A4 landscape;margin:0}
   html,body{background:#fff!important;width:auto!important;height:auto!important;overflow:visible!important}
-  .bgfx,.ctybar,.langbar,.pdfbar,.nav,.brandmark,#bar{display:none!important}
+  .bgfx,.ctybar,.langbar,.pdfbar,.presentbar,.nav,.brandmark,#bar{display:none!important}
   .deck{position:static!important;inset:auto!important;overflow:visible!important;height:auto!important;z-index:auto!important}
   .slide{position:relative!important;inset:auto!important;opacity:1!important;visibility:visible!important;
     transform:none!important;filter:none!important;transition:none!important;
@@ -327,7 +337,7 @@ body.presenting .presentbar{top:12px;right:12px}
 .slide.vision h2 em{color:var(--maroon-2);font-style:normal}
 .slide.vision .vlead{margin-top:18px;font-size:clamp(1.02rem,2vw,1.26rem);line-height:1.55;color:rgba(255,255,255,.78);max-width:720px}
 .slide.vision .vbillion{color:#fff;font-weight:700}
-@media(max-width:720px){.bigs,.cards3,.pk,.plan,.tri,.tst,.forwho,.brands,.pcards{grid-template-columns:1fr}.vgrid{grid-template-columns:repeat(2,1fr)}.cg{grid-template-columns:1fr 1fr}.lgo{flex:0 0 calc(50% - 6px)}.cmp{font-size:10.5px}.brandmark{display:none}.pkc.pop2{transform:none}}
+@media(max-width:720px){.bigs,.cards3,.pk,.plan,.tri,.tst,.forwho,.brands,.pcards,.avggrid{grid-template-columns:1fr}.vgrid{grid-template-columns:repeat(2,1fr)}.cg{grid-template-columns:1fr 1fr}.lgo{flex:0 0 calc(50% - 6px)}.cmp{font-size:10.5px}.brandmark{display:none}.pkc.pop2{transform:none}}
 </style>
 </head>
 <body>
@@ -336,7 +346,7 @@ body.presenting .presentbar{top:12px;right:12px}
 <div class="ctybar seg" id="cty"></div>
 <div class="langbar seg" id="lang"></div>
 <div class="pdfbar">
-  <button id="pdfbtn" title="Export every slide as a PDF in the language and market currently selected">
+  <button id="pdfbtn" disabled title="Export every slide as a PDF in the language and market currently selected">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
     <span id="pdfbtn-label">PDF</span>
   </button>
@@ -357,23 +367,50 @@ var LANG='EN';
 var L=function(en,zh,id,ms){return LANG==='MS'?(ms||id):(LANG==='ID'?id:(LANG==='ZH'?zh:en));};
 var CLIENTS=[['Tesla','clientlogos/tesla.svg'],['Netflix','clientlogos/netflix.svg'],['Sony','clientlogos/sony.svg'],['Red Bull','clientlogos/redbull.svg'],['Toyota','clientlogos/toyota.svg'],['Volkswagen','clientlogos/volkswagen.svg'],['Ferrari','clientlogos/ferrari.svg'],['BYD','clientlogos/byd.svg'],['Geely','clientlogos/geely.svg'],['Eurokars','clientlogos/eurokars.svg'],['Don Don Donki','clientlogos/donki.png'],['Swissôtel','clientlogos/swissotel.svg'],['ERA','clientlogos/era.svg'],['PropNex','clientlogos/propnex.png'],['mm2',null],['Scuderia FSG',null],['Eco Majestic',null]];
 var BRANDS=[['brand-koocester.png','Flagship'],['brand-koocester-homes.png','Homes'],['brand-koocester-business.png','Business'],['brand-koocester-autos.png','Autos'],['brand-koocester-wealth.png','Wealth'],['brand-koocester-foodie.png','Foodie']];
-var DATA={
- SG:{name:'Singapore',follTot:1275826,reach:96958382,eng:3.8,engc:4.3e6,follGrow:11,
-   trend:{foll:[1151389,1175581,1200014,1230857,1253085,1275826],reach:[15230506,24870201,15162651,22330521,14576881],lab:['Jan','Feb','Mar','Apr','May','Jul'],rlab:['Jan','Feb','Mar','Apr','May']},
-   plat:[['Instagram',408451,36093728,4.24,60257],['TikTok',668471,38003105,3.44,67262],['Facebook',198904,22861549,1.3,42652]],
-   verts:[['Koocester Flagship',44448252,3.1],['Homes',26937464,2.6],['Business',9908652,2.1],['Autos',8625187,2.7],['Foodie',5214060,3.4],['Wealth',1824767,1.3]],
-   top:[['Hanif Zaki and the S$300k Volvo ES90.','TikTok',1870901,7.6,'https://www.tiktok.com/@koocester/video/7603319452834303243'],['A 3-Room and 2-Room inside one 5-Room HDB.','TikTok',1647084,6.5,'https://www.tiktok.com/@koocesterhomes/video/7607772346237193484'],['Rock music, fashion and a founder story.','TikTok',1311396,9.3,'https://www.tiktok.com/@koocester/video/7632960974819036423'],['Inside a tattoo artist designer HDB home.','TikTok',1330635,6.2,'https://www.tiktok.com/@koocesterhomes/video/7607772346237193484']]},
- MY:{name:'Malaysia',follTot:249376,reach:59266218,eng:4.6,engc:3.2e6,follGrow:302,
-   trend:{foll:[62013,176952,126395,195506,222952,249376],reach:[10234067,8086064,17099090,22851444,3704378],lab:['Jan','Feb','Mar','Apr','May','Jul'],rlab:['Jan','Feb','Mar','Apr','May']},
-   plat:[['TikTok',110286,27928109,4.16,78011],['Instagram',73224,17691976,4.97,57256],['Facebook',65866,13646133,1.3,46102]],
-   verts:[['Homes',33384853,2.9],['Autos',12780623,3.8],['Business',7993971,3.1],['Wealth',3150534,2.0],['Foodie',1956237,4.0]],
-   top:[['“Rumah Pengamal Ilmu Hitam” tapi cantik giler.','TikTok',4578136,7.6,'https://www.tiktok.com/@koocesterhomes.my/video/7617830387829722388'],['More than a home. A space for connection.','TikTok',2787676,6.5,'https://www.tiktok.com/@koocesterhomes.my/video/7624495093201767696'],['More than a home. A space for connection.','Instagram',2564690,12.1,'https://www.instagram.com/reel/DWqwUo5IDPz/'],['Wait, this house has a rooftop MINI GOLF? ⛳','TikTok',1791416,6.4,'https://www.tiktok.com/@koocesterhomes.my/video/7624509536170298642']]},
- ID:{name:'Indonesia',follTot:154918,reach:98230776,eng:4.8,engc:9.1e6,follGrow:547,
-   trend:{foll:[23928,38649,70232,98287,113254,154918],reach:[5279879,18004346,20208956,18141896,31464983],lab:['Jan','Feb','Mar','Apr','May','Jul'],rlab:['Jan','Feb','Mar','Apr','May']},
-   plat:[['Instagram',87670,57007260,5.82,164761],['TikTok',47770,36670509,3.85,121025],['Facebook',19478,4553007,1.3,21681]],
-   verts:[['Autos',47295155,4.3],['Business',26052145,4.4],['Homes',20310318,4.1],['Wealth',3926385,2.7],['Foodie',646773,2.8]],
-   top:[['Gang ini bantu cegah krisis planet? Emang iya?','Instagram',15793480,13.6,'https://www.instagram.com/reel/DYhCcPXCXR4/'],['Liat si Om sama Mobilnya, berasa Monaco vibes 🇲🇨','Instagram',5249480,14.6,'https://www.instagram.com/reel/DXQxIg8EqS3/'],['Gang ini bantu cegah krisis planet? (cross-post)','TikTok',5730029,8.7,'https://www.tiktok.com/@koocesterbusiness.id/video/7641541704918568199'],['Saking langkanya, sampe bisa kehitung jari.','Instagram',3226567,9.6,'https://www.instagram.com/reel/DUpsbhqlcMk/']]}
-};
+var DATA={SG:{name:'Singapore'},MY:{name:'Malaysia'},ID:{name:'Indonesia'}};
+var LIVE_URL='https://koocester.app.n8n.cloud/webhook/media-kit-data';
+var DATA_READY=false;
+function E(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+function U(v){try{var u=new URL(String(v));return u.protocol==='https:'?u.href:'#';}catch(e){return '#';}}
+function countryCode(name){return {Singapore:'SG',Malaysia:'MY',Indonesia:'ID'}[name];}
+function cleanPage(name){return name==='Koocester'?'Koocester Flagship':String(name||'').replace(/^Koocester\s+/,'');}
+function showDataState(message){
+ document.getElementById('deck').innerHTML='<section class="slide active"><div class="inner"><div class="eyebrow">Media Kit · Live data</div><h2>'+E(message)+'</h2><div class="lead">Source: content_perf.reels · Koocester data warehouse</div></div></section>';
+ document.getElementById('count').textContent='—';
+}
+function applyLive(payload){
+ if(!payload||!Array.isArray(payload.heads))throw new Error('Invalid media-kit payload');
+ payload.heads.forEach(function(h){
+  var code=countryCode(h.c),d=DATA[code];if(!d)return;
+  d.follTot=Number(h.follTot);d.reach=Number(h.reach);d.eng=Number(h.eng);d.engc=Number(h.engc);d.follGrow=Number(h.follGrow);
+  d.avgViews=Number(h.avgViews);d.platformPosts=Number(h.platformPosts);d.windowStart=E(h.windowStart);d.latestPost=E(h.latestPost);
+ });
+ ['SG','MY','ID'].forEach(function(code){
+  var d=DATA[code],name=d.name;
+  d.plat=(payload.plat||[]).filter(function(x){return x.c===name;}).map(function(x){return [E(x.platform),Number(x.foll),Number(x.reach),Number(x.eng),Number(x.avg)];});
+  d.verts=(payload.verts||[]).filter(function(x){return x.c===name;}).map(function(x){return [E(cleanPage(x.page)),Number(x.reach),Number(x.eng),Number(x.avgViews),Number(x.platformPosts)];}).sort(function(a,b){return b[3]-a[3];});
+  d.top=(payload.top||[]).filter(function(x){return x.c===name;}).slice(0,4).map(function(x){return [E(x.t),E(x.pl),Number(x.v),Number(x.er),U(x.u)];});
+  var fm=(payload.fmon||[]).filter(function(x){return x.c===name;}).sort(function(a,b){return String(a.sort).localeCompare(String(b.sort));});
+  var rm=(payload.rmon||[]).filter(function(x){return x.c===name;}).sort(function(a,b){return String(a.sort).localeCompare(String(b.sort));}).slice(-6);
+  d.trend={foll:fm.map(function(x){return Number(x.v);}),lab:fm.map(function(x){return E(x.m);}),reach:rm.map(function(x){return Number(x.v);}),rlab:rm.map(function(x){return E(x.m);})};
+  if(!d.avgViews||!d.platformPosts||!d.trend.foll.length||!d.trend.reach.length)throw new Error('Incomplete live data for '+name);
+ });
+ DATA_READY=true;
+ document.getElementById('pdfbtn').disabled=false;
+}
+async function loadLiveData(){
+ showDataState('Loading verified figures…');
+ var lastError;
+ for(var attempt=0;attempt<2;attempt++){
+  try{
+   var response=await fetch(LIVE_URL,{cache:'no-store',headers:{Accept:'application/json'}});
+   if(!response.ok)throw new Error('Data service returned '+response.status);
+   applyLive(await response.json());render();return;
+  }catch(error){lastError=error;if(attempt===0)await new Promise(function(resolve){setTimeout(resolve,700);});}
+ }
+ showDataState('Live figures are temporarily unavailable. Please refresh.');
+ console.error(lastError);
+}
 var CTRY='SG',IDX=0;
 function line(vals,labs){
  var W=680,H=200,pL=8,pR=52,pT=16,pB=24,N=vals.length;
@@ -386,7 +423,7 @@ function line(vals,labs){
  s+='<g class="pushline"><path d="'+d+'L'+X(N-1).toFixed(1)+' '+Y(mn).toFixed(1)+' L'+pL+' '+Y(mn).toFixed(1)+' Z" fill="url(#g)"/><path class="ln2" d="'+d+'" fill="none" stroke="#C02025" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray:1400"/>';
  pts.forEach(function(p){s+='<circle class="pt" data-v="'+K(p[2])+'" data-l="'+p[3]+'" data-px="'+p[0].toFixed(1)+'" data-py="'+p[1].toFixed(1)+'" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="11" fill="transparent"/><circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.5" fill="#C02025"/>';});
  s+='<circle class="gdot" cx="'+end[0].toFixed(1)+'" cy="'+end[1].toFixed(1)+'" r="5" fill="#C02025"/></g>';
- for(var q=0;q<N;q++){s+='<text x="'+X(q).toFixed(1)+'" y="'+(H-6)+'" font-size="10" fill="#767676" font-family="var(--mono)" text-anchor="middle">'+labs[q]+'</text>';}
+ for(var q=0;q<N;q++){s+='<text x="'+X(q).toFixed(1)+'" y="'+(H-6)+'" font-size="10" fill="#666" font-family="var(--mono)" text-anchor="middle">'+labs[q]+'</text>';}
  return '<div class="chartwrap">'+s+'</svg><div class="tip"></div></div>';
 }
 /* FREEZE is raised before any print. Both counter loops below check it every
@@ -395,8 +432,8 @@ var FREEZE=false;
 function fmtCount(v){return v>=1e6?(v/1e6).toFixed(v>=1e7?0:1)+'M':v>=1e3?Math.round(v/1e3)+'K':Math.round(v);}
 function cnt(el){var target=Number(el.getAttribute('data-c'));if(FREEZE){el.textContent=fmtCount(target);return;}var t0=Date.now(),dur=900;(function st(){if(FREEZE){el.textContent=fmtCount(target);return;}var p=Math.min(1,(Date.now()-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=(target>=1e6?(target*e/1e6).toFixed(target>=1e7?0:1)+'M':target>=1e3?Math.round(target*e/1e3)+'K':Math.round(target*e));if(p<1)requestAnimationFrame(st);})();}
 function slides(d){
- var vv=d.verts.filter(function(v){return v[1]>0;});
- var maxV=Math.max.apply(null,vv.map(function(v){return v[1];})),maxR=Math.max.apply(null,d.trend.reach);
+ var vv=d.verts.filter(function(v){return v[3]>0;});
+ var maxV=Math.max.apply(null,vv.map(function(v){return v[3];})),maxR=Math.max.apply(null,d.trend.reach);
  return [
  {c:'title',h:'<div class="inner"><img class="logo" src="koocester-logo.png" alt="Koocester"><div class="eyebrow">Media Kit · '+d.name+' · 2026</div><h1><span class="lnwrap"><span class="ln">'+L('Your brand,','您的品牌，','Brand Anda,','Jenama anda,')+'</span></span><span class="lnwrap"><span class="ln">'+L('in front of <em>millions.</em>','触达<em>百万人。</em>','di depan <em>jutaan mata.</em>','di hadapan <em>jutaan mata.</em>')+'</span></span></h1><div class="lead">'+L('Southeast Asia\'s growth media ecosystem. Empowering Growth. Built on Trust.','东南亚增长媒体生态系统。Empowering Growth. Built on Trust.','Ekosistem media pertumbuhan Asia Tenggara. Empowering Growth. Built on Trust.','Ekosistem media pertumbuhan Asia Tenggara. Empowering Growth. Built on Trust.')+'</div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The opportunity','机遇','Peluangnya','Peluangnya')+'</div><h2>'+L('The right eyes, not another ad','对的观众，而非又一则广告','Mata yang tepat, bukan sekadar iklan','Mata yang tepat, bukan sekadar iklan')+'</h2><div class="tri"><div class="ti"><b>'+L('Chosen','被选择','Dipilih','Dipilih')+'</b><span>'+L('Millions choose to watch. Nobody skips a story they want to see.','百万人主动观看，没人会跳过想看的故事。','Jutaan orang memilih menonton. Tak ada yang melewati cerita yang mereka mau.','Jutaan memilih untuk menonton. Tiada siapa melangkau cerita yang mereka mahu.')+'</span></div><div class="ti"><b>'+L('Trusted','被信任','Dipercaya','Dipercayai')+'</b><span>'+L('You appear inside a media brand your audience already believes.','您出现在观众早已信任的媒体品牌中。','Brand Anda tampil di media yang sudah dipercaya audiens.','Jenama anda muncul dalam media yang sudah dipercayai audiens anda.')+'</span></div><div class="ti"><b>'+L('Growth','增长','Pertumbuhan','Pertumbuhan')+'</b><span>'+L('Attention that turns into leads, not spend that disappears.','化为潜在客户的注意力，而非消失的花费。','Perhatian yang jadi leads, bukan biaya yang hilang.','Perhatian yang menjadi prospek, bukan belanja yang lenyap.')+'</span></div></div></div>'},
@@ -404,10 +441,11 @@ function slides(d){
  {c:'vision',h:'<div class="inner"><div class="eyebrow">'+L('Vision','愿景','Visi','Visi')+'</div><div class="vyear">2035</div><h2>'+L('The world\'s most trusted and influential <em>growth ecosystem.</em>','全球最受信任、最具影响力的<em>增长生态系统。</em>','<em>Ekosistem pertumbuhan</em> paling terpercaya dan berpengaruh di dunia.','<em>Ekosistem pertumbuhan</em> paling dipercayai dan berpengaruh di dunia.')+'</h2><div class="vlead">'+L('To be the world\'s most trusted and influential growth ecosystem, inspiring over <span class="vbillion">1 billion people a year</span> through influential media, impactful education and data intelligence.','成为全球最受信任、最具影响力的增长生态系统，每年通过影响力媒体、有价值的教育与数据智能启发<span class="vbillion">超过10亿人</span>。','Menjadi ekosistem pertumbuhan paling terpercaya dan berpengaruh di dunia, menginspirasi <span class="vbillion">lebih dari 1 miliar orang setahun</span> lewat media berpengaruh, edukasi bermakna dan intelijen data.','Menjadi ekosistem pertumbuhan paling dipercayai dan berpengaruh di dunia, memberi inspirasi kepada <span class="vbillion">lebih 1 bilion orang setahun</span> melalui media berpengaruh, pendidikan bermakna dan perisikan data.')+'</div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Values','价值观','Nilai','Nilai')+'</div><h2>'+L('Five values. They spell <em>GUIDE.</em>','五大价值观，即 <em>GUIDE。</em>','Lima nilai. Namanya <em>GUIDE.</em>','Lima nilai. Ejaannya <em>GUIDE.</em>')+'</h2><div class="vgrid"><div class="vcell2"><div class="letter">G</div><h3>Growth and Curiosity</h3><p>'+L('We keep learning, and we keep raising the bar.','我们持续学习，不断提升标准。','Kami terus belajar dan terus meninggikan standar.','Kami terus belajar dan sentiasa meningkatkan standard.')+'</p></div><div class="vcell2"><div class="letter">U</div><h3>Uniting through trust and relationships</h3><p>'+L('Trust is the asset. Relationships compound it.','信任是资产，关系让它复利增长。','Kepercayaan adalah aset. Relasi melipatgandakannya.','Kepercayaan ialah aset. Hubungan menggandakannya.')+'</p></div><div class="vcell2"><div class="letter">I</div><h3>Impact through inspiration</h3><p>'+L('We move people to act by showing what is possible.','我们以展现可能，激励人们行动。','Kami menggerakkan orang bertindak dengan menunjukkan yang mungkin.','Kami menggerakkan orang bertindak dengan menunjukkan apa yang mungkin.')+'</p></div><div class="vcell2"><div class="letter">D</div><h3>Dare to be bold and innovate</h3><p>'+L('We back new ideas and ship them fast.','我们支持新想法，并快速落地。','Kami mendukung ide baru dan mewujudkannya dengan cepat.','Kami menyokong idea baharu dan melaksanakannya dengan pantas.')+'</p></div><div class="vcell2"><div class="letter">E</div><h3>Empathy and Giving</h3><p>'+L('We lead with generosity, for our people and our partners.','我们以慷慨待人，无论团队或伙伴。','Kami memimpin dengan kemurahan hati, bagi tim dan mitra kami.','Kami memimpin dengan kemurahan hati, untuk pasukan dan rakan kami.')+'</p></div></div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The reach, in one line','一句话看触达','Jangkauan, satu baris','Jangkauan, satu baris')+' · '+d.name+'</div><h2>'+L('One market.','一个市场。','Satu pasar.','Satu pasaran.')+' <em>'+K(d.reach)+'</em> '+L('in reach.','触达。','jangkauan.','jangkauan.')+'</h2><div class="bigs"><div class="bstat"><div class="n" data-c="'+d.follTot+'">'+fmtCount(d.follTot)+'</div><div class="l">'+L('Total followers','总粉丝','Total pengikut','Jumlah pengikut')+'</div></div><div class="bstat"><div class="n" data-c="'+d.reach+'" style="color:var(--maroon)">'+fmtCount(d.reach)+'</div><div class="l">'+L('Reach, 6 months','触达，6个月','Jangkauan, 6 bln','Jangkauan, 6 bulan')+'</div></div><div class="bstat"><div class="n pct" data-c="'+d.eng+'">'+Number(d.eng).toFixed(1)+'%</div><div class="l">'+L('Avg engagement','平均互动率','Rata-rata engagement','Purata penglibatan')+'</div></div><div class="bstat"><div class="n" data-c="'+d.engc+'">'+fmtCount(d.engc)+'</div><div class="l">'+L('Engagements','互动量','Interaksi','Penglibatan')+'</div></div></div><div class="netnote">'+L(d.name+'\'s own audience, part of a <b>1.68M Southeast Asia network</b>.',''+d.name+' 的自有受众，属于 <b>168万人的东南亚网络</b>。','Audiens '+d.name+', bagian dari <b>jaringan 1,68 juta se-Asia Tenggara</b>.','Audiens '+d.name+' sendiri, sebahagian daripada <b>rangkaian 1.68 juta Asia Tenggara</b>.')+'</div></div>'},
- {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Momentum','增长势头','Momentum','Momentum')+' · '+d.name+'</div><h2>'+L('Growing, every month','每月增长','Bertumbuh, setiap bulan','Berkembang, setiap bulan')+'</h2><div class="lead">'+L('Followers up <em>+'+d.follGrow+'%</em> since January. Compounding attention, not rented.','粉丝自1月增长 <em>+'+d.follGrow+'%</em>，是复利式的关注，而非租来的流量。','Pengikut naik <em>+'+d.follGrow+'%</em> sejak Januari. Perhatian berlipat, bukan sewaan.','Pengikut naik <em>+'+d.follGrow+'%</em> sejak Januari. Perhatian berganda, bukan sewaan.')+'</div><div class="cbfull"><div class="ct"><span>'+L('Follower growth','粉丝增长','Pertumbuhan pengikut','Pertumbuhan pengikut')+'</span><span class="gr"><span class="up"></span>+'+d.follGrow+'%</span></div>'+line(d.trend.foll,d.trend.lab)+'</div><div class="rlow"><span class="rt">'+L('Monthly reach','每月触达','Jangkauan bulanan','Jangkauan bulanan')+'</span><div class="rbars">'+d.trend.reach.map(function(r,i){return '<div class="rb"><b>'+K(r)+'</b><i data-h="'+Math.max(6,Math.round(r/maxR*100))+'"></i><small>'+d.trend.rlab[i]+'</small></div>';}).join('')+'</div></div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Average views per post, by country','各国单帖平均观看量','Rata-rata tayangan per posting, per negara','Purata tontonan setiap hantaran, mengikut negara')+'</div><h2>'+L('One live benchmark across all three markets','三个市场，一个实时基准','Satu tolok ukur langsung untuk tiga pasar','Satu penanda aras langsung untuk ketiga-tiga pasaran')+'</h2><div class="avggrid">'+['SG','MY','ID'].map(function(code){var x=DATA[code];return '<div class="avgcard"><div class="country">'+x.name+'</div><div class="avgn" data-c="'+x.avgViews+'">'+C(x.avgViews)+'</div><div class="avgl">'+L('average views per platform post','每个平台帖子的平均观看量','rata-rata tayangan per posting platform','purata tontonan setiap hantaran platform')+'</div><div class="posts">'+C(x.platformPosts)+' '+L('platform posts measured','个平台帖子','posting platform diukur','hantaran platform diukur')+'</div></div>';}).join('')+'</div><div class="avgmeta"><b>'+L('Rolling six months','滚动六个月','Enam bulan bergulir','Enam bulan bergerak')+'</b> · '+L('one platform post equals one row','每个平台帖子计为一行','satu posting platform sama dengan satu baris','satu hantaran platform bersamaan satu baris')+' · '+L('live through','数据更新至','data hingga','data hingga')+' '+d.latestPost+'.<br>'+L('A story cross-posted to three platforms counts as three platform posts. Source: content_perf.reels.views.','同一内容跨发到三大平台时，计为三个平台帖子。来源：content_perf.reels.views。','Satu cerita yang diposting silang ke tiga platform dihitung sebagai tiga posting platform. Sumber: content_perf.reels.views.','Satu cerita yang disiar silang ke tiga platform dikira sebagai tiga hantaran platform. Sumber: content_perf.reels.views.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Momentum','增长势头','Momentum','Momentum')+' · '+d.name+'</div><h2>'+L('Growing, every month','每月增长','Bertumbuh, setiap bulan','Berkembang, setiap bulan')+'</h2><div class="lead">'+L('Followers up <em class="growth-positive">+'+d.follGrow+'%</em> since January. Compounding attention, not rented.','粉丝自1月增长 <em class="growth-positive">+'+d.follGrow+'%</em>，是复利式的关注，而非租来的流量。','Pengikut naik <em class="growth-positive">+'+d.follGrow+'%</em> sejak Januari. Perhatian berlipat, bukan sewaan.','Pengikut naik <em class="growth-positive">+'+d.follGrow+'%</em> sejak Januari. Perhatian berganda, bukan sewaan.')+'</div><div class="cbfull"><div class="ct"><span>'+L('Follower growth','粉丝增长','Pertumbuhan pengikut','Pertumbuhan pengikut')+'</span><span class="gr"><span class="up"></span>+'+d.follGrow+'%</span></div>'+line(d.trend.foll,d.trend.lab)+'</div><div class="rlow"><span class="rt">'+L('Monthly reach','每月触达','Jangkauan bulanan','Jangkauan bulanan')+'</span><div class="rbars">'+d.trend.reach.map(function(r,i){return '<div class="rb"><b>'+K(r)+'</b><i data-h="'+Math.max(6,Math.round(r/maxR*100))+'"></i><small>'+d.trend.rlab[i]+'</small></div>';}).join('')+'</div></div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('The numbers','数据','Angka','Angka')+' · '+d.name+'</div><h2>'+L('Platform performance','平台表现','Performa platform','Prestasi platform')+'</h2><div class="cards3">'+d.plat.map(function(p){return '<div class="pcard"><div class="ph">'+p[0]+'</div><div class="foll">'+C(p[1])+' '+L('followers','粉丝','pengikut','pengikut')+'</div><div class="kv"><span class="k">'+L('Reach, 6 months','触达，6个月','Jangkauan','Jangkauan')+'</span><span class="v">'+K(p[2])+'</span></div><div class="kv"><span class="k">'+L('Engagement','互动率','Engagement','Penglibatan')+'</span><span class="v">'+p[3]+'%</span></div><div class="kv"><span class="k">'+L('Avg reach / post','单帖平均触达','Jangkauan / post','Jangkauan / pos')+'</span><span class="v">'+K(p[4])+'</span></div></div>';}).join('')+'</div><div class="note">'+L('Engagement '+d.eng+'% versus the 1 to 3% category norm. Organic, not paid.','互动率 '+d.eng+'%，行业平均为 1 至 3%。纯自然流量，非付费。','Engagement '+d.eng+'% versus norma 1 sampai 3%. Organik, bukan berbayar.','Penglibatan '+d.eng+'% berbanding norma 1 hingga 3%. Organik, bukan berbayar.')+'</div></div>'},
- {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Our verticals','我们的垂类','Vertikal kami','Vertikal kami')+' · '+d.name+'</div><h2>'+L('Reach by vertical','各垂类触达','Jangkauan per vertikal','Jangkauan mengikut vertikal')+'</h2><div class="lead">'+L('Each vertical is its own audience. We place your brand in the right one.','每个垂类都是独立的受众。我们把您的品牌放到最合适的位置。','Setiap vertikal punya audiensnya. Kami tempatkan brand Anda di tempat yang tepat.','Setiap vertikal ada audiensnya. Kami letakkan jenama anda di tempat yang betul.')+'</div><div class="vb">'+vv.map(function(v){return '<div class="vrow"><span class="vn">'+v[0]+'</span><div class="vt"><i data-w="'+Math.max(4,Math.round(v[1]/maxV*100))+'" style="width:'+Math.max(4,Math.round(v[1]/maxV*100))+'%"></i></div><span class="vv">'+K(v[1])+'<small>'+v[2]+'% eng</small></span></div>';}).join('')+'</div></div>'},
- {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Proof','实证','Bukti','Bukti')+' · '+d.name+'</div><h2>'+L('Content that travels','会传播的内容','Konten yang menyebar','Kandungan yang tersebar')+'</h2><div class="cg">'+d.top.map(function(t){return '<a class="tc" href="'+t[4]+'" target="_blank" rel="noopener"><div class="th"><span class="play"></span><span class="vov">'+K(t[2])+'</span><span class="pf">'+t[1]+'</span></div><div class="b"><div class="er">'+t[3]+'% ER</div><span class="t">'+t[0]+'</span></div></a>';}).join('')+'</div><div class="cite">'+L('Top posts by views, last 6 months. Tap to watch. Source: Metricool.','按观看量排名的热门帖子，近6个月。点击观看。来源：Metricool。','Post teratas 6 bulan terakhir. Ketuk untuk menonton. Sumber: Metricool.','Pos teratas mengikut tontonan, 6 bulan lepas. Ketik untuk menonton. Sumber: Metricool.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Average views per post, by page','各页面单帖平均观看量','Rata-rata tayangan per posting, per halaman','Purata tontonan setiap hantaran, mengikut halaman')+' · '+d.name+'</div><h2>'+L('Every page, measured on the same basis','每个页面，采用同一衡量标准','Setiap halaman, diukur dengan dasar yang sama','Setiap halaman, diukur atas asas yang sama')+'</h2><div class="lead">'+L('Rolling six-month average. One cross-post equals one platform post.','滚动六个月平均值。每次跨平台发布均计为一个平台帖子。','Rata-rata enam bulan bergulir. Satu cross-post sama dengan satu posting platform.','Purata enam bulan bergerak. Satu silang siar bersamaan satu hantaran platform.')+'</div><div class="vb">'+vv.map(function(v){return '<div class="vrow"><span class="vn">'+v[0]+'</span><div class="vt"><i data-w="'+Math.max(4,Math.round(v[3]/maxV*100))+'" style="width:'+Math.max(4,Math.round(v[3]/maxV*100))+'%"></i></div><span class="vv">'+C(v[3])+'<small>'+C(v[4])+' '+L('posts','帖子','posting','hantaran')+'</small></span></div>';}).join('')+'</div><div class="cite">'+L('Source: content_perf.reels.views · rolling six months · one row per platform post.','来源：content_perf.reels.views · 滚动六个月 · 每个平台帖子一行。','Sumber: content_perf.reels.views · enam bulan bergulir · satu baris per posting platform.','Sumber: content_perf.reels.views · enam bulan bergerak · satu baris setiap hantaran platform.')+'</div></div>'},
+ {c:'',h:'<div class="inner"><div class="eyebrow">'+L('High-engagement proof','高互动实证','Bukti engagement tinggi','Bukti penglibatan tinggi')+' · '+d.name+'</div><h2>'+L('Content that earns attention','赢得关注的内容','Konten yang meraih perhatian','Kandungan yang meraih perhatian')+'</h2><div class="cg">'+d.top.map(function(t){return '<a class="tc" href="'+t[4]+'" target="_blank" rel="noopener"><div class="th"><span class="play"></span><span class="vov">'+K(t[2])+'</span><span class="pf">'+t[1]+'</span></div><div class="b"><div class="er">'+t[3]+'% ER</div><span class="t">'+t[0]+'</span></div></a>';}).join('')+'</div><div class="cite">'+L('10%+ ER posts ranked by views, rolling six months. Minimum 10,000 views and 1,000 reach. Tap to watch. Source: content_perf.reels.','互动率10%以上的帖子，按观看量排名，滚动六个月。至少10,000次观看和1,000次触达。点击观看。来源：content_perf.reels。','Posting dengan ER 10%+ diurutkan berdasarkan tayangan, enam bulan bergulir. Minimal 10.000 tayangan dan 1.000 jangkauan. Ketuk untuk menonton. Sumber: content_perf.reels.','Hantaran dengan ER 10%+ disusun mengikut tontonan, enam bulan bergerak. Minimum 10,000 tontonan dan 1,000 capaian. Ketik untuk menonton. Sumber: content_perf.reels.')+'</div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Our brands','我们的品牌','Brand kami','Jenama kami')+'</div><h2>'+L('Five verticals, one ecosystem','五大垂类，一个生态','Lima vertikal, satu ekosistem','Lima vertikal, satu ekosistem')+'</h2><div class="brands">'+BRANDS.map(function(b){return '<div class="brc"><img src="'+b[0]+'" alt="'+b[1]+'"><span>Koocester '+b[1]+'</span></div>';}).join('')+'</div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('Trusted by','合作品牌','Dipercaya oleh','Dipercayai oleh')+'</div><h2>'+L('Brands featured across our ecosystem','曾在我们生态中亮相的品牌','Brand yang tampil di ekosistem kami','Jenama yang dipaparkan dalam ekosistem kami')+'</h2><div class="logos">'+CLIENTS.map(function(b){return '<div class="lgo">'+(b[1]?'<img src="'+b[1]+'" alt="'+b[0]+'">':b[0])+'</div>';}).join('')+'</div></div>'},
  {c:'',h:'<div class="inner"><div class="eyebrow">'+L('In their words','客户之声','Kata mereka','Kata mereka')+'</div><h2>'+L('What partners say','合作伙伴的评价','Kata para mitra','Kata rakan kongsi')+'</h2><div class="tst"><div class="tstc ph"><div class="q">'+L('Add a real client quote here.','在此加入真实客户评价。','Tambahkan kutipan klien asli.','Tambah petikan pelanggan sebenar di sini.')+'</div><div class="who"><b>'+L('Client name','客户姓名','Nama klien','Nama pelanggan')+'</b>, '+L('title, company','职位，公司','jabatan, perusahaan','jawatan, syarikat')+'</div></div><div class="tstc ph"><div class="q">'+L('Add a second client quote here.','在此加入第二条客户评价。','Tambahkan kutipan kedua.','Tambah petikan kedua di sini.')+'</div><div class="who"><b>'+L('Client name','客户姓名','Nama klien','Nama pelanggan')+'</b>, '+L('title, company','职位，公司','jabatan, perusahaan','jawatan, syarikat')+'</div></div></div><div class="cite">'+L('Full case studies live in the Koocester client portal.','完整案例研究在 Koocester 客户门户中。','Studi kasus lengkap ada di portal klien Koocester.','Kajian kes penuh ada di portal pelanggan Koocester.')+'</div></div>'},
@@ -441,7 +479,7 @@ function render(){
    bindTip(a);
  },90);}
 }
-function go(n){var S=slides(DATA[CTRY]);IDX=Math.max(0,Math.min(S.length-1,IDX+n));render();}
+function go(n){if(!DATA_READY)return;var S=slides(DATA[CTRY]);IDX=Math.max(0,Math.min(S.length-1,IDX+n));render();}
 document.getElementById('cty').innerHTML=['SG','MY','ID'].map(function(c){return '<button data-c="'+c+'">'+c+'</button>';}).join('');
 document.getElementById('lang').innerHTML=[['EN','EN'],['ZH','中文'],['ID','ID'],['MS','BM']].map(function(x){return '<button data-lg="'+x[0]+'">'+x[1]+'</button>';}).join('');
 
@@ -509,14 +547,14 @@ document.getElementById('lang').innerHTML=[['EN','EN'],['ZH','中文'],['ID','ID
     document.addEventListener('webkitfullscreenchange',function(){ plabel.textContent=isFs()?'Exit':'Present'; });
   }
 })();
-document.querySelectorAll('#cty button').forEach(function(b){b.onclick=function(){CTRY=this.getAttribute('data-c');IDX=0;render();};});
-document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){LANG=this.getAttribute('data-lg');render();};});
+document.querySelectorAll('#cty button').forEach(function(b){b.onclick=function(){CTRY=this.getAttribute('data-c');IDX=0;if(DATA_READY)render();};});
+document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){LANG=this.getAttribute('data-lg');if(DATA_READY)render();};});
 document.getElementById('next').onclick=function(){go(1);};
 document.getElementById('prev').onclick=function(){go(-1);};
 document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')go(1);if(e.key==='ArrowLeft')go(-1);});
 var qc=(location.search.match(/[?&]c=(SG|MY|ID)/i)||[])[1];if(qc)CTRY=qc.toUpperCase();
 var ql=(location.search.match(/[?&]lang=(EN|ZH|ID|MS)/i)||[])[1];if(ql)LANG=ql.toUpperCase();
-render();
+loadLiveData();
 </script>
 </body>
 </html>

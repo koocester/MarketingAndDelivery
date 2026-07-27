@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="koo-nav.js?v=2026072106"></script>
+<script src="koo-nav.js?v=2026072304"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>People · Koocester</title>
@@ -69,7 +69,7 @@ h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.03;letter-spacing:-.035em;co
 <section class="hero">
   <div class="eyebrow">Company · Directory</div>
   <h1>People</h1>
-  <p class="lead">Who is who, and who to ask. Grouped by department across Singapore, Malaysia and Indonesia. Live from the staff roster, so it is right as long as HR is right.</p>
+  <p class="lead">Who is who, and who to ask. Grouped by role across Singapore, Malaysia and Indonesia. Live from the staff roster, so it is right as long as HR is right.</p>
   <div class="tools">
     <input class="search" id="q" type="search" placeholder="Search a name, role or department…" autocomplete="off">
     <span class="count" id="count"></span>
@@ -103,7 +103,7 @@ h1{font-size:clamp(2.1rem,5vw,3.2rem);line-height:1.03;letter-spacing:-.035em;co
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = 'https://lfppmsppvqtjyusfrlkf.supabase.co';
-const SUPABASE_ANON_KEY = '<SUPABASE_ANON_KEY>';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmcHBtc3BwdnF0anl1c2ZybGtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5MzMzMDAsImV4cCI6MjA5OTUwOTMwMH0.juL94msBxiqlwIhdhraOhxF69MmrohuW4TkY_2J5oGs';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -118,7 +118,7 @@ function render(filter){
   if(!rows.length){ $('list').innerHTML=''; $('state').style.display='block'; $('state').innerHTML='No one matches <b>'+esc(filter)+'</b>.'; return; }
   $('state').style.display='none';
   const byDept={};
-  rows.forEach(p=>{ const d=p.department||'Unassigned'; (byDept[d]=byDept[d]||[]).push(p); });
+  rows.forEach(p=>{ const d=p.role||'Role not set'; (byDept[d]=byDept[d]||[]).push(p); });
   $('list').innerHTML=Object.keys(byDept).sort().map(d=>{
     const list=byDept[d].sort((a,b)=>String(a.full_name||'').localeCompare(String(b.full_name||'')));
     return '<div class="dept"><h2>'+esc(d)+'<span class="n">'+list.length+'</span></h2>'+
