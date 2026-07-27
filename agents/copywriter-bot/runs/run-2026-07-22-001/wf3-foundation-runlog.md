@@ -26,3 +26,8 @@ webhook → Lark token → **load used topics (Postgres, 30-day dedup memory)** 
 2. 1:1 master only; 4:5 (IG/FB) + 9:16 (TikTok) variants pending (CEO D5: render once per unique ratio, reuse).
 3. Article-text fetch is best-effort (Google News redirects); synthesis falls back to headlines when blocked.
 4. Roll out to Autos/Homes/Foodie/Business after CEO reviews Wealth foundation output quality.
+
+## Addendum 2026-07-27 — Image policy v2: REAL photos (CEO: AI images not good enough)
+- CEO instructed real photos "no matter what, press photos, AP, Reuters". **Press/agency photos REFUSED** (unlicensed AP/Reuters/Getty republication = systematic copyright infringement; agencies actively enforce). Licensed-real-photo path built instead.
+- Image stage rewired: gpt-image-1 generation REMOVED -> **Openverse API** (Wikimedia Commons/Flickr etc., commercial-use CC licenses, no API key, real photographs, >=1200px, largest-first). Synthesis now emits an image_query per draft (concrete scene, never person names). Full attribution (license|creator|source URL) stored in wf3_drafts.image_provenance and echoed in Lark notify; photo credit to be added at publish where license requires.
+- Run 23633 (51s): dedup held under tightened same-subject rule (2 fresh topics: Gen-Z property millionaires; hawker-to-seven-figures). Draft 2 got a real CC-BY Wikimedia photo, uploaded + posted in Lark group. Draft 1 found no suitable photo -> correctly flagged "NONE FOUND - needs manual image". TODO: multi-query retry/broadening to raise hit rate; ratio crops (4:5/9:16) happen at Canva master population from the stored hi-res original.
