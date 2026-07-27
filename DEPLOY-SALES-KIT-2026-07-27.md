@@ -1,4 +1,22 @@
-# Sales kit update — ready to publish (2026-07-27)
+# Sales kit update — ✅ DEPLOYED 2026-07-27 ~17:10 SGT
+
+**Update: this went live.** tech@koocester.com received Super Admin on the
+Cloudflare account and the deploy ran from Faiz's machine (deployment
+`37386727`, 114 files + Functions bundle). Verified live: hub shows one kit
+per tab, MY shows the fixed rate card, SG/ID untouched, auth gate returns 302
+without a session. Note: the deploy reset active portal sessions — staff just
+sign in again with their email code.
+
+**⚠️ Still required from Hakim:** copy `portal/src/sales-kits.html` and
+`portal/src/sales-kit-slides.html` from branch `sales-kit-my-rates` into the
+vault's `04. Resources/Training/` — otherwise the next vault deploy reverts
+these prices. Also note the vault's `functions/` may have drifted: this deploy
+shipped the repo's 21-July functions, so if the vault changed edge functions
+after 21 July, re-deploy from the vault after syncing the two sales-kit files.
+
+---
+
+# Original pre-deploy note (kept for context)
 
 Prepared by Faiz (with Claude) on branch **`sales-kit-my-rates`**. Everything is
 edited, verified and safety-gated. The ONLY missing step is the Cloudflare
