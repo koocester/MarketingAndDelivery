@@ -132,3 +132,12 @@ Note: entry committed via a cx worktree because the main checkout was on branch 
 **Next build (internal-only, no client sends, so no pilot list / templates / Hakim gate needed):**
 1. CX-W4 Health Monitor — daily read of cx_state.project_snapshot + Lark → compute green/amber/red per client → post amber/red cards to the CX group, tagging the CX owner. Build inactive.
 2. Feedback follow-up notifier — watch the feedback that Project Feedback Intake (I6Axw8WicVHpexXK) writes to Lark/HubSpot → on new feedback (esp. low score) post a follow-up card to the CX group tagging the owner. Fills the current gap where feedback is collected but nobody is told to follow up.
+
+## 2026-07-28 — CX-W4 Health Monitor built (inactive, validated)
+
+- Table added: migration `cx_state_client_health` (client_id pk, health, reasons, signals, last_alerted_health, last_alerted_at, updated_at).
+- Workflow: `CX-W4 — Client Health Monitor (daily → CX Lark group)` (n8n id 3NjEh9DuI2z6Fscn, inactive, validated 0 errors). Nodes: Daily 9am SGT + manual webhook `cx-w4-health-probe` → Get Lark Token → Fetch CX Owners (reads Clients tblWpq8b0uo1vBtX Customer Success user field → client_id→{name,open_id}) → Load Projects (cx_state.project_snapshot) → Load Prior Health → Compute Health → Save Health (upsert) → Post Alerts (Lark cards to CX group oc_49baeaf94d775eb5041a0fe8e11c903a).
+- Health model (available signals during soak): per client, active projects (status not Completed/Delivered/Cancelled): overdue = days_to_due<0; behind = pace contains 'behind'; due_soon = 0..7 days & progress<1. RED if overdue OR (behind & due_soon); AMBER if behind OR due_soon; else GREEN.
+- Anti-spam design: (a) first run SEEDS silently — baselines every client's health, posts nothing (prevents flooding the group with existing amber/red); (b) after seed, a client only alerts when its health WORSENS beyond the level already alerted (last_alerted_health); recovery lowers the baseline silently so a future dip re-alerts. Green never posts.
+- Alerts @-mention the client's Customer Success owner (open_id from Lark), red = "reach out today", amber = "quick check-in before it slips". Cards say "flags only, a human attends".
+- Next: Faiz publishes → seed run via manual probe → verify cx_state.client_health distribution (expect mostly GREEN since only ~40 projects carry Pace and ~55 carry due dates) → then build feedback follow-up notifier.
