@@ -98,3 +98,23 @@ Faiz is building the client onboarding process outside this run:
 3. **Vendor flag** is a welcome extra scoping guard: CX comms exclude Vendor-flagged records by design once the flag exists.
 4. **Client Brief + intake answers** become the natural context pack for CX-W0's welcome and "what success looks like" framing — better than reconstructing from Projects data.
 5. **Suggestion passed to Faiz**: add a "best WhatsApp number for updates" field to the intake form → auto-fills cx_state.clients.wa_phone for every onboarded client, removing manual pilot mapping over time.
+
+## 2026-07-27 — State check (Faiz asked: pause Rasayel, find brand guidelines, what's next)
+
+**Rasayel pause: CONFIRMED SAFE.** The only workflow that can send via the Rasayel credential (mpqr9eVtImd0S5ZL) is the D-1 probe (SentryvcX7iW14Yp) — verified active:false. CX-W1 (UXOGKObos0HXbYbb) is active but diff-only with zero send nodes (reads Lark, writes Postgres). Nothing CX will auto-fire on WhatsApp; admin can take over +65 8086 3787 with no risk of the agent messaging clients. (Scope: CX-owned workflows; no other workflow is known to use the Rasayel credential.)
+
+**Brand guidelines: FOUND in repo** — portal/src/brand-guideline-training.html (Koocester Academy deck). Resolves open item V-2 (voice reference). Voice rules for CX templates:
+- Voice: lead with the answer; bullets over paragraphs; numbers over adjectives; warm not soft, confident not loud, show don't boast.
+- HARD TABOO (non-negotiable): negativity is not the voice. Never lead with no/don't/can't/won't/never/"unfortunately"/"that's a problem" in ANY message. Always reframe into the way forward.
+- Abundance not scarcity: speak from possibility, never fear.
+- Word swaps: "investment" not cost/price; "qualified buyers" not leads; "outcomes/results" not impressions/reach.
+- Client-delivery tone: reassuring, specific, no hype. Prose capitalises "Koocester".
+- Action: pre-send tone lint gains a rejection-word blocklist; T1/T2/T3/T4 drafted against these rules.
+
+**Landscape shift (matters for what's next):** other sessions shipped overlapping active workflows since CX-W1. CX must reconcile, not duplicate:
+- Feedback already collected via email/forms: Completed + Paid → Client Feedback Email (c9ecGsADh9UeDXQ0), Project Feedback Intake (I6Axw8WicVHpexXK). CX-W3 WhatsApp feedback would double-touch → ownership decision needed.
+- Onboarding funnel live: 8pubiv9F8Zhm4C1h, RZ1I9kFKcXPk68JW, WH4VhAkFHrF16cuX, Vy47AAS66TVp1tn8/rTE9vutmQ4ddraM7. CX-W0 triggers off these, not reinvents.
+- Lark Project Status → HubSpot Deal Mirror (QIZFCAOongrXqjjH) already mirrors status to HubSpot — CX reads rather than writes status.
+- Decision for Faiz: which touchpoints are WhatsApp (CX) vs email (existing). Recommend CX owns live WhatsApp updates + health; feedback/onboarding stay put unless consciously moved.
+
+Note: entry committed via a cx worktree because the main checkout was on branch copywriter-bot (concurrent workstream) at the time.
