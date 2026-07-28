@@ -54,3 +54,13 @@ Approvals received: E3 yes (Postgres tables), E2 pilot = Wendi Amalia, E4 build 
 - IMPACT ON PILOT: W1's "Notify Strategist (DM)" node uses the same bot and will fail the same way until scope is fixed. Wendi would never receive the "storyboard ready" DM. BLOCKER for the pilot notification path (new E-item).
 - FIX (admin, Faiz): Lark Admin Console → app cli_aa914316d6b8deed → availability scope → include Wendi or all employees. Then W1 DMs work and the reminder can be resent.
 - Reminder to Wendi: Faiz will pass it to her directly this round; no DM sent by the bot.
+
+## 2026-07-27 (later) — WORKFLOW MISMATCH found: transcripts live in Poppy, not the Lark record
+
+- Wendi reported placing "Transcript & Meeting notes" in the Content Planner box of the Koocester Business Poppy board. Verified via Chrome: the board's Content Planner group holds:
+  - Karen (Drapery and Co / The Vinyl House): "Meeting transcript_ ...2026-07-27.docx" + "AI notes_ ...Jul 27 2026.docx"
+  - Dongpeng: "Meeting transcript_ Dongpeng Storyboard Discussion 2026-07-23.pdf" + "AI notes_ ...pdf"
+- Cross-checked Lark Videos table: Dongpeng = VID-1800 (Business MY, Audrey, Planning) — record EXISTS but transcript is NOT attached to it (only in Poppy). Karen/Drapery/Vinyl House = NO Lark Video record at all.
+- KEY FINDING: the strategists' real habit is to drop the transcript + AI notes (PDF/DOCX) into Poppy's Content Planner group on the board — NOT as a TXT on the Lark Video record's "Meeting Transcript (TXT file)" field, which is what W1's current trigger watches. This matches the mission brief's spirit ("Poppy AI already holds the storyboard work") but not W1's plumbing.
+- CONSEQUENCE: the current build will not auto-trigger from what Wendi actually did. Fork to decide with Faiz: (A) keep W1, ask strategists to also drop a TXT on the Lark record; (B) re-point the copilot to read transcripts from Poppy's Content Planner (matches habit, needs browser automation, fuzzy file→VID match); (C) manual proof dry-run now using an existing transcript to demonstrate draft quality regardless of trigger.
+- Format note: transcripts are PDF/DOCX, not TXT — the drafting input handling must parse those, not assume TXT.
