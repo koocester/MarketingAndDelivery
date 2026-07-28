@@ -1,5 +1,10 @@
 # Decision Log — run-2026-07-23-001
 
+## DEC-006 — CX owns feedback follow-up + health monitoring; alerts to a Lark group (2026-07-28)
+
+- Decision maker: Faiz (in chat), gated on brief alignment (confirmed: §6, §7, §16).
+- Decision: agent detects health signals and new feedback, routes to the human CX owner (Option A, per-client owner). Does NOT send its own client feedback ask (email one stays). Alerts delivered to new Lark group "Customer Success (CX)" (chat_id oc_49baeaf94d775eb5041a0fe8e11c903a) via the shared Koocester bot. Internal-only, so independent of pilot list / WhatsApp templates / Hakim message gate.
+
 ## DEC-005 — Defer HubSpot properties and project_number backfill (2026-07-23)
 
 - Decision maker: Faiz (in chat), on engineering advice that items 3–4 do not block pilot sends but remain required for the full mission.

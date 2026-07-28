@@ -118,3 +118,17 @@ Faiz is building the client onboarding process outside this run:
 - Decision for Faiz: which touchpoints are WhatsApp (CX) vs email (existing). Recommend CX owns live WhatsApp updates + health; feedback/onboarding stay put unless consciously moved.
 
 Note: entry committed via a cx worktree because the main checkout was on branch copywriter-bot (concurrent workstream) at the time.
+
+## 2026-07-28 — Internal alert channel decided + created (DEC-006)
+
+**DEC-006 (Faiz):** CX owns feedback follow-up + health monitoring (confirmed in-brief: §6 "Feedback collection", §7 "health signals, churn prevention", §16 "A client showing unhappiness. A human attends."). Agent detects + routes; human attends — never sends its own competing feedback ask (the email one at c9ecGsADh9UeDXQ0 stays). Delivery of alerts = a dedicated Lark group via the shared Koocester bot (the same bot identity Jarvis uses; Jarvis = c2RpBCrqU20PLu7h, reply-only conversational agent, so alerts are bot pushes not Jarvis broadcasts).
+
+**Discovery:** Koocester bot (app cli_aa914316d6b8deed) is a member of 10 Lark groups; none was a CX/Customer Success group → created fresh.
+
+**Created:** Lark group **"Customer Success (CX)"**, chat_id `oc_49baeaf94d775eb5041a0fe8e11c903a`. Owner = Faiz (ou_736421e1336c81d49c44a784a641f621); Koocester bot added as manager (can post). Sample amber alert card posted (message_id om_x100b69b2d3c1a0a4e2e96a74b718295) for format review.
+
+**Alert routing (Option A):** each alert tags the client's Customer Success owner — Lark Clients field `Customer Success` (fldKobTRZ7) / Projects `Customer Success` (fldAarYRS6). Health model green/amber/red per r4 §4 CX-W4.
+
+**Next build (internal-only, no client sends, so no pilot list / templates / Hakim gate needed):**
+1. CX-W4 Health Monitor — daily read of cx_state.project_snapshot + Lark → compute green/amber/red per client → post amber/red cards to the CX group, tagging the CX owner. Build inactive.
+2. Feedback follow-up notifier — watch the feedback that Project Feedback Intake (I6Axw8WicVHpexXK) writes to Lark/HubSpot → on new feedback (esp. low score) post a follow-up card to the CX group tagging the owner. Fills the current gap where feedback is collected but nobody is told to follow up.
