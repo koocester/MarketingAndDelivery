@@ -4,6 +4,18 @@ All notable changes to this repo. Format: Keep a Changelog. Dates are absolute (
 
 ## [Unreleased]
 
+### Fixed — Overdue alert attribution (2026-07-30) · LIVE
+The daily 09:00 overdue digests named the wrong person. Raised by Mike on 28 and 30 July; the counts were never wrong, the names were.
+- **Root cause.** The `Digest – … Overdue → <owner>` automations filter correctly by stage. The bug was only in the Lark message **Title**, built as `⏰ Overdue alert: {Video Editor of "the first record found"}`. Two failures: the wrong role is named (an editor on a QC/Approval/Final Approval digest), and because the token resolves against *the first record found*, one arbitrary name is stamped across a digest covering many people — hiding the rest. `⏰ Overdue alert: Ulysess Marvels` appeared twice on 30 July purely because he was first in the result set.
+- **Responsibility rule confirmed by Mike (owner).** Editors own an overdue ONLY at `Amendments (Marketing)` and `Amendments Needed`. Strategist QC is excluded (his 28 July message naming it was retracted as a typo). All other stages belong to the stage owner. Correct editor count on 30 July was 5, out of 22 total overdues.
+- **5 Base automations changed** — the person token removed from the Title, replaced with a stage label: Video Strategist QC, Video Marketing Approval, Video Final Approval, Video Amendments, Video ManyChat. All Video-side; the carousel digests were never affected (they select only `Carousel Title`, so no person token was available).
+- **7 verified correct, unchanged** — including `Video - Overdue edit alert`, which correctly filters on `Overdue (alert)` (the true editor SLA) and stayed silent on 30 July because zero videos were genuinely late on an editor's clock.
+- **n8n `c2RpBCrqU20PLu7h` (Jarvis)** — `overdue_by_editor` restricted to the two amendment stages; added `overdue_by_stage` / `_strategist` / `_approver` and the rule as an explicit model instruction; fetch gained `Head of Growth Approver`, `Overdue (alert)`, `Amendments Overdue (alert)`.
+- **Metric Registry** — `Content overdue count` downgraded Trusted → **Approximate**; new row `Overdue by person (responsibility attribution)` = **Broken**, owner Mike, not to be used for performance, pay or promotion.
+- **New rule for all digests:** never interpolate a person field into a Base digest Title. Label by stage; put records in the body.
+- Full audit + rollback: `connectors/lark/09-overdue-alert-attribution-fix.md`.
+- **Still open.** `Last Video/Carousel Stage Updated` are record-level ModifiedTime fields that reset on ANY write, including 15-minute n8n jobs — so every duration **understates** lateness. Needs immutable per-stage timestamps. Same root cause already flagged against `SLA State (activate at go-live)`.
+
 ### Added — Portal source + Academy auth deep-dive (2026-07-21)
 - `portal/src/` — the **actual portal source** committed as a sanitized snapshot (103 HTML pages, 10 JS, `deploy.sh`, curriculum map + rollback runbook). Two secret classes replaced with placeholders exactly like the n8n exports: `<SUPABASE_ANON_KEY>` (26 files) and `<REDACTED_N8N_BASIC_AUTH>` (3 Functions). Binary assets (~22M of portraits/brand/logos) intentionally excluded; restored on deploy from the vault. The vault source is untouched.
 - `portal/04-academy-auth.md` — the identity subsystem in full: passwordless email-OTP sign-in, the `koo_session` cookie (shape, why not HttpOnly, 400-day + token-rotation mirroring), `safeNext()` redirect safety, the four-layer gate stack, roles/permissions with the exact column/RPC per field, and the `is_founder()` open verification (with the SQL to close it).

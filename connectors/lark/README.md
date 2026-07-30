@@ -14,6 +14,7 @@
 6. [06-conventions-and-gotchas.md](06-conventions-and-gotchas.md) — coloring/must-fill standards, API limits, trigger pitfalls.
 7. 🔴 [07-button-automation-audit.md](07-button-automation-audit.md) — **guard-by-guard audit of all 28 button automations; 7 are unguarded, one is high-risk.**
 8. 📄 [08-schema-full-reference.md](08-schema-full-reference.md) — **complete field dump: all 19 tables + 243 fields (Videos 113 · Carousels 64 · Projects 46 · Pages 20)** with formulas, option sets, link targets.
+9. 🔴 [09-overdue-alert-attribution-fix.md](09-overdue-alert-attribution-fix.md) — **audit of all 12 overdue automations; 5 named the wrong person via a "first record found" token in the message Title.** Includes the editor-responsibility rule and the still-open SLA clock reset.
 
 ## Auth & access
 - Lark app → `tenant_access_token` from `LARK_APP_ID` + `LARK_APP_SECRET` (server-side only).
