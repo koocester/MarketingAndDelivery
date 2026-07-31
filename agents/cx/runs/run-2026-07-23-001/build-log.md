@@ -141,3 +141,20 @@ Note: entry committed via a cx worktree because the main checkout was on branch 
 - Anti-spam design: (a) first run SEEDS silently — baselines every client's health, posts nothing (prevents flooding the group with existing amber/red); (b) after seed, a client only alerts when its health WORSENS beyond the level already alerted (last_alerted_health); recovery lowers the baseline silently so a future dip re-alerts. Green never posts.
 - Alerts @-mention the client's Customer Success owner (open_id from Lark), red = "reach out today", amber = "quick check-in before it slips". Cards say "flags only, a human attends".
 - Next: Faiz publishes → seed run via manual probe → verify cx_state.client_health distribution (expect mostly GREEN since only ~40 projects carry Pace and ~55 carry due dates) → then build feedback follow-up notifier.
+
+## 2026-07-28 — Auto-send Post-Campaign Report to client via WhatsApp (Faiz request; roadmap for CX-W2)
+
+Faiz wants: when a campaign completes, auto-generate the PCR and push it (PDF + summary) straight to the client on WhatsApp, no manual start.
+
+PCR pipeline today (`Post Campaign Report Generator` fNPWAIlcdv1Uso7k): GET webhook `pcr-generate` (manual/one-shot trigger) → Build HTML → **Cloudflare Browser Rendering** (`api.cloudflare.com/.../browser-rendering/pdf`, cred 7mNsRzTvEjLVY5ib) returns PDF binary → **Lark** medias/upload_all → file_token → attaches to Video record field "Post Campaign Report File" (tbl8wIByJQwhIUei) + sends into a Lark chat. **The PDF lives only in Lark — no public URL.**
+
+To send via Rasayel:
+1. **Auto-trigger (the "preempt"):** CX-W1 milestone (project → Delivered/Completed) POSTs the `pcr-generate` webhook — removes the manual start.
+2. **Public URL (the only real new plumbing):** add a step that stores the rendered PDF to public storage (Cloudflare R2 or Supabase Storage) → public/signed link. Rasayel media/document send needs a public URL; Lark file_token is not reachable by Rasayel.
+3. **Send:** Rasayel `POST /v1/messages` — text summary (key numbers pulled live) + document by URL. Outside the 24h window this needs an approved template with a DOCUMENT header (a new template to submit to Meta).
+
+Hard constraints (restated):
+- **WhatsApp API is 1:1 — cannot post into a WhatsApp GROUP.** Report goes to the client's individual WhatsApp (the CX line), not a group chat. A human would have to forward into a group. Platform limit, not Rasayel.
+- Gated like all client sends: pilot list, Hakim review during pilot (steady-state autonomous per D-5).
+
+Placement: belongs to **CX-W2 (report delivery)**, built after the client-facing send stages exist. Auto-trigger + Rasayel send are straightforward; net-new work = the public-link step + a document-header template.
