@@ -300,6 +300,47 @@ raw leads and qualified leads together, MoM, as a chart.
   feedback email) need real completions to flow before this slide has material. Worth watching
   the response rate for a month before the first dry run leans on it.
 
+## Design language v3 (2026-08-04 — Faiz's review of dry run 1, engraved)
+
+Hard rendering rules from the first dry-run review. These apply to every future build:
+
+- **Navigation lives at the top** (arrows + `n / N` counter, top-centre). The bottom edge
+  belongs to brandmark (left) · PVV footer (centre) · version stamp (right) — nothing overlaps.
+- **Video slide:** the embed must be **verified embeddable at build time** (YouTube error
+  150/153 = pick another video) and **clipped with `start`/`end` params to a 2–4 minute
+  segment** — nobody watches a 15-minute video in a town hall. The caption names the clip
+  length and why it was chosen.
+- **Birthdays:** vertical timeline, **earliest → latest** in the month, each row with the
+  person's **profile photo** (Lark avatar, fetched at build time and inlined as a data URI so
+  the deck stays self-contained), name, role, day+month.
+- **Podium recognition:** top-3 recognition uses the portal-leaderboard podium: **gold /
+  silver / bronze** blocks (1 centre-tallest, 2 left, 3 right), circular photo with
+  metal-coloured ring, crown on #1, points line. Metal palette: gold `#EFC94C→#D4A017`,
+  silver `#C6CBD1→#9AA0A6`, bronze `#DA9A59→#B5722F`.
+- **Rank badges:** in any top-N list, ranks 1–3 get filled metal badges; the rest maroon.
+- **Flags, not country codes:** SG / MY / ID are rendered as inline-SVG mini-flags wherever
+  they label data (lists, cards, growth rows). Emoji flags are banned — Windows renders them
+  as letters. Codes may remain inside prose/titles.
+- **Platform logos, not abbreviations:** Instagram / TikTok / Facebook rows carry their
+  inline-SVG logo marks instead of IG/TT/FB text.
+- **Growth figures as pills:** percentage deltas render as right-aligned rounded pills —
+  green for growth, muted for flat, maroon-tinted for decline — never bare text in a column.
+- **Account cards:** the ALL row is emphasised on a tinted band; platform rows get logos;
+  generous padding; one growth pill per row right-aligned.
+- **Credit chips:** creator credits render as metal-coded chips — **Produced = gold, Edited =
+  silver, Written = bronze** — each with a role-initial disc and the person's name.
+- **Charts fill the space:** comparison charts use the 2-column large grid (`chgrid big`),
+  not four cramped tiles in a sea of white.
+- **Department slide is a card grid:** one card per department — big number, what it counts,
+  who drove it; departments without a registered stat get a muted card, honestly labelled.
+
+**Pending from the same review (logged, not yet possible):**
+1. **Video thumbnails on the top-content cards** — real IG thumbnails need the Meta Graph API
+   path (app "Koocester Reporting" 910717378117369 exists; needs IG tokens wired). Until then
+   cards stay text-only; never hotlink instagram CDN URLs (they expire and break the deck).
+2. **Client feedback source** — Faiz is checking where feedback should actually be pulled
+   from; the Projects-form rule in this spec stands until he says otherwise.
+
 ## Change log
 
 | Date | Who asked | Change |
