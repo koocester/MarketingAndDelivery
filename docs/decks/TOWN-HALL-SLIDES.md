@@ -222,15 +222,72 @@ Every item below is a **hard rule** once the dry run passes (see README, Framewo
   without blame, with the concrete change being made. The deck must contain exactly one; zero
   is a spec violation (something always went wrong), more than one dilutes it.
 
-### Open questions (answer before the dry run)
+### Canonical Purpose · Values · Vision (supplied by Faiz, 2026-08-04, from the founder's Lark doc)
 
-1. **Canonical purpose / values / vision text** — where is the approved wording? (Candidate:
-   the brand guideline training page in the portal; needs Hakim's sign-off as the canonical text.)
-2. **"Qualified lead" definition** — which HubSpot lifecycle stage / property counts as
-   qualified? Must become a Metric Registry row before it appears on a slide.
-3. **Client story source** — Project Feedback Intake responses, CX health monitor, or a manual
-   pick by CX each month? Needs an owner.
-4. Faiz's phrasing "for every slide … it must have the values, company purpose, and vision" is
+This is the approved wording for the opening slide. Do not paraphrase it. The source doc calls
+itself "a living document, not a poster" — if the Lark doc changes, this section is updated to
+match and the change is logged.
+
+**Values — GUIDE:**
+- **G**rowth & Curiosity
+- **U**niting through trust and relationships
+- **I**mpact through inspiration
+- **D**are to be bold and innovate
+- **E**mpathy and Giving
+
+**Purpose:** *Symbol of Inspiration. Empowering Growth. Powered by People.*
+"We exist to be the growth partner businesses trust to deliver outcomes that matter — not vanity
+metrics, not impressions for impressions' sake. We turn credible brands into category-defining
+ones. We turn ideas into audiences. We turn marketing spend into measurable impact. And none of
+that happens without people. Our culture is the product. It always has been."
+
+**Vision 2035:** "To be the world's most trusted and influential growth ecosystem, inspiring
+over 1 billion people annually and shaping industries through influential media, impactful
+education, and data intelligence." Always aiming for media dominance — market leader in every
+country. Headquartered in Singapore.
+
+**Founder's three quotes** (usable on the slide or as the video slide's framing):
+1. "To get something you never had, you have to do something you never did."
+2. "The harder you work, the luckier you get."
+3. "Win the hearts of people, win everything."
+
+**Slide layout:** one slide, three blocks (Purpose / Values as the GUIDE list / Vision 2035),
+maroon GUIDE initials, `.cite` line naming the founder's doc as source. The inspirational-video
+slide follows it, choosing a video that speaks to one of these three blocks.
+
+### Qualified lead — PROPOSED definition (2026-08-04, needs Faiz's confirm + a Metric Registry row)
+
+> **Qualified lead (month) = a contact that entered HubSpot lifecycle stage
+> `salesqualifiedlead` (or skipped past it to `opportunity`/`customer`) during the reporting
+> month**, measured by `property_hs_v_2_date_entered_salesqualifiedlead` in SGT, with the
+> standard `tech+%@koocester.com` exclusion.
+
+Why this one: it is stage-based (sales actually judged the lead), timestamped by HubSpot itself
+(so it counts leads qualified this month even if they arrived earlier), and already synced to
+the warehouse. Checked against real data: **July = 9 qualified vs June = 40** (leads overall:
+2,864 vs 3,982). The alternative property `hs_latest_qualified_lead_date` gives July = 13; it
+re-counts re-qualified contacts, so the entered-stage measure is cleaner.
+Once Faiz confirms: add it to the Metric Registry (`tblSfp4fLYS02iRp`) with this exact rule
+before it appears on any slide — until then it must not be shown.
+
+### Client story of the month — source (resolved 2026-08-04, per Faiz: the project feedback forms)
+
+- **Source:** the Project Feedback pipeline — clients rate 1–5 with a comment via the tokenised
+  form (`I6Axw8WicVHpexXK`), which writes `Feedback Rating`, `Feedback Comment`,
+  `Feedback Received At`, `Feedback Request Status='Received'` onto the project row in
+  Projects (Delivery) `tblAJKbb2UZRh8rn`, linked to the Client.
+- **Rule:** pick the month's highest-rated received feedback with a usable comment; the slide
+  shows the client, the project, the rating and the comment verbatim. **If no real feedback was
+  received that month, the slide says so** — a story is never invented and test submissions are
+  never used.
+- **State at spec time:** mechanics verified end-to-end, but only ONE response exists and it is
+  a regression test. The feedback-request emails (`c9ecGsADh9UeDXQ0`, Completed + Paid →
+  feedback email) need real completions to flow before this slide has material. Worth watching
+  the response rate for a month before the first dry run leans on it.
+
+### Remaining open point
+
+1. Faiz's phrasing "for every slide … it must have the values, company purpose, and vision" is
    interpreted as **a dedicated opening slide**, not a footer repeated on all slides. Confirm.
 
 ## Change log
@@ -247,3 +304,4 @@ Every item below is a **hard rule** once the dry run passes (see README, Framewo
 | 2026-08-04 | Hakim | "Department meetings" → **Tuesday huddle**, cascading from the leadership meeting and aligning teams. |
 | 2026-08-04 | Hakim | More recognition: elevate the top 3 of the top 10, and give each market its own top 3. |
 | 2026-08-04 | Faiz | v2 requirements: purpose/values/vision slide, embedded inspirational video, birthdays of the month (HR base verified, 35/35 coverage), department wins for every department, leads + qualified leads, one client story, one thing-that-went-wrong + improvement, MoM charts. Pending dry run. |
+| 2026-08-04 | Faiz | Canonical Purpose/Values/Vision text supplied (GUIDE values, purpose statement, Vision 2035, founder's three quotes) — engraved verbatim. Client story source settled: the project feedback forms. Qualified-lead definition proposed (entered `salesqualifiedlead` in month; Jul 9 vs Jun 40) — awaiting confirm + registry row. |
