@@ -51,6 +51,30 @@ These hold regardless of which deck is being built:
 - **Governed numbers.** Figures come from the warehouse and the Metric Registry, not from
   anyone's memory. See each spec for the enforcement path.
 
+## Framework v2 — hard rules (2026-08-04, Faiz) · **PENDING DRY RUN**
+
+Faiz's requirement: both decks run on **one solid framework**, and every rule below is a
+**hard rule** — the generator must satisfy all of them before a deck is considered built.
+Status: specified on this branch, **not yet merged to main**. A dry-run build against these
+rules must pass and be reviewed before this section becomes binding (see Dry-run gate).
+
+1. **Continuous improvement is always visible.** Every reported number carries its comparison:
+   **week-on-week (WoW)** on the weekly deck, **month-on-month (MoM)** on the Town Hall and on
+   the month-end weekly edition. A number without its comparison is a spec violation.
+2. **Soft numbers are charts, not prose.** Trends and comparisons (views, engagement, followers,
+   leads, output) render as proper visualisations — bar chart or equivalent — inline SVG, no
+   external chart libraries (the self-contained-HTML invariant still applies). Single headline
+   figures may stay as stat tiles; anything with a time axis or a comparison gets a chart.
+3. **Month-end consolidation.** The weekly deck built on the **last Saturday of the month** is
+   the monthly edition: same running order, but every section consolidates the month and
+   compares MoM instead of WoW. The Town Hall then draws from that consolidated month.
+4. **The spec is machine-followable.** Each deck spec keeps a `## Generation rules` section
+   written as explicit, checkable statements — the fixed set of rules the generator reads
+   before building. Prose explains; the rules section governs.
+5. **Dry-run gate.** Before this framework (or any future format change) merges to main:
+   build a **dry run** of the deck to a scratch report row (never the live row), review it
+   against the rules, and only then merge the spec and switch the live build over.
+
 ## Where the parts live
 
 - Generators and servers: n8n Cloud (workflow IDs in each spec).

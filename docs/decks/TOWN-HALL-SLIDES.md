@@ -187,6 +187,52 @@ a stale copy after someone edits.
 8. Send the view + edit links to the Manager Updates Lark group with a QC ask before the meeting.
 9. Log any missing credits so the base gets fixed before next month.
 
+## v2 requirements (2026-08-04, Faiz) · **PENDING DRY RUN — not yet built**
+
+Target running order for the next Town Hall (first Tuesday of September 2026). Extends §3;
+the three-part shape (recognition → recap → moving forward) survives, with a new opening block.
+Every item below is a **hard rule** once the dry run passes (see README, Framework v2).
+
+### New opening block (before Part one)
+
+| Slide | Rule |
+|---|---|
+| **Purpose · Values · Vision** | The company's purpose, values and vision, stated on their own slide at the top of every Town Hall. ⚠ Needs the canonical wording — see Open questions. |
+| **Inspirational video** | An embedded, playable video (click play, plays in the deck) chosen fresh each month for its relevance to the purpose, values and vision. The house skeleton already has the `.slide.video` / `.vframe iframe` pattern (used in the July 2026 deck) — reuse it. Selection is part of the monthly build checklist; the chooser records one line on why this video, this month. |
+| **Birthdays of the month** | Everyone with a birthday in the meeting month, by name. **Source verified 2026-08-04:** HR base `KQp7bmn5WaztcZsILUalm4bjgOf` / Employees `tbletkzlOHyUIzOX`, field `Birthdate` (`fldPWmKEfO`; there is also a `Next Birthday` formula). Coverage: 35/35 active staff have it filled. **Hard rule: fetch ONLY `Preferred Name`/`Full Name`, `Birthdate`, `Status`, `Department` from that table — never salary, IC, bank, address or any other column. Show day + month only, never the year/age.** The July deck's `.joiners` birthday-chip component exists for exactly this. |
+
+### Part two additions (recap)
+
+- **Department wins — every department**, with accurate statistics from the Lark M&D base
+  (videos shipped, carousels written, projects delivered, posts published…). Every department
+  appears; a department with a quiet month still gets its line — the slide never silently
+  drops one.
+- **Leads and qualified leads** are reported explicitly, with MoM comparison, as a chart.
+  ⚠ "Qualified" needs a registry definition — see Open questions.
+- **MoM everywhere:** every recap number carries its prior-month comparison, charted per
+  Framework v2 rule 2.
+
+### Part three additions (moving forward)
+
+- **Company updates and rollouts** — the existing slides (devices, AI, trainings…) formalised
+  as a standing "updates & rollouts" section.
+- **One client story of the month** — a single customer/client story told properly.
+  ⚠ Source to decide — see Open questions.
+- **One thing that went wrong + the improvement** — chosen from the month's statistics, told
+  without blame, with the concrete change being made. The deck must contain exactly one; zero
+  is a spec violation (something always went wrong), more than one dilutes it.
+
+### Open questions (answer before the dry run)
+
+1. **Canonical purpose / values / vision text** — where is the approved wording? (Candidate:
+   the brand guideline training page in the portal; needs Hakim's sign-off as the canonical text.)
+2. **"Qualified lead" definition** — which HubSpot lifecycle stage / property counts as
+   qualified? Must become a Metric Registry row before it appears on a slide.
+3. **Client story source** — Project Feedback Intake responses, CX health monitor, or a manual
+   pick by CX each month? Needs an owner.
+4. Faiz's phrasing "for every slide … it must have the values, company purpose, and vision" is
+   interpreted as **a dedicated opening slide**, not a footer repeated on all slides. Confirm.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -200,3 +246,4 @@ a stale copy after someone edits.
 | 2026-08-04 | Hakim | Producer/editor names on every top-content card. |
 | 2026-08-04 | Hakim | "Department meetings" → **Tuesday huddle**, cascading from the leadership meeting and aligning teams. |
 | 2026-08-04 | Hakim | More recognition: elevate the top 3 of the top 10, and give each market its own top 3. |
+| 2026-08-04 | Faiz | v2 requirements: purpose/values/vision slide, embedded inspirational video, birthdays of the month (HR base verified, 35/35 coverage), department wins for every department, leads + qualified leads, one client story, one thing-that-went-wrong + improvement, MoM charts. Pending dry run. |
