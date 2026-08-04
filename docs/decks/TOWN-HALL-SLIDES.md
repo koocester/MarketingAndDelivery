@@ -318,6 +318,11 @@ Hard rendering rules from the first dry-run review. These apply to every future 
   metal-coloured ring, crown on #1, points line. Metal palette: gold `#EFC94C→#D4A017`,
   silver `#C6CBD1→#9AA0A6`, bronze `#DA9A59→#B5722F`.
 - **Rank badges:** in any top-N list, ranks 1–3 get filled metal badges; the rest maroon.
+- **Top-10 pedestal (Faiz, 2026-08-04):** the biggest-hits slide puts **ranks 1–3 on a
+  pedestal** — three cards standing on gold / silver / bronze blocks, #1 centre and tallest —
+  with title, flag, views, credit chips and watch link on each card, and **ranks 4–10 as the
+  compact list below**. The podium metaphor is the same one the people slide uses; people and
+  work are celebrated in the same visual language.
 - **Flags, not country codes:** SG / MY / ID are rendered as inline-SVG mini-flags wherever
   they label data (lists, cards, growth rows). Emoji flags are banned — Windows renders them
   as letters. Codes may remain inside prose/titles.
