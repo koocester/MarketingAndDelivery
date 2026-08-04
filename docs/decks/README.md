@@ -81,6 +81,51 @@ rules must pass and be reviewed before this section becomes binding (see Dry-run
    three must never collide. Canonical wording and the full-render layout live in
    [TOWN-HALL-SLIDES.md](TOWN-HALL-SLIDES.md).
 
+## The engineering loop (Faiz, 2026-08-04) · **PENDING DRY RUN**
+
+Generation is not one shot — it is an orchestrated loop with a **non-human number vet**:
+
+```
+ORCHESTRATOR (scheduled)
+   │ reads the spec (this folder) — running order, hard rules, registered definitions
+   ▼
+BUILD — iteration 1 of the deck, from governed sources only, to a scratch/staging row
+   ▼
+SLIDE WATCHDOG (cron, not a human)
+   │ extracts every figure from the BUILT deck, recomputes each one from its
+   │ registered source (Metric Registry rule → warehouse SQL), and compares
+   ├─ all match → stamps a "numbers vetted" verdict into the report metadata
+   └─ mismatch → diff report to the Tech/Manager Lark channel; deck is NOT promoted
+   ▼
+PROMOTE — only a vetted build becomes the live report row (the governed save path,
+   which snapshots + stamps as usual)
+   ▼
+HUMANS — managers QC wording and judgement calls via the edit link, as today.
+   The watchdog vets arithmetic; people vet meaning.
+```
+
+This extends a pattern **already running in production**: the *Metric Watchdog —
+pre-weekly verification* (n8n `CI1wLjRA8U8PvIUX`, Sat 07:30 SGT) already does
+schedule → SQL checks → change report → DM Faiz → **Record Verdict** — today against the
+dashboard cache, before the weekly build. The slide watchdog is stage 2 of that same dog:
+same skeleton, pointed at the built deck instead of the cache. A deck without a recorded
+verdict is not presentable.
+
+## The dry run (scope set by Faiz, 2026-08-04)
+
+The dry run does **not** invent new decks. It takes the **existing** decks — the live August
+Town Hall and the latest weekly — and rebuilds them under the v2 framework (footer, charts,
+department nav, WoW/MoM everywhere, new town hall sections), with the same underlying data,
+to **scratch rows production never reads**. Deliverables:
+
+1. The v2 rebuild of each deck, side by side with the existing version.
+2. A pass/fail sheet: every Framework-v2 hard rule, checked against the v2 build.
+3. A first run of the slide-watchdog check against the v2 build — the loop above, exercised
+   end to end on staging.
+
+Improvement is judged against the existing deck, rule by rule. Only after Faiz signs off does
+the spec merge to main and the live builders switch over.
+
 ## Where the parts live
 
 - Generators and servers: n8n Cloud (workflow IDs in each spec).
