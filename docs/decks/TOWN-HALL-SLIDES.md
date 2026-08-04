@@ -193,11 +193,27 @@ Target running order for the next Town Hall (first Tuesday of September 2026). E
 the three-part shape (recognition → recap → moving forward) survives, with a new opening block.
 Every item below is a **hard rule** once the dry run passes (see README, Framework v2).
 
+### Purpose · Values · Vision — a FOOTER, not a slide (decided by Faiz, 2026-08-04)
+
+Faiz's call: "we're not gonna look at this every single time" — so PVV does **not** get an
+opening slide that eats meeting time. Instead it is **engraved into the footer of every slide,
+on both decks** (weekly and Town Hall):
+
+- A persistent, unobtrusive footer strip on every slide, bottom-centre (the brandmark owns
+  bottom-left and the version stamp owns bottom-right — the three must never collide):
+  **"Symbol of Inspiration. Empowering Growth. Powered by People. · G U I D E · Vision 2035"**
+  — mono, muted, small. Present on every slide, ignorable, always there.
+- When PVV is ever rendered **in full** (onboarding material, a leadership ask, the video
+  slide's framing), the engraved layout is the founder-doc look from Faiz's screenshots:
+  the five-column **G · U · I · D · E** grid — big letter on top, value phrase beneath —
+  and the left-bordered highlight block for the purpose line and the Vision 2035 statement.
+  Structure from the doc; colours stay house palette (maroon accent, not the doc's gold).
+- The wording is the canonical text below, verbatim, both in the footer and in full renders.
+
 ### New opening block (before Part one)
 
 | Slide | Rule |
 |---|---|
-| **Purpose · Values · Vision** | The company's purpose, values and vision, stated on their own slide at the top of every Town Hall. ⚠ Needs the canonical wording — see Open questions. |
 | **Inspirational video** | An embedded, playable video (click play, plays in the deck) chosen fresh each month for its relevance to the purpose, values and vision. The house skeleton already has the `.slide.video` / `.vframe iframe` pattern (used in the July 2026 deck) — reuse it. Selection is part of the monthly build checklist; the chooser records one line on why this video, this month. |
 | **Birthdays of the month** | Everyone with a birthday in the meeting month, by name. **Source verified 2026-08-04:** HR base `KQp7bmn5WaztcZsILUalm4bjgOf` / Employees `tbletkzlOHyUIzOX`, field `Birthdate` (`fldPWmKEfO`; there is also a `Next Birthday` formula). Coverage: 35/35 active staff have it filled. **Hard rule: fetch ONLY `Preferred Name`/`Full Name`, `Birthdate`, `Status`, `Department` from that table — never salary, IC, bank, address or any other column. Show day + month only, never the year/age.** The July deck's `.joiners` birthday-chip component exists for exactly this. |
 
@@ -255,20 +271,19 @@ country. Headquartered in Singapore.
 maroon GUIDE initials, `.cite` line naming the founder's doc as source. The inspirational-video
 slide follows it, choosing a video that speaks to one of these three blocks.
 
-### Qualified lead — PROPOSED definition (2026-08-04, needs Faiz's confirm + a Metric Registry row)
+### Qualified lead — CONFIRMED and registered (Faiz, 2026-08-04)
 
 > **Qualified lead (month) = a contact that entered HubSpot lifecycle stage
 > `salesqualifiedlead` (or skipped past it to `opportunity`/`customer`) during the reporting
 > month**, measured by `property_hs_v_2_date_entered_salesqualifiedlead` in SGT, with the
 > standard `tech+%@koocester.com` exclusion.
 
-Why this one: it is stage-based (sales actually judged the lead), timestamped by HubSpot itself
-(so it counts leads qualified this month even if they arrived earlier), and already synced to
-the warehouse. Checked against real data: **July = 9 qualified vs June = 40** (leads overall:
-2,864 vs 3,982). The alternative property `hs_latest_qualified_lead_date` gives July = 13; it
-re-counts re-qualified contacts, so the entered-stage measure is cleaner.
-Once Faiz confirms: add it to the Metric Registry (`tblSfp4fLYS02iRp`) with this exact rule
-before it appears on any slide — until then it must not be shown.
+Registered in the Metric Registry (`tblSfp4fLYS02iRp`, record `recvrjoebW6CUp`) as
+**"Qualified leads (month)" — Trusted**, appearing on Town hall + Weekly Management Report,
+with the exact rule, source, key and known-issue fields filled. The registry row is the
+authority; if the rule ever changes, change it there first, then here. Reference numbers at
+registration: July 2026 = 9 vs June = 40 (raw leads 2,864 vs 3,982). The slide always shows
+raw leads and qualified leads together, MoM, as a chart.
 
 ### Client story of the month — source (resolved 2026-08-04, per Faiz: the project feedback forms)
 
@@ -285,11 +300,6 @@ before it appears on any slide — until then it must not be shown.
   feedback email) need real completions to flow before this slide has material. Worth watching
   the response rate for a month before the first dry run leans on it.
 
-### Remaining open point
-
-1. Faiz's phrasing "for every slide … it must have the values, company purpose, and vision" is
-   interpreted as **a dedicated opening slide**, not a footer repeated on all slides. Confirm.
-
 ## Change log
 
 | Date | Who asked | Change |
@@ -305,3 +315,4 @@ before it appears on any slide — until then it must not be shown.
 | 2026-08-04 | Hakim | More recognition: elevate the top 3 of the top 10, and give each market its own top 3. |
 | 2026-08-04 | Faiz | v2 requirements: purpose/values/vision slide, embedded inspirational video, birthdays of the month (HR base verified, 35/35 coverage), department wins for every department, leads + qualified leads, one client story, one thing-that-went-wrong + improvement, MoM charts. Pending dry run. |
 | 2026-08-04 | Faiz | Canonical Purpose/Values/Vision text supplied (GUIDE values, purpose statement, Vision 2035, founder's three quotes) — engraved verbatim. Client story source settled: the project feedback forms. Qualified-lead definition proposed (entered `salesqualifiedlead` in month; Jul 9 vs Jun 40) — awaiting confirm + registry row. |
+| 2026-08-04 | Faiz | PVV is a **footer on every slide of both decks**, not an opening slide ("we're not gonna look at this every single time"). Full-render layout engraved from the founder-doc screenshots: five-column G·U·I·D·E grid + left-bordered highlight blocks, house palette. Qualified-lead definition **confirmed** and registered in the Metric Registry (`recvrjoebW6CUp`, Trusted). |

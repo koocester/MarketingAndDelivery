@@ -74,6 +74,12 @@ rules must pass and be reviewed before this section becomes binding (see Dry-run
 5. **Dry-run gate.** Before this framework (or any future format change) merges to main:
    build a **dry run** of the deck to a scratch report row (never the live row), review it
    against the rules, and only then merge the spec and switch the live build over.
+6. **Purpose · Values · Vision footer** (Faiz, 2026-08-04). Every slide of **both decks**
+   carries the PVV footer strip, bottom-centre, muted:
+   *"Symbol of Inspiration. Empowering Growth. Powered by People. · G U I D E · Vision 2035"*.
+   It shares the bottom edge with the brandmark (left) and the version stamp (right) — the
+   three must never collide. Canonical wording and the full-render layout live in
+   [TOWN-HALL-SLIDES.md](TOWN-HALL-SLIDES.md).
 
 ## Where the parts live
 
