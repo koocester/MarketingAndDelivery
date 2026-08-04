@@ -334,6 +334,20 @@ Hard rendering rules from the first dry-run review. These apply to every future 
 - **Department slide is a card grid:** one card per department — big number, what it counts,
   who drove it; departments without a registered stat get a muted card, honestly labelled.
 
+**Two build lessons from dry-run iteration 2 (2026-08-04) — now rules:**
+
+- **CSS class names must be unique across the whole deck.** The podium's `.pod` class collided
+  with the top-10 rows' existing `thr t10 pod` marker and flattened that slide into a 174px
+  column. New components get distinct names (`.pdm`), and the build check must fail if a new
+  CSS class name already appears anywhere in the deck's HTML.
+- **YouTube can never autoplay-embed on n8n-served pages.** n8n cloud sends
+  `Content-Security-Policy: sandbox` (without `allow-same-origin`) on all webhook responses,
+  so the page has a null origin, YouTube gets no referrer, and every embed dies with error 153
+  regardless of the video. Rule: the video slide is a **thumbnail facade** (thumbnail inlined
+  as a data URI, house play button) that injects the player on click — it plays inline on the
+  portal viewer (real origin) — with a **permanent fallback link** "open the clip on YouTube
+  (starts at m:ss)" for the n8n-served links. Never ship a bare `<iframe>` embed.
+
 **Pending from the same review (logged, not yet possible):**
 1. **Video thumbnails on the top-content cards** — real IG thumbnails need the Meta Graph API
    path (app "Koocester Reporting" 910717378117369 exists; needs IG tokens wired). Until then
