@@ -167,6 +167,8 @@ Hard rules once the dry run passes (see README, Framework v2):
    views, followers, leads, output per role) render as bar charts or equivalent inline SVG —
    not sentences, not bare tables. Stat tiles stay for single headline figures.
 4. **WoW / MoM on every number.** A figure without its comparison is a spec violation.
+5. **PVV footer on every slide** — the Purpose · Values · Vision footer strip (README,
+   Framework v2 rule 6). Same placement rules as the Town Hall deck.
 
 ### Generation rules (machine-followable — the fixed set the generator reads)
 
