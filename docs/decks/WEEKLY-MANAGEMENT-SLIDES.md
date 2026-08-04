@@ -150,6 +150,35 @@ Engagement averages exclude rows with `engagement_rate >= 100` (bad data guard).
 6. Confirm the manager update went out at 08:50 with the QC ask and the edit link.
 7. Monday: check whether managers edited anything, and who.
 
+## v2 requirements (2026-08-04, Faiz) · **PENDING DRY RUN — not yet built**
+
+Hard rules once the dry run passes (see README, Framework v2):
+
+1. **Department navigation.** Fixed buttons at the **top-left** of the deck — **Sales ·
+   Marketing · Finance · HR · Tech** — each jumping to that department's slides. The deck
+   becomes one consolidated report you can enter by department instead of only paging through.
+   The running order in §4 already groups by department; the nav indexes those groups.
+   (Same self-contained rule: plain anchors/JS in the deck, no external assets.)
+2. **Month-end consolidated edition.** The deck built on the **last Saturday of the month**
+   reports the **month, not the week**: same running order, every section consolidates the
+   month's numbers and compares **MoM**. All other weeks compare **WoW**. The Town Hall then
+   draws its recap from that month-end edition — one number set, two audiences.
+3. **Charts for soft numbers.** Week-over-week / month-over-month series (engagement, posts,
+   views, followers, leads, output per role) render as bar charts or equivalent inline SVG —
+   not sentences, not bare tables. Stat tiles stay for single headline figures.
+4. **WoW / MoM on every number.** A figure without its comparison is a spec violation.
+
+### Generation rules (machine-followable — the fixed set the generator reads)
+
+- `edition = (last Saturday of month) ? "monthly" : "weekly"`
+- `comparison_window = monthly ? prior month : prior week` — applied to **every** metric.
+- Render: series/comparison → inline-SVG chart; single figure → stat tile; list → ranked rows.
+- Department nav: Sales, Marketing, Finance, HR, Tech → anchor links to those slide groups,
+  top-left, present on every slide.
+- All numbers come from `command_cache` + Metric Registry enforce (§3). No fresh ad-hoc queries
+  at build time.
+- Build target for any dry run: a **scratch report row**, never the live `kind='weekly'` row.
+
 ## Change log
 
 | Date | Who asked | Change |
