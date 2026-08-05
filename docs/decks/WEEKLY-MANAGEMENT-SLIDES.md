@@ -220,9 +220,19 @@ Slide-group mapping (from the §4 running order): Sales → 4, 5 (+ per-video at
 bridge item) · Marketing → 7–22 · Finance → 27, 28 · Tech → 23–26 · Client Success (6) is
 surfaced inside the Sales view as the client book until CS gets its own button.
 
-**HR:** the weekly deck has **no HR section** — the HR button opens an honest gap view saying
-exactly that (no invented numbers). Filling it needs an HR fact source wired into the fact pack
-(roster, joiners/leavers, birthdays live in the HR base). Logged as an open gap, owner: Faiz.
+**HR (filled 2026-08-05 per the Town Hall session's dept-stats handoff, Faiz's instruction):**
+the HR button opens the **hiring funnel view** — registry row "HR dept stat — hiring funnel
+(month)" (`recvrpysnZYlxO`, **Approximate**). Source: HR base `KQp7bmn5WaztcZsILUalm4bjgOf`:
+Hiring Pipeline `tblKpRZ34y7DkYcd` (field `Interview Status`; application date = record
+`created_time` via `automatic_fields: true` — no explicit applied-on field) + Employee Data
+`tbletkzlOHyUIzOX` (`Contract Start Date` for joins). **HARD PRIVACY RULE: fetch only
+name / status / dates — the base holds salary, IC and bank columns; never select them.**
+Weekly numbers use the same Sun→Sat window; month window on the month-end edition. Until two
+confirmations land the view carries the **"currently being worked on" (≈ Approximate)** tag:
+(1) Bhavani confirms `created_time` ≈ application date; (2) whether `Contract Start Date` is a
+renewal or first joining (Audrey/Wendi/Esther/Jaydon show 6 Jul starts despite months of prior
+output). When confirmed, flip the registry row to Trusted and drop the tag. The deck still has
+**no HR slide** — the running order is unchanged; the view is the HR section until one exists.
 
 ### Week boundary — Sunday → Saturday, SGT (2026-08-05, Faiz) · HARD RULE
 
