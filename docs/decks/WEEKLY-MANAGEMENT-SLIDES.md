@@ -284,6 +284,35 @@ The two options as they were put to Faiz, for the record:
 - Either way: same 28 slides, same order; every WoW pair becomes MoM; `edition` recorded in
   report metadata; monthly windows are calendar months in SGT.
 
+### v4.2 refinement pass (2026-08-05, Faiz's slide-by-slide review) · HARD RULES
+
+1. **Running order change: Sales → Marketing → Finance → HR → Tech.** Finance (Finance, Who we
+   invoiced) moves BEFORE the Tech block. Same 28 slides. §4's table is superseded by:
+   cover · how-to-read · scoreboard · Sales (4–5) · Client book (6) · Marketing (7–22) ·
+   Finance (23–24) · Tech (25–28). HR still has no slides (open gap).
+2. **No explainer captions.** "What this says", registry caveat paragraphs, and the
+   "Meeting Fact Pack v1 · window · snapshot" stamp are REMOVED from slide bodies and footers —
+   the reader is expected to know the deck. Governance markers shrink to a small ≈ on the figure.
+   Credit lines (Team lead / Who did it chips) stay, minus trailing stamp text. The manager-edit
+   stamp chip (bottom-left) is no longer rendered on the deck; edit history lives in the DB row.
+   PVV footer and page number stay.
+3. **Top-5 slides are podiums with proof.** Ranks 1/2/3 get gold/silver/bronze badges, 4–5 plain;
+   every row carries page, producer (avatar chip where known — matched from `video_contributors`
+   by post URL), a **▶ Watch** link (post_url, query-string stripped), views in mono maroon, eng.
+4. **Content-stock slide**: pipeline stages render as horizontal gradient bars, not a bare table;
+   overdue-by-page renders as **heat bars** — darker red = worse, lighter = milder (urgency hue).
+5. **All-roles slide**: "How many did the work" column is replaced by **Who did it** avatar chips
+   with counts per role; the separate "Leading this week" line is dropped.
+6. **Every headline figure carries its WoW delta** including Engagement-against-the-bar.
+7. **Events**: venue carries the country flag of where the event actually is.
+8. **Attribution**: real per-video lead counts from HubSpot `lead_source_post` (0 is shown as 0);
+   the ZZ-TEST-F9 test fill (1 lead, 4 Aug) is cited as pipeline proof. No invented numbers.
+9. **Finance**: amounts labelled SGD explicitly; invoiced-clients slide shows the client count and
+   numbered rows with monogram chips (real logos need a logo/domain source on Xero contacts — gap).
+10. **Dept overlays mirror their slides verbatim** and lead with a "Go to section" jump; jump
+    indices track the new running order.
+11. **Mobile pass**: chips/tiles/tables get compact paddings under 850px; the meeting timer hides.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -296,3 +325,4 @@ The two options as they were put to Faiz, for the record:
 | 2026-08-05 | Faiz | Weekly deck reskinned to the town-hall base skeleton after review ("apply v4" = full harmonisation, not components-only). Dry run row 79. |
 | 2026-08-05 | Faiz | Month-end edition SETTLED: Option B — first Saturday build of a new month reports the closed calendar month, MoM. First firing 5 Sep 2026. |
 | 2026-08-05 | Faiz | Sun→Sat week-boundary release APPLIED to `t9ZZ7sk9hyWEKNdR` (facts SQL + display window) and `o4M9V8PYxRT4skvA` (Sunday keys), with the one-time `week_start − 1` backfill. |
+| 2026-08-05 | Faiz | v4.2 refinement: running order becomes Sales→Marketing→Finance→Tech; captions/stamps stripped; top-5 podiums with watch links + producers; heat bars for overdue; who-did-it chips on all-roles; SGD labels + client count; attribution shows real lead counts. |
