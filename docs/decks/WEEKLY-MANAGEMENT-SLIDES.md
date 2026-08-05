@@ -251,14 +251,26 @@ The rule going forward: one anchor, used by every metric —
 today's flip-to-next-week behaviour (Tuesday, after the Monday meeting) unchanged. Display
 window on the deck prints the full Sun–Sat range it actually queried.
 
-**Status: engraved as the rule; the production change to `t9ZZ7sk9hyWEKNdR` and
-`o4M9V8PYxRT4skvA` is prepared but NOT applied — touching live workflows requires Faiz's
-explicit approval** (standing rule, 2026-08-05 regression lesson).
+**Status: APPLIED 2026-08-05 with Faiz's explicit approval** ("apply the Sun→Sat week-boundary
+release to the two workflows"). Release contents: Weekly Facts query → Sunday-anchor windows on
+every metric; Build Deck display window → prints the true Sun–Sat range (was Mon–Fri); snapshot
+`o4M9V8PYxRT4skvA` Init-Table DELETE anchor + Compute-Throughput week block → Sunday keys;
+one-time backfill `UPDATE public.team_throughput SET week_start = week_start - 1` so prior-week
+joins survive the cutover (historic rows measured Mon–Sun windows — one day of drift in
+historical comparisons, accepted). First Sunday-keyed snapshot: Sat 9 Aug 07:00 SGT.
 
-### Month-end consolidated edition — PROPOSED mechanism (2026-08-05, awaiting Faiz)
+### Month-end consolidated edition — SETTLED: Option B (Faiz, 2026-08-05)
 
-v2 rule 2 says the month-end build consolidates the month. Two candidate triggers; Faiz to
-settle before anything is built:
+**Faiz picked Option B, 2026-08-05:** the **first Saturday build of a new month** reports the
+**just-closed calendar month** (1st → last day, complete data), MoM vs the month before. That
+week's WoW deck is replaced by the monthly edition — still one deck per week. `edition` is
+recorded in report metadata; monthly windows are calendar months in SGT. The Town Hall (first
+Tuesday) reads that complete, vetted month. Generation rule updates to:
+`edition = (first Saturday build of a new month) ? "monthly" : "weekly"` — superseding the
+last-Saturday rule in v2 rule 2. Implementation lands with the v4 generator rebuild (after the
+row-79 design sign-off), well before the first firing on **Saturday 5 September 2026**.
+
+The two options as they were put to Faiz, for the record:
 
 - **Option A — last-Saturday build**: the build whose reporting Saturday is the month's last
   Saturday becomes the monthly edition. Timely (lands before month end) but the month is
@@ -281,3 +293,6 @@ settle before anything is built:
 | 2026-08-05 | Faiz | v4 design language applied to the weekly deck (explicit harmonisation instruction; no new slides, 28-slide order kept). Department buttons become consolidated overlay views; HR = honest gap. |
 | 2026-08-05 | Faiz | Week boundary HARD RULE: every window Sun→Sat SGT (HubSpot week). Current state documented as mixed Mon/Sun windows; production fix prepared, awaiting Faiz's approval to apply. |
 | 2026-08-05 | Claude (for Faiz to settle) | Month-end edition mechanism PROPOSED (Option A last-Saturday vs Option B first-build-of-month, B recommended). Not built. |
+| 2026-08-05 | Faiz | Weekly deck reskinned to the town-hall base skeleton after review ("apply v4" = full harmonisation, not components-only). Dry run row 79. |
+| 2026-08-05 | Faiz | Month-end edition SETTLED: Option B — first Saturday build of a new month reports the closed calendar month, MoM. First firing 5 Sep 2026. |
+| 2026-08-05 | Faiz | Sun→Sat week-boundary release APPLIED to `t9ZZ7sk9hyWEKNdR` (facts SQL + display window) and `o4M9V8PYxRT4skvA` (Sunday keys), with the one-time `week_start − 1` backfill. |
