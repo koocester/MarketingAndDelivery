@@ -6,6 +6,7 @@ Two decks in this company repeat forever on a fixed cadence:
 |---|---|---|
 | Management weekly slides | every week, built Saturday morning SGT | [WEEKLY-MANAGEMENT-SLIDES.md](WEEKLY-MANAGEMENT-SLIDES.md) |
 | Town Hall slides | monthly, **first Tuesday, 10:00 SGT** | [TOWN-HALL-SLIDES.md](TOWN-HALL-SLIDES.md) |
+| — opening video sourcing | every Town Hall | [VIDEO-SOURCING.md](VIDEO-SOURCING.md) |
 
 > **Note on the name.** The Town Hall used to be "first Wednesday" and is still called that
 > in conversation. Hakim moved it on 2026-07-30: the old Wednesday series was terminated and a

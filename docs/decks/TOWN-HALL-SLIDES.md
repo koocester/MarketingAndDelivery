@@ -367,7 +367,10 @@ Hard rendering rules from the first dry-run review. These apply to every future 
 - **Video slide (final form):** a plain, always-present player embedded with the clip window
   (`start`/`end`) — no facade, no autoplay, no fallback link. The viewer presses the player's
   own play button; the clip starts at the hook and stops when the point lands.
-- **Monthly video selection procedure (keep this exactly):**
+- **Monthly video selection procedure:** now a standalone hard-hold file —
+  **[VIDEO-SOURCING.md](VIDEO-SOURCING.md)** — anchor line from the PVV text → three
+  candidates → empirical embeddability check → transcript-derived hook → clip window →
+  pick log (no repeats within 24 months). Summary (the file governs):
   1. Shortlist 2–3 talks that speak to the purpose / values / vision (GUIDE).
   2. Pull the transcript of the leading candidate.
   3. Find **the hook** — the 3–5 contiguous minutes that carry the whole idea. Note the exact
