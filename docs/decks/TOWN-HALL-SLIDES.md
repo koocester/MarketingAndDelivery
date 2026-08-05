@@ -395,6 +395,23 @@ Hard rendering rules from the first dry-run review. These apply to every future 
 - **Vertical labels carry icons**: 💼 Business · 🚗 Autos · 💰 Wealth · 🏡 Homes · 🍜 Foodie.
   **Main deliberately has no icon** — it represents the whole, not a vertical.
 
+### Video playback — the full truth (established empirically, 2026-08-05)
+
+- **YouTube rejects embed requests that carry no Referer header** ("Video player
+  configuration error" / error 153). This is about the *serving origin*, never the video.
+- **Two of our own surfaces can never play embeds:** n8n webhook responses AND Supabase Edge
+  Function HTML responses — both platforms stamp a CSP `sandbox` that gives the page a null
+  origin, so the browser omits the Referer. Nothing rendered from those URLs will ever play.
+- **Surfaces that DO play:** the staff portal (real origin) and the dedicated review host
+  **`koocester-dryrun.pages.dev`** (Cloudflare Pages project `koocester-dryrun`, static direct
+  upload via `wrangler pages deploy`, `_headers` sets noindex + no-store). Dry-run reviews that
+  include video must be hosted there, not on the n8n viewer.
+- **Determining the clip window:** pull the talk's transcript **with timestamps**
+  (`youtube-transcript-api`), find where the hook begins and the line it must end on, and set
+  the player's `start`/`end` (seconds) to exactly that. The player itself enforces the stop.
+  August, verified from the transcript: start=100 (1:40 "all the great inspiring leaders…"),
+  end=352 (5:52, after "do business with people who believe what you believe").
+
 **Pending from the same review (logged, not yet possible):**
 1. **Video thumbnails on the top-content cards** — real IG thumbnails need the Meta Graph API
    path (app "Koocester Reporting" 910717378117369 exists; needs IG tokens wired). Until then
