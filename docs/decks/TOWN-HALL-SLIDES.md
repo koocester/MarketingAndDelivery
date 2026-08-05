@@ -353,6 +353,15 @@ Hard rendering rules from the first dry-run review. These apply to every future 
   portal viewer (real origin) — with a **permanent fallback link** "open the clip on YouTube
   (starts at m:ss)" for the n8n-served links. Never ship a bare `<iframe>` embed.
 
+- **The video slide is exempt from click-to-advance.** The deck's click-anywhere navigation
+  must ignore clicks inside `.vframe`, and the facade's click handler stops propagation —
+  otherwise pressing play also flips the slide (found by Hakim/Faiz in dry-run iteration 3).
+- **Cut straight to the hook.** The monthly video selection process is: pull the talk's
+  transcript, find the hook — the 3–5 minutes that carry the idea — and set the player's
+  `start`/`end` to exactly that segment, tied to the purpose/values/vision. The caption names
+  the hook. Nobody gets the wind-up, everybody gets the point. (August: Sinek's golden circle,
+  2:30–6:00, "people don't buy what you do, they buy why you do it".)
+
 **Pending from the same review (logged, not yet possible):**
 1. **Video thumbnails on the top-content cards** — real IG thumbnails need the Meta Graph API
    path (app "Koocester Reporting" 910717378117369 exists; needs IG tokens wired). Until then
