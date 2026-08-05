@@ -89,9 +89,17 @@ Record: start second, end second, and the exact closing line.
 
 ### 6. Build the slide
 
-- Embed: `https://www.youtube-nocookie.com/embed/<ID>?start=<S>&end=<E>&rel=0` — the player
-  itself starts at the hook and stops at the closing line. No autoplay, no facade, no
-  fallback link.
+- **Use the YouTube IFrame Player API, not a bare embed** (found 2026-08-05: the plain
+  `end` URL parameter is unreliable, and a hidden slide keeps its iframe playing). The slide
+  loads `https://www.youtube.com/iframe_api` and creates the player
+  (`host: youtube-nocookie.com`, `playerVars: {start, end, rel:0}`) with two guards:
+  1. **Hard stop:** on PLAYING, a 250ms watchdog reads `getCurrentTime()` and calls
+     `pauseVideo()` at the end second — belt and braces on top of the `end` param.
+  2. **Slide-change pause:** a MutationObserver on the video slide's `class` pauses the
+     player the moment the slide loses `active` — no audio bleeding into the next slide.
+  Both verified mechanically in Chrome (stop landed at exactly the end second; player state
+  PAUSED after slide change). No autoplay, no facade, no fallback link.
+- This is the deck's one permitted external script — video requires the network anyway.
 - Caption: why this clip this month (name the anchor line) + the hook's closing line +
   "timestamps taken from the talk's transcript."
 
