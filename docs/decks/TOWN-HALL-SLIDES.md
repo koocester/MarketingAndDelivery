@@ -109,8 +109,12 @@ comparison tells the room nothing.
 
 - **Only cleared items.** Leadership items are surfaced to all staff only when explicitly
   cleared for that. The Town Hall does **not** infer announcements, joiners, birthdays or wins.
-- **No finance on this surface.** Revenue, collections and margins are management-only. They
-  appear in the weekly deck, not here.
+- **Finance on this surface — one carve-out (Faiz, 2026-08-05).** The department-wins card for
+  Finance shows **cash collected in the month** (with invoiced as the secondary line), using the
+  weekly deck's exact Xero definition on a month window — registry row "Finance dept stat —
+  cash collected (month)", Trusted. Precedent: Hakim's own July 2026 town hall showed collected
+  cash. **Everything else finance — revenue detail, margins, per-client — stays
+  management-only**, on the weekly deck, never here.
 - **Meeting rhythm slide** currently states: Monday leadership meeting · first Tuesday Town Hall ·
   **Tuesday huddle** — every department, same day, cascading what came out of the leadership
   meeting and aligning across teams. (Changed 2026-08-04 on Hakim's instruction, replacing
