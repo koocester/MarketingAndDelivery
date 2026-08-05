@@ -305,8 +305,16 @@ The two options as they were put to Faiz, for the record:
    with counts per role; the separate "Leading this week" line is dropped.
 6. **Every headline figure carries its WoW delta** including Engagement-against-the-bar.
 7. **Events**: venue carries the country flag of where the event actually is.
-8. **Attribution**: real per-video lead counts from HubSpot `lead_source_post` (0 is shown as 0);
-   the ZZ-TEST-F9 test fill (1 lead, 4 Aug) is cited as pipeline proof. No invented numbers.
+8. **Attribution**: real per-video lead counts from HubSpot **`postcampaign`** (the field the
+   lead-magnet form links write — `?postcampaign=<videoId>_<code>`; `lead_source_post` was only
+   the manual test). Video-coded rows shown individually with leads + latest-lead date; 0 shown
+   as 0; campaign-coded links (elixir, MRCA, client names) summarised separately — they are not
+   per-video. Data-hygiene finds surface as one line (e.g. a live link carrying literal brackets
+   `[0100_kbmy_ig]`). No invented numbers.
+   **Producer resolution order** for top-5 rows: (1) exact post-URL match in `video_contributors`;
+   (2) same-title + same-market match from another platform (FB links are rarely logged on the
+   Lark video record); (3) blank "—" = the video has no contributor logged in Lark at all — the
+   fix is logging, not querying.
 9. **Finance**: amounts labelled SGD explicitly; invoiced-clients slide shows the client count and
    numbered rows with monogram chips (real logos need a logo/domain source on Xero contacts — gap).
 10. **Dept overlays mirror their slides verbatim** and lead with a "Go to section" jump; jump
