@@ -362,6 +362,39 @@ Hard rendering rules from the first dry-run review. These apply to every future 
   the hook. Nobody gets the wind-up, everybody gets the point. (August: Sinek's golden circle,
   2:30–6:00, "people don't buy what you do, they buy why you do it".)
 
+## UI language v4 (2026-08-05 — Faiz's second design review, engraved)
+
+- **Video slide (final form):** a plain, always-present player embedded with the clip window
+  (`start`/`end`) — no facade, no autoplay, no fallback link. The viewer presses the player's
+  own play button; the clip starts at the hook and stops when the point lands.
+- **Monthly video selection procedure (keep this exactly):**
+  1. Shortlist 2–3 talks that speak to the purpose / values / vision (GUIDE).
+  2. Pull the transcript of the leading candidate.
+  3. Find **the hook** — the 3–5 contiguous minutes that carry the whole idea. Note the exact
+     start/stop timestamps and the line the clip must end on.
+  4. Verify the video allows embedding; set `start`/`end` to the hook window.
+  5. Caption = why this clip, this month + the hook line itself. Log the pick in the build notes.
+- **Stat tiles carry emojis** (👀 views · 🎬 posts · ❤️ engagement · 👥 followers · 🧲 leads ·
+  📈 growth) — personality, not decoration; one emoji per tile, never in the numbers.
+- **Charts are professional, not primitive:** light horizontal gridlines, baseline axis,
+  rounded-top bars, maroon gradient for the current period vs neutral grey for the prior,
+  value labels above each bar, month labels below, and the % delta in a colour pill placed on
+  the empty side of the chart. No bare two-rectangle "PowerPoint" bars.
+- **Market comparison is one chart** (three bars, biggest first) with country names and post
+  counts under the bars — not three separate stat tiles.
+- **Platform tiles carry the platform's icon** (IG / TikTok / FB inline-SVG marks) beside the
+  number, replacing text-only labels.
+- **Gains carry a rising sparkline** (small stock-style trend line, green up / maroon down)
+  next to the +X.XK figure and on growth pills.
+- **Per-market winners slide:** three flag-headed columns, metal rank badges, title in large
+  type, **views as the highlighted number** (large maroon mono), and the makers as
+  **avatar chips — profile photo + name** (producer gold-tinted, editor silver, writer bronze).
+- **All creator credits everywhere use avatar chips** (photo + name), replacing initial discs.
+  Avatars are fetched at build time and embedded **once each** as a shared CSS class
+  (`.av-<key>`), never repeated per chip — repeating data URIs tripled the deck size once.
+- **Vertical labels carry icons**: 💼 Business · 🚗 Autos · 💰 Wealth · 🏡 Homes · 🍜 Foodie.
+  **Main deliberately has no icon** — it represents the whole, not a vertical.
+
 **Pending from the same review (logged, not yet possible):**
 1. **Video thumbnails on the top-content cards** — real IG thumbnails need the Meta Graph API
    path (app "Koocester Reporting" 910717378117369 exists; needs IG tokens wired). Until then
