@@ -181,9 +181,103 @@ Hard rules once the dry run passes (see README, Framework v2):
   at build time.
 - Build target for any dry run: a **scratch report row**, never the live `kind='weekly'` row.
 
+## v4 for the weekly deck (2026-08-05, Faiz) · dry run in progress
+
+Faiz's instruction, verbatim scope: apply the **v4 UI/UX formula** (the town-hall dry-run design
+language) to the weekly deck — **NO video slide, NO new slides, keep the existing 28 slides and
+running order exactly**. This is the explicit instruction §6's caveat asked for: the weekly deck
+now adopts the v4 visual components while keeping its own skeleton (timer, per-slide footer,
+timing manifest, keyboard nav all stay).
+
+v4 components applied to the weekly deck:
+
+- **Comparison charts** — gridlines, rounded gradient bars (prior grey → current maroon
+  gradient), value labels, **delta pill** placed on the empty side (collision rule from the
+  town-hall pass). Applied wherever a figure has a WoW pair: engagement/posts/views, leads,
+  deals opened, invoiced/collected, role output.
+- **Delta pills** replace the plain `▲/▼ n vs last week` small-text: green tint pill for good,
+  maroon tint for bad, with **rising/falling sparkline**. "Good" respects direction (a drop in
+  overdue is green).
+- **Inline-SVG flags** for SG/MY/ID rows (emoji flags stay banned — Windows renders letters).
+- **Inline-SVG platform logos** for Instagram / TikTok / Facebook rows and table headers.
+- **Avatar credit chips** wherever a person is named for work done ("Who did it", "Leading this
+  week", team leads): photo + name, shared `.av-<key>` CSS classes embedded once (the 335KB
+  lesson). People without a stored avatar get an initial chip — never skip the name.
+- **PVV footer** on every slide (bottom-centre muted strip), placed to clear the weekly deck's
+  page number and nav arrows — the three-way bottom edge rule adapts to this deck's chrome.
+- Stat-tile emojis on headline tiles, matching the town-hall register.
+
+### Department views — the mechanism (2026-08-05)
+
+Refines v2 rule 1. The five fixed top-left buttons — **Sales · Marketing · Finance · HR ·
+Tech** — do not merely jump: each opens that department's **consolidated view**, a full-screen
+overlay built **only from information already on the 28 slides** (no new numbers, no new
+queries). The overlay shows the department's headline figures with their WoW comparisons, plus
+jump links into the department's slides. Overlays are chrome, not slides: the 28-slide running
+order is untouched, the timing manifest ignores them, Esc/× closes.
+
+Slide-group mapping (from the §4 running order): Sales → 4, 5 (+ per-video attribution 22 as a
+bridge item) · Marketing → 7–22 · Finance → 27, 28 · Tech → 23–26 · Client Success (6) is
+surfaced inside the Sales view as the client book until CS gets its own button.
+
+**HR:** the weekly deck has **no HR section** — the HR button opens an honest gap view saying
+exactly that (no invented numbers). Filling it needs an HR fact source wired into the fact pack
+(roster, joiners/leavers, birthdays live in the HR base). Logged as an open gap, owner: Faiz.
+
+### Week boundary — Sunday → Saturday, SGT (2026-08-05, Faiz) · HARD RULE
+
+**Every week window in the weekly pipeline is Sunday 00:00 → Saturday 24:00 SGT**, matching how
+HubSpot defines a week. Faiz's report: extraction was Monday-based and "Friday is currently
+getting cut off."
+
+What the pipeline actually does today (read 2026-08-05 from `t9ZZ7sk9hyWEKNdR` Weekly Facts +
+`o4M9V8PYxRT4skvA`):
+
+- Anchor: `date_trunc('week', now() SGT - interval '1 day')` → **Monday**-based ISO week.
+- **The windows are mixed.** Leads and deals-created were already patched to Sun→Sat
+  (`b.mon-1 … b.mon+6`), but content posts/views/engagement, top-5s, cash invoiced/collected,
+  team throughput and won-deals still run Mon→Sun (`b.mon … b.mon+7`). Different slides in the
+  same deck report different week definitions.
+- The deck's display window prints **Mon–Fri** ("27–31 July 2026") while the queries span 7
+  days — so what managers read as "the week" is neither window.
+- The throughput snapshot keys `public.team_throughput.week_start` on the **Monday**; Weekly
+  Facts joins on that key. Both must move to the Sunday key **in the same release** or the team
+  slides go blank; the first Sunday-keyed week also needs the prior Monday-keyed row bridged
+  (backfill `week_start - 1 day` copy) or `team_prev` shows null for one week.
+
+The rule going forward: one anchor, used by every metric —
+`sun = ((now SGT)::date - 2) - EXTRACT(DOW FROM (now SGT)::date - 2)::int`, window
+`[sun, sun+7)` = Sun 00:00 → Sat 24:00 SGT, prior week `[sun-7, sun)`. The `-2` lag keeps
+today's flip-to-next-week behaviour (Tuesday, after the Monday meeting) unchanged. Display
+window on the deck prints the full Sun–Sat range it actually queried.
+
+**Status: engraved as the rule; the production change to `t9ZZ7sk9hyWEKNdR` and
+`o4M9V8PYxRT4skvA` is prepared but NOT applied — touching live workflows requires Faiz's
+explicit approval** (standing rule, 2026-08-05 regression lesson).
+
+### Month-end consolidated edition — PROPOSED mechanism (2026-08-05, awaiting Faiz)
+
+v2 rule 2 says the month-end build consolidates the month. Two candidate triggers; Faiz to
+settle before anything is built:
+
+- **Option A — last-Saturday build**: the build whose reporting Saturday is the month's last
+  Saturday becomes the monthly edition. Timely (lands before month end) but the month is
+  incomplete at build time — e.g. a 26th-of-31 Saturday misses 5 days, and the missing tail is
+  silently absorbed into next month's numbers. MoM comparisons systematically undercount.
+- **Option B — first-build-of-the-month (RECOMMENDED)**: the first Saturday build of a new
+  month reports the **just-closed calendar month** (1st → last day, complete), MoM vs the month
+  before. That week's WoW deck is replaced by the monthly edition — still one deck per week.
+  The Town Hall (first Tuesday) then reads a complete, already-vetted month — the cascade v2
+  intended.
+- Either way: same 28 slides, same order; every WoW pair becomes MoM; `edition` recorded in
+  report metadata; monthly windows are calendar months in SGT.
+
 ## Change log
 
 | Date | Who asked | Change |
 |---|---|---|
 | 2026-07-31 | Faiz | Manager edit MVP: managers edit the live deck in place, name required, name stored on the change. |
 | 2026-08-04 | Faiz | Contract written down so weekly rebuilds follow a fixed format and only refresh numbers. |
+| 2026-08-05 | Faiz | v4 design language applied to the weekly deck (explicit harmonisation instruction; no new slides, 28-slide order kept). Department buttons become consolidated overlay views; HR = honest gap. |
+| 2026-08-05 | Faiz | Week boundary HARD RULE: every window Sun→Sat SGT (HubSpot week). Current state documented as mixed Mon/Sun windows; production fix prepared, awaiting Faiz's approval to apply. |
+| 2026-08-05 | Claude (for Faiz to settle) | Month-end edition mechanism PROPOSED (Option A last-Saturday vs Option B first-build-of-month, B recommended). Not built. |
