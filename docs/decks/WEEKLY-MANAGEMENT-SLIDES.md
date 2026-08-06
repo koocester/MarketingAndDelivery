@@ -446,6 +446,22 @@ the slide as context, never as the headline. Full rule lives in the registry row
   cross-platform top 5 per country). Not yet asked as of this entry; Hakim's known precedent
   (Town Hall change log, 2026-08-04) is podium-style top-3 elevation per market.
 
+
+### v5 decisions, round 4 (Faiz, 2026-08-05)
+
+- **Top-5 format: KEEP AS IS** — per-platform sections per country, ordered by views.
+- **Events economics fields CREATED** (no approval needed, additive): `Marketing Budget`
+  (fldGFKa6g2), `Expected Revenue` (fldDcNinP4), `Marketing Efforts` (fldba73x1u) — and
+  `Actual Revenue` already existed. Events table `tblA7Ick2xpH4T5H`. The ask to the events
+  owner is now only: FILL THEM per event. Data entry into the Events table is manual (no
+  automation feeds it); the deck's retrieval of it is automated at build time.
+- **Approve-QC button action: approved by Faiz to wire in** (set `QC Passed At` = now). Base
+  automations have no public API — it is a Lark-UI step; to be done via a driven browser
+  session or by Hakim (3 clicks). Once stamping exists, strategist metrics go live.
+- **Post-URL gap (#3) gets an automation instead of discipline**: a weekly n8n backfill job
+  writes FB/YouTube post links from `content_perf.reels` back onto the video records by
+  title+market match — nobody has to paste links manually. Queued with the carousel sync.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -467,3 +483,4 @@ the slide as context, never as the headline. Full rule lives in the registry row
 | 2026-08-05 | Faiz | Enquiry-leads definition settled: 4 form GUIDs behind enquire.koocester.com + Business Growth forms; registry row recvrtS7yu4kfR (Trusted). Deck headline becomes Enquiries in (30 vs 49 WoW); 780 total fills demoted to context. |
 | 2026-08-05 | Faiz | Progress-bar rule approved (0/50/90/100, On-Hold amber frozen); tech-roadmap progress keyed to GitHub branch/deploy state; QC/storyboard timestamp fields + carousel sync approved to build; ManyChat blocked on key (Faiz to paste into n8n credential); events field ask sent to Hakim. |
 | 2026-08-05 | Faiz | Round 3: client-page mapping reassigned to Hakim; tech roadmap = CR register + GitHub commit/branch state (derived, no session); top-5 format question routed to Hakim. |
+| 2026-08-05 | Faiz | Round 4: top-5 stays per-platform; Events economics fields created (Budget/Expected Revenue/Efforts; Actual Revenue pre-existed) — owner only fills; QC-button action approved to wire; post-URL backfill job replaces manual link logging. |
