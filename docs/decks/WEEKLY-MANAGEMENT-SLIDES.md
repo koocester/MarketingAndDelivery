@@ -331,6 +331,69 @@ The two options as they were put to Faiz, for the record:
     indices track the new running order.
 11. **Mobile pass**: chips/tiles/tables get compact paddings under 850px; the meeting timer hides.
 
+## v5 requirements (2026-08-05, Faiz's deep review) · CATALOGUE + data-source map
+
+Faiz's full review of dry-run v4.3. Each item lists its data source and status:
+**READY** (warehouse/Lark has it), **NEEDS-DEF** (definition or mapping Faiz must settle),
+**NEEDS-SOURCE** (no system captures it yet — instrumentation first).
+
+1. **PVV opens the weekly deck** — slide 2 (after the cover): Purpose · GUIDE values · Vision
+   2035, canonical wording verbatim from TOWN-HALL-SLIDES.md, founder-doc layout in house
+   maroon. **Supersedes, for the weekly deck's opening, the 2026-08-04 footer-only ruling**
+   (the footer stays as well). READY — built in dry run v5.
+2. **Leads = enquiries only.** "New leads in" must count only people enquiring about Koocester
+   (the enquiry form), not client-campaign form fills. Measured for w/26 Jul: 780 total, of
+   which client campaign forms ≈755 (Timothy Tiah MY 352, Gabriel Judah 139, ELIXIR 85,
+   SuperCane 80, …) and Koocester's own **Business Growth Form SG/MY/ID ≈25**. NEEDS-DEF:
+   Faiz names the qualifying form(s) → Metric Registry row updated → generator filters on
+   `recent_conversion_event_name`. Until then the deck shows the current governed number.
+3. **Client Success**: per-project progress bars + an AI analysis block of project updates and
+   concerns. NEEDS-DEF (stage→percent mapping; which projects shown) + generator-time analysis
+   step (the orchestrator writes it; watchdog checks the numbers it cites).
+4. **Sales**: (a) revenue to date + cash collected to date — READY (Xero: 2026 YTD invoiced
+   S$975,436 · collected S$866,753; built in dry run v5); (b) **per-person leading/lagging** —
+   e.g. Sarah: deals to work next week, leads to attend this week, deals closed / moved forward
+   last week. Source: HubSpot deal/contact owner. NEEDS-DEF: owner→person mapping and pipeline
+   hygiene (amounts, stages) before per-person numbers are fair.
+5. **Producers**: leading = shoots scheduled next week (chart + list, from Videos `Shoot Date`
+   future window — READY); lagging = shoots done; plus **per-video results fed back** to the
+   producer (views by video — READY via content_perf). Closed loop engraved.
+6. **Copywriters**: closed loop — results of carousels posted last week / two weeks ago
+   (carousel metrics needed — Metricool carousel data NEEDS-SOURCE check); next-week plan once
+   the copywriter board is live.
+7. **Strategists**: storyboards done last week vs planned next week + patterns recognised.
+   NEEDS-SOURCE: still no QC-passed/storyboard-done timestamp (same gap as throughput).
+8. **Editors**: this week / next week edit schedule (Lark stages — READY), per-video results +
+   credit for wins (READY via content_perf + credits).
+9. **SMM**: on-time posting + missed upload dates (planned vs `Actual Upload Date` — READY),
+   engagement/viewership levels, uploads planned this week (leading) vs uploaded last week
+   (lagging) — READY; **ManyChat health** NEEDS-SOURCE (no ManyChat feed in the warehouse).
+10. **Marketing funnel (the closed loop)**: leads collected → converted → qualified → drop-off,
+    plus actions to raise conversion / cut drop-off. Qualified is registered (recvrjoebW6CUp);
+    conversion/drop-off stages NEEDS-DEF. **The attribution/closing-the-loop slide moves BEFORE
+    Events** (built in dry run v5).
+11. **Engagement**: per-page breakdown across all platforms — READY (content_perf by page);
+    analysis block bridging 3.4%→10%; **all trend graphs span ≥5 weeks** — READY (warehouse
+    holds data since 2 Jan 2026). Generator work.
+12. **Top videos**: answer to "why all Facebook" — the country slides hold one section per
+    platform and Facebook merely sorted first; sections now ordered by views (built in dry run
+    v5). Open question for Faiz: keep per-platform sections or one combined cross-platform
+    top 5 per country?
+13. **Events**: per event — marketing efforts, footfall (attending / target), expected revenue,
+    marketing budget. NEEDS-SOURCE: Events table has Status/Date/Venue/Target/Actual only;
+    budget, revenue and efforts fields must be added to the base first.
+14. **Finance**: revenue breakdown per page/brand with graphs — which page earns most, where to
+    focus. NEEDS-DEF: Xero invoices are per client, not per page; needs a client→page/vertical
+    mapping (add a tracking category in Xero or a mapping table).
+15. **Tech**: a roadmap planned together — items, progress per item, maintenance issues.
+    Source: Tech Updates CR Register + Tech Base. Generator work once the roadmap is agreed.
+16. **Rename "Followers" → "People inspired"** on the audience slide, aligned to Vision 2035's
+    1 billion people annually — built in dry run v5 (registry label to follow).
+
+Everything marked "generator work" lands with the v5 real-generator rebuild; NEEDS-DEF items
+block on Faiz; NEEDS-SOURCE items block on instrumentation and are listed honestly on the slide
+as "currently being worked on" per the HR precedent.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -348,3 +411,4 @@ The two options as they were put to Faiz, for the record:
 | 2026-08-05 | Faiz | **Dept buttons become a department FILTER**: clicking Sales shows only the Sales slides — arrows cycle within that department (wrap-around), never crossing into the next department. An **All** button (default, highlighted state) or Esc returns to the full consolidated deck. The main deck always carries everything — the filter is a lens, not a different report. Sets: Sales 4–6 · Marketing 7–22 · Finance 23–24 · HR 25 · Tech 26–29; cover/how-to/scoreboard appear only in All. |
 | 2026-08-05 | Faiz | **HR slide added to the deck** (deck is now 29 slides): People & hiring between Finance and Tech, so the flow reads Sales→Marketing→Finance→HR→Tech left to right. Content = the hiring-funnel view (tiles + funnel bars). 150s in the timing manifest, taken as −30s from each of the five 300s slides (total stays 5400). |
 | 2026-08-05 | Faiz | **CONFIRMED: the 6-Jul contract starts (Audrey, Wendi, Esther, Jaydon) are all NEW HIRES**, not renewals — 4 joins in July. Handoff confirmation #2 closed by Faiz; #1 (application date = record created_time) still with Bhavani, so the ≈ Approximate tag stays until then. |
+| 2026-08-05 | Faiz | v5 catalogue engraved (see §v5): PVV opening slide (supersedes footer-only for the weekly opening), enquiries-only leads (form to be named), per-person sales, role closed loops, ≥5-week graphs, per-page engagement & revenue, event budgets/footfall, tech roadmap, "People inspired" rename. Quick wins built to dry run v5: PVV slide, attribution before Events, YTD revenue/cash on Sales, rename, top-5 sections ordered by views. |
