@@ -408,6 +408,30 @@ with a submission on any of the four, via `hubspot.contact_form_submission`. Ref
 w/26 Jul: **enquiries 30 vs 49 prior**; total form fills 780 (~96% client campaigns) stays on
 the slide as context, never as the headline. Full rule lives in the registry row.
 
+
+### v5 decisions settled (Faiz, 2026-08-05, second round)
+
+- **Project progress-bar rule APPROVED**: Not Started 0% · In Production 50% · Delivered 90% ·
+  Completed 100% · On Hold rendered amber, frozen. Book-level progress = count-weighted average.
+  Upgrade path stays: videos delivered ÷ videos promised per project, when promised counts exist.
+- **Tech roadmap progress = GitHub state.** A roadmap item is keyed to a repo/branch: sitting on
+  a working branch = In progress; merged/pushed to the live tag or deployed = Done. The roadmap
+  slide reads branch/deploy state, so progress is never self-reported.
+- **Storyboard / QC timestamps: approved to build.** Fields `QC Passed At` + `Storyboard Done At`
+  (datetime) on the Videos table; stamped by the existing Approve-QC button automation (one
+  action added: set field = now). This finally makes strategist output measurable.
+- **Carousel results sync: approved to build.** A separate daily n8n sync (never touching the
+  reels sync) pulling carousel-post metrics into `content_perf.carousels`; copywriter closed
+  loop reads it.
+- **ManyChat health: blocked on the API key only.** Faiz retrieves it (ManyChat → Settings →
+  API) and pastes it into a new n8n credential himself — credentials are never handled by the
+  assistant. The sync workflow is built inactive around the credential slot.
+- **Events economics: field ask to Hakim** — add to the Events table and fill per event:
+  `Marketing Budget` (number, SGD), `Expected Revenue` (number, SGD), `Actual Revenue` (number,
+  SGD), `Marketing Efforts` (text: what was run — ads, posts, partners), and keep
+  `Targeted/Actual Attendees` maintained. Slide then shows footfall vs target, revenue vs
+  budget, and the efforts line per event.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -427,3 +451,4 @@ the slide as context, never as the headline. Full rule lives in the registry row
 | 2026-08-05 | Faiz | **CONFIRMED: the 6-Jul contract starts (Audrey, Wendi, Esther, Jaydon) are all NEW HIRES**, not renewals — 4 joins in July. Handoff confirmation #2 closed by Faiz; #1 (application date = record created_time) still with Bhavani, so the ≈ Approximate tag stays until then. |
 | 2026-08-05 | Faiz | v5 catalogue engraved (see §v5): PVV opening slide (supersedes footer-only for the weekly opening), enquiries-only leads (form to be named), per-person sales, role closed loops, ≥5-week graphs, per-page engagement & revenue, event budgets/footfall, tech roadmap, "People inspired" rename. Quick wins built to dry run v5: PVV slide, attribution before Events, YTD revenue/cash on Sales, rename, top-5 sections ordered by views. |
 | 2026-08-05 | Faiz | Enquiry-leads definition settled: 4 form GUIDs behind enquire.koocester.com + Business Growth forms; registry row recvrtS7yu4kfR (Trusted). Deck headline becomes Enquiries in (30 vs 49 WoW); 780 total fills demoted to context. |
+| 2026-08-05 | Faiz | Progress-bar rule approved (0/50/90/100, On-Hold amber frozen); tech-roadmap progress keyed to GitHub branch/deploy state; QC/storyboard timestamp fields + carousel sync approved to build; ManyChat blocked on key (Faiz to paste into n8n credential); events field ask sent to Hakim. |
