@@ -432,6 +432,20 @@ the slide as context, never as the headline. Full rule lives in the registry row
   `Targeted/Actual Attendees` maintained. Slide then shows footfall vs target, revenue vs
   budget, and the efforts line per event.
 
+
+### v5 decisions, round 3 (Faiz, 2026-08-05)
+
+- **Client→page revenue mapping goes to HAKIM** (not Faiz): Hakim decides where the tag lives
+  (Xero tracking category or a Lark column) and tags the clients — he knows the accounts.
+- **Tech roadmap needs NO planning session.** The roadmap is DERIVED: items come from the
+  Tech Updates CR Register where a change request exists; where there is no CR, the GitHub
+  commits themselves are the item. Progress in both cases is read from GitHub state —
+  working branch = in progress, merged/pushed to the live tag or deployed = done. The slide
+  self-assembles from CR register + repo state; nothing is hand-maintained.
+- **Top-5 format question is HAKIM'S to answer** (per-platform sections vs one combined
+  cross-platform top 5 per country). Not yet asked as of this entry; Hakim's known precedent
+  (Town Hall change log, 2026-08-04) is podium-style top-3 elevation per market.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -452,3 +466,4 @@ the slide as context, never as the headline. Full rule lives in the registry row
 | 2026-08-05 | Faiz | v5 catalogue engraved (see §v5): PVV opening slide (supersedes footer-only for the weekly opening), enquiries-only leads (form to be named), per-person sales, role closed loops, ≥5-week graphs, per-page engagement & revenue, event budgets/footfall, tech roadmap, "People inspired" rename. Quick wins built to dry run v5: PVV slide, attribution before Events, YTD revenue/cash on Sales, rename, top-5 sections ordered by views. |
 | 2026-08-05 | Faiz | Enquiry-leads definition settled: 4 form GUIDs behind enquire.koocester.com + Business Growth forms; registry row recvrtS7yu4kfR (Trusted). Deck headline becomes Enquiries in (30 vs 49 WoW); 780 total fills demoted to context. |
 | 2026-08-05 | Faiz | Progress-bar rule approved (0/50/90/100, On-Hold amber frozen); tech-roadmap progress keyed to GitHub branch/deploy state; QC/storyboard timestamp fields + carousel sync approved to build; ManyChat blocked on key (Faiz to paste into n8n credential); events field ask sent to Hakim. |
+| 2026-08-05 | Faiz | Round 3: client-page mapping reassigned to Hakim; tech roadmap = CR register + GitHub commit/branch state (derived, no session); top-5 format question routed to Hakim. |
