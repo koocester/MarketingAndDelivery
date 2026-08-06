@@ -462,6 +462,37 @@ the slide as context, never as the headline. Full rule lives in the registry row
   writes FB/YouTube post links from `content_perf.reels` back onto the video records by
   title+market match — nobody has to paste links manually. Queued with the carousel sync.
 
+
+## v5 GENERATOR REBUILD — SIGNED OFF (Faiz, 2026-08-06: "ok signed off. proceed with the generator rebuild")
+
+The dry run (scratch row 94) is approved as the target output. Architecture per the engraved
+engineering loop — **build-and-store, not build-on-serve**:
+
+1. **Builder workflow (new, n8n)** — Saturday 08:00 SGT, after throughput (07:00) and watchdog
+   (07:30): gathers facts → renders the v5 deck → writes a STAGING row.
+   Fact nodes: extended Weekly Facts SQL (add: enquiry leads by the 4 GUIDs · qualified
+   weekly · won prev-week · YTD invoiced/collected · 5-week series for eng/posts/views/leads ·
+   per-page engagement) + Lark fetches (HR hiring funnel · Projects in-flight · Events incl.
+   economics fields · upload discipline Intended-vs-Actual · CR register) + top-5 enrichment
+   (post_url + producer via video_contributors + title fallback) + avatars (Lark profile,
+   cached) + GitHub state for the roadmap (branch list via API).
+2. **Renderer** — one Code node, a JS port of the dry-run component library
+   (nicechart / hbar / heat / podium rows / chips / flags / platform icons / pills / PVV /
+   dept-filter nav / manifest builder). The approved dry-run HTML (row 94) is the contract:
+   same classes, same structure, only numbers change.
+3. **Watchdog vet** (stage 2 of CI1wLjRA8U8PvIUX): extracts figures from the staged build,
+   recomputes from registered sources, stamps numbers_vetted or blocks with a diff.
+4. **Promote** — vetted build becomes the `kind='weekly'` row; serve path
+   (`t9ZZ7sk9hyWEKNdR`) switches to serving the stored row; edit loop unchanged.
+5. **Edition switch** — first Saturday of a month builds the monthly Option B edition
+   (closed calendar month, MoM); first firing Sat 5 Sep 2026.
+
+**Cutover plan:** this Saturday (8 Aug) still runs the CURRENT generator (already on Sun→Sat
+windows). The v5 builder is developed against staging rows during the week, compared against
+8 Aug's real deck, and takes over on **Saturday 15 Aug** — with n8n version history and the
+stored-row snapshots as rollback. Honest sections where sources are pending (ManyChat, event
+economics until filled, carousel results) render with the ≈ "currently being worked on" tag.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -486,3 +517,4 @@ the slide as context, never as the headline. Full rule lives in the registry row
 | 2026-08-05 | Faiz | Round 4: top-5 stays per-platform; Events economics fields created (Budget/Expected Revenue/Efforts; Actual Revenue pre-existed) — owner only fills; QC-button action approved to wire; post-URL backfill job replaces manual link logging. |
 | 2026-08-05 | Faiz | **Approve-QC automation WIRED (driven browser session): the Videos 'Video - Approve QC Automation' now also sets `QC Passed At` = NOW() in the same update action; Save-and-Activate confirmed.** Strategist QC throughput is measurable from today. Client → Page Mapping table created (`tbl3gOPoHuZBFayg`, 249 clients pre-filled) — Hakim fills Page + Market dropdowns. |
 | 2026-08-06 | Faiz | **Funnel definition settled: converted = deal WON** (closedate in window, hs_is_closed_won). Funnel = enquiries → qualified (registry recvrjoebW6CUp rule, weekly window) → won; drop-off measured at each boundary. Queue approved: per-project bars, roadmap slide, funnel, SMM on-time. |
+| 2026-08-06 | Faiz | **SIGNED OFF dry run row 94. Generator rebuild approved and started** — build-and-store architecture, staging→vet→promote, v5 renderer ported from the dry-run components, cutover Sat 15 Aug, monthly edition first fires 5 Sep. |
