@@ -394,6 +394,20 @@ Everything marked "generator work" lands with the v5 real-generator rebuild; NEE
 block on Faiz; NEEDS-SOURCE items block on instrumentation and are listed honestly on the slide
 as "currently being worked on" per the HR precedent.
 
+
+### Enquiry leads — SETTLED (Faiz, 2026-08-05) · registry `recvrtS7yu4kfR`, Trusted
+
+Faiz named the enquiry funnel: the 15 `enquire.koocester.com/?vertical=X&country=Y` URLs
+(Homes/Autos/Business/Wealth/Foodie x SG/MY/ID). Traced empirically: **all 15 URLs embed ONE
+HubSpot form** — "Website - Get Qualified Buyers" `ba8f0198-ca9b-44ae-950e-c09e4dbe5a9e`
+(vertical/country ride as fields). The ~25 Business Growth Form fills count inside per Faiz, so
+the definition is **4 form GUIDs** (never names — the ID form was already renamed once):
+`ba8f0198…` + `9b2224b7…` (Business Growth SG) + `fa582e09…` (GROW Business Growth MY) +
+`fba06326…` (MAJU Business Growth ID). Count = distinct contacts created in the Sun→Sat week
+with a submission on any of the four, via `hubspot.contact_form_submission`. Reference week
+w/26 Jul: **enquiries 30 vs 49 prior**; total form fills 780 (~96% client campaigns) stays on
+the slide as context, never as the headline. Full rule lives in the registry row.
+
 ## Change log
 
 | Date | Who asked | Change |
@@ -412,3 +426,4 @@ as "currently being worked on" per the HR precedent.
 | 2026-08-05 | Faiz | **HR slide added to the deck** (deck is now 29 slides): People & hiring between Finance and Tech, so the flow reads Sales→Marketing→Finance→HR→Tech left to right. Content = the hiring-funnel view (tiles + funnel bars). 150s in the timing manifest, taken as −30s from each of the five 300s slides (total stays 5400). |
 | 2026-08-05 | Faiz | **CONFIRMED: the 6-Jul contract starts (Audrey, Wendi, Esther, Jaydon) are all NEW HIRES**, not renewals — 4 joins in July. Handoff confirmation #2 closed by Faiz; #1 (application date = record created_time) still with Bhavani, so the ≈ Approximate tag stays until then. |
 | 2026-08-05 | Faiz | v5 catalogue engraved (see §v5): PVV opening slide (supersedes footer-only for the weekly opening), enquiries-only leads (form to be named), per-person sales, role closed loops, ≥5-week graphs, per-page engagement & revenue, event budgets/footfall, tech roadmap, "People inspired" rename. Quick wins built to dry run v5: PVV slide, attribution before Events, YTD revenue/cash on Sales, rename, top-5 sections ordered by views. |
+| 2026-08-05 | Faiz | Enquiry-leads definition settled: 4 form GUIDs behind enquire.koocester.com + Business Growth forms; registry row recvrtS7yu4kfR (Trusted). Deck headline becomes Enquiries in (30 vs 49 WoW); 780 total fills demoted to context. |
