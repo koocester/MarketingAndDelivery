@@ -100,3 +100,51 @@ row label, but v1 labels that row by what is counted — "Social media — video
 "SMM". That row lost its icon and all its credit chips. Matching is now on the wording
 (`/social media|smm/`, `/producer/`, …) and an unmatched label reports itself in `misses`.
 All five rows now carry the right icon and their people: Esther 11 · Talulla 3 on SMM.
+
+---
+
+## Saturday 8 Aug — what actually happens, verified 2026-08-07
+
+**The chain, in order.** 07:00 Team Throughput Snapshot (`o4M9V8PYxRT4skvA`, cron `0 7 * * 6`) →
+07:30 Metric Watchdog (`CI1wLjRA8U8PvIUX`) → **08:45 Portal Report Archiver (`db8jcaHxVUWmYOPT`,
+cron `45 8 * * 6`) fetches `/webhook/mgmt-slides` and INSERTs the deck into `public.reports`** →
+08:50 Manager Updates (`bhBTXc9o47wQ2nVZ`) → 09:00 Weekly Slides → Hakim (`STzSYqQAmqDflniT`).
+
+**The archive step is real and proven**, not theoretical: report id 38 was inserted 2026-08-01
+08:45 SGT by exactly this path. The insert is `ON CONFLICT (kind, dated) DO NOTHING` — immutable,
+first write wins. Confirmed no row exists for `dated = 2026-08-02`, so tomorrow's insert is unblocked.
+
+### Defect found and fixed: the archiver was still on Monday–Friday
+`Prep Weekly` computed its week keys with an ISO-Monday anchor and no −2d offset — it was never
+updated when the week boundary moved to Sun→Sat on 5 Aug. It would have filed tomorrow's deck as
+**"Week of 3 August 2026 · 3–7 August 2026", `dated=2026-08-03`, window "Monday–Friday"**, wrapping
+a deck whose own title reads "Week of 2 August 2026 · 2–8 August 2026". The portal list and the deck
+contents would have disagreed on which week it was.
+
+Now uses the identical anchor as Build Deck (`now +8h − 2 days`, Sunday of that week). Verified by
+simulation at Sat 8 Aug 08:45 SGT: title `Week of 2 August 2026 · 2–8 August 2026`,
+`dated=2026-08-02`, end `2026-08-08` — byte-identical to the deck title. `Upsert Weekly` metadata
+updated to match (`reporting_week_end` = +6 not +4, window `Sunday–Saturday`).
+
+This is the same class of drift as Leadership Meeting Intake's `reporting_monday`, which is a
+SEPARATE and still-unfixed instance. One-off artifact: report 38 stays keyed `2026-07-27` under the
+old Mon–Fri scheme; it is immutable and not worth rewriting. The new scheme starts at `2026-08-02`.
+
+### Month-end monthly edition — NOT built
+Faiz's Option B (the first Saturday build of a new month reports the just-closed calendar month
+MoM) is **not implemented anywhere in the weekly chain**. Build Deck has no monthly branch, the
+Weekly Facts SQL has no MoM keys, and V5 Transform has none. The archiver's "Month-end 6pm SGT"
+trigger feeds Fetch/Upsert **Townhall** only — that is the Town Hall deck, a different workstream.
+First firing of the weekly monthly edition would be **Sat 5 Sep 2026**. Roughly four weeks to build it.
+
+### Still needs a human to type the numbers
+- **Events economics** (Hakim) — Marketing Budget / Expected Revenue / Marketing Efforts fields exist
+  on `tblA7Ick2xpH4T5H`; entry is manual. Actual Revenue existed already.
+- **Vertical + Market per invoiced client** (Hakim) — `tbl3gOPoHuZBFayg` dropdowns; 76 of 283 already
+  filled on Clients & Vendor and should be auto-copied rather than retyped.
+- **ManyChat API key** (Faiz) — into an n8n Header-Auth credential, or the call to drop ManyChat health.
+- **Storyboard "done" definition** (Hakim) — so its NOW() stamp can be wired like QC Passed At.
+- **Application-date confirmation** (Bhavani) — flips HR row `recvrpysnZYlxO` to Trusted and drops the ≈ tag.
+
+Not manual, but still missing: **Strategist output**. QC Passed At has been stamping since 6 Aug, but
+the throughput job does not count it, so that row still reads "not measured". Next wiring job.
