@@ -487,10 +487,14 @@ engineering loop — **build-and-store, not build-on-serve**:
 5. **Edition switch** — first Saturday of a month builds the monthly Option B edition
    (closed calendar month, MoM); first firing Sat 5 Sep 2026.
 
-**Cutover plan:** this Saturday (8 Aug) still runs the CURRENT generator (already on Sun→Sat
-windows). The v5 builder is developed against staging rows during the week, compared against
-8 Aug's real deck, and takes over on **Saturday 15 Aug** — with n8n version history and the
-stored-row snapshots as rollback. Honest sections where sources are pending (ManyChat, event
+**Cutover plan (REVISED by Faiz 2026-08-07: "proceed with using the new v5 generator" for
+8 Aug):** v5 goes live IN the serve workflow tonight — a `V5 Transform` Code node between
+Build Deck and Respond converts the v1 build to the row-94 contract with live numbers
+(Weekly Facts extended: enquiries by the 4 GUIDs · qualified weekly · won prev · YTD cash ·
+top-5 post URLs; plus a Lark v5-facts node: HR funnel · in-flight projects · upload
+discipline · CR register). The transform is wrapped in try/catch — any failure serves the
+v1 deck unchanged (graceful degradation), rollback via n8n versions. The build-and-store +
+watchdog-vet architecture lands the following week as phase 2. Honest sections where sources are pending (ManyChat, event
 economics until filled, carousel results) render with the ≈ "currently being worked on" tag.
 
 ## Change log
