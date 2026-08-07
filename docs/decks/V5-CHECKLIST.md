@@ -27,3 +27,52 @@ Dry run: https://koocester-dryrun.pages.dev/weekly
 
 **The gate for every ❌ and the generator half of every 🟡: Faiz's sign-off on the dry run.**
 Waiting on people: Hakim (events fields · mapping dropdowns), Faiz (sign-off · ManyChat key or drop-it call), Bhavani (application-date answer — optional, else ≈ tag stays).
+
+---
+
+## Renderer port — DONE 2026-08-07 (night)
+
+The v5 renderer now lives in the **V5 Transform** Code node of `t9ZZ7sk9hyWEKNdR`, ported from
+`build_weekly_v4.py` + `build_weekly_v42.py`. It is still **preview-gated**: only the
+`dryrun-v5-weekly-x9` webhook transforms; the live serve path passes v1 through untouched.
+Flipping v5 live = delete the three guard lines under `// ---- preview guard` (Faiz's word only).
+
+**Value-agnostic, not anchored.** The Python hard-coded report-38 numbers. The port takes every
+figure from one of two places: parsed back out of the v1 markup it is rewriting (stage tables,
+project statuses, role rows, client billing, top-5 rows) or read from `wf` / `v5` (enquiries, SQL,
+YTD, watch URLs, HR funnel, in-flight projects, upload discipline, CR register). Nothing is typed in.
+
+**Fails soft.** Each pass is independent; a broken pattern is recorded in `v5_meta.misses` and the
+rest of the deck still renders, and the whole node is wrapped so any throw serves the v1 html.
+A slide whose source table is genuinely absent (registry withheld it, or the 07:00 snapshot has not
+run) is reported as `skipped_no_data` and its honest v1 callout is left alone — that is not an error.
+
+**Verified end to end on the real chain**, 2026-08-07 04:12 UTC (execution 53918, 19s):
+30 slides · manifest 5400s · DOM order == manifest order · `misses: []` · 7 charts · 48 podium rows ·
+45 watch links · 42 bars · 18 credit chips. `skipped_no_data: [marketing-summary]` — correct, the
+Saturday 07:00 throughput snapshot had not run yet; it carries a table from tomorrow.
+
+Slide set and lanes are computed, not hard-coded: `top-*` slides expand to however many countries
+Weekly Facts returns, the timing manifest is rebalanced to 5400s for whatever set results, and the
+dept filter index sets are derived from the final order. A week with two countries will not break it.
+
+### Deviations from the Python, and why
+- **Avatars are initials.** The photo base64 lives on a local disk the node cannot read. Chips render
+  initials until the `deck_assets` warehouse row exists. Faiz accepted initials for the first build.
+- **Per-video attribution table is not printed.** The Python's rows came from a one-off manual HubSpot
+  query. There is no live feed, so the section carries the ≈ tag and says so, rather than shipping a
+  stale copy. The funnel above it *is* live.
+- **Roadmap bars are a maintained constant in the node**; the "Shipped recently" list under them is
+  read live from the CR register. Deriving bar progress from branch state is still phase 2.
+
+### Two defects found and fixed during the live dry run
+- **Negative drop-off.** Won (4) exceeded Qualified (3) because the three funnel stages are counted
+  independently inside the week — a deal won this week can come from an enquiry raised weeks ago.
+  It printed `qualified→won -33%`. Now an inverted stage prints `—` plus a line saying the three
+  counts are not a cohort. Never print a negative drop-off.
+- **Silently dropped project status.** The stage rule names five statuses; a `Cancelled` project
+  existed, so the bars summed to 478 while the tile above said 479. Statuses outside the rule now
+  render greyed and tagged "not in the rule", and the book-progress caption states the weighted base.
+
+Staged for Faiz: https://koocester-dryrun.pages.dev/weekly-tomorrow (v5 skin, live data, this week).
+The signed-off design contract at /weekly is untouched.
