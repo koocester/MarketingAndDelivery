@@ -717,7 +717,25 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "pagination": {
+            "pagination": {
+              "paginationMode": "updateAParameterInEachRequest",
+              "parameters": {
+                "parameters": [
+                  {
+                    "type": "qs",
+                    "name": "page_token",
+                    "value": "={{ $response.body?.data?.page_token || '' }}"
+                  }
+                ]
+              },
+              "paginationCompleteWhen": "other",
+              "completeExpression": "={{ !$response.body?.data?.has_more }}",
+              "limitPagesFetched": false
+            }
+          }
+        }
       },
       "id": "5ecdaa82-3927-4f8f-b2ad-27014095387f",
       "name": "Get Lark Records",
@@ -730,7 +748,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const allPosts = $('Combine All Reels').first().json.data || [];\nconst larkItems = $input.item.json.data?.items || [];\nconst toCreate = [], toUpdate = [];\n\nfor (const post of allPosts) {\n  const postUrl = (post.url || '').trim().replace(/\\/$/,'');\n  const publishedDate = post.publishedDateStr ? post.publishedDateStr.split('T')[0] : null;\n  const matched = larkItems.find(r => {\n    const stored = r.fields?.['Post URL'];\n    if (!stored) return false;\n    return stored.trim().replace(/\\/$/,'') === postUrl;\n  });\n  const fields = {\n    'Post URL': post.url, 'Account': post.account, 'Platform': post.platform,\n    'Video Title': post.videoTitle, 'Caption': post.caption,\n    'Views': post.views, 'Reach': post.reach, 'Impressions': post.impressions,\n    'Likes': post.likes, 'Comments': post.comments, 'Shares': post.shares,\n    'Saves': post.saved, 'Interactions': post.interactions,\n    'Engagement Rate': parseFloat(post.engagement.toFixed(4))\n  };\n  if (publishedDate) fields['Published Date'] = publishedDate;\n  if (matched) toUpdate.push({ record_id: matched.record_id, fields });\n  else toCreate.push({ fields });\n}\n\nfunction chunk(arr, size) {\n  const chunks = [];\n  for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size));\n  return chunks;\n}\n\nconst results = [];\nfor (const batch of chunk(toCreate, 500)) {\n  results.push({ json: { operation: 'create', count: batch.length, records: batch } });\n}\nfor (const batch of chunk(toUpdate, 500)) {\n  results.push({ json: { operation: 'update', count: batch.length, records: batch } });\n}\nif (results.length === 0) results.push({ json: { operation: 'skip', count: 0, records: [] } });\n\nconsole.log('Create batches: ' + chunk(toCreate,500).length + ' | Update batches: ' + chunk(toUpdate,500).length);\nreturn results;"
+        "jsCode": "const allPosts = $('Combine All Reels').first().json.data || [];\nconst larkItems = $input.all().flatMap(it => it.json?.data?.items || []);\nconst toCreate = [], toUpdate = [];\n\nfor (const post of allPosts) {\n  const postUrl = (post.url || '').trim().replace(/\\/$/,'');\n  const publishedDate = post.publishedDateStr ? post.publishedDateStr.split('T')[0] : null;\n  const matched = larkItems.find(r => {\n    const stored = r.fields?.['Post URL'];\n    if (!stored) return false;\n    return stored.trim().replace(/\\/$/,'') === postUrl;\n  });\n  const fields = {\n    'Post URL': post.url, 'Account': post.account, 'Platform': post.platform,\n    'Video Title': post.videoTitle, 'Caption': post.caption,\n    'Views': post.views, 'Reach': post.reach, 'Impressions': post.impressions,\n    'Likes': post.likes, 'Comments': post.comments, 'Shares': post.shares,\n    'Saves': post.saved, 'Interactions': post.interactions,\n    'Engagement Rate': parseFloat(post.engagement.toFixed(4))\n  };\n  if (publishedDate) fields['Published Date'] = publishedDate;\n  if (matched) toUpdate.push({ record_id: matched.record_id, fields });\n  else toCreate.push({ fields });\n}\n\nfunction chunk(arr, size) {\n  const chunks = [];\n  for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size));\n  return chunks;\n}\n\nconst results = [];\nfor (const batch of chunk(toCreate, 500)) {\n  results.push({ json: { operation: 'create', count: batch.length, records: batch } });\n}\nfor (const batch of chunk(toUpdate, 500)) {\n  results.push({ json: { operation: 'update', count: batch.length, records: batch } });\n}\nif (results.length === 0) results.push({ json: { operation: 'skip', count: 0, records: [] } });\n\nconsole.log('Create batches: ' + chunk(toCreate,500).length + ' | Update batches: ' + chunk(toUpdate,500).length);\nreturn results;"
       },
       "id": "4b7ef50c-f364-44e2-86a6-1bb498fa71e7",
       "name": "Match and Prepare",
