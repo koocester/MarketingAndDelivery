@@ -76,3 +76,27 @@ dept filter index sets are derived from the final order. A week with two countri
 
 Staged for Faiz: https://koocester-dryrun.pages.dev/weekly-tomorrow (v5 skin, live data, this week).
 The signed-off design contract at /weekly is untouched.
+
+### v5 IS LIVE — flipped 2026-08-07 on Faiz's word
+
+The preview guard is removed. The Saturday 8 Aug build and every build after it renders v5 on the
+serve path. The try/catch remains: any error still serves the v1 html, so a bad week degrades to the
+old skin rather than to no deck.
+
+**The "withheld" tiles were never a data gap.** They come from `team_throughput`, written by
+`o4M9V8PYxRT4skvA` (Team Throughput Snapshot) on cron `0 7 * * 6` — Saturday 07:00 SGT. It last ran
+1 Aug; this week's row simply had not been written yet on Friday night. Its insert is
+`ON CONFLICT (week_start,role,person) DO UPDATE` and Init Table clears the current week first, so it
+is idempotent. Ran it early via `/webhook/team-snapshot` to populate the week: every withheld tile
+resolved (deck now contains zero "withheld"), and tomorrow's 07:00 run overwrites the same row with
+Saturday-morning numbers. Nothing to fix — the deck was simply being built before its source ran.
+
+Numbers now live: carousels 5 (last wk 17) · first drafts 36 (48) · shoots 6 (9) · videos posted 14
+(39). Strategists stays "not measured" — the QC-passed timestamp is stamping since 6 Aug but the
+throughput job does not yet count it; that is the next wiring job, not a rendering gap.
+
+**Third defect found and fixed:** the marketing-summary role rows matched the role key against the
+row label, but v1 labels that row by what is counted — "Social media — videos posted" never contains
+"SMM". That row lost its icon and all its credit chips. Matching is now on the wording
+(`/social media|smm/`, `/producer/`, …) and an unmatched label reports itself in `misses`.
+All five rows now carry the right icon and their people: Esther 11 · Talulla 3 on SMM.
