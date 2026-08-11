@@ -356,3 +356,22 @@ Each country slide now carries up to 4 platform blocks + up to 5 vertical blocks
 groups. On a full week that is a lot of vertical scroll on one slide. If it reads as too much in the
 room, the natural split is a second slide per country (platforms on one, verticals + virality on the
 next) — that is a layout decision, not a data one, and the timing manifest rebalances automatically.
+
+### Every vertical now appears, published or not (Faiz, 11 Aug)
+
+The first cut only rendered verticals that had posts that week, so a quiet vertical vanished the
+same way Malaysia's whole slide had. Faiz set the expected shape: **SG 6 — Autos, Business, Foodie,
+Homes, Koocester, Wealth** (Koocester is the main account, SG only); **MY and ID 5 each — Autos,
+Business, Foodie, Homes, Wealth**.
+
+Rather than hardcode that, the grid is derived from **every (country, page) pair that has ever
+published** in `content_perf.reels`, LEFT JOINed to the week's top 5. Queried against source it
+returns exactly SG 6 / MY 5 / ID 5, matching Faiz's spec — and a new page added later appears on
+its own without a code change.
+
+A vertical with nothing that week renders its header and the line *"Nothing published in this
+vertical this week"*. A market with nothing at all (Malaysia this week) additionally carries the
+callout at the top, then still lists all five verticals underneath.
+
+Verified on rebuild: Singapore 6 verticals (2 empty), Malaysia 5 (5 empty), Indonesia 5 (3 empty),
+30 slides, manifest 5400s.
