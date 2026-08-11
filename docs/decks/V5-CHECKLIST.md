@@ -242,3 +242,41 @@ of every snapshot, 7 was correct. The number moved because carousels were back-d
 This is the third instance of the same pattern (HubSpot contacts settling after build, throughput
 missing Saturday, carousels back-dated). The weekly figure is never final at build time. Worth a
 decision on whether the immutable archive should be written later than the Saturday send.
+
+---
+
+## Planning split (paid vs internal) + editors by name — added 2026-08-11
+
+Both requested by Faiz off the live deck.
+
+### Strategists: the 204 in planning is now segmented
+**Paid vs internal follows `Client/Vendor`**, which is the signal the base itself already uses —
+the Videos `Lead Time` formula reads `IF(COUNTA(Client/Vendor)>0, 48, 8)`, i.e. 48h approval for
+client work and 8h for internal. Using the same field means the deck and the base agree on what
+"paid" means rather than inventing a second definition.
+
+Renders as two bars under the leading tiles: **Paid (client work) 160 · 78%** and
+**Internal (our own content) 44 · 22%**, summing to the 204 tile above them.
+
+### Video editors: queue and drafts broken down by name
+Per-editor rows showing waiting / editing / drafts sent this week, sorted by drafts then queue.
+Drafts are credited to `Draft Submitted By`, falling back to the assigned `Video Editor` — the same
+attribution the throughput job uses, so the slide and the leaderboard cannot disagree.
+
+### The reason both needed a second fix: two sources on one slide again
+The new breakdowns come from the live Lark pass in V5 Facts; the tiles above them came from the
+dashboard snapshot. The two fetches race **inside the same build**, so on first render the editors
+slide showed "Waiting to edit 45" above rows summing to 44, and "Editing now 5" above rows summing
+to 6. Same class of defect as the "7 deals still open" bug from the 8 Aug audit.
+
+Both tiles are now **pinned to `v5.stages`**, the same pass that produces the rows, so tile and rows
+are arithmetically identical by construction. Verified: waiting 44 = 9+5+19+1+0+9+1, editing 6 = six
+editors at 1, drafts 9 = 3+3+1+1+1. Strategist tiles pinned the same way (QC queue 19, planning 204).
+
+### Two notes for whoever edits this next
+- Credit chips took initials from raw word starts, so `Maulana_Homes & Business` rendered as **"M&"**
+  and `(unassigned)` as **"("**. Initials now strip punctuation and the underscore renders as a
+  separator: **MH · Maulana · Homes & Business**, **U · (unassigned)**.
+- When generating JS that contains a regex literal, use `new RegExp('...')`. A literal needs `\/`
+  inside the patcher's own string, and `\/` collapses to `/` when that string is parsed, which
+  silently produces `Invalid regular expression flags` at the syntax gate.
