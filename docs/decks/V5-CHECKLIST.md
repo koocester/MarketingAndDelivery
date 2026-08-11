@@ -375,3 +375,37 @@ callout at the top, then still lists all five verticals underneath.
 
 Verified on rebuild: Singapore 6 verticals (2 empty), Malaysia 5 (5 empty), Indonesia 5 (3 empty),
 30 slides, manifest 5400s.
+
+---
+
+## Per-video lead attribution is LIVE — 2026-08-11 (was the last ≈ placeholder)
+
+I had left this as "≈ currently being worked on" on the grounds that there was no live feed. That
+was too cautious: the data was already in the warehouse the whole time, in
+`hubspot.contact.property_postcampaign`. Faiz asked for numbers by Saturday; they are in.
+
+**How the join works.** Lead-magnet link codes come in two shapes. Per-video codes lead with the
+video number — `0711_kb_ig`, `1790_kfmy_ig`, and one still carrying literal brackets,
+`[0100_kbmy_ig]`. Client-campaign codes are words — `elixir_sg_koocesterbusiness`, `MRCA`,
+`najahadmire_my`. The regex `^\[?[0-9]{3,4}[_-]` separates them, the leading digits resolve to
+`VID-####`, and that joins `public.video_contributors` for country, vertical and producer.
+
+**Live on the slide now** (all-time unless stated):
+
+| | |
+|---|---|
+| Leads via tracked links | **265** |
+| Traced to a specific video | **19** across 7 video links |
+| Coded leads this week | 0 (the 9–15 Aug week was 3 days old at render) |
+
+Per-video rows carry code, VID + vertical + country, producer chip, leads, leads this week and the
+latest lead date — e.g. `0711_kb_ig · VID-0711 · Homes · Singapore · Sujinraj · 11 leads · 7 Aug`.
+Campaign codes are listed underneath, explicitly **not** counted in the per-video figure, so the 265
+and the 19 can never be confused for each other.
+
+**Hygiene finding carried onto the slide:** one live link still writes literal brackets
+(`[0100_kbmy_ig]`), and that video is the only one that fails to resolve to a vertical/producer —
+the brackets are in the stored code. Fix the link builder and it will join like the rest.
+
+A video appears only once its link has produced a lead, so an empty table would mean the link
+builder has stopped writing codes — that is now the failure signal, not a placeholder.
