@@ -322,3 +322,37 @@ re-escaped. Same fix applied to page and producer.
   distinct titles in Metricool. **So roughly 60 pieces went live with no matching Lark upload
   record.** That gap is real and worth a decision: either the pipeline is being bypassed, or upload
   dates are not being filled. The deck currently shows both numbers without reconciling them.
+
+---
+
+## Malaysia restored + top 5 by views per vertical — 2026-08-11
+
+### Malaysia was silently dropping out of the deck
+The country list came from `SELECT DISTINCT country FROM rk`, i.e. only markets that published
+something that week. A market with nothing live lost its slide entirely, so the deck went from 30
+slides to 29 and nobody could tell whether Malaysia had a bad week or had been removed.
+
+The three markets are now **fixed** (`unnest(ARRAY['Singapore','Malaysia','Indonesia'])`). A market
+with no posts keeps its slide and states it plainly: *"No videos went live in Malaysia this week —
+the slide is kept so the gap is visible rather than the market quietly dropping out of the deck."*
+Back to 30 slides, manifest still balances to 5400s.
+
+### Top 5 by views per vertical, per country
+New `vtop` aggregate in Weekly Facts, rendered under the existing per-platform blocks.
+
+**Deduped by title and summed across platforms**, so a cross-posted video appears once with its real
+combined total instead of three times with a third of its views each. Columns: rank, title,
+platforms it ran on, watch link, total views, average engagement. The per-platform top 5 keeps its
+own ranking and its producer chips — Faiz's earlier ruling to keep per-platform still stands, this
+sits alongside it.
+
+Verified against source for the week of 9 Aug: Singapore Business 1, Homes 1, Koocester 2, Wealth 2
+(6 rows) and Indonesia Autos 2, Business 2 (4 rows) — matching the rendered slides exactly. The
+counts are small only because that week was three days old at render time; a full week fills each
+vertical closer to five.
+
+### Note on slide length
+Each country slide now carries up to 4 platform blocks + up to 5 vertical blocks + 2 virality bar
+groups. On a full week that is a lot of vertical scroll on one slide. If it reads as too much in the
+room, the natural split is a second slide per country (platforms on one, verticals + virality on the
+next) — that is a layout decision, not a data one, and the timing manifest rebalances automatically.
