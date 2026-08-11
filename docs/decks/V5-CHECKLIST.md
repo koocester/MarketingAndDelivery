@@ -409,3 +409,50 @@ the brackets are in the stored code. Fix the link builder and it will join like 
 
 A video appears only once its link has produced a lead, so an empty table would mean the link
 builder has stopped writing codes — that is now the failure signal, not a placeholder.
+
+---
+
+## Ops breakdowns + an accuracy audit of the questioned numbers — 2026-08-11
+
+Faiz questioned several figures. Checked every one against Lark for **week 2–8 Aug**, the week the
+deck he was reading covered.
+
+| Figure | Deck said | Source says | Verdict |
+|---|---|---|---|
+| Shoots done last week | 6 | **6** | **accurate** |
+| Shoots booked ahead | 23 | 64 at Ready to Shoot, **3 with a shoot date already past** | **label was wrong** |
+| Carousels posted last week | 7 | **9** | correct at build, 2 back-dated after |
+| Carousels Not Started | 289 | **288** | accurate (drift of 1) |
+| SMM uploaded | 36 | **40** | correct at build, back-dated after |
+| SMM intended | 99 | **47** | **volatile — intended dates get rewritten wholesale** |
+
+### "Shoots booked ahead" was never true
+It rendered the **Ready to Shoot stage count**, which includes shoots whose date has already passed —
+3 of them. Nothing about it was "ahead". Retitled **"At Ready to Shoot"** with a sub-line reading
+*"N already past their shoot date"*, so the overdue tail is visible instead of being folded into a
+forward-looking number.
+
+### Shoots by page, organic split out
+Organic is the **Organic Video tick on the record**, not an inference. For 2–8 Aug: 6 shoots, **0
+organic**, all 6 with a guest — KOOCESTER (Main) 2, Business SG 2, Foodie SG 1, Wealth SG 1.
+
+### SMM: intended vs uploaded, by page
+New table on the SMM slide — page, intended, uploaded, and the gap, coloured red when the plan was
+missed and green when backlog was cleared. This is what makes the volatile "intended" figure legible:
+the total moves because intended dates are rewritten, but the per-page gap shows where.
+
+### Strategists: storyboards and approvals
+- **Storyboard uploaded: 3 of 205 videos in Planning — 1%.** The storyboard is the
+  `Storyboard (Lark Doc)` link; a video in Planning without one has nothing for the producer to
+  shoot against. This is the starkest number found in the whole audit.
+- **Waiting at Approval 67** (Head of Growth gate) and **Final approval 29** (marketing/client).
+
+### Still open
+- **Top 5 "by pages" layout.** Grouping is already effectively per page — each country slide groups
+  by vertical, and page = vertical x country. So "doesn't look good" reads as a layout problem, not
+  a grouping one, and the country slides are now very long (4 platform blocks + 5–6 vertical blocks
+  + 2 virality groups + attribution). The fix is splitting each country across two slides, which is
+  a presentation decision, not a data one. Not actioned pending Faiz's call.
+- **Back-dating** now confirmed on carousels, video uploads and HubSpot contacts. Every weekly figure
+  is provisional at Saturday build time. Unresolved: whether the immutable archive should be written
+  later than the Saturday send.
