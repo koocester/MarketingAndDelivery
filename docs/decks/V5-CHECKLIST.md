@@ -190,3 +190,55 @@ was not running, and a "▲ +22" against that would be meaningless. It appears f
 Singapore and Indonesia but not Malaysia, so that country slide is absent and the timing manifest
 rebalanced to 5400s on its own. That is the value-agnostic design working, not a regression.
 The week beginning 9 Aug closes Saturday 15 Aug and is the first fully measured strategist week.
+
+---
+
+## Copywriters slide — mislabelled tile hid a 289-carousel backlog (fixed 2026-08-11)
+
+Faiz flagged that "Not started 59" looked far too low and that "7 posted last week" did not tally.
+Two separate things, only one of them a bug.
+
+### The bug: the tile was showing the wrong bucket
+`Koocester Command (live dashboard)` → Compute node builds two things:
+```
+carousel:[['Pending',cPend],['Copywriting',cCw],['Amendments',cAmend],['Final approval',cFinal],['Ready',cReady]]
+carousel_reservoir: cNS
+```
+where `cPend = cC('Carousel Stage','Pending Copywriting')` and `cNS = cC('Carousel Stage','Not Started')`.
+
+Build Deck rendered `carouselVal('Pending')` under the label **"Not started"**. So the tile was
+showing the **Pending Copywriting** count, while the genuine Not Started backlog sat in
+`carousel_reservoir` and was **never rendered anywhere on the deck**.
+
+Counted live against Lark (all 659 carousel records, not a 500-row first page):
+
+| Carousel Stage | true count | deck showed |
+|---|---|---|
+| Not Started | **289** | not rendered at all |
+| Pending Copywriting | **66** | 59, labelled "Not started" |
+| Copywriting | **0** | 0 ✓ |
+| Final Approval (Head Copywriter/Client) | **7** | 7 ✓ |
+| Ready to Upload | 91 | not on this slide |
+
+(59 vs 66 is snapshot age, not a second bug.)
+
+**Fix.** The tile is now labelled **"Pending copywriting"** for what it actually counts, and the
+reservoir is surfaced as its own tile, **"Unstarted shells — 289 · generated backlog not yet in
+copywriting"**. Verified on rebuild: 66 / 0 / 7 / 289, matching Lark exactly.
+
+The reservoir is deliberately excluded from *active* work by the dashboard
+(`active = stage not terminal && stage !== 'Not Started'`) because these are auto-generated shells
+from the Monthly Content Engine. That exclusion is fine — hiding the number entirely was not.
+
+### Not a bug: "7 posted last week"
+True count for week 2–8 Aug is **9** (Ratnasari 5, Farrel 2, Aisha 2 — all three are active
+Copywriters in the HR base, so the HR role gate dropped nobody, and every one had a Copywriter set,
+so `if(!p)return` dropped nobody either).
+
+Pulling `last_modified_time` on all nine shows exactly **two records were edited 2026-08-11 at
+10:38 and 10:39 SGT** — after the Saturday build *and* after the Monday 06:00 re-run. At the moment
+of every snapshot, 7 was correct. The number moved because carousels were back-dated two days later.
+
+This is the third instance of the same pattern (HubSpot contacts settling after build, throughput
+missing Saturday, carousels back-dated). The weekly figure is never final at build time. Worth a
+decision on whether the immutable archive should be written later than the Saturday send.
