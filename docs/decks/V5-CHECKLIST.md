@@ -148,3 +148,45 @@ First firing of the weekly monthly edition would be **Sat 5 Sep 2026**. Roughly 
 
 Not manual, but still missing: **Strategist output**. QC Passed At has been stamping since 6 Aug, but
 the throughput job does not count it, so that row still reads "not measured". Next wiring job.
+
+---
+
+## Strategist output is now measured — wired 2026-08-11, TEAM TOTAL (Faiz's call)
+
+Item 8 on this checklist and item 6 of the 8 Aug audit are now closed.
+
+**Why it said "not measured" before.** Three separate hardcodes, not one:
+1. `Compute Throughput` carried `NO_OUT={Strategists:1}`, forcing output to 0.
+2. `Build Deck`'s strategists `mktDept({... measured:false ...})` printed the literal string.
+3. `Build Deck`'s marketing-summary special-cased `isStrat` to 'not measured' and '—'.
+
+The data existed the whole time — the 8 Aug build carried `v5.qcWk = 8` unused. But 8 was a
+**partial** figure: stamping only began 5 Aug, so Sun 2 – Tue 4 Aug had no QC records at all.
+Publishing it would have read as a bad week when the instrument simply did not exist yet, so
+"not measured" was the correct output for that week.
+
+**What changed.** Reported as a **team total, no individual credit** — the QC Passed At stamp
+records *when* a video passed, not *who* passed it, so per-person attribution would be an inference.
+- `Compute Throughput` fetches `QC Passed At`, counts stamps inside the week, and emits ONE row
+  `role=Strategists, person='(team)', metric='qc passed'`. Individual strategist rows stay at 0.
+- `Weekly Facts` excludes `person = '(team)'` from the per-person credit list, so the synthetic row
+  can never surface as a name chip.
+- `mktDept` now falls back to 'not measured' when `teamNow(role)` is **null** — a missing row still
+  reads honestly instead of printing a fabricated zero.
+- marketing-summary shows the number with **"team total"** in the who-did-the-work column.
+- Registry `recvpPy7jVCuh0` flipped **Not measured → Trusted**, rule records the team-total decision,
+  the (team) row mechanism, and that weeks before 9 Aug are partial and must not be compared against.
+- Guard manifest now declares it: **23 metrics**, up from 22 (and 9 before the 8 Aug work).
+
+**Verified live.** Throughput re-run wrote `(team) = 22, metric 'qc passed'` for week 2026-08-09 with
+both named strategists at 0. Deck rebuild: strategists slide reads **"Approved through QC last week:
+22"**, marketing-summary reads "Strategists — approved through QC · 22 · team total", no `(team)`
+string anywhere in the html, and the guard passed in enforce mode with the new Trusted metric.
+
+No week-over-week pill is shown for this metric yet: the prior week sums to 0 because the instrument
+was not running, and a "▲ +22" against that would be meaningless. It appears from the week of 16 Aug.
+
+**Note on slide count.** The rebuild produced **29 slides, not 30** — the current week has posts in
+Singapore and Indonesia but not Malaysia, so that country slide is absent and the timing manifest
+rebalanced to 5400s on its own. That is the value-agnostic design working, not a regression.
+The week beginning 9 Aug closes Saturday 15 Aug and is the first fully measured strategist week.
