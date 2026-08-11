@@ -280,3 +280,45 @@ editors at 1, drafts 9 = 3+3+1+1+1. Strategist tiles pinned the same way (QC que
 - When generating JS that contains a regex literal, use `new RegExp('...')`. A literal needs `\/`
   inside the patcher's own string, and `\/` collapses to `/` when that string is parsed, which
   silently produces `Invalid regular expression flags` at the syntax gate.
+
+---
+
+## Virality + two render bugs — 2026-08-11
+
+### Virality per country, by platform and by vertical
+**Definition: shares per 1,000 views.** Reach is the textbook denominator for virality, but for the
+week it is populated on only **66 of 153 reels rows (43%)** while shares is **153 of 153**. A
+reach-based rate would silently drop more than half the posts, so the metric uses the sharing
+behaviour that actually pushes a post past its own followers. Stated on the slide itself.
+
+Added to every country top-5 slide: bars for **virality by platform** and **virality by vertical**,
+plus an overall line with the raw shares and views behind it. Live figures on first render —
+Singapore overall 3.8/1k (Instagram 8.1, TikTok 7.4, Facebook 0.4; Business 5.9, Wealth 3.5,
+Homes 0.9), Indonesia overall 2.5/1k. Computed in the Weekly Facts SQL so it follows the same
+Sun–Sat window as everything else.
+
+If reach coverage improves, switching the denominator is a one-line change in that aggregate — but
+it needs a Metric Registry row first; this is currently an undeclared metric.
+
+### Bug: the editor name column rendered blank
+The by-editor table put the name chip in a `.t5pr` cell, and the `@media(max-width:850px)` rule
+hides `.t5pg, .t5pr, .t5e`. At any viewport under 850px — which includes how the deck was being
+viewed — the whole Editor column vanished while the three number columns stayed. Now uses `.t5t`.
+
+### Bug: titles shipped the literal text `&quot;`
+v1 renders table cells through `esc()`, so a title containing a real quote arrives as `&quot;`.
+The podium rebuild then ran `esc()` over it again, turning `&` into `&amp;` and printing
+`&quot;Namanya mobil itu jodoh-jodohan!&quot;` on the deck. Cells are now unescaped before being
+re-escaped. Same fix applied to page and producer.
+
+### Answered, no change needed
+- **"Posts published 99" does not include carousels.** It counts distinct (title, publish date) in
+  `content_perf.reels`, fed by the Metricool *Reels* syncs. Carousels and static posts land in a
+  separate table, `content_perf.posts` (395 rows, SG only — the MY/ID carousel syncs are not built).
+- **Why SMM "videos posted 36" is far below 99.** Different populations, not an error:
+  36 = Lark video records with an Actual Upload Date inside the week and a named SMM;
+  99 = distinct pieces Metricool observed published. For that week Lark now holds **41** such
+  records (Talulla 30, Esther 11 — it was 36 at build, the rest back-dated later), against **107**
+  distinct titles in Metricool. **So roughly 60 pieces went live with no matching Lark upload
+  record.** That gap is real and worth a decision: either the pipeline is being bypassed, or upload
+  dates are not being filled. The deck currently shows both numbers without reconciling them.
