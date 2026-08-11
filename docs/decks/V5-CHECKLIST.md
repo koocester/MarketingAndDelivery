@@ -456,3 +456,36 @@ the total moves because intended dates are rewritten, but the per-page gap shows
 - **Back-dating** now confirmed on carousels, video uploads and HubSpot contacts. Every weekly figure
   is provisional at Saturday build time. Unresolved: whether the immutable archive should be written
   later than the Saturday send.
+
+---
+
+## Vertical becomes its own slide — restructured 2026-08-11 (Faiz's spec)
+
+**One slide per vertical, three markets on it, top 3 videos under each.** Autos → Singapore /
+Malaysia / Indonesia; then Homes → the same three; and so on. Country flags head each block.
+
+The per-country **top 5 by platform** slides are unchanged — Faiz: *"the top five by platform rate
+is okay"*. The per-vertical blocks that had briefly been added to those slides are removed, so the
+same thing is not said twice.
+
+Running order now: `… top-singapore top-malaysia top-indonesia | vert-autos vert-business
+vert-foodie vert-homes vert-koocester vert-wealth | communities …` — **36 slides, manifest still
+balances to 5400s** on its own, and the new slides join the Marketing filter lane.
+
+A vertical only lists the markets that actually run it, so **Koocester (the SG-only main account)
+shows Singapore alone** rather than two markets it never had. A market that published nothing shows
+"Nothing published in <market> this week" rather than being dropped.
+
+### Bug caught on first render: the same video listed twice
+Autos ID, Business ID and Wealth SG each burned two of their three slots on one video. TikTok stores
+the **whole caption** in `video_title` while Facebook/Instagram store a short title, so
+`left(video_title,52)` was not the same string on both platforms and the rows never merged.
+
+Grouping is now on the **normalised first four words**, which is stable across both, and the row
+displays the *shortest* title in the group — the clean one, without the caption tail. The merge is
+arithmetically verified: Autos ID 6,236 + 3,837 = **10,073**; Wealth SG 2,279 + 1,129 = **3,408**;
+Business ID 441 + 272 = **713**. Each now shows once as Facebook/Instagram/TikTok with the real total.
+
+Trade-off worth knowing: two genuinely different videos sharing their first four words would merge.
+Given the alternative was duplicate entries eating the top 3, that is the better failure mode — but
+if titles ever become templated ("Koocester Homes Episode ..."), this key needs revisiting.
