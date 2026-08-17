@@ -489,3 +489,44 @@ Business ID 441 + 272 = **713**. Each now shows once as Facebook/Instagram/TikTo
 Trade-off worth knowing: two genuinely different videos sharing their first four words would merge.
 Given the alternative was duplicate entries eating the top 3, that is the better failure mode — but
 if titles ever become templated ("Koocester Homes Episode ..."), this key needs revisiting.
+
+---
+
+## Sales slide — YTD and month, combined and by market (Faiz's 4 asks) 2026-08-11
+
+| Ask | On the slide |
+|---|---|
+| 1 Total sales Jan → now, 3 markets combined | **S$1,030,270** |
+| 2 Sales this month, combined **and per market** | **S$32,301** — SG S$32,301, MY —, ID — |
+| 3 Closed won this month, combined **and per market** | **6** — SG 6, MY 0, ID 0 |
+| 4 Total closed won Jan → now, combined | **167 deals** |
+
+Plus a by-market table carrying month and YTD side by side, so a market that is quiet this month
+still shows its year: Singapore 102 / S$848,598 · Malaysia 48 / S$174,508 · Indonesia 17 / S$7,164.
+
+### Definition, stated because it matters
+**"Sales" = the value of closed-won deals**, which is the measure that pairs with the close-won
+counts in asks 3 and 4 and comes from the same source. It is deliberately **not** the Xero invoiced
+figure already on this slide: YTD closed-won is **S$1,030,270** against Xero invoiced **S$975,436**.
+Those are different measures and will never tie — the slide says so rather than leaving two
+near-identical millions to be mistaken for each other.
+
+### Country had to be inferred, and the slide admits it
+`hubspot.deal` has no country. `property_business_unit` is **NULL on 178 of 192 deals** (only
+media_sg 13, media_id 1), so it is unusable. `property_deal_currency_code` is populated on **188 of
+192** — SGD 108 / MYR 60 / IDR 20 — so the market is taken from the deal currency and that is
+printed on the slide. Values are summed in **home currency** so the three markets are comparable
+rather than adding SGD to IDR. A row for deals with no currency set appears only if any exist.
+
+Data quality is good where it counts: all **167** closed-won deals have both an amount in home
+currency and a close date, so nothing is silently excluded.
+
+**Upgrade path:** if Business Unit gets filled in on deals, switch the split to it and drop the
+currency inference — one expression in the `sales` aggregate.
+
+### Draft rendered on a complete week
+Faiz asked to judge this on a full week rather than the 3-day-old current one. `render-lastweek.js`
+takes a pristine backup, shifts the week anchor back 7 days, renders once, restores from the backup
+in a `finally`, then re-fetches and compares to prove production is byte-identical. Verified twice.
+The month/YTD sales figures are NOT shifted — they are always "now", which is what Saturday shows too.
+Draft: https://koocester-dryrun.pages.dev/weekly-lastweek
