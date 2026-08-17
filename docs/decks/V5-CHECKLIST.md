@@ -548,3 +548,26 @@ still balancing to 5400s. Both new slides join the Sales filter lane.
 The Xero tiles deliberately stay on the main Sales slide: closed-won (S$1,030,270) and Xero invoiced
 (S$975,436) are different measures, and separating them across slides makes it less likely they get
 read as the same number twice.
+
+---
+
+## Live deck overwritten with the current build — 2026-08-17
+
+Faiz: *"put live and overwrite"*. Done on the **live Staff Academy copy**, not the dry-run site.
+
+Timing mattered: it is Monday 17 Aug, and the week anchor still resolves to **9–15 Aug** until
+Tuesday, so the serve path naturally rendered the right week and no anchor shifting was needed.
+
+- **Was:** report 99, archived Sat 15 Aug 08:45, 186KB, **36 slides**, none of the recent work.
+- **Now:** report 100, 194KB, **38 slides**, verified to contain the sales-by-market slide, the six
+  per-vertical slides, live per-video attribution and the virality blocks.
+
+Same title and date key (`Week of 9 August 2026`, `dated=2026-08-09`), window Sunday–Saturday.
+Written by the archiver itself rather than by hand, so metadata and the leadership-intake join
+behave exactly as on a normal Saturday. The webhook was isolated to the weekly branch during the
+run and the Townhall fan-out restored afterwards.
+
+**Consequence worth recording:** report 99 held the Saturday 08:45 snapshot; report 100 holds the
+same week measured on Monday evening. Figures that drift — closed-won, uploads, carousels, coded
+leads — now read as of 17 Aug rather than 15 Aug. That is inherent to overwriting an archive and is
+the same back-dating behaviour documented earlier in this file.
