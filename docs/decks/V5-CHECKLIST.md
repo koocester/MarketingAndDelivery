@@ -530,3 +530,21 @@ takes a pristine backup, shifts the week anchor back 7 days, renders once, resto
 in a `finally`, then re-fetches and compares to prove production is byte-identical. Verified twice.
 The month/YTD sales figures are NOT shifted — they are always "now", which is what Saturday shows too.
 Draft: https://koocester-dryrun.pages.dev/weekly-lastweek
+
+### Sales add-on split onto its own slides (Faiz, 11 Aug)
+
+Faiz confirmed **deals won is the headline**, and that the four sales asks were an *add-on* — so
+they get their own slides rather than being packed onto the existing Sales slide, which was
+starting to look nothing like the version before it.
+
+Running order is now `sales -> sales-ytd -> sales-market -> sales-pipeline`, **38 slides**, manifest
+still balancing to 5400s. Both new slides join the Sales filter lane.
+
+- **Sales** — unchanged from before the add-on: pipeline, deals opened, enquiries, deals won,
+  customers, contacts, and the Xero invoiced / collected tiles.
+- **Sales — 2026 to date and this month** — the four headline figures, two per row so they read big.
+- **Sales by market — month and year to date** — the country table on its own.
+
+The Xero tiles deliberately stay on the main Sales slide: closed-won (S$1,030,270) and Xero invoiced
+(S$975,436) are different measures, and separating them across slides makes it less likely they get
+read as the same number twice.
