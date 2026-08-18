@@ -625,3 +625,120 @@ Verified: 37 footers, one per slide, none mis-numbered. Any tile shaped "NN / NN
 ### Not done in this batch
 The editor-by-vertical table (Stanley 9 / Riza 6 / Marvels 6 / Rafli 5 / Maulana 5 / Mabdi 2 = 33,
 with the category split, to be rendered in English) is still outstanding.
+
+---
+
+## Report 100 restated in place + metric definitions from Iman — 2026-08-18 (CR-20260818-01)
+
+### HubSpot stopped reaching the warehouse on 9 Aug — every HubSpot figure in this deck was a false zero
+
+Root cause of the attribution slide reading `0 / 0 / 0`. It was never a rendering bug:
+
+| table | last `_fivetran_synced` |
+|---|---|
+| `hubspot.contact` | 2026-08-09 08:51 UTC |
+| `hubspot.contact_form_submission` | 2026-08-09 08:51 UTC |
+| `hubspot.deal` | 2026-08-08 20:51 UTC |
+
+Report 100 covers 9–15 Aug, so the build only ever saw **day one** of its own week: 22 contacts in
+the warehouse against **236** real form submissions. `enq_wk`, `sql_wk`, `won_wk` and the per-video
+`wk` counter all resolved to zero and rendered as honest-looking zeros.
+
+**This is not confined to the attribution slide.** Every HubSpot-derived number in report 100 is
+understated — sales, scorecard, deals opened, deals won. Only the figures Faiz's lead-report export
+could prove were restated; the rest still stand as built and are wrong.
+
+Second-order lesson: the guard cannot catch this. A stale-but-present feed returns a valid number,
+so the Metric Registry sees a real value and passes it. **A freshness assertion on
+`max(_fivetran_synced)` per source table belongs at the entrance of the Saturday build**, alongside
+the watchdog verdict gate.
+
+`enq_wk` is also pinned to four hard-coded form GUIDs — Website Get Qualified Buyers, Business Growth
+Form SG, GROW MY, MAJU ID. That is why "our forms" reads **28** for the week while all 30 active
+forms carry **236**. The four are correct as a definition of *our* enquiries; the slide now shows
+both lines so the gap is visible rather than implied.
+
+### Producer metric — Iman's method, verbatim
+
+Recorded as stated, because this is the definition the business is counting to and the automated
+stamp (`Queued to Edit At`, from 18 Aug) has to reproduce it exactly:
+
+> * Set Prompt Date: August 9–15
+> * Internal Campaign & Paid Campaign: The duration is calculated from the first time the status
+>   changes from Ready to Shoot to Ready to Edit. This is checked through the Project History.
+> * Organic Content: The duration is calculated from the first time the Producer submits the form and
+>   it enters Head Editor – Organic Approval.
+
+Worked example supplied by Iman — VID-0848 (Rachel Ingrid Saidbun, Business ID). Its History shows
+`Video Stage: Ready to Shoot → Ready to Edit` on **1 Aug**, outside the window, so the video is
+**excluded** even though it was actively edited during 9–15 Aug (Ready to Edit → Editing on 13 Aug,
+Editing → Strategist QC and First Draft Submitted on 13–14 Aug). This is the backlog-exclusion rule
+working as intended and is the single clearest illustration of why the deck's Shoot-Date count of 5
+and Iman's 16 were never going to tie.
+
+### Editor metric — Iman's proposed benchmark, NOT yet adopted
+
+> Suggestion for the Editor data: the benchmark for **First Draft Submitted** can be the first time
+> the video stage changes from **"Editing" to "QC."** This timestamp can be used as the point when
+> the first draft is considered completed and submitted for the QC process.
+
+Iman confirms he still counts editors **by hand**. That matters, because the hand count and the
+system disagree for 9–15 Aug:
+
+| editor | hand count | deck `First Draft Submitted At` | Δ |
+|---|---|---|---|
+| Stanley | 9 | 11 | +2 |
+| Ulysess Marvels | 6 | 8 | +2 |
+| Riza Ismail | 6 | 6 | — |
+| Rafli Fahrizal | 5 | 5 | — |
+| Maulana | 5 | 5 | — |
+| Mabdi Rizqi Rofi | 2 | 1 | −1 |
+| **total** | **33** | **36** | **+3** |
+
+Unreconciled. The likely cause is exactly what Iman's suggestion addresses: `First Draft Submitted At`
+is a stamped field that can be written more than once (or late, by automation) whereas an
+`Editing → Strategist QC` **transition** is a single unambiguous event in History. VID-0848 above
+shows both landing in the same run, which is the agreeable case — the disagreement will be in the
+records where they do not.
+
+**Next step when this is picked up:** derive the transition timestamp for the week, compare against
+`First Draft Submitted At` per editor, and expect the difference to explain Stanley +2 / Marvels +2 /
+Mabdi −1 before changing the definition. Do not switch the deck to the new benchmark until that
+reconciliation is done — swapping definitions mid-dispute would hide the discrepancy rather than
+settle it.
+
+### Pushed to report 100 (live, in place)
+
+The v5 generator was deliberately **not** re-run: the serve path builds the *current* week, so
+regenerating today would produce 16–22 Aug, not the meeting week. Edits were written straight to
+`public.reports.html_content` for id 100. Original preserved in `public.reports_backup_20260818`.
+
+- **Attribution (30/38)** — funnel restated from the lead-report export: all lead forms 236, our four
+  business forms 28, Qualified and Won rendered `n/a` rather than 0 because the export cannot supply
+  them. Top-10 form leaderboard added beside the per-video table. Per-video "this week" column
+  removed — it cannot be counted past 9 Aug.
+- **Editors (13/38)** — merged table now carries queue, drafts sent (36, system) and videos (33, hand
+  count) side by side with the category split in English, plus a line naming the disagreement.
+- **Producers (10/38)** — "Videos into production 16" tile added, by-producer table from the sheet
+  (Aji 6, Fajrin 4, Amrel 3, Jordan 2, Thaddeus 1, Jaydon/Bestian/Al Hakim 0), Iman's method printed
+  as the proofline. "Shoots done last week 5" kept alongside, explicitly labelled a different measure.
+- **Tech (35/38)** — Entra 19/21, device joined 14/21, Pro activated 18/21, outstanding names listed,
+  plus the six phones with no MDM stated by hand. Sarah confirmed **on a Mac** (18 Aug) — the Lark
+  record still says "confirm Windows or Mac" and should be corrected at source.
+- **Roadmap (37/38)** — CRs scoped to the week: **none raised 9–15 Aug**, last register entry is
+  CR-20260807-01. The five most recent are listed under a heading that dates them honestly.
+- **HR (34/38)** — banner: NOT REPORTABLE, data still being set up. Slide left in place rather than
+  removed, because deleting it would renumber all 38 footers under meeting pressure.
+- **Finance (32/38) and Client revenue (33/38)** — banner: NOT YET VERIFIED BY FINANCE, pending
+  Mishkat.
+
+### Carried debt from this batch
+
+1. **Restore the HubSpot → warehouse sync.** Nothing else on this list matters as much.
+2. **Freshness gate** on `max(_fivetran_synced)` before the Saturday build.
+3. Report 100 is flagged `metadata.immutable = true` and was edited directly, bypassing the
+   manager edit-and-sign flow. **No signed history and no `kooEditedBy` stamp exists for any of the
+   above.** If in-place restatement is going to be normal, it needs to go through that flow.
+4. The Saturday archiver (`db8jcaHxVUWmYOPT`) is the one job that could overwrite these edits.
+5. No Lark post and no CR register row was written for CR-20260818-01 — notifications are still held
+   at Faiz's instruction. The number is carried in this commit only.
