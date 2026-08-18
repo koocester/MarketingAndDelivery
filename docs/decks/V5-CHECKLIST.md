@@ -938,3 +938,69 @@ move it to Sunday or retire it — not touched without instruction.
 The trigger nodes still read "Sat 7:30 SGT", "Weekly Sat 8:45am SGT" and "Sat 8:50 SGT". Renaming
 a node rewrites every connection reference, so the crons were changed and the labels left. Read
 the cron, not the name.
+
+---
+
+## CR numbering convention + CR feed reads the chat — 2026-08-18
+
+### The clash, and the rule that prevents it recurring
+Two Claude sessions raised CRs on the same day and both started at `-01`. The device/Entra
+workstream posted `CR-20260818-01` (Sarah Miranda's Entra account) and `CR-20260818-02`
+(device-onboarding docs) into Tech Updates; the deck workstream had independently used `-01`
+through `-04` in git. That session spotted it and left a note in the group.
+
+**The sequence suffix was the defect.** Two people cannot pick the next number in a shared
+sequence without first reading the whole register, and neither did.
+
+**New convention, from 2026-08-18 (Faiz):**
+
+```
+CR-DDMMYYYY  followed by the title
+e.g.  CR-18082026 — HubSpot + Xero sync restored
+```
+
+No sequence number. The **title** is what makes a same-day CR unique, and a title is something
+the author already knows without consulting anyone. Note the date is **DDMMYYYY**, deliberately
+different from the old `YYYYMMDD-NN`, so the two generations are distinguishable at a glance.
+
+**Renumbering applied:** the deck workstream ceded `-01` and `-02` to the device workstream,
+which posted first. `CR-20260818-01` in the Lark CR Register (the sync fix) was renumbered to
+**`CR-20260818-03`** and posted to the group under that number.
+
+**Still wrong, and worth knowing:** the four deck commits below carry CR labels that collide with
+the device workstream. Their commit messages are unchanged — rewriting pushed history needs a
+force-push on a shared branch, which is not worth the risk for a label. This table is the
+authoritative mapping:
+
+| Commit | Label in message | Should be read as |
+|---|---|---|
+| `8c04aee` | CR-20260818-01 | CR-18082026 — HubSpot sync outage + report 100 restatement |
+| `e56324f` | (none) | CR-18082026 — Shoot Date correction |
+| `4171b60` | CR-20260818-02 | CR-18082026 — freshness gate |
+| `02011cb` | CR-20260818-04 | CR-18082026 — weekly build moved to Sunday |
+
+### CR feed now reads the Tech Updates GROUP, not the Base table
+Faiz: *"the change request feed is inside the Tech Updates group"*. The `crWeek` fetch in
+**V5 Facts** was reading `tblarK2gfipaHTRC`, which lags and is not always written. It now reads
+the chat (`oc_1e17c626a19a6ba213abca429d0d13ff`) over a 60-day lookback via
+`im/v1/messages`, parses the first CR line out of each message body, de-duplicates by number
+(a CR is sometimes reposted after an edit), and filters to the deck week.
+
+The parser accepts **both** generations — `CR-(\d{8})(?:-(\d{1,2}))?` — so historical entries keep
+resolving. The separator is matched as `[^A-Za-z0-9]+` rather than a literal dash, because the
+group contains em dashes, en dashes and hyphens interchangeably.
+
+Verified on a live render: the tech slide now lists all three CRs raised on 18 Aug, including the
+two from the device workstream that the deck had no visibility of before.
+
+### Notifications repointed
+Recipients changed from **Manager Updates** (`oc_cd23f247...`, 10 people) to **Koocester
+Management** (`oc_7bfdc6d0...`, 7 people) — the people who actually present the deck. Six are
+@-mentioned by name: Iman Arifin, Rina, Mishkat Tanin, Cheryl, K.Bhavani Karupiah, Faiz.
+**Hakim is in the chat but deliberately not mentioned** — he presents none of it.
+
+`Weekly Slides → Hakim (Sat 9am)` (`STzSYqQAmqDflniT`) is **deactivated**: it duplicated the
+group ping and was stranded on Saturday after the build moved to Sunday.
+
+Message body reordered so the **portal link comes first** — open the deck, then QC, then the edit
+link. The QC ask used to sit above the link.
