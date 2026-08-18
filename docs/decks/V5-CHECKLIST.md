@@ -1004,3 +1004,75 @@ group ping and was stranded on Saturday after the build moved to Sunday.
 
 Message body reordered so the **portal link comes first** — open the deck, then QC, then the edit
 link. The QC ask used to sit above the link.
+
+---
+
+## Month-on-month + the month-end edition — BUILT 2026-08-18
+
+Previously recorded in this file as *"NOT built ... Build Deck has no monthly branch, the Weekly
+Facts SQL has no MoM keys, and V5 Transform has none."* That is now stale — it is built.
+
+### The rule
+The **last weekly deck of a calendar month** becomes the monthly edition: same running order,
+same slides, but every comparison is **month-on-month against the prior month** instead of
+week-on-week. Every other week is untouched.
+
+### How month-end is detected
+Not by counting weeks, and not by a maintained calendar. In `Weekly Facts`:
+
+```sql
+EXTRACT(MONTH FROM (sun+13)) <> EXTRACT(MONTH FROM (sun+6))
+```
+
+*"Is the Saturday after this week's Saturday in a different month?"* If yes, this is the last
+full week of the month. It is self-maintaining and cannot fire twice. Verified across 13
+consecutive weeks:
+
+| Week (Sun–Sat) | Generated | Edition |
+|---|---|---|
+| 16–22 Aug | Sun 23 Aug | weekly |
+| **23–29 Aug** | **Sun 30 Aug** | **MONTHLY — Aug vs Jul** |
+| 30 Aug – 5 Sep | Sun 6 Sep | weekly |
+| **20–26 Sep** | **Sun 27 Sep** | **MONTHLY — Sep vs Aug** |
+| **25–31 Oct** | **Sun 1 Nov** | **MONTHLY — Oct vs Sep** |
+
+Exactly one per month, always the last full week. **First firing: Sunday 30 August.**
+
+### What the data layer returns
+`wf.mom` — `isMonthEnd`, `mLabel`, `pLabel`, `mStart`, `mEnd`, and current-vs-prior month pairs for
+**leads, enq, sql, won, won_val, inv, coll, posts, views, eng**. The month is the one containing the
+week's Saturday, so the last week of August reports August even though the deck is built in
+September.
+
+### How the deck switches
+A single `pick(weekPrior, weekCur, momKey)` helper in V5 Transform. On a normal week it returns the
+week pair; on the month-end edition it returns the month pair. Axis labels flip `last wk / this wk`
+→ `last mth / this mth`. Wired into the sales enquiries chart, all three engagement charts, and both
+finance charts.
+
+The opening slide carries a blue **MONTHLY EDITION — <month>** banner naming the comparison basis,
+because a reader cannot otherwise tell which basis a chart is on. `v5_meta.month_end_edition` and
+`v5_meta.mom_month` expose it machine-readably.
+
+### Verified
+Live render on a normal week: 36 slides, **no** monthly banner, all 14 chart axes still read
+`last wk / this wk`, no mojibake. The month-end branch was then exercised against the real
+warehouse figures:
+
+| | week basis | month basis (Aug vs Jul) |
+|---|---|---|
+| Enquiries | 27 → 6 | 163 → 70 |
+| Invoiced | 3,000 → 1,000 | 85,901 → 45,700 |
+| Collected | 0 → 0 | 107,001 → 24,500 |
+| Posts | 89 → 9 | 396 → 211 |
+| Views | 1,996,156 → 30,886 | 44,444,403 → 4,563,607 |
+| Engagement | 3.09 → 3.39 | 3.37 → 2.89 |
+
+August is still partial today, so those figures fill out as the month closes — the structure is
+what was being proven.
+
+### Deliberately left on the week basis
+`deals_created`, the role-output rows on the marketing summary (`team_throughput` is stored per
+week and would need month aggregation), and the top-5 / vertical slides, which are inherently a
+"what ran this week" list rather than a comparison. Adding MoM to the role rows is the obvious
+next increment.
