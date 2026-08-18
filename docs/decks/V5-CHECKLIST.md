@@ -742,3 +742,63 @@ regenerating today would produce 16–22 Aug, not the meeting week. Edits were w
 4. The Saturday archiver (`db8jcaHxVUWmYOPT`) is the one job that could overwrite these edits.
 5. No Lark post and no CR register row was written for CR-20260818-01 — notifications are still held
    at Faiz's instruction. The number is carried in this commit only.
+
+### Correction — Shoot Date on the 16 is mostly absent, not mostly earlier
+
+The note above ("only 2 of the 16 have a Shoot Date in that window") is true but materially
+incomplete, and a slide was briefly published claiming the rest "were shot before this week."
+**That claim was wrong and was not verified before it was written.** Checked against
+`Shoot Date` (`fldIi1Lyjz`) on all 16:
+
+| | count | detail |
+|---|---|---|
+| Shot inside 9–15 Aug | 2 | VID-2429 (10 Aug), VID-2470 (13 Aug) |
+| Shot before the week | 3 | VID-0843 (27 Jul), VID-2458 (30 Jul), VID-2463 (5 Aug) |
+| **No Shoot Date at all** | **11** | 7 organic + **4 campaign videos with the field blank** |
+
+The 7 organic are correct by design — organic has no scheduled shoot, the producer submits
+footage straight into Head-Editor approval. The **4 campaign videos (VID-0739, VID-0885,
+VID-2061, VID-2464)** moved through to editing with `Shoot Date` never filled in.
+
+Two consequences:
+
+1. **"Shoots done this week" is a floor, not a count.** It selects on `Shoot Date` being in
+   range, and the field is patchily populated, so the deck's 5 understates by an unknown amount.
+   Any comparison drawn between it and the 16 is therefore soft on both sides.
+2. **A blank `Shoot Date` silently disables the raw-footage SLA.** `Raw Upload Overdue (alert)`
+   (`fldwatklM6`) returns empty when `Shoot Date` is blank, so those four videos could never have
+   raised the 16h alert. This is a live gap in the alerting, not just a reporting one.
+   `Shoot Date` should be mandatory on non-organic videos leaving Ready to Shoot.
+
+### Limitation — 4 of the 16 rest on record creation date
+
+Faiz's objection, confirmed: record creation is an admin artifact, not a production event.
+A paid record is created when Sales closes the deal; an internal one about two weeks before the
+month begins. The sheet counts four videos with the qualifier *"created in-window"* because they
+had no prior stage history to read:
+
+| VID | record created (SGT) | Shoot Date (SGT) | gap |
+|---|---|---|---|
+| VID-2458 | 10 Aug 17:44 | 30 Jul 11:30 | created 11 days **after** the shoot |
+| VID-2463 | 12 Aug 13:22 | 5 Aug 15:30 | created 7 days **after** the shoot |
+| VID-2464 | 12 Aug 17:28 | (none) | — |
+| VID-2470 | 13 Aug 11:47 | 13 Aug 13:30 | created ~2h **before** the shoot |
+
+Note the observed failure runs the *opposite* way to the one Faiz described: these were created
+too **late**, not too early. Creation date is unreliable in both directions.
+
+**The total of 16 still holds, but by luck rather than method** — each of those four records was
+created inside the window, so its handover to editing cannot have happened before the record
+existed. The method would break on the paid case: a deal closed in June, shot and handed over in
+August, would be filed in June with nothing to catch it.
+
+All four were created by the **"Finance" Lark user**, not by a producer or strategist — likely an
+automation spawning video records off closed deals. If so, that is the exact mechanism behind the
+objection and is worth tracing before anyone leans on creation date again.
+
+**Not carried forward:** `Queued to Edit At` (from 18 Aug) stamps arrival at Ready to Edit and
+never reads creation date, so this weakness is confined to the 9–15 Aug hand count.
+
+**Process note:** the wrong claim reached a live slide because an illustration was written as if
+it were evidence. Anything asserted on a slide about a specific set of records should be read out
+of the base first, even when it seems to follow from arithmetic already done.
