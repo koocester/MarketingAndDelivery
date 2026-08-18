@@ -895,3 +895,46 @@ warning sign present 5x, delta arrows present 5x.
 ### HR slide
 Already absent from the generator — the 18 Aug render carries 37 slides and no `hr` id. No change
 needed. It survives only in archived **report 100**, which also predates the emoji strip.
+
+---
+
+## Weekly build moved to Sunday 00:00 — 2026-08-18 (CR-20260818-04)
+
+Faiz: sales update their numbers across Saturday, sometimes into the evening. Building at
+Saturday 07:00 meant the deck was cut **while its own last day was still running** — the week
+never had a complete Saturday in it. Give sales until Saturday 23:59 and build once the week has
+actually closed.
+
+**The week itself does not change: still Sunday → Saturday.** Only the build moves.
+
+| Job | Was | Now | Cron |
+|---|---|---|---|
+| Metric Watchdog (pre-build verification) | Sat 07:30 | **Sun 00:00** | `0 0 * * 0` |
+| Portal Report Archiver (**the generator**) | Sat 08:45 | **Sun 00:05** | `5 0 * * 0` |
+| Manager Updates (the ping) | Sat 08:50 | **Sun 00:20** | `20 0 * * 0` |
+
+**No SQL change was needed for the week boundary.** The `b` CTE in Weekly Facts anchors on
+`(today − 2) − DOW(today − 2)`; run at Sunday 00:00 that still resolves to the Sunday that opened
+the week which just closed. Verified: at Sun 30 Aug it returns 23 Aug, i.e. the 23–29 Aug week.
+The only behavioural change is that Saturday's data is now fully inside the window.
+
+### Managers are @-mentioned by name
+The ping went to the managers chat as plain text, which is easy to scroll past. Each manager is
+now mentioned individually — Lark takes `<at user_id="ou_...">Name</at>` inline in a text message,
+so it fires a personal notification rather than adding a line to a group. IDs read live from the
+membership of `oc_cd23f2473003e47dc2a5db164a12d770`: Al Hakim, Iman Arifin, Thaddeus, Talulla,
+Ratnasari Cenreng, Rina, Mishkat Tanin, K.Bhavani Karupiah, Shahrukh Ameer, Faiz.
+
+Faiz's call on timing: **the ping goes out with the build, not the next morning** — "no time to
+lose". So managers are notified at ~00:20 Sunday and have all of Sunday to QC before Monday.
+
+### Left alone, needs a decision
+`Weekly Slides → Hakim (Sat 9am)` (`STzSYqQAmqDflniT`) is **still on Saturday 09:00** and is now
+out of step with the chain: it would fire a day before the deck is rebuilt, pointing at the
+previous week's deck. It also duplicates the managers ping, since Hakim is in that chat. Either
+move it to Sunday or retire it — not touched without instruction.
+
+### Node names are now stale
+The trigger nodes still read "Sat 7:30 SGT", "Weekly Sat 8:45am SGT" and "Sat 8:50 SGT". Renaming
+a node rewrites every connection reference, so the crons were changed and the labels left. Read
+the cron, not the name.
