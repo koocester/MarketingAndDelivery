@@ -571,3 +571,57 @@ run and the Townhall fan-out restored afterwards.
 same week measured on Monday evening. Figures that drift — closed-won, uploads, carousels, coded
 leads — now read as of 17 Aug rather than 15 Aug. That is inherent to overwriting an archive and is
 the same back-dating behaviour documented earlier in this file.
+
+---
+
+## Producer metric instrumented + tech/HR/finance batch — 2026-08-18
+
+### The producer number was measuring the wrong thing
+Faiz supplied `Producer_Production_9-15Aug2026.xlsx`. Its metric: *"video first entered the Editing
+Queue (campaign) / Head-Editor Organic Approval (organic) within 9–15 Aug. Verified one-by-one via
+record History."* Sheet total **16** (3 internal, 6 paid, 7 organic).
+
+The deck was counting **Shoot Date in the week = 5**. Checked all 16 against the base:
+**only 2 of the 16 have a Shoot Date in that window.** The deck's producer output was near-unrelated
+to what the business counts as producer production.
+
+What IS reproducible was verified exactly: classifying each of the 16 by
+`Organic Video` tick → Organic, else `Client/Vendor` present → Paid, else Internal gives
+**16/16 agreement** with the sheet, and Producer attribution is **16/16** too. Only the *date* was
+missing — and no field in the 131 on the Videos table could supply it.
+
+**Fix:** new field `Queued to Edit At` (`fldnff7CCb`) plus a poller,
+**Producer Queue Stamp (every 15m)**, that stamps it the first time a video sits at Ready to Edit.
+Never overwritten, so re-entry after amendments does not double-count.
+
+First run stamped **1 record wrongly** — VID-0857, which entered the queue on 3 Aug and merely moved
+*out* of Ready to Edit that morning. The rule had accepted any stage at-or-past Ready to Edit. Stamp
+cleared, rule tightened to `stage === 'Ready to Edit'`, re-run confirmed **1,659 scanned, 0 stamped**.
+Backlog is protected by a cutover timestamp, so historical records are never back-dated.
+
+The metric therefore starts from **18 Aug**; the 9–15 Aug figures cannot be reproduced automatically
+and the sheet remains the record for that week.
+
+### Batch applied
+- **Tech slide** now carries Entra ID and Windows 11 Pro onboarding, live from *Windows 11 Pro &
+  Entra Onboarding*: Entra account **19/21**, device joined **14**, Pro activated **18**, and the
+  outstanding names listed — Zainab (no Entra account), plus Mabdi, Thaddeus, Actorina, Bhavani,
+  Mishkat and Zainab not yet device-joined; Bhavani and Zainab without Pro.
+- **Phone/MDM enrolment is NOT tracked in Lark.** Neither the onboarding table nor the Device & Asset
+  Tracker holds it (a filter for pending returned zero). The slide says so and names the outstanding
+  set by hand. Adding an *MDM Enrolled* field to the Device & Asset Tracker makes it automatic.
+- **CRs** now scoped to the deck week. **Zero CRs exist for 9–15 Aug** — the register's last entry is
+  7 Aug, because the work in that period was never written up while notifications were held.
+- **HR slide removed** entirely (data still being set up).
+- **Finance** eyebrow flagged *"≈ not yet verified by finance"* pending Mishkat.
+
+### Latent bug this batch exposed
+The footer page-number rewrite used `/<strong>\d{2} \/ \d{2,}<\/strong>/` with **no anchor**, so it
+replaced the *first* match on the slide. The new tech tile "19 / 21" matched that shape and was
+rewritten to the slide number **"34 / 37"** — and because `String.replace` with a non-global regex
+replaces once, that slide's real footer was then left un-numbered. Anchored to `</footer>`.
+Verified: 37 footers, one per slide, none mis-numbered. Any tile shaped "NN / NN" was at risk.
+
+### Not done in this batch
+The editor-by-vertical table (Stanley 9 / Riza 6 / Marvels 6 / Rafli 5 / Maulana 5 / Mabdi 2 = 33,
+with the category split, to be rendered in English) is still outstanding.
