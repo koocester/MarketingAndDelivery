@@ -857,3 +857,41 @@ that were wrong.
 - The `ROLE_EMOJI` entry for **Strategists** in `V5 Transform` still holds corrupted bytes and
   renders as mojibake; the rendered slide was fixed by hand in report 100, so it will come back on
   the next build.
+
+### Emoji removed from the deck — 2026-08-18 (CR-20260818-03)
+
+Faiz: strip the emoji rather than repair the corrupt one. Implemented as a **single pass over
+the finished HTML** in `V5 Transform`, immediately before `outHtml` is returned — not by editing
+the ~40 scattered literals (`ROLE_EMOJI`, the tile-emoji table, and inline labels across sales,
+finance, content-stock, client-success, smm, strategists, tech and attribution). One pass cannot
+miss a label, and no future edit can quietly reintroduce one.
+
+It strips **both** literal characters and numeric HTML entities. That second half matters: several
+labels are written as entities (`&#128203;`) and would have survived a character-only strip
+completely intact.
+
+Ranges dropped: `1F000–1FAFF`, `2600–27BF`, `2300–23FF`, `2B00–2BFF`, plus `FE0F` (variation
+selector), `200D` (ZWJ) and `FFFD` (replacement char).
+
+**Kept deliberately:**
+- `U+26A0` warning sign — functional on the stale-data and governance banners, not decoration.
+- `▲ / ▼` (`25B2/25BC`) — outside every dropped range, so the week-over-week pills still read.
+- `→ · — ≈` — all outside the ranges.
+
+**Side effect that dropping `FFFD` produced for free:** the corrupt `ROLE_EMOJI.Strategists` entry
+rendered as mojibake (`????`) on every build. It is now stripped along with the rest, so the
+underlying corrupt bytes no longer need fixing — but they are *still in the source* and would
+resurface if the strip were ever removed.
+
+**Known side effect to watch:** the pass also strips emoji out of **video titles** pulled from
+social (4 rows in the 18 Aug render, e.g. *"Siapa bilang perubahan harus dimulai dari atas? 👀🇮🇩"*).
+That is real source content being altered for presentation. Acceptable for a clean deck; if titles
+should keep theirs, the strip has to be scoped to chrome only rather than run over the whole
+document.
+
+Verified on a live render: 37 slides, **0** literal emoji, **0** emoji entities, **0** mojibake,
+warning sign present 5x, delta arrows present 5x.
+
+### HR slide
+Already absent from the generator — the 18 Aug render carries 37 slides and no `hr` id. No change
+needed. It survives only in archived **report 100**, which also predates the emoji strip.
