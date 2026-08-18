@@ -802,3 +802,58 @@ never reads creation date, so this weakness is confined to the 9–15 Aug hand c
 **Process note:** the wrong claim reached a live slide because an illustration was written as if
 it were evidence. Anything asserted on a slide about a specific set of records should be read out
 of the base first, even when it seems to follow from arithmetic already done.
+
+---
+
+## Freshness gate — built 2026-08-18 (CR-20260818-02)
+
+Fivetran was restored the same afternoon (account `Koocester_Group` moved to the **Free Plan**;
+usage ~100k of 500k MAR, so no paid tier is needed). All three connectors were `Delayed` and did
+**not** self-restart — a plan change resumes the *schedule*, not the backlog, so all three were
+kicked manually. Backfill landed 05:26 UTC: contacts 7,906 → 8,164, week 9–15 Aug 22 → 230.
+
+### Why the existing guard could never have caught this
+The Metric Registry Guard asks whether a number is **approved**. It does not ask whether the data
+behind it is **current**. A frozen feed returns a valid, in-range, unflagged number — `0` — and
+sails through. That is the whole mechanism by which nine days of missing HubSpot data reached a
+leadership meeting looking like a bad week.
+
+### What was built
+1. **`Weekly Facts`** (`t9ZZ7sk9hyWEKNdR`) gained a `freshness` key: `max(_fivetran_synced)` for
+   `hubspot.contact` / `hubspot.deal` / `hubspot.contact_form_submission` / `xero.invoice` /
+   `xero.payment`, plus `max(published_date)` for `content_perf.reels` and `max(snapshot_date)` for
+   `content_perf.metricool_snapshots` (neither carries a sync column — these are proxies).
+2. **`V5 Transform`** gained a pass before the ordering phase that compares each feed against the
+   deck week and stamps a red **"DO NOT TRUST THESE NUMBERS"** banner under the `<h1>` of every
+   slide fed by a stale source. `v5_meta.stale_sources` carries the machine-readable list.
+
+**Behaviour is brand-not-halt** (Faiz's call, 18 Aug). A halt fails badly on a quiet Saturday —
+nobody sees the alert and Monday has no deck at all. Branding degrades instead of failing: you
+always get a deck, and a zero can no longer be mistaken for a real result.
+
+### Two subtleties that took a second pass
+- **A running week has no Saturday yet.** Judging a mid-week preview against a future Saturday
+  flags *every* feed as stale. The comparison is `min(week's Saturday, now)`.
+- **A quiet week is not a broken week.** `content_perf.reels` has no sync column, so freshness is
+  inferred from the newest post — and nothing published Thu–Sat would read as stale. A **2-day
+  grace** absorbs that without hiding a real outage, which is always days long.
+
+### Verified against three scenarios
+| scenario | expected | result |
+|---|---|---|
+| Live preview, week 16–22 Aug still running, all feeds current | no banners | `[]` |
+| **15 Aug build, week 9–15 Aug, the real outage** | catch it | 5 sources flagged, HubSpot 6 days / deals 7 days behind |
+| Quiet week, last post Thu 13 Aug, feeds healthy | no false positive | `[]` |
+
+In the real-failure case it would have branded scorecard, sales, sales-ytd, sales-market,
+sales-pipeline, attribution, client-success, finance and client-revenue — precisely the slides
+that were wrong.
+
+### Still owed
+- **No push alert.** The gate is visible in the deck and in `v5_meta` but does not yet message
+  anyone; wiring it to the Tech Updates group needs a decision while notifications are held.
+- `content_perf.*` freshness is a proxy, not a sync timestamp. A sync-time column on those tables
+  would make it exact and let the grace period drop.
+- The `ROLE_EMOJI` entry for **Strategists** in `V5 Transform` still holds corrupted bytes and
+  renders as mojibake; the rendered slide was fixed by hand in report 100, so it will come back on
+  the next build.
