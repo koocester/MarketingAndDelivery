@@ -27,10 +27,12 @@ the Lark tracker, not in git**, where it would go stale within weeks. See below.
 - Enrolment truth: **Entra admin center → Devices** (not the Intune device list — it lags)
 - Per-user check: M365 admin center → user → **Devices** tab
 
-Snapshot as of 18 Aug 2026 for orientation only: 18 devices Entra-joined/registered,
-Intune-managed, all Compliant. Indonesia complete except Mabdi. Malaysia: Mishkat,
-Rina, Thaddeus joined 17 Aug; Zainab and Bhavani laptops outstanding; Sarah (Mac)
-account created 18 Aug, enrolment pending. Profile migration not started anywhere.
+Snapshot as of 19 Aug 2026 for orientation only: **20 devices** Entra-joined/registered,
+Intune-managed, all Compliant. Indonesia complete except Mabdi. Malaysia complete
+except Bhavani — Mishkat, Rina, Thaddeus joined 17 Aug; Zainab's laptop
+(DESKTOP-CPQTK16) and Sarah's MacBook both onboarded and verified 19 Aug
+(CR-20260819-01). Licence pool settled at 22 paid = 22 assigned (CR-20260818-03).
+Remaining device work: Mabdi + Bhavani only. Profile migration not started anywhere.
 
 ## Tenant facts
 

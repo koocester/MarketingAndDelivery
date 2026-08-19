@@ -25,16 +25,19 @@ change at first sign-in" defaults are the correct ones — leave them ticked.
 
 ## What is bought
 
-| Product | Seats | Term | Net (USD) | GST 9% | Total (USD) |
-|---|---|---|---|---|---|
-| Microsoft Entra ID P1 | 19 | 13 Aug 2026 – 12 Aug 2027 | 1,596.00 | 143.64 | **1,739.64** |
-| Microsoft Intune Plan 1 | 19 | 13 Aug 2026 – 12 Aug 2027 | 1,824.00 | 164.16 | **1,988.16** |
-| | | | | | **3,727.80** |
+**22 seats of each product** (19 bought 13 Aug 2026, +3 on 18 Aug 2026 under
+CR-20260818-03), term 13 Aug 2026 – 12 Aug 2027:
 
-⚠️ **Billing is annual, charged upfront.** The full year hit the card on 14 Aug 2026
-($84/seat/yr P1 + $96/seat/yr Intune ≙ $7 + $8 monthly equivalent). Planning documents
-that say "$285/month" describe the run-rate, not the cash flow. Seats added mid-term
-arrive as pro-rated annual charges.
+| Product | Seats | Rate | Annual net (USD) |
+|---|---|---|---|
+| Microsoft Entra ID P1 | 22 | $84/seat/yr | 1,848.00 |
+| Microsoft Intune Plan 1 | 22 | $96/seat/yr | 2,112.00 |
+| | | | **3,960.00 + 9% GST ≈ 4,316.40** |
+
+⚠️ **Billing is annual, charged upfront.** The original 19-seat year hit the card on
+14 Aug 2026 (invoices below); the +3 seats arrive as pro-rated annual charges.
+Run-rate equivalent ≈ $330/month ($7 + $8 per seat) — planning documents quoting a
+monthly figure describe the run-rate, not the cash flow.
 
 ## Invoices
 
@@ -49,34 +52,34 @@ the stored payment method automatically. Originals: **M365 admin center → Bill
 Bills & payments** under `tech@koocester.onmicrosoft.com`. Wider company spend lives
 in Aspire/Xero; these PDFs are kept here because the rollout is documented here.
 
-## ⚠️ Seat shortfall — open risk
+## ✅ Seat shortfall — RESOLVED 18 Aug 2026 (CR-20260818-03)
 
-Two expired 25-seat trials (Intune trial exp. 6 Aug 2026, P1 trial exp. 10 Aug 2026)
-still inflate the console's "available" count (44 shown). When they deprovision the
-pool drops to **19 paid seats** against **23 assigned**:
+Historical context: the original purchase covered only the 19 group members, while
+23 people were assigned — the gap silently floated on two expired 25-seat trials
+(Intune exp. 6 Aug, P1 exp. 10 Aug) still pooled in the console. Fix applied:
 
-| Assigned | Count |
-|---|---|
-| Original group members | 19 |
-| Muhammad Faaiz | 1 |
-| Koocester Tech (admin) | 1 |
-| Zainab | 1 |
-| Sarah | 1 |
-| **Total** | **23** |
+1. The `tech@` service account was **unlicensed** (its Global Administrator role
+   needs no licence; it never enrolled a device).
+2. Both subscriptions were raised **19 → 22 seats** via Billing → Your products →
+   Buy more licenses.
 
-**Four people silently lose licences** when the trials die — including Faiz, whose
-Entra-joined laptop falls out of management. Fix: **buy 4 more seats** (~+$60/month
-equivalent), or drop `tech@` from licensing if the service account doesn't need Intune
-and buy 3. Purchase links (verified working):
+Verified 18 Aug: **Purchased 22 / Assigned 22 on both products** — the expired trials
+can deprovision with zero impact. The maths: 15 Indonesia + 6 Malaysia + Faiz = 22
+people. **Seats are per person, not per device** (up to 50 devices per user), so new
+laptops never need new seats — only new *people* do. To add seats later: tick the
+subscription under Billing → Your products → Buy more licenses (pro-rated annual
+charge), then add the person to the licensing group.
 
-- Entra ID P1: `https://admin.cloud.microsoft/#/catalog/offer-details/microsoft-entra-id-p1/A8B0208D-C604-40CE-BEE6-C601C4F41E85`
-- Intune Plan 1: `https://admin.cloud.microsoft/#/catalog/offer-details/microsoft-intune-plan-1/64312587-435C-4771-B826-822519581E60`
+Ignore the console's "Available licenses" column while the expired trials linger —
+it counts their ghost seats. **"Purchased quantity" is the only number that matters.**
 
 ## Windows 11 Pro product keys
 
 18 retail **activate-only** keys bought 11 Aug 2026 from keysender (reply-to
-erpvideos). 4 arrived dead (replacements chased), 1 spare remains. **Key values are
-deliberately not stored in this repo** — custody is with Faiz. Verify any key's
+erpvideos); 4 arrived dead (replacements chased). Live spare/failed key state is the
+**SPARE rows at the bottom of the Lark rollout tracker** — do not trust counts written
+in docs. **Key values are deliberately not stored in this repo** — custody is with
+Faiz and the tracker. Verify any key's
 channel with `slmgr /dlv`: `Retail`/`OEM` = legitimate; `Volume:MAK`/`Volume:GVLK` =
 grey market and will likely be blocked later. Cross-check `Partial Product Key`
 against the assignment list to prove the right person used the right key.
