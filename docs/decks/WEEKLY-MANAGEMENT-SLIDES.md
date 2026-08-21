@@ -57,6 +57,14 @@ Edit button (login-stamped) instead of handing out the old type-your-name edit l
 generator's Sunday anchor `(sgt_date − 2) − DOW(sgt_date − 2)` — never `date_trunc('week')`,
 which resolves to Monday while weekly reports are Sunday-dated (since 2026-08-07).
 
+**Tech section = the week's CRs, nothing else (Faiz, 2026-08-21: "tech part just put the CR
+for the week that's all, no need so extra").** The four former tech slides (numbers-reconcile
+narrative, automations narrative, roadmap, roadblocks + the Entra/Win11 onboarding block) are
+retired. One slide remains: **"Tech — change requests this week"**, read live from the Tech
+Updates group over the deck week (same-day CRs share a number and differ by title, so the CR
+feed dedups on number+title, not number alone — fixed 21 Aug). An empty week renders the honest
+"no CR was raised" line. Deck is 33 slides as of this change.
+
 **Month-end MoM edition** (supersedes the 2026-08-05 "Option B / first build of new month"
 decision): the build covering the **last week of a calendar month** is the monthly edition —
 detection `EXTRACT(MONTH FROM sun+13) <> EXTRACT(MONTH FROM sun+6)` in Weekly Facts, confirmed
@@ -577,3 +585,4 @@ economics until filled, carousel results) render with the ≈ "currently being w
 | 2026-08-21 | Faiz | **Build moved back to SATURDAY morning (hard must): Watchdog 09:30 · build 10:00 · ping 10:10 SGT** (CR-21082026). Ping report-lookup Monday/Sunday date bug fixed. Month-end edition now first fires Sat 29 Aug. |
 | 2026-08-21 | Faiz | **Editing v2: in-portal, signed by login** (CR-21082026). Google Slides/PPTX route explicitly rejected. Editor injected into every generated deck; save path token-verified + manager-gated; per-slide change history + 🕘 History panel; saved version is the live copy at the same link. Listing-card "Generated/Last edited" line pending on the portal-repo drift. |
 | 2026-08-21 | Faiz | **§0 Weekly session protocol engraved**: this file is the standing GitHub reference; any slide-structure or posting change must land here, be pushed, and be flagged to Faiz directly. |
+| 2026-08-21 | Faiz | **Tech section cut to one slide: the week's CRs from the Tech Updates group** (was 4 slides: narrative x2, roadmap, roadblocks). CR-feed dedup fixed to number+title. Deck 36 -> 33 slides. Slide-by-slide audit run: headline numbers verified against the warehouse (won wk 12, Aug 20, YTD S$1,071,262/181 - exact). |
