@@ -42,7 +42,7 @@ Saturday covered only to 10:00; sales closing later on Saturday land in next wee
 | Sat 07:30 | Team impact leaderboard | `vyXc1pIXnQUNQKVx` | unchanged |
 | Sat 09:30 | **Metric Watchdog** — verifies dashboard numbers vs source, report-only, posts to Tech Updates group | `CI1wLjRA8U8PvIUX` | `30 9 * * 6` |
 | Sat 10:00 | **Deck build + archive** — Portal Report Archiver fetches `mgmt-slides`, files the immutable weekly row | `db8jcaHxVUWmYOPT` | `0 10 * * 6` |
-| Sat 10:10 | **Manager ping** — to the **Koocester Management** chat (`oc_7bfdc6d030886842e9d44434d0598bc8`), the 6 presenters @-mentioned by name (Iman, Rina, Mishkat, Cheryl, K.Bhavani, Faiz; Hakim present but not mentioned) | `bhBTXc9o47wQ2nVZ` | `10 10 * * 6` |
+| Sat 10:10 | **Manager ping** — to the **Koocester Management** chat (`oc_7bfdc6d030886842e9d44434d0598bc8`), the 4 presenters @-mentioned by name (Iman, Mishkat, Cheryl, Faiz — Rina and K.Bhavani removed 21 Aug per Faiz; Hakim present but never mentioned) | `bhBTXc9o47wQ2nVZ` | `10 10 * * 6` |
 | — | Slides link to Hakim | `STzSYqQAmqDflniT` | **deactivated 2026-08-18** |
 
 ⚠️ Trigger node **labels** on the three moved workflows still read the old Sat 7:30/8:45/8:50
@@ -587,3 +587,4 @@ economics until filled, carousel results) render with the ≈ "currently being w
 | 2026-08-21 | Faiz | **§0 Weekly session protocol engraved**: this file is the standing GitHub reference; any slide-structure or posting change must land here, be pushed, and be flagged to Faiz directly. |
 | 2026-08-21 | Faiz | **Tech section cut to one slide: the week's CRs from the Tech Updates group** (was 4 slides: narrative x2, roadmap, roadblocks). CR-feed dedup fixed to number+title. Deck 36 -> 33 slides. Slide-by-slide audit run: headline numbers verified against the warehouse (won wk 12, Aug 20, YTD S$1,071,262/181 - exact). |
 | 2026-08-21 | Faiz | **Accuracy footers**: the four Sales slides carry "as at the Saturday 10:00 build — deals not yet entered are not in these figures, fix via Edit"; the two Finance slides carry "PENDING — Mishkat to verify and update, Xero is not booked daily". Saturday ping gains matching lines addressed to Mishkat and Sales. |
+| 2026-08-21 | Faiz | Ping mentions cut to 4: Iman, Mishkat, Cheryl, Faiz (Bhavani not inside, Rina not involved). |
