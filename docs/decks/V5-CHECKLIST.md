@@ -1076,3 +1076,54 @@ what was being proven.
 week and would need month aggregation), and the top-5 / vertical slides, which are inherently a
 "what ran this week" list rather than a comparison. Adding MoM to the role rows is the obvious
 next increment.
+
+---
+
+## 2026-08-21 (later) — CR-21082026: Saturday 10:00 generation + ping date-match fix + Google Slides editing dry run
+
+### Schedule moved BACK to Saturday, per Faiz ("hard must: slides generated every Sat morning 10am")
+This reverses the Sunday-00:00 decision of CR-20260818-04, with the trade-off now accepted
+explicitly: the Sun–Sat week ships with Saturday covered only to 10:00; sales that close later
+on Saturday appear in the following week's deck.
+
+| Workflow | Now | Cron |
+|---|---|---|
+| Metric Watchdog `CI1wLjRA8U8PvIUX` | Sat 09:30 | `30 9 * * 6` |
+| Portal Report Archiver (generator) `db8jcaHxVUWmYOPT` | Sat 10:00 | `0 10 * * 6` |
+| Manager ping `bhBTXc9o47wQ2nVZ` | Sat 10:10 | `10 10 * * 6` |
+
+All three verified on the PUBLISHED (active) version, timezone Asia/Singapore. Trigger node
+labels remain stale ("Sat 8:50" etc.) — read the cron, not the label. The week anchor
+(`now −2d − DOW`) needs no change: at Sat 10:00 it resolves to the in-progress week's Sunday.
+Month-end MoM edition moves with it — **first firing is now Saturday 29 August**.
+First firing of the whole Saturday chain: **Sat 22 Aug 10:00**, week 16–22 Aug.
+
+### Bug fix: manager ping report-check matched the wrong date
+`Report Check` looked up the weekly report with `date_trunc('week', now())` = **Monday**, but
+weekly reports have been **Sunday-dated since 7 Aug** (verified in `public.reports`: 9 Aug,
+2 Aug are Sundays; 27 Jul, 20 Jul are the old Monday-dated rows). Every firing since 8 Aug
+would have taken the "slides NOT built" branch. Replaced with the same Sunday anchor as the
+generator: `dated = (sgt_date − 2) − DOW(sgt_date − 2)`.
+
+### Dry run for week 16–22 (data through Fri 21) — NOT sent to any group
+Rendered from `dryrun-v5-weekly-x9`: 36 slides, no stale-source banners, weekly (not monthly)
+edition — all correct. Delivered to Faiz as `DRYRUN_16-21_AUG.html` (scrollfix injected).
+
+### Google Slides as the manager editing surface — dry run built, architecture decided
+Faiz wants edits to happen in Google Slides: native version history, named editor
+accountability, one live link for everyone. Dry run delivered: the 36-slide deck converted to
+`DRYRUN_16-21_AUG_editable.pptx` — per slide, a raster of the rendered HTML (text hidden
+before capture) + every text element re-laid as a real editable text box at its measured
+position/size/style. Text was extracted mechanically from the rendered DOM, so numbers are
+exact by construction. Converter lives in the session scratchpad (`extract.js`, `build.js`,
+puppeteer-core + pptxgenjs, headless Chrome at 1280×720, deviceScaleFactor 2).
+Drive-import of the .pptx yields an editable Google Slides file.
+
+Automation path (proposed, not built): n8n already holds a working `googleDriveOAuth2Api`
+credential ("Koocester Drive", refreshed 31 Jul). Proper build = a Google Slides TEMPLATE deck
++ weekly Drive copy + `replaceAllText` + charts linked to a Google Sheet the pipeline updates —
+fully native, no conversion step. The pptx converter is the bridge until that exists.
+
+Known cosmetic limits of the pptx bridge: Arial substitutes for Helvetica Neue (slight width
+drift, occasional label/pill overlap), inline bold-within-a-line flattens to the block style,
+SVG chart labels stay rasterised (not editable). All numbers and copy are editable text.
