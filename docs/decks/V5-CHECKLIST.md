@@ -1172,3 +1172,30 @@ the repo would DELETE those pages and may not carry their server Functions.
 deployed until the ~14 Aug deploy tree is found and pushed.** Ask Hakim / find the session
 that deployed 4× on ~14 Aug. Both files needed (report-view.html, weekly/index.html) are
 identical repo↔live, so the change itself is a small diff once deploys are unblocked.
+
+---
+
+## 2026-08-21 (night) — editor bugs found by Faiz's dry run, fixed and SELF-TESTED end-to-end
+
+Faiz's live test of the in-portal editor surfaced three defects; all fixed, all re-verified by
+an automated end-to-end run in a real logged-in browser session against dry-run row 103.
+
+1. **Every slide flagged as edited** → the server compared raw markup; the browser re-serialises
+   markup and charts render at load, so all slides differed. Fix iterated twice, final: **the
+   editor measures the change in the page** — snapshots each slide's textContent at Edit-start,
+   sends the changed indexes at Save. The server-side markup diff is gone (legacy decks without
+   the field record 'unspecified').
+2. **Deck read-only after one save** → the save-cleanup stripped the editor's own <script>.
+   Fix: cleanup spares scripts, AND the server transplants the editor block back into any
+   submitted copy that lost it (self-healing).
+3. **Saves silently "lost"** → root cause is LATENCY, not loss: the endpoint takes ~10–15s
+   (n8n cloud). Users navigated away mid-save (aborting the upload) or checked History before a
+   slow save landed. Fixes: blocking "💾 Saving — keep this page open (~20s)" state with both
+   buttons disabled; server no longer pulls the full ~217KB html out of Postgres per save (only
+   the editor block substring); no-change saves now rejected client-side in ~2ms with no round
+   trip.
+
+Self-test results (Chrome, real Supabase session, row 103): save 1 → chip/history "slide 2"
+only, 11s; save 2 on the once-saved copy → "slide 3", editor still present; no-change → instant
+reject, edit mode preserved. DB: 2 history entries [[2],[3]], 2 pre-edit snapshots. Generator
+output re-verified carrying editor v5, zero JS errors.
