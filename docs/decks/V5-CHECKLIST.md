@@ -1127,3 +1127,48 @@ fully native, no conversion step. The pptx converter is the bridge until that ex
 Known cosmetic limits of the pptx bridge: Arial substitutes for Helvetica Neue (slight width
 drift, occasional label/pill overlap), inline bold-within-a-line flattens to the block style,
 SVG chart labels stay rasterised (not editable). All numbers and copy are editable text.
+
+---
+
+## 2026-08-21 (evening) — CR-21082026: in-portal slide editing, signed by login (Google Slides idea dropped)
+
+Faiz rejected the Google Slides/PPTX route ("this is not the way"): edits must happen ON the
+staff portal, on the slides themselves; whatever is saved becomes the live copy at the same
+link; the portal LOGIN is the edit identity; the weekly card should show "Generated <when>"
+and "Last edited by <who>".
+
+### What shipped (all n8n — zero portal files deployed)
+1. **`Inject Portal Editor`** node in `t9ZZ7sk9hyWEKNdR` (between V5 Transform and Respond):
+   every generated deck carries `data-koo-dated="<week sunday>"` plus a self-contained editor
+   script. It activates ONLY when a staffacademy Supabase session is present in localStorage
+   (report-view.html renders decks in a same-origin srcdoc iframe, so the session is visible);
+   on the public dry-run webhook or file:// it stays silent. UI: ✏️ Edit + 🕘 History buttons.
+2. **`slides-edit-save-v2`** endpoint in `Eqmd0mEmyxkuPGxL`: verifies the token against
+   `auth/v1/user` (identity can NOT be typed or spoofed), resolves `profiles.full_name`,
+   requires `is_manager OR is_admin`, snapshots the pre-edit copy as `weekly_manager_edit`,
+   diffs per-slide segments to record WHICH slides changed, updates `reports.html_content`
+   in place, appends `{by, email, at, slides, pre_edit_snapshot_id}` to
+   `metadata.edit_history`, stamps "✏️ Edited by <name> · <when> · slide N" chip.
+   CORS locked to `https://staffacademy.koocester.com`.
+3. **History panel**: "Generated <closed_at>" + one row per save with editor, time, slides
+   changed, link to the version before that edit. This is the Google-Slides-style history,
+   done natively.
+4. Saturday 10:10 ping now teaches this flow (old type-your-name editor k8w2 left up, unlinked).
+5. **Report 100 armed** with the same script as the demo/test bed.
+
+Verified in Faiz's own browser: buttons render inside report-view, edit bar reads
+"editing as Faiz" (from login, profiles.full_name), history panel correct, bogus token
+rejected with a clean error. The final keystroke+save leg is left for Faiz (automation
+was not allowed to type into his browser).
+
+### 🔴 Portal repo is BEHIND live production — do not deploy
+Hash-compared all 162 repo files against live (authed fetches): live build = commit
+`16853fb` (~14 Aug, not in the GitHub repo). Live-only pages: leave, hr-escalation,
+gift-barter, exit-interview, training-record, new-joiner-feedback; newer deploy.sh,
+portal.html, koo-nav.js, sales/media kits, brand PNGs. A Pages direct-upload deploy from
+the repo would DELETE those pages and may not carry their server Functions.
+**Consequence: the weekly-listing card line ("Generated <date> 10:00 AM · Last edited by
+<name>") is designed but NOT shipped — it needs manager/weekly/index.html, which cannot be
+deployed until the ~14 Aug deploy tree is found and pushed.** Ask Hakim / find the session
+that deployed 4× on ~14 Aug. Both files needed (report-view.html, weekly/index.html) are
+identical repo↔live, so the change itself is a small diff once deploys are unblocked.
