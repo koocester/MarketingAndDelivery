@@ -106,7 +106,7 @@ HUMANS — managers QC wording and judgement calls via the edit link, as today.
 ```
 
 This extends a pattern **already running in production**: the *Metric Watchdog —
-pre-weekly verification* (n8n `CI1wLjRA8U8PvIUX`, Sat 07:30 SGT) already does
+pre-weekly verification* (n8n `CI1wLjRA8U8PvIUX`, Sat 09:30 SGT since 2026-08-21) already does
 schedule → SQL checks → change report → DM Faiz → **Record Verdict** — today against the
 dashboard cache, before the weekly build. The slide watchdog is stage 2 of that same dog:
 same skeleton, pointed at the built deck instead of the cache. A deck without a recorded

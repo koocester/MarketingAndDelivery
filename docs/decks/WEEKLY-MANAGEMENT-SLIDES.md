@@ -9,25 +9,59 @@ appended here before they are built.
 > live pipeline or the stored deck; anything not marked is a rule to confirm with Faiz before
 > relying on it.
 
+## 0. Weekly session protocol (Faiz, 2026-08-21) · HARD RULE
+
+**This file, on GitHub, is the standing reference for every weekly-slides session.**
+
+1. **Start every weekly-deck session by reading this file** (and the tail of
+   [V5-CHECKLIST.md](V5-CHECKLIST.md) for what the last session touched).
+2. **Any change to the SLIDE STRUCTURE** (sections, running order, what a slide shows) **or to
+   HOW/WHEN/WHERE the deck is POSTED** (schedule, destination group, message wording, edit flow)
+   must be: (a) recorded in this file's relevant section AND the Change log, (b) committed and
+   pushed to GitHub in the same session, and (c) **flagged to Faiz directly** — the CR in the
+   Tech Updates group is necessary but not sufficient; tell him in plain words what changed
+   about structure or posting.
+3. A structure/posting change that is live but not written here is a defect: fix the doc.
+
 ## 1. The meeting
 
 - **Weekly**, built Saturday morning SGT, reviewed by managers over the weekend, used in the
   **Monday leadership meeting**.
 - **Audience: management.** Unlike the Town Hall, finance and commercial detail belong here.
 
-## 2. Saturday build chain *(verified)*
+## 2. Saturday build chain *(verified 2026-08-21, CR-21082026)*
 
-| Time (SGT) | What | Workflow |
-|---|---|---|
-| 07:00 | Team throughput snapshot for the week | `o4M9V8PYxRT4skvA` |
-| 07:30 | Team impact leaderboard | `vyXc1pIXnQUNQKVx` |
-| 07:30 | **Metric Watchdog** — verifies dashboard numbers against source, report-only, DMs Faiz | `CI1wLjRA8U8PvIUX` |
-| 08:50 | Manager update to the Manager Updates Lark group: slides ready + QC ask + edit link | `bhBTXc9o47wQ2nVZ` |
-| 09:00 | Slides link to Hakim | `STzSYqQAmqDflniT` |
+History: originally Sat ~07:30–09:00; moved to **Sunday 00:00** on 2026-08-18 (CR-20260818-04,
+to capture a complete Saturday); **moved back to Saturday morning on 2026-08-21 at Faiz's hard
+must** — managers get the deck Saturday 10am. Accepted trade-off: the Sun–Sat week ships with
+Saturday covered only to 10:00; sales closing later on Saturday land in next week's deck.
 
-The 08:50 message is deliberately blunt about AI: managers are told to QC the numbers before
-Monday because AI-generated slides can be inaccurate, and are given the edit link to fix them
-themselves. Keep that framing — it is what makes the QC loop work.
+| Time (SGT) | What | Workflow | Cron |
+|---|---|---|---|
+| Sat 07:00 | Team throughput snapshot | `o4M9V8PYxRT4skvA` | unchanged |
+| Sat 07:30 | Team impact leaderboard | `vyXc1pIXnQUNQKVx` | unchanged |
+| Sat 09:30 | **Metric Watchdog** — verifies dashboard numbers vs source, report-only, posts to Tech Updates group | `CI1wLjRA8U8PvIUX` | `30 9 * * 6` |
+| Sat 10:00 | **Deck build + archive** — Portal Report Archiver fetches `mgmt-slides`, files the immutable weekly row | `db8jcaHxVUWmYOPT` | `0 10 * * 6` |
+| Sat 10:10 | **Manager ping** — to the **Koocester Management** chat (`oc_7bfdc6d030886842e9d44434d0598bc8`), the 6 presenters @-mentioned by name (Iman, Rina, Mishkat, Cheryl, K.Bhavani, Faiz; Hakim present but not mentioned) | `bhBTXc9o47wQ2nVZ` | `10 10 * * 6` |
+| — | Slides link to Hakim | `STzSYqQAmqDflniT` | **deactivated 2026-08-18** |
+
+⚠️ Trigger node **labels** on the three moved workflows still read the old Sat 7:30/8:45/8:50
+times — renaming rewrites connection references, so only the crons were changed. **Read the
+cron, not the label.**
+
+The 10:10 message stays deliberately blunt about AI: managers are told to QC the numbers before
+Monday because AI-generated slides can be inaccurate. Since 2026-08-21 it teaches the in-deck
+Edit button (login-stamped) instead of handing out the old type-your-name edit link.
+
+**Ping report-lookup rule (bug fixed 2026-08-21):** the ping finds the week's report by the
+generator's Sunday anchor `(sgt_date − 2) − DOW(sgt_date − 2)` — never `date_trunc('week')`,
+which resolves to Monday while weekly reports are Sunday-dated (since 2026-08-07).
+
+**Month-end MoM edition** (supersedes the 2026-08-05 "Option B / first build of new month"
+decision): the build covering the **last week of a calendar month** is the monthly edition —
+detection `EXTRACT(MONTH FROM sun+13) <> EXTRACT(MONTH FROM sun+6)` in Weekly Facts, confirmed
+by Faiz 2026-08-18. Under the Saturday schedule the first firing is **Sat 29 Aug 2026 (Aug vs
+Jul)**, then Sat 26 Sep, Sat 31 Oct.
 
 ## 3. Data source and governance *(verified)*
 
@@ -121,13 +155,30 @@ Engagement averages exclude rows with `engagement_rate >= 100` (bad data guard).
 - **Serving:** n8n `t9ZZ7sk9hyWEKNdR` "Management Weekly Slides (served)", webhook path
   `mgmt-slides`, basic auth "Command Dashboard Login"; portal at
   `staffacademy.koocester.com/manager/weekly/`.
-- **Editing:** `Eqmd0mEmyxkuPGxL` "Weekly Slides — Manager Edit", edit link
-  `/webhook/slides-edit-k8w2`. Manager types their name, edits in place, saves; the edit
-  **updates the live weekly report in place** and the editor's name is stored on the change so
-  they own that correction. A pre-edit snapshot is written as `kind='weekly_manager_edit'`.
-  - **Caution:** because the edit path writes to the live report, a test run mutates the real
-    deck. Use a scratch row when testing.
+- **Editing (v2, CR-21082026 — in-portal, signed by login):** every generated deck embeds an
+  editor (`Inject Portal Editor` node in `t9ZZ7sk9hyWEKNdR`, plus a `data-koo-dated` attr).
+  A logged-in manager viewing the deck on the portal sees **✏️ Edit** and **🕘 History**; the
+  script activates only when a staffacademy Supabase session exists (report-view renders the
+  deck in a same-origin srcdoc iframe), so the public dry-run render stays inert.
+  Saving POSTs to webhook `slides-edit-save-v2` (in `Eqmd0mEmyxkuPGxL`), which:
+  1. verifies the Supabase token server-side (`auth/v1/user`) — the identity is the LOGIN,
+     never typed, never spoofable;
+  2. requires `profiles.is_manager OR is_admin`;
+  3. snapshots the pre-edit copy as `kind='weekly_manager_edit'`;
+  4. diffs per-slide segments to record **which slides changed**;
+  5. updates the live row in place — **the saved version IS the copy everyone sees at the
+     same link** — and appends `{by, email, at, slides, pre_edit_snapshot_id}` to
+     `metadata.edit_history`;
+  6. stamps a visible chip: "✏️ Edited by <name> · <when SGT> · slide N".
+  The 🕘 History panel shows "Generated <closed_at>" plus every save (who · when · slides ·
+  link to the version before that edit) — Google-Slides-style history, native to the portal.
+  - Legacy: the type-your-name editor at `/webhook/slides-edit-k8w2` still exists but is no
+    longer linked from the ping. Same in-place-update caution applies to both: **a test save
+    mutates the real deck — use a scratch row (or the superseded prior week) when testing.**
   - `reports_kind_check` must allow `weekly_manager_edit` (fixed 2026-07-31).
+  - Pending (blocked): "Generated <date> · Last edited by <name>" line on the weekly-listing
+    card needs `manager/weekly/index.html` deployed — blocked while the portal repo is behind
+    live production (see V5-CHECKLIST 2026-08-21 evening entry).
 
 ## 8. Two intake lanes into the weekly report
 
@@ -147,8 +198,8 @@ Engagement averages exclude rows with `engagement_rate >= 100` (bad data guard).
 3. Verify the fact pack's week boundary matches the week you intend to report.
 4. Build to the running order in §4 — same sections, new numbers.
 5. Confirm the Registry Guard ran in enforce mode and check what it withheld.
-6. Confirm the manager update went out at 08:50 with the QC ask and the edit link.
-7. Monday: check whether managers edited anything, and who.
+6. Confirm the manager ping went out at 10:10 to Koocester Management with the QC ask.
+7. Monday: open the deck's 🕘 History panel — who edited, when, which slides.
 
 ## v2 requirements (2026-08-04, Faiz) · **PENDING DRY RUN — not yet built**
 
@@ -522,3 +573,7 @@ economics until filled, carousel results) render with the ≈ "currently being w
 | 2026-08-05 | Faiz | **Approve-QC automation WIRED (driven browser session): the Videos 'Video - Approve QC Automation' now also sets `QC Passed At` = NOW() in the same update action; Save-and-Activate confirmed.** Strategist QC throughput is measurable from today. Client → Page Mapping table created (`tbl3gOPoHuZBFayg`, 249 clients pre-filled) — Hakim fills Page + Market dropdowns. |
 | 2026-08-06 | Faiz | **Funnel definition settled: converted = deal WON** (closedate in window, hs_is_closed_won). Funnel = enquiries → qualified (registry recvrjoebW6CUp rule, weekly window) → won; drop-off measured at each boundary. Queue approved: per-project bars, roadmap slide, funnel, SMM on-time. |
 | 2026-08-06 | Faiz | **SIGNED OFF dry run row 94. Generator rebuild approved and started** — build-and-store architecture, staging→vet→promote, v5 renderer ported from the dry-run components, cutover Sat 15 Aug, monthly edition first fires 5 Sep. |
+| 2026-08-18 | Faiz | Build moved to Sunday 00:00 (CR-20260818-04); notifications repointed to Koocester Management with named mentions; Hakim send deactivated; CR feed reads the Tech Updates chat; month-end MoM edition BUILT — rule re-settled as "last weekly deck of the month" (supersedes 5 Aug Option B); freshness gate (stale-source banner) added. |
+| 2026-08-21 | Faiz | **Build moved back to SATURDAY morning (hard must): Watchdog 09:30 · build 10:00 · ping 10:10 SGT** (CR-21082026). Ping report-lookup Monday/Sunday date bug fixed. Month-end edition now first fires Sat 29 Aug. |
+| 2026-08-21 | Faiz | **Editing v2: in-portal, signed by login** (CR-21082026). Google Slides/PPTX route explicitly rejected. Editor injected into every generated deck; save path token-verified + manager-gated; per-slide change history + 🕘 History panel; saved version is the live copy at the same link. Listing-card "Generated/Last edited" line pending on the portal-repo drift. |
+| 2026-08-21 | Faiz | **§0 Weekly session protocol engraved**: this file is the standing GitHub reference; any slide-structure or posting change must land here, be pushed, and be flagged to Faiz directly. |
